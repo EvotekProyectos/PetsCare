@@ -2,11 +2,12 @@
 <html lang="es">
 
 <head>
+    @routes
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" id="csrf" content="{{ csrf_token() }}">
 
     <title>PETS CARE</title>
 
@@ -23,6 +24,12 @@
 
     <!-- Scrollbar Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/jquery.mCustomScrollbar.min.css') }}">
+    {{-- dataTables CSS --}}
+    <link href="{{ asset('css/dataTables.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('css/responsive.dataTables.min.css') }}" rel="stylesheet"> --}}
+    <link href="{{ asset('css/sweetalert2.min.css') }}" rel="stylesheet">
+
+    <link href="{{ asset('css/select2.min.css') }}" rel="stylesheet">
     <!-- Font Awesome JS -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"
         integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous">
@@ -83,9 +90,13 @@
                             <i class="fas fa-cogs"></i>
                             Configuración
                         </a>
-                        <ul class="collapse list-unstyled" id="pageSubmenu">
+                        <ul class="collapse list-unstyled" id="pageSubmenu"> 
                             <li>
-                                <a href="#" class="ms-2"><i class="fas fa-user"></i> Usuarios</a>
+                                <a href="{{route('logs.index')}}" class="ms-2"><i class="fa fa-calendar-check"></i> Bitácora</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('users.index') }}" class="ms-2"><i class="fas fa-user"></i>
+                                    Usuarios</a>
                             </li>
                             <li>
                                 <a href="#" class="ms-2"><i class="fa fa-clock"></i> Turnos</a>
@@ -93,6 +104,7 @@
                             <li>
                                 <a href="#" class="ms-2"><i class="fa fa-calendar-check"></i> Horarios</a>
                             </li>
+                           
                         </ul>
                     </li>
                 </ul>
@@ -158,7 +170,8 @@
                                             {{ __('Logout') }}
                                         </a>
 
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                            class="d-none">
                                             @csrf
                                         </form>
                                     </div>
@@ -168,7 +181,7 @@
                         </div>
                     </div>
                 </nav>
-                <main class="py-4">
+                <main class="">
                     @yield('content')
                 </main>
 
@@ -180,14 +193,25 @@
     </div>
 
     <!-- jQuery CDN - Slim version (=without AJAX) -->
-    <script src="{{ asset('js/jquery-3.3.1.slim.min.js') }}"></script>
-    <!-- Popper.JS -->
-    <script src="{{ asset('js/popper.min.js') }}"></script>
-    <!-- Bootstrap JS -->
-    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-    <!-- jQuery Custom Scroller CDN -->
-    <script src="{{ asset('js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
 
+    <!-- Popper.JS -->
+    <script src="{{ asset('js/popper.min.js') }}" defer></script>
+    <!-- Bootstrap JS -->
+    <script src="{{ asset('js/bootstrap.min.js') }}" defer></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="{{ asset('js/jquery.mCustomScrollbar.concat.min.js') }}" defer></script>
+    {{-- dataTables JS --}}
+    <script src="{{ asset('js/dataTables.js') }}" defer></script>
+    <script src="{{ asset('js/jquery.dataTables.spanish.js') }}" defer></script>
+    {{-- <script src="{{ asset('js/responsive.dataTables.min.js') }}" defer></script> --}}
+    <script src="{{ asset('js/global.js') }}" defer></script>
+    {{-- Select2 JS --}}
+    <script src="{{ asset('js/select2.min.js') }}" defer></script>
+    {{-- MOMENT JS --}}
+    <script src="{{ asset('js/momentjs.min.js') }}" defer></script>
+    {{-- sweetalert JS --}}
+    <script src="{{ asset('js/sweetalert2.all.min.js') }}" defer></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $("#sidebar").mCustomScrollbar({
