@@ -4,8 +4,13 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
+            <div class="card bg-primary-soft border-0 p-3">
+                <div class="card-header bg-transparent border-0">
+                    <h4 id="card_title" class="text-primary text-uppercase">
+                        <i class="fas fa-user"></i>  {{ __('Reset Password') }}
+                    </h4>
+                   
+                </div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('password.update') }}">

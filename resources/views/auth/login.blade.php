@@ -23,18 +23,18 @@
                         <div class="col-12">
                             <div class="input-group mb-3">
                                 <span class="input-group-text bg-primary-subtle" id="basic-addon1">
-                                    <i class="fa fa-envelope text-primary"></i>
-                                </span>
+                                    <i class="fas fa-at text-primary"></i></span>
                                 <input type="email" class="form-control @error('email') is-invalid @enderror"
                                     placeholder="Correo electrónico" aria-label="Correo electrónico"
                                     value="{{ old('email') }}" id="email" name="email" autocomplete="email" required
                                     autofocus aria-describedby="basic-addon1">
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
-                            @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+
                         </div>
                     </div>
 
@@ -43,17 +43,19 @@
 
                         <div class="col-12">
                             <div class="input-group mb-3">
-                                <span class="input-group-text bg-primary-subtle" id="basic-addon1"><i class="fas fa-key text-primary"></i></span>
+                                <span class="input-group-text bg-primary-subtle" id="basic-addon1"><i
+                                        class="fas fa-lock text-primary"></i></span>
                                 <input type="password" class="form-control @error('password') is-invalid @enderror"
                                     placeholder="Contraseña" aria-label="Contraseña" value="" id="password"
                                     name="password" autocomplete="current-password" required
                                     aria-describedby="basic-addon1">
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
-                            @error('password')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+
                         </div>
                     </div>
 
@@ -81,7 +83,7 @@
 
                     <div class="row mb-0">
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary-dark w-100">
                                 {{ __('Login') }}
                             </button>
                         </div>
