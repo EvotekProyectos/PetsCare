@@ -1,5 +1,3 @@
-var fileDataTable = undefined;
-
 function showAlertWithCallback(callbackFunction, id) {
     Swal.fire({
         title: '¿Estás seguro?',
@@ -20,57 +18,43 @@ function showAlertWithCallback(callbackFunction, id) {
     });
 }
 
-function iniciarTablaArchivos(record_id = 0) {
-    fileDataTable = $('#fileTable').DataTable({
-        ajax: route('documents.list', record_id),
-        responsive: true,
-        select: {
-            style: 'multi'
-        },
-        ordering: [[2, 'asc']],
-        columns: [
-            {
-                data: 'id',
-            },
-            {
-                data: 'name',
-            },
-            {
-                data: null,
-                render: function (data) {
-                    return "<input type='text' name='' id='paginasde"+data.id+"' placeholder='Ej. 1,2,3 (Separado por comas y sin espacios)' class='form-control'>";
-                }
-            },
-            {
-                data: 'description',
-            }, 
-            {
-                data: 'created_at',
-                render: function (data) {
-                    return data ? moment(data).format('DD-MM-YYYY') : '';
-                },
-            },
-            {
-                data: null,
-                render: function (data) {
-                    return '<a type="button" href="'+data.asset_route+'" target="_blank" class="btn btn-glass btn-primary text-info btn-sm"><i class="fa-solid fa-eye"></i></a><button type="button" class="btn btn-glass btn-warning text-danger btn-sm" onclick="showAlertWithCallback(deleteDocument, '+ data.id+')"><i class="fa-solid fa-trash-can"></i></button>';
-                }
-            }
-        ],
-        columnDefs: [
-            {
-                targets: [0], // Índice de la columna que deseas ocultar
-                className: "d-none"
-                // hidden: true // Configura esta columna como no visible.
-            }
-        ]
+function showAlert( text = "Registro guardado correctamente", message = 'Buen trabajo', icon = 'success', showConfirmButton = false, timer = 1500) {
+    Swal.fire({
+        icon: icon,
+        title: message,
+        text: text,
+        showConfirmButton: showConfirmButton,
+        timer: timer
     });
-
-    
-     
-    // document.querySelector('#button').addEventListener('click', function () {
-    //     alert(table.rows('.selected').data().length + ' row(s) selected');
-    // });
 }
 
+const deleteResource = async (url, table = null) => {
+    const init = {
+        method: "DELETE",
+        headers: {
+            Accept: "application/json",
+            "X-CSRF-TOKEN": $("#csrf").attr("content"),
+        }
+    };
+    try {
+        const req = await fetch(url, init);
+        if (req.ok) {
+            showAlert("Registro eliminado correctamente");
+            if (table) {
+                table.ajax.reload(); 
+            }
+        } else {
+            showAlert("Vuelve a intentar más tarde.", "Error", "error");
+            console.error("Error deleting resource:", req.statusText);
+        }
+    } catch (error) {
+        showAlert("Vuelve a intentar más tarde.", "Error", "error");
+        console.error("Error deleting resource:", error);
+    }
+};
+
+const deleteUser = (id, table) => {
+    const url = route("users.destroy", id);
+    deleteResource(url, table);
+};
 
