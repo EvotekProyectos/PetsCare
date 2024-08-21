@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LogController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,3 +24,18 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+
+Route::group(['middleware' => ['auth']], function () {
+
+    // USERS
+    Route::get('/users/list', [UserController::class, 'list'])->name('users.list');
+    Route::get('/users/permissions/{id?}', [UserController::class, 'getPermissionsForUsers'])->name('users.permissions');
+    Route::post('/users/changePermissions/{id?}', [UserController::class, 'changePermissions'])->name('users.changePermissions');
+    Route::resource('/users', UserController::class);
+
+    // LOGS
+    Route::get('/logs/list', [LogController::class, 'list'])->name('logs.list');
+    Route::resource('/logs', LogController::class);
+});
