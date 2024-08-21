@@ -16,7 +16,7 @@ class UserObserver
         $log = Log::create([
             'action' => 'NUEVO USUARIO',
             'description' => 'Se creó un nuevo usuario: ' . $user->name,
-            'user_id' => (Auth::user()->id) ?? 'Sistema'
+            'user_id' => (Auth::user()->id) ?? null
         ]);
    
     }
