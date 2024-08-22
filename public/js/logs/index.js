@@ -3,7 +3,7 @@ $(document).ready(function () {
     table = $('#table').DataTable({
         ajax: route('logs.list'),
         responsive: true,
-        order: false,
+        order: [0, 'desc'],
         columns: [
             {
                 data: 'created_at',
