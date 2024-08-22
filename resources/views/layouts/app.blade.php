@@ -41,7 +41,7 @@
     @stack('styles')
 </head>
 
-<body class="bg-transparent">
+<body class="bg-white">
     @guest
         <main class="py-4">
             @yield('content')
@@ -90,9 +90,10 @@
                             <i class="fas fa-cogs"></i>
                             Configuración
                         </a>
-                        <ul class="collapse list-unstyled" id="pageSubmenu"> 
+                        <ul class="collapse list-unstyled" id="pageSubmenu">
                             <li>
-                                <a href="{{route('logs.index')}}" class="ms-2"><i class="fa fa-calendar-check"></i> Bitácora</a>
+                                <a href="{{ route('logs.index') }}" class="ms-2"><i class="fa fa-calendar-check"></i>
+                                    Bitácora</a>
                             </li>
                             <li>
                                 <a href="{{ route('users.index') }}" class="ms-2"><i class="fas fa-user"></i>
@@ -104,7 +105,9 @@
                             <li>
                                 <a href="#" class="ms-2"><i class="fa fa-calendar-check"></i> Horarios</a>
                             </li>
-                           
+                            <li>
+                                <a href="{{route('reasons.index')}}" class="ms-2"><i class="fas fa-list"></i> Motivos</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>

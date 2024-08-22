@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReasonController;
 use App\Http\Controllers\Auth\RegisterController;
 
 /*
@@ -34,6 +35,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/users/permissions/{id?}', [UserController::class, 'getPermissionsForUsers'])->name('users.permissions');
     Route::post('/users/changePermissions/{id?}', [UserController::class, 'changePermissions'])->name('users.changePermissions');
     Route::resource('/users', UserController::class);
+
+    // REASONS
+    Route::get('/reasons/list', [ReasonController::class, 'list'])->name('reasons.list');
+    Route::resource('/reasons', ReasonController::class);
 
     // LOGS
     Route::get('/logs/list', [LogController::class, 'list'])->name('logs.list');
