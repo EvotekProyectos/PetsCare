@@ -100,6 +100,10 @@
                                     Usuarios</a>
                             </li>
                             <li>
+                                <a href="{{ route('rooms.index') }}" class="ms-2"><i class="fas fa-first-aid"></i>
+                                    Consultorios</a>
+                            </li>
+                            <li>
                                 <a href="#" class="ms-2"><i class="fa fa-clock"></i> Turnos</a>
                             </li>
                             <li>
