@@ -108,6 +108,10 @@
                             <li>
                                 <a href="{{route('reasons.index')}}" class="ms-2"><i class="fas fa-list"></i> Motivos</a>
                             </li>
+                            <li>
+                                <a href="{{route('areas.index')}}" class="ms-2"><i class="fas fa-list"></i> Áreas</a>
+                            </li>
+                            
                         </ul>
                     </li>
                 </ul>

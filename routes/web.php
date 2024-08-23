@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogController;
+use App\Http\Controllers\AreaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReasonController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -39,6 +40,10 @@ Route::group(['middleware' => ['auth']], function () {
     // REASONS
     Route::get('/reasons/list', [ReasonController::class, 'list'])->name('reasons.list');
     Route::resource('/reasons', ReasonController::class);
+
+    // AREAS
+    Route::get('/areas/list', [AreaController::class, 'list'])->name('areas.list');
+    Route::resource('areas', AreaController::class);
 
     // LOGS
     Route::get('/logs/list', [LogController::class, 'list'])->name('logs.list');
