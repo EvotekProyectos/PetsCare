@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Reason;
 use App\Models\User;
+use App\Observers\ReasonObserver;
 use App\Observers\UserObserver;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
@@ -28,6 +30,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot(): void
     {
         User::observe(UserObserver::class);
+        Reason::observe(ReasonObserver::class);
     }
 
     /**

@@ -58,3 +58,9 @@ const deleteUser = (id, table) => {
     deleteResource(url, table);
 };
 
+const deleteReason = (id, table) => {
+    const url = route("reasons.destroy", id);
+    deleteResource(url, table);
+};
+
+

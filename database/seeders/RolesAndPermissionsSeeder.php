@@ -30,10 +30,14 @@ class RolesAndPermissionsSeeder extends Seeder
         // create logs permissions
         Permission::create(['name' => 'ver panel bitácora']);
 
-        // admin permissions
+        // create reasons permissions
+        Permission::create(['name'=> 'ver panel motivos']);
+        Permission::create(['name' => 'crear motivos']);
+        Permission::create(['name' =>'editar motivos']);
+        Permission::create(['name' => 'eliminar motivos']);
+
+        // roles
         $role = Role::create(['name' => 'admin']);
-
-
         // $role->givePermissionTo(Permission::all());
 
     }

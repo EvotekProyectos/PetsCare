@@ -22,8 +22,8 @@ class LogController extends Controller
     }
 
     public function list(){
-        $logs = Log::with('user')->get();
-        return DataTables::of($logs) ->make(true);
+        $logs = Log::with('user')->orderBy('id', 'desc')->get();
+        return DataTables::of($logs)->make(true);
     }
 
     /**
