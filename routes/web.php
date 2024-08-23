@@ -7,6 +7,7 @@ use App\Http\Controllers\AreaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReasonController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\RoomController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,4 +49,9 @@ Route::group(['middleware' => ['auth']], function () {
     // LOGS
     Route::get('/logs/list', [LogController::class, 'list'])->name('logs.list');
     Route::resource('/logs', LogController::class);
+
+    //Rooms
+    Route::get('/rooms/list', [RoomController::class, 'list'])->name('rooms.list');
+    Route::resource('rooms', RoomController::class);
+    
 });

@@ -68,3 +68,7 @@ const deleteArea = (id, table) => {
     deleteResource(url, table);
 };
 
+const deleteRoom = (id, table) => {
+    const url = route("rooms.destroy", id);
+    deleteResource(url, table);
+};

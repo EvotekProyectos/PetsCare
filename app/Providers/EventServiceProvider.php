@@ -4,9 +4,11 @@ namespace App\Providers;
 
 use App\Models\Area;
 use App\Models\Reason;
-use App\Models\User;
 use App\Observers\AreaObserver;
 use App\Observers\ReasonObserver;
+use App\Models\Room;
+use App\Models\User;
+use App\Observers\RoomObserver;
 use App\Observers\UserObserver;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
@@ -34,6 +36,7 @@ class EventServiceProvider extends ServiceProvider
         User::observe(UserObserver::class);
         Reason::observe(ReasonObserver::class);
         Area::observe(AreaObserver::class);
+        Room::observe(RoomObserver::class);
     }
 
     /**
