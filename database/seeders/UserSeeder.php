@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
             'name' => 'Patricia Briones',
             'email' => 'patricia.briones@evotek.com.mx',
             'password' => Hash::make('8442036052'),
+            'remember_token' => 'sqd4HLT3nolNw9JUSz8Hh9P9hYZBLHG9xi3buifOPKUgPSJj3jDajoch9olN',
         ])->assignRole('admin');
 
         $user->givePermissionTo(Permission::all());

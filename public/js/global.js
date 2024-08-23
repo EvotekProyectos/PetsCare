@@ -44,11 +44,11 @@ const deleteResource = async (url, table = null) => {
                 table.ajax.reload(); 
             }
         } else {
-            showAlert("Vuelve a intentar más tarde.", "Error", "error");
+            showAlert("Parece que no tienes permisos para realizar esta acción.", "Error", "error");
             console.error("Error deleting resource:", req.statusText);
         }
     } catch (error) {
-        showAlert("Vuelve a intentar más tarde.", "Error", "error");
+        showAlert("Ocurrió un error inesperado. Vuelve a intentar más tarde.", "Error", "error");
         console.error("Error deleting resource:", error);
     }
 };
@@ -63,4 +63,8 @@ const deleteReason = (id, table) => {
     deleteResource(url, table);
 };
 
+const deleteArea = (id, table) => {
+    const url = route("areas.destroy", id);
+    deleteResource(url, table);
+};
 
