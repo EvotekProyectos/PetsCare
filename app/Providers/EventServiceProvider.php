@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Room;
 use App\Models\User;
+use App\Observers\RoomObserver;
 use App\Observers\UserObserver;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
@@ -28,6 +30,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot(): void
     {
         User::observe(UserObserver::class);
+        Room::observe(RoomObserver::class);
     }
 
     /**

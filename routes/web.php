@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\RoomController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +36,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/users/changePermissions/{id?}', [UserController::class, 'changePermissions'])->name('users.changePermissions');
     Route::resource('/users', UserController::class);
 
+
     // LOGS
     Route::get('/logs/list', [LogController::class, 'list'])->name('logs.list');
     Route::resource('/logs', LogController::class);
+
+    //Rooms
+    Route::get('/rooms/list', [RoomController::class, 'list'])->name('rooms.list');
+    Route::resource('rooms', RoomController::class);
+    
 });
