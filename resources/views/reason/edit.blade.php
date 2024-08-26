@@ -15,22 +15,23 @@
                                 Actualizar motivo
                             </h4>
                         </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12 col-lg-9">
-                                    <form method="POST" action="{{ route('reasons.update', $reason->id) }}" role="form"
-                                        enctype="multipart/form-data">
-                                        {{ method_field('PATCH') }}
-                                        @csrf
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-lg-9">
+                                <form method="POST" action="{{ route('reasons.update', $reason->id) }}" role="form"
+                                    enctype="multipart/form-data">
+                                    {{ method_field('PATCH') }}
+                                    @csrf
 
-                                        @include('reason.form')
+                                    @include('reason.form')
 
-                                    </form>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
     </section>
 @endsection
