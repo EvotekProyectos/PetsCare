@@ -121,6 +121,9 @@
                             <li>
                                 <a href="{{route('reception-types.index')}}" class="ms-2"><i class="fas fa-list"></i> Tipos de recepción</a>
                             </li>
+                                <a href="{{route('genres.index')}}" class="ms-2"><i class="fas fa-venus-mars"></i> Géneros</a>
+                            </li>
+                            
                         </ul>
                     </li>
                 </ul>

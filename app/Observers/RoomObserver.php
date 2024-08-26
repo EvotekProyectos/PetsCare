@@ -15,7 +15,7 @@ class RoomObserver
     {
         Log::create([
             "action" => "CREACION DE NUEVO CONSULTORIO",
-            'description' => 'Se creo un nuevo consultorio ' . $room->name,
+            'description' => 'Se creo un nuevo consultorio: ' . $room->name,
             'user_id' => (Auth::user()->id) ?? null
         ]);
     }
@@ -27,7 +27,7 @@ class RoomObserver
     {
         Log::create([
             'action' => 'EDICIÓN DE CONSULTORIO',
-            'description' => 'Se edito el consultorio ' . $room->name,
+            'description' => 'Se edito el consultorio: ' . $room->name,
             'user_id' => Auth::user()->id
         ]);
     }
@@ -39,7 +39,7 @@ class RoomObserver
     {
         Log::create([
             'action' => 'ELIMINACION DE CONSULTORIO',
-            'description' => 'Se elimino el consultorio ' . $room->name,
+            'description' => 'Se elimino el consultorio: ' . $room->name,
             'user_id' => Auth::user()->id
         ]);
     }

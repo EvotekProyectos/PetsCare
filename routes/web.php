@@ -10,6 +10,7 @@ use App\Http\Controllers\ReasonController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ReceptionTypeController;
 use App\Http\Controllers\AttentionStatusController;
+use App\Http\Controllers\GenreController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,5 +64,9 @@ Route::group(['middleware' => ['auth']], function () {
     //Rooms
     Route::get('/rooms/list', [RoomController::class, 'list'])->name('rooms.list');
     Route::resource('rooms', RoomController::class);
+
+    //Genres
+    Route::get('/genres/list', [GenreController::class, 'list'])->name('genres.list');
+    Route::resource('genres', GenreController::class);
     
 });
