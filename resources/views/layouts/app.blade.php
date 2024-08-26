@@ -123,6 +123,9 @@
                             </li>
                                 <a href="{{route('genres.index')}}" class="ms-2"><i class="fas fa-venus-mars"></i> Géneros</a>
                             </li>
+                            <li>
+                                <a href="{{route('reproductive-statuses.index')}}" class="ms-2"><i class="fas fa-list"></i> Estados Reproductivos</a>
+                            </li>
                             
                         </ul>
                     </li>

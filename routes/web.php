@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ReceptionTypeController;
 use App\Http\Controllers\AttentionStatusController;
 use App\Http\Controllers\GenreController;
+use App\Http\Controllers\ReproductiveStatusController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,4 +70,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/genres/list', [GenreController::class, 'list'])->name('genres.list');
     Route::resource('genres', GenreController::class);
     
+    //Reproductive Statuses
+    Route::get('/reproductive-statuses/list', [ReproductiveStatusController::class, 'list'])->name('reproductive-statuses.list');
+    Route::resource('reproductive-statuses', ReproductiveStatusController::class);
 });

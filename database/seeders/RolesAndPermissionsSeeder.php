@@ -65,6 +65,12 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name'=> 'editar generos']);
         Permission::create(['name'=> 'eliminar generos']);
 
+        //cretae reproductive status perissions
+        Permission::create(['name'=> 'ver panel estados reproductivos']);
+        Permission::create(['name'=> 'crear estados reproductivos']);
+        Permission::create(['name'=> 'editar estados reproductivos']);
+        Permission::create(['name'=> 'eliminar estados reproductivos']);
+
         // roles
         $role = Role::create(['name' => 'admin']);
         // $role->givePermissionTo(Permission::all());
