@@ -110,20 +110,28 @@
                                 <a href="#" class="ms-2"><i class="fa fa-calendar-check"></i> Horarios</a>
                             </li>
                             <li>
-                                <a href="{{route('reasons.index')}}" class="ms-2"><i class="fas fa-list"></i> Motivos</a>
+                                <a href="{{ route('reasons.index') }}" class="ms-2"><i class="fas fa-list"></i>
+                                    Motivos</a>
                             </li>
                             <li>
-                                <a href="{{route('areas.index')}}" class="ms-2"><i class="fas fa-list"></i> Áreas</a>
+                                <a href="{{ route('areas.index') }}" class="ms-2"><i class="fas fa-list"></i> Áreas</a>
                             </li>
                             <li>
-                                <a href="{{route('attention-statuses.index')}}" class="ms-2"><i class="fas fa-list"></i> Estados de atención</a>
+                                <a href="{{ route('attention-statuses.index') }}" class="ms-2"><i
+                                        class="fas fa-list"></i> Estados de atención</a>
                             </li>
                             <li>
-                                <a href="{{route('reception-types.index')}}" class="ms-2"><i class="fas fa-list"></i> Tipos de recepción</a>
+                                <a href="{{ route('reception-types.index') }}" class="ms-2"><i class="fas fa-list"></i>
+                                    Tipos de recepción</a>
                             </li>
-                                <a href="{{route('genres.index')}}" class="ms-2"><i class="fas fa-venus-mars"></i> Géneros</a>
+                            <li>
+                                <a href="{{ route('genres.index') }}" class="ms-2"><i class="fas fa-venus-mars"></i>
+                                    Géneros</a>
                             </li>
-                            
+                            <li>
+                                <a href="{{ route('admission-types.index') }}" class="ms-2"><i class="fas fa-list"></i>
+                                    Tipos de ingreso</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
