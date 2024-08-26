@@ -4,10 +4,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\AreaController;
+use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReasonController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\RoomController;
+use App\Http\Controllers\AttentionStatusController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,10 @@ Route::group(['middleware' => ['auth']], function () {
     // AREAS
     Route::get('/areas/list', [AreaController::class, 'list'])->name('areas.list');
     Route::resource('areas', AreaController::class);
+
+    // ATTENTION STATUSES
+    Route::get('/attention-statuses/list', [AttentionStatusController::class, 'list'])->name('attention-statuses.list');
+    Route::resource('attention-statuses', AttentionStatusController::class);
 
     // LOGS
     Route::get('/logs/list', [LogController::class, 'list'])->name('logs.list');

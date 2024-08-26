@@ -48,6 +48,12 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' =>'editar areas']);
         Permission::create(['name' => 'eliminar areas']);
 
+        // create attention statuses permissions
+        Permission::create(['name'=> 'ver panel estados de atención']);
+        Permission::create(['name' => 'crear estados de atención']);
+        Permission::create(['name' =>'editar estados de atención']);
+        Permission::create(['name' => 'eliminar estados de atención']);
+
         // roles
         $role = Role::create(['name' => 'admin']);
         // $role->givePermissionTo(Permission::all());
