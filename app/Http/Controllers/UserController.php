@@ -58,6 +58,7 @@ class UserController extends Controller
     public function create()
     {
         $user = new User();
+        $this->authorize("create", User::class);
         return view('user.create', compact('user'));
     }
 
@@ -78,7 +79,7 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::find($id);
-
+        $this->authorize("view", $user);
         return view('user.show', compact('user'));
     }
 
@@ -88,7 +89,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-
+        $this->authorize("update", User::class);
         return view('user.edit', compact('user'));
     }
 
@@ -97,6 +98,7 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User $user)
     {
+        $this->authorize("update", $user);
         $user->update($request->validated());
 
         return redirect()->route('users.index')
@@ -106,6 +108,7 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user =  User::find($id);
+        $this->authorize("delete", $user);
         $user->delete();
 
         return response()->json($user);

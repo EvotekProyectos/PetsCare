@@ -21,7 +21,7 @@ class UserPolicy
      */
     public function view(User $user, User $model): bool
     {
-        //
+        return false;
     }
 
     /**
@@ -29,15 +29,15 @@ class UserPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return $user->can('crear usuarios');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, User $model): bool
+    public function update(User $user): bool
     {
-        //
+        return $user->can('editar usuarios');
     }
 
     /**
@@ -45,7 +45,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        //
+        return $user->can('eliminar usuarios');
     }
 
     /**
