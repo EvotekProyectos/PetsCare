@@ -23,5 +23,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ReasonSeeder::class);
         $this->call(AreaSeeder::class);
         $this->call(AttentionStatusSeeder::class);
+        $this->call(ReceptionTypeSeeder::class);
     }
 }

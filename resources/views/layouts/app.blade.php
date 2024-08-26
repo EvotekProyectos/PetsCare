@@ -118,6 +118,9 @@
                             <li>
                                 <a href="{{route('attention-statuses.index')}}" class="ms-2"><i class="fas fa-list"></i> Estados de atención</a>
                             </li>
+                            <li>
+                                <a href="{{route('reception-types.index')}}" class="ms-2"><i class="fas fa-list"></i> Tipos de recepción</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>

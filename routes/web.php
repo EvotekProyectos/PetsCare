@@ -8,6 +8,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReasonController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ReceptionTypeController;
 use App\Http\Controllers\AttentionStatusController;
 
 /*
@@ -50,6 +51,10 @@ Route::group(['middleware' => ['auth']], function () {
     // ATTENTION STATUSES
     Route::get('/attention-statuses/list', [AttentionStatusController::class, 'list'])->name('attention-statuses.list');
     Route::resource('attention-statuses', AttentionStatusController::class);
+
+    // RECEPTION TYPES
+    Route::get('/reception-types/list', [ReceptionTypeController::class, 'list'])->name('reception-types.list');
+    Route::resource('reception-types', ReceptionTypeController::class);
 
     // LOGS
     Route::get('/logs/list', [LogController::class, 'list'])->name('logs.list');
