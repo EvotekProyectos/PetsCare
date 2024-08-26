@@ -115,7 +115,9 @@
                             <li>
                                 <a href="{{route('areas.index')}}" class="ms-2"><i class="fas fa-list"></i> Áreas</a>
                             </li>
-                            
+                            <li>
+                                <a href="{{route('attention-statuses.index')}}" class="ms-2"><i class="fas fa-list"></i> Estados de atención</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
