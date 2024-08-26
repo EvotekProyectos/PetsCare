@@ -4,9 +4,9 @@
         <div class="form-group mb-2 ">
             <label for="name" class="form-label">{{ __('Name') }}</label>
             <div class="input-group mb-3">
-                <span class="input-group-text bg-primary-subtle" id="basic-addon1"> <i class="fas fa-first-aid text-primary"></i></span>
+                <span class="input-group-text bg-primary-subtle" id="basic-addon1"> <i class="fas fa-venus-mars text-primary"></i></span>
                 <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-                    value="{{ old('name', $room?->name) }}" id="name" placeholder="Nombre">
+                    value="{{ old('name', $genre?->name) }}" id="name" placeholder="Nombre">
                 {!! $errors->first('name', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
             </div>
         </div>

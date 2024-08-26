@@ -48,6 +48,12 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' =>'editar areas']);
         Permission::create(['name' => 'eliminar areas']);
 
+        // create genres permissions
+        Permission::create(['name'=> 'ver panel generos']);
+        Permission::create(['name'=> 'crear generos']);
+        Permission::create(['name'=> 'editar generos']);
+        Permission::create(['name'=> 'eliminar generos']);
+
         // roles
         $role = Role::create(['name' => 'admin']);
         // $role->givePermissionTo(Permission::all());
