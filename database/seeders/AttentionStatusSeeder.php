@@ -14,9 +14,9 @@ class AttentionStatusSeeder extends Seeder
     public function run(): void
     {
         $attentionStatuses = [
-            ["namme" => 'Atendido', "color" => "#56BF2F"],
-            ["namme" => 'En espera', "color" => "#EEF515"],
-            ["namme" => 'En consulta', "color" => "#1534F5"],
+            ["name" => 'Atendido', "color" => "#56BF2F"],
+            ["name" => 'En espera', "color" => "#EEF515"],
+            ["name" => 'En consulta', "color" => "#1534F5"],
         ];
 
         foreach ($attentionStatuses as $as) {

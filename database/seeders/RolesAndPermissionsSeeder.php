@@ -54,6 +54,12 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' =>'editar estados de atención']);
         Permission::create(['name' => 'eliminar estados de atención']);
 
+        // create reception types permissions
+        Permission::create(['name'=> 'ver panel tipos de recepción']);
+        Permission::create(['name' => 'crear tipos de recepción']);
+        Permission::create(['name' =>'editar tipos de recepción']);
+        Permission::create(['name' => 'eliminar tipos de recepción']);
+
         // roles
         $role = Role::create(['name' => 'admin']);
         // $role->givePermissionTo(Permission::all());
