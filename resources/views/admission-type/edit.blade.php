@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('template_title')
-    {{ __('Create') }} Area
+    {{ __('Update') }} Admission Type
 @endsection
 
 @section('content')
@@ -11,19 +11,19 @@
 
                 <div class="card bg-primary-soft border-0 p-3">
                     <div class="card-header bg-transparent border-0">
-
                         <div class="d-flex justify-content-between align-items-center">
-                            <h4 id="card_title" class="text-primary text-uppercase">Crear área</h4>
+                            <h4 id="card_title" class="text-primary text-uppercase">Actualizar tipo Ingreso</span>
                         </div>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-lg-9">
-                                <form method="POST" action="{{ route('areas.store') }}" role="form"
-                                    enctype="multipart/form-data">
+                                <form method="POST" action="{{ route('admission-types.update', $admissionType->id) }}"
+                                    role="form" enctype="multipart/form-data">
+                                    {{ method_field('PATCH') }}
                                     @csrf
 
-                                    @include('area.form')
+                                    @include('admission-type.form')
 
                                 </form>
                             </div>

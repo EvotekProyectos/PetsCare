@@ -6,11 +6,12 @@ use App\Http\Controllers\LogController;
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\GenreController;
 use App\Http\Controllers\ReasonController;
+use App\Http\Controllers\AdmissionTypeController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ReceptionTypeController;
 use App\Http\Controllers\AttentionStatusController;
-use App\Http\Controllers\GenreController;
 use App\Http\Controllers\ReproductiveStatusController;
 
 /*
@@ -57,6 +58,10 @@ Route::group(['middleware' => ['auth']], function () {
     // RECEPTION TYPES
     Route::get('/reception-types/list', [ReceptionTypeController::class, 'list'])->name('reception-types.list');
     Route::resource('reception-types', ReceptionTypeController::class);
+
+    // ADMISSION TYPES
+    Route::get('/admission-types/list', [AdmissionTypeController::class, 'list'])->name('admission-types.list');
+    Route::resource('admission-types', AdmissionTypeController::class);
 
     // LOGS
     Route::get('/logs/list', [LogController::class, 'list'])->name('logs.list');

@@ -59,6 +59,7 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'crear tipos de recepción']);
         Permission::create(['name' =>'editar tipos de recepción']);
         Permission::create(['name' => 'eliminar tipos de recepción']);
+
         // create genres permissions
         Permission::create(['name'=> 'ver panel generos']);
         Permission::create(['name'=> 'crear generos']);
@@ -70,6 +71,11 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name'=> 'crear estados reproductivos']);
         Permission::create(['name'=> 'editar estados reproductivos']);
         Permission::create(['name'=> 'eliminar estados reproductivos']);
+        // create admission types permissions
+        Permission::create(['name'=> 'ver panel tipos de ingreso']);
+        Permission::create(['name' => 'crear tipos de ingreso']);
+        Permission::create(['name' =>'editar tipos de ingreso']);
+        Permission::create(['name' => 'eliminar tipos de ingreso']);
 
         // roles
         $role = Role::create(['name' => 'admin']);
