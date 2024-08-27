@@ -8,6 +8,7 @@ use App\Models\AttentionStatus;
 use App\Models\Genre;
 use App\Models\Reason;
 use App\Models\ReceptionType;
+use App\Models\ReproductiveStatus;
 use App\Observers\AreaObserver;
 use App\Observers\ReasonObserver;
 use App\Models\Room;
@@ -16,6 +17,7 @@ use App\Observers\AdmissionTypeObserver;
 use App\Observers\AttentionStatusObserver;
 use App\Observers\ReceptionTypeObserver;
 use App\Observers\GenreObserver;
+use App\Observers\ReproductiveStatusObserver;
 use App\Observers\RoomObserver;
 use App\Observers\UserObserver;
 use Illuminate\Support\Facades\Event;
@@ -48,6 +50,7 @@ class EventServiceProvider extends ServiceProvider
         AttentionStatus::observe(AttentionStatusObserver::class);
         ReceptionType::observe(ReceptionTypeObserver::class);
         Genre::observe(GenreObserver::class);
+        ReproductiveStatus::observe(ReproductiveStatusObserver::class);
         AdmissionType::observe(AdmissionTypeObserver::class);
     }
 

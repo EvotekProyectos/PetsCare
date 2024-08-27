@@ -132,6 +132,10 @@
                                 <a href="{{ route('admission-types.index') }}" class="ms-2"><i class="fas fa-list"></i>
                                     Tipos de ingreso</a>
                             </li>
+                            <li>
+                                <a href="{{route('reproductive-statuses.index')}}" class="ms-2"><i class="fas fa-list"></i> Estados Reproductivos</a>
+                            </li>
+                            
                         </ul>
                     </li>
                 </ul>

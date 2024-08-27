@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ReceptionTypeSeeder::class);
         $this->call(RoomSeeder::class);
         $this->call(GenreSeeder::class);
+        $this->call(ReproductiveStatusSeeder::class);
         $this->call(AdmissionTypeSeeder::class);
     }
 }
