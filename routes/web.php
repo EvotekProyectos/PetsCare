@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ReceptionTypeController;
 use App\Http\Controllers\AttentionStatusController;
 use App\Http\Controllers\FamClassificationController;
+use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\ReproductiveStatusController;
 
 /*
@@ -88,4 +89,8 @@ Route::group(['middleware' => ['auth']], function () {
     //Family Classifications
     Route::get('/fam-classifications/list', [FamClassificationController::class, 'list'])->name('fam-classifications.list');
     Route::resource('fam-classifications', FamClassificationController::class);
+
+    //Pet Classifications
+    Route::get('/pet-classifications/list', [PetClassificationController::class, 'list'])->name('pet-classifications.list');
+    Route::resource('pet-classifications', PetClassificationController::class);
 });

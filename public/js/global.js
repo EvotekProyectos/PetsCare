@@ -87,3 +87,8 @@ const deleteFamClassifications = (id, table) => {
     const url = route("fam-classifications.destroy", id);
     deleteResource(url, table);
 }
+
+const deletePetClassifications = (id, table) => {
+    const url = route("pet-classifications.destroy", id);
+    deleteResource(url, table);
+}
