@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\AdmissionType;
 use App\Models\Area;
 use App\Models\AttentionStatus;
+use App\Models\FamClassification;
 use App\Models\Genre;
 use App\Models\Reason;
 use App\Models\ReceptionType;
@@ -15,6 +16,7 @@ use App\Models\Room;
 use App\Models\User;
 use App\Observers\AdmissionTypeObserver;
 use App\Observers\AttentionStatusObserver;
+use App\Observers\FamClassificationObserver;
 use App\Observers\ReceptionTypeObserver;
 use App\Observers\GenreObserver;
 use App\Observers\ReproductiveStatusObserver;
@@ -52,6 +54,7 @@ class EventServiceProvider extends ServiceProvider
         Genre::observe(GenreObserver::class);
         ReproductiveStatus::observe(ReproductiveStatusObserver::class);
         AdmissionType::observe(AdmissionTypeObserver::class);
+        FamClassification::observe(FamClassificationObserver::class);
     }
 
     /**

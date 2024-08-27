@@ -82,3 +82,8 @@ const deleteReproductiveStatus = (id, table) => {
     const url = route("reproductive-statuses.destroy", id);
     deleteResource(url, table);
 }
+
+const deleteFamClassifications = (id, table) => {
+    const url = route("fam-classifications.destroy", id);
+    deleteResource(url, table);
+}

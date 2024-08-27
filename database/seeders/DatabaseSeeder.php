@@ -28,5 +28,6 @@ class DatabaseSeeder extends Seeder
         $this->call(GenreSeeder::class);
         $this->call(ReproductiveStatusSeeder::class);
         $this->call(AdmissionTypeSeeder::class);
+        $this->call(FamClassificationSeeder::class);
     }
 }
