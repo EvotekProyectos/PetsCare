@@ -77,6 +77,18 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' =>'editar tipos de ingreso']);
         Permission::create(['name' => 'eliminar tipos de ingreso']);
 
+        //create family classification permissions
+        Permission::create(['name'=> 'ver panel clasificaciones familias']);
+        Permission::create(['name' => 'crear clasificaciones familias']);
+        Permission::create(['name' =>'editar clasificaciones familias']);
+        Permission::create(['name' => 'eliminar clasificaciones familias']);
+
+        //create pet classificaion permissions
+        Permission::create(['name'=> 'ver panel clasificacion mascotas']);
+        Permission::create(['name' => 'crear clasificacion mascotas']);
+        Permission::create(['name' =>'editar clasificacion mascotas']);
+        Permission::create(['name' => 'eliminar clasificacion mascotas']);
+
         // roles
         $role = Role::create(['name' => 'admin']);
         // $role->givePermissionTo(Permission::all());

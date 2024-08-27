@@ -133,9 +133,17 @@
                                     Tipos de ingreso</a>
                             </li>
                             <li>
-                                <a href="{{route('reproductive-statuses.index')}}" class="ms-2"><i class="fas fa-list"></i> Estados Reproductivos</a>
+                                <a href="{{route('reproductive-statuses.index')}}" class="ms-2"><i class="fas fa-list"></i> 
+                                    Estados Reproductivos</a>
                             </li>
-                            
+                            <li>
+                                <a href="{{route('fam-classifications.index')}}" class="ms-2"><i class="fas fa-list"></i> 
+                                    Clasificación Familias</a>
+                            </li>
+                            <li>
+                                <a href="{{route('pet-classifications.index')}}" class="ms-2"><i class="fas fa-list"></i> 
+                                    Clasificación Mascotas</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
