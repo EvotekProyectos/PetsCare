@@ -1,9 +1,11 @@
 <?php
 
+use Dotenv\Store\FileStore;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\AreaController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GenreController;
@@ -66,6 +68,9 @@ Route::group(['middleware' => ['auth']], function () {
     // LOGS
     Route::get('/logs/list', [LogController::class, 'list'])->name('logs.list');
     Route::resource('/logs', LogController::class);
+
+    // FILES
+    Route::resource('/files', FileController::class);
 
     //Rooms
     Route::get('/rooms/list', [RoomController::class, 'list'])->name('rooms.list');
