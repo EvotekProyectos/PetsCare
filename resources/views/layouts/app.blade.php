@@ -104,7 +104,7 @@
                                     Consultorios</a>
                             </li>
                             <li>
-                                <a href="#" class="ms-2"><i class="fa fa-clock"></i> Turnos</a>
+                                <a href="{{ route('shifts.index') }}" class="ms-2"><i class="fa fa-clock"></i> Turnos</a>
                             </li>
                             <li>
                                 <a href="#" class="ms-2"><i class="fa fa-calendar-check"></i> Horarios</a>

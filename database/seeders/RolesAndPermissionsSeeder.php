@@ -89,6 +89,12 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' =>'editar clasificacion mascotas']);
         Permission::create(['name' => 'eliminar clasificacion mascotas']);
 
+        //create shifts permissions
+        Permission::create(['name'=> 'ver panel turnos']);
+        Permission::create(['name' => 'crear turnos']);
+        Permission::create(['name' =>'editar turnos']);
+        Permission::create(['name' => 'eliminar turnos']);
+
         // roles
         $role = Role::create(['name' => 'admin']);
         // $role->givePermissionTo(Permission::all());
