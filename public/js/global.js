@@ -97,3 +97,8 @@ const deleteShifts = (id, table) => {
     const url = route("shifts.destroy", id);
     deleteResource(url, table);
 }
+
+const deletePetsStatuses = (id, table) => {
+    const url = route("pets-statuses.destroy", id);
+    deleteResource(url, table);
+}

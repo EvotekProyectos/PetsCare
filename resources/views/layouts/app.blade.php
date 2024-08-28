@@ -144,6 +144,10 @@
                                 <a href="{{route('pet-classifications.index')}}" class="ms-2"><i class="fas fa-list"></i> 
                                     Clasificación Mascotas</a>
                             </li>
+                            <li>
+                                <a href="{{route('pets-statuses.index')}}" class="ms-2"><i class="fas fa-list"></i> 
+                                    Estados de Mascotas</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>

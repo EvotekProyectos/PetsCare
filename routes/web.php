@@ -16,6 +16,7 @@ use App\Http\Controllers\ReceptionTypeController;
 use App\Http\Controllers\AttentionStatusController;
 use App\Http\Controllers\FamClassificationController;
 use App\Http\Controllers\PetClassificationController;
+use App\Http\Controllers\PetsStatusController;
 use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\ShiftController;
 
@@ -98,4 +99,8 @@ Route::group(['middleware' => ['auth']], function () {
     // Shifts 
     Route::get('/shifts/list', [ShiftController::class, 'list'])->name('shifts.list');
     Route::resource('shifts', ShiftController::class);
+
+    //Pets Statuses
+    Route::get('/pets-statuses/list', [PetsStatusController::class, 'list'])->name('pets-statuses.list');
+    Route::resource('pets-statuses', PetsStatusController::class);
 });
