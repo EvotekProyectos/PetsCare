@@ -102,3 +102,8 @@ const deletePetsStatuses = (id, table) => {
     const url = route("pets-statuses.destroy", id);
     deleteResource(url, table);
 }
+
+const deleteFamily = (id, table) => {
+    const url = route("families.destroy", id);
+    deleteResource(url, table);
+}

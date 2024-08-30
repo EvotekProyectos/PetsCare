@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
     <!-- Our Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
+    <!-- ICONIFY CSS -->
+    <link rel="stylesheet" href="{{ asset('css/iconify.css') }}">
 
     <!-- Scrollbar Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/jquery.mCustomScrollbar.min.css') }}">
@@ -78,8 +80,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class=" ms-2">
-                            <i class="fas fa-users"></i>
+                        <a href="{{ route('families.index') }}" class=" ms-2">
+                            <span class="fluent-mdl2--family"></span>
                             Familias
                         </a>
                     </li>

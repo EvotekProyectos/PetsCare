@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ReceptionTypeController;
 use App\Http\Controllers\AttentionStatusController;
 use App\Http\Controllers\FamClassificationController;
+use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\PetsStatusController;
 use App\Http\Controllers\ReproductiveStatusController;
@@ -103,4 +104,8 @@ Route::group(['middleware' => ['auth']], function () {
     //Pets Statuses
     Route::get('/pets-statuses/list', [PetsStatusController::class, 'list'])->name('pets-statuses.list');
     Route::resource('pets-statuses', PetsStatusController::class);
+
+    //Families
+    Route::get('/families/list', [FamilyController::class, 'list'])->name('families.list');
+    Route::resource('families', FamilyController::class);
 });

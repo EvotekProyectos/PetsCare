@@ -101,6 +101,12 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' =>'editar estados mascotas']);
         Permission::create(['name' => 'eliminar estados mascotas']);
 
+        //create families permissions
+        Permission::create(['name'=> 'ver panel familias']);
+        Permission::create(['name' => 'crear familias']);
+        Permission::create(['name' =>'editar familias']);
+        Permission::create(['name' => 'eliminar familias']);
+
         // roles
         $role = Role::create(['name' => 'admin']);
         // $role->givePermissionTo(Permission::all());

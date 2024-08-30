@@ -6,6 +6,7 @@ use App\Models\AdmissionType;
 use App\Models\Area;
 use App\Models\AttentionStatus;
 use App\Models\FamClassification;
+use App\Models\Family;
 use App\Models\Genre;
 use App\Models\PetClassification;
 use App\Models\PetsStatus;
@@ -20,6 +21,7 @@ use App\Models\User;
 use App\Observers\AdmissionTypeObserver;
 use App\Observers\AttentionStatusObserver;
 use App\Observers\FamClassificationObserver;
+use App\Observers\FamilyObserver;
 use App\Observers\ReceptionTypeObserver;
 use App\Observers\GenreObserver;
 use App\Observers\PetClassificationObserver;
@@ -64,6 +66,7 @@ class EventServiceProvider extends ServiceProvider
         PetClassification::observe(PetClassificationObserver::class);
         Shift::observe(ShiftObserver::class);
         PetsStatus::observe(PetsStatusObserver::class);
+        Family::observe(FamilyObserver::class);
         
     }
 
