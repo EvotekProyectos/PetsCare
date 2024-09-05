@@ -28,7 +28,7 @@ class FamilyRequest extends FormRequest
 			'address' => 'required|string',
 			'contact_name' => 'required|string',
 			'contact_number' => 'required|string',
-            'fam_classification_id' => 'required|integer|exists:fam_classifications,id',
+            'fam_classification_id' => 'nullable|integer|exists:fam_classifications,id',
         ];
     }
 }

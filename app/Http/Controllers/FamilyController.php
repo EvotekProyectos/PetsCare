@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Family;
 use App\Http\Requests\FamilyRequest;
 use App\Models\FamClassification;
+use App\Models\Genre;
+use App\Models\Pet;
+use App\Models\PetClassification;
+use App\Models\ReproductiveStatus;
 use App\Models\Room;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -43,11 +47,12 @@ class FamilyController extends Controller
      */
     public function store(FamilyRequest $request)
     {
-        Family::create($request->validated());
+        $family = Family::create($request->validated());
         $this->authorize("create", Family::class);
+        $id = $family->id;
 
-        return redirect()->route('families.index')
-            ->with('success', 'Family created successfully.');
+        return redirect()->route('families.edit', $id)
+            ->with('success', 'Familia guardada, ahora puedes agregar sus mascotas.');
     }
 
     /**
@@ -68,9 +73,13 @@ class FamilyController extends Controller
     {
         $family = Family::find($id);
         $FamClassifications = FamClassification::all();
+        $pet = new Pet();
+        $genders = Genre::all();
+        $ReproductiveStatuses = ReproductiveStatus::all();
+        $PetClassifications = PetClassification::all();
         $this->authorize("update", $family);
 
-        return view('family.edit', compact('family', 'FamClassifications'));
+        return view('family.edit', compact('family', 'FamClassifications', 'pet', 'genders', 'ReproductiveStatuses', 'PetClassifications'));
     }
 
     /**
@@ -82,7 +91,7 @@ class FamilyController extends Controller
         $this->authorize("update", $family);
 
         return redirect()->route('families.index')
-            ->with('success', 'Family updated successfully');
+            ->with('success', 'Family actualizada exitosamente');
     }
 
     public function destroy($id)

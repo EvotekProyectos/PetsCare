@@ -45,7 +45,7 @@ class FamilyPolicy
      */
     public function delete(User $user, Family $family): bool
     {
-        return $user ->can("ver eliminar familias");
+        return $user ->can("eliminar familias");
     }
 
     /**

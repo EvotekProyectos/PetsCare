@@ -33,5 +33,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ShiftSeeder::class);
         $this->call(PetStatusesSeeder::class);
         $this->call(FamiliesSeeder::class);
+        $this->call(PetSeeder::class);
     }
 }

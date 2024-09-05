@@ -8,6 +8,7 @@ use App\Models\AttentionStatus;
 use App\Models\FamClassification;
 use App\Models\Family;
 use App\Models\Genre;
+use App\Models\Pet;
 use App\Models\PetClassification;
 use App\Models\PetsStatus;
 use App\Models\Reason;
@@ -25,6 +26,7 @@ use App\Observers\FamilyObserver;
 use App\Observers\ReceptionTypeObserver;
 use App\Observers\GenreObserver;
 use App\Observers\PetClassificationObserver;
+use App\Observers\PetObserver;
 use App\Observers\PetsStatusObserver;
 use App\Observers\ReproductiveStatusObserver;
 use App\Observers\RoomObserver;
@@ -67,6 +69,7 @@ class EventServiceProvider extends ServiceProvider
         Shift::observe(ShiftObserver::class);
         PetsStatus::observe(PetsStatusObserver::class);
         Family::observe(FamilyObserver::class);
+        Pet::observe(PetObserver::class);
         
     }
 
