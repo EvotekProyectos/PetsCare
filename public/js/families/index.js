@@ -31,6 +31,16 @@ $(document).ready(function () {
             },
             {
                 data: null,
+                render: function(data) {
+                    let petNames = "";
+                    data.pets.forEach(pet => {
+                        petNames += `<span class="mdi--pets"></span> ${pet.name} <br> `;
+                    });
+                    return petNames.trim(); 
+                }
+            },
+            {
+                data: null,
                 render: function (data) {
                     return `
                         <a type="button" href="${route('families.edit', data.id)}" class="btn btn-sm text-primary">

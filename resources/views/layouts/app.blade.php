@@ -109,6 +109,9 @@
                                 <a href="{{ route('shifts.index') }}" class="ms-2"><i class="fa fa-clock"></i> Turnos</a>
                             </li>
                             <li>
+                                <a href="{{ route('cover-areas.index') }}" class="ms-2"><i class="fas fa-list"></i> Areas Horarios</a>
+                            </li>
+                            <li>
                                 <a href="#" class="ms-2"><i class="fa fa-calendar-check"></i> Horarios</a>
                             </li>
                             <li>

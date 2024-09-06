@@ -47,5 +47,9 @@ class Family extends Model
         return $this->belongsTo(\App\Models\FamClassification::class, 'fam_classification_id', 'id');
     }
     
+    public function pets()
+    {
+        return $this->hasMany(Pet::class, 'family_id', 'id');
+    }
 
 }

@@ -107,3 +107,8 @@ const deleteFamily = (id, table) => {
     const url = route("families.destroy", id);
     deleteResource(url, table);
 }
+
+const deleteCoverArea = (id, table) => {
+    const url = route("cover-areas.destroy", id);
+    deleteResource(url, table);
+}

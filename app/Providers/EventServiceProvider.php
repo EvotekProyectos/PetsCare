@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\AdmissionType;
 use App\Models\Area;
 use App\Models\AttentionStatus;
+use App\Models\CoverArea;
 use App\Models\FamClassification;
 use App\Models\Family;
 use App\Models\Genre;
@@ -21,6 +22,7 @@ use App\Models\Shift;
 use App\Models\User;
 use App\Observers\AdmissionTypeObserver;
 use App\Observers\AttentionStatusObserver;
+use App\Observers\CoverAreaObserver;
 use App\Observers\FamClassificationObserver;
 use App\Observers\FamilyObserver;
 use App\Observers\ReceptionTypeObserver;
@@ -70,6 +72,7 @@ class EventServiceProvider extends ServiceProvider
         PetsStatus::observe(PetsStatusObserver::class);
         Family::observe(FamilyObserver::class);
         Pet::observe(PetObserver::class);
+        CoverArea::observe(CoverAreaObserver::class);
         
     }
 

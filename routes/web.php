@@ -14,6 +14,7 @@ use App\Http\Controllers\AdmissionTypeController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ReceptionTypeController;
 use App\Http\Controllers\AttentionStatusController;
+use App\Http\Controllers\CoverAreaController;
 use App\Http\Controllers\FamClassificationController;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\PetClassificationController;
@@ -105,6 +106,10 @@ Route::group(['middleware' => ['auth']], function () {
     //Pets Statuses
     Route::get('/pets-statuses/list', [PetsStatusController::class, 'list'])->name('pets-statuses.list');
     Route::resource('pets-statuses', PetsStatusController::class);
+
+    //Cover Areas
+    Route::get('/cover-areas/list', [CoverAreaController::class, 'list'])->name('cover-areas.list');
+    Route::resource('cover-areas', CoverAreaController::class);
 
     //Families
     Route::get('/families/list', [FamilyController::class, 'list'])->name('families.list');

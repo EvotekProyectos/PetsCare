@@ -105,7 +105,7 @@ class FamilyController extends Controller
 
     public function list()
     {
-        $family = Family::with("famClassification")->get();
+        $family = Family::with("famClassification", "pets")->get();
 
         return DataTables::of($family) ->make(true);
     }

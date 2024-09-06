@@ -107,6 +107,12 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' =>'editar familias']);
         Permission::create(['name' => 'eliminar familias']);
 
+         //create cover areas permissions
+         Permission::create(['name'=> 'ver panel areas a cubrir']);
+         Permission::create(['name' => 'crear areas a cubrir']);
+         Permission::create(['name' =>'editar areas a cubrir']);
+         Permission::create(['name' => 'eliminar areas a cubrir']);
+
         // roles
         $role = Role::create(['name' => 'admin']);
         // $role->givePermissionTo(Permission::all());
