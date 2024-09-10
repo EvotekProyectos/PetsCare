@@ -18,6 +18,7 @@ use App\Models\ReproductiveStatus;
 use App\Observers\AreaObserver;
 use App\Observers\ReasonObserver;
 use App\Models\Room;
+use App\Models\Schedule;
 use App\Models\Shift;
 use App\Models\User;
 use App\Observers\AdmissionTypeObserver;
@@ -32,6 +33,7 @@ use App\Observers\PetObserver;
 use App\Observers\PetsStatusObserver;
 use App\Observers\ReproductiveStatusObserver;
 use App\Observers\RoomObserver;
+use App\Observers\ScheduleObserver;
 use App\Observers\ShiftObserver;
 use App\Observers\UserObserver;
 use Illuminate\Support\Facades\Event;
@@ -73,6 +75,7 @@ class EventServiceProvider extends ServiceProvider
         Family::observe(FamilyObserver::class);
         Pet::observe(PetObserver::class);
         CoverArea::observe(CoverAreaObserver::class);
+        Schedule::observe(ScheduleObserver::class);
         
     }
 

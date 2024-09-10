@@ -39,7 +39,12 @@
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"
         integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous">
     </script>
+    <!-- Full Calendar JS -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+    <script src='fullcalendar/core/locales/es.global.js'></script>
 
+ 
+    
     @stack('styles')
 </head>
 
@@ -112,7 +117,7 @@
                                 <a href="{{ route('cover-areas.index') }}" class="ms-2"><i class="fas fa-list"></i> Areas Horarios</a>
                             </li>
                             <li>
-                                <a href="#" class="ms-2"><i class="fa fa-calendar-check"></i> Horarios</a>
+                                <a href="{{ route('schedules.index') }}" class="ms-2"><i class="fa fa-calendar-check"></i> Horarios</a>
                             </li>
                             <li>
                                 <a href="{{ route('reasons.index') }}" class="ms-2"><i class="fas fa-list"></i>

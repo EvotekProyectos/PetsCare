@@ -21,6 +21,7 @@ use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\PetsStatusController;
 use App\Http\Controllers\ReproductiveStatusController;
+use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ShiftController;
 
 /*
@@ -110,6 +111,11 @@ Route::group(['middleware' => ['auth']], function () {
     //Cover Areas
     Route::get('/cover-areas/list', [CoverAreaController::class, 'list'])->name('cover-areas.list');
     Route::resource('cover-areas', CoverAreaController::class);
+
+    //Schedules
+    Route::get('/schedules/list', [ScheduleController::class, 'list'])->name('schedules.list');
+    Route::get('/schedules/get-events', [ScheduleController::class, 'getEvents'])->name('schedules.getEvents');
+    Route::resource('schedules', ScheduleController::class);
 
     //Families
     Route::get('/families/list', [FamilyController::class, 'list'])->name('families.list');

@@ -112,3 +112,8 @@ const deleteCoverArea = (id, table) => {
     const url = route("cover-areas.destroy", id);
     deleteResource(url, table);
 }
+
+const deleteSchedule = (id, table) => {
+    const url = route("schedules.destroy", id);
+    deleteResource(url, table);
+}
