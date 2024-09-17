@@ -14,9 +14,15 @@ use App\Http\Controllers\AdmissionTypeController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ReceptionTypeController;
 use App\Http\Controllers\AttentionStatusController;
+use App\Http\Controllers\CoverAreaController;
 use App\Http\Controllers\FamClassificationController;
+use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\PetClassificationController;
+use App\Http\Controllers\PetController;
+use App\Http\Controllers\PetsStatusController;
 use App\Http\Controllers\ReproductiveStatusController;
+use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\ShiftController;
 
 /*
 |--------------------------------------------------------------------------
@@ -93,4 +99,30 @@ Route::group(['middleware' => ['auth']], function () {
     //Pet Classifications
     Route::get('/pet-classifications/list', [PetClassificationController::class, 'list'])->name('pet-classifications.list');
     Route::resource('pet-classifications', PetClassificationController::class);
+
+    // Shifts 
+    Route::get('/shifts/list', [ShiftController::class, 'list'])->name('shifts.list');
+    Route::resource('shifts', ShiftController::class);
+
+    //Pets Statuses
+    Route::get('/pets-statuses/list', [PetsStatusController::class, 'list'])->name('pets-statuses.list');
+    Route::resource('pets-statuses', PetsStatusController::class);
+
+    //Cover Areas
+    Route::get('/cover-areas/list', [CoverAreaController::class, 'list'])->name('cover-areas.list');
+    Route::resource('cover-areas', CoverAreaController::class);
+
+    //Schedules
+    Route::get('/schedules/list', [ScheduleController::class, 'list'])->name('schedules.list');
+    Route::get('/schedules/get-events', [ScheduleController::class, 'getEvents'])->name('schedules.getEvents');
+    Route::resource('schedules', ScheduleController::class);
+
+    //Families
+    Route::get('/families/list', [FamilyController::class, 'list'])->name('families.list');
+    Route::resource('families', FamilyController::class);
+
+    //Pets
+    Route::get('/pets/list', [PetController::class, 'list'])->name('pets.list');
+    Route::get('/pets/preview/{family}', [PetController::class, 'preview'])->name('pets.preview');
+    Route::resource('pets', PetController::class);
 });

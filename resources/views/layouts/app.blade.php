@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
     <!-- Our Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
+    <!-- ICONIFY CSS -->
+    <link rel="stylesheet" href="{{ asset('css/iconify.css') }}">
 
     <!-- Scrollbar Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/jquery.mCustomScrollbar.min.css') }}">
@@ -37,7 +39,12 @@
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"
         integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous">
     </script>
+    <!-- Full Calendar JS -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+    <script src='fullcalendar/core/locales/es.global.js'></script>
 
+ 
+    
     @stack('styles')
 </head>
 
@@ -78,8 +85,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class=" ms-2">
-                            <i class="fas fa-users"></i>
+                        <a href="{{ route('families.index') }}" class=" ms-2">
+                            <span class="fluent-mdl2--family"></span>
                             Familias
                         </a>
                     </li>
@@ -104,10 +111,13 @@
                                     Consultorios</a>
                             </li>
                             <li>
-                                <a href="#" class="ms-2"><i class="fa fa-clock"></i> Turnos</a>
+                                <a href="{{ route('shifts.index') }}" class="ms-2"><i class="fa fa-clock"></i> Turnos</a>
                             </li>
                             <li>
-                                <a href="#" class="ms-2"><i class="fa fa-calendar-check"></i> Horarios</a>
+                                <a href="{{ route('cover-areas.index') }}" class="ms-2"><i class="fas fa-list"></i> Areas Horarios</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('schedules.index') }}" class="ms-2"><i class="fa fa-calendar-check"></i> Horarios</a>
                             </li>
                             <li>
                                 <a href="{{ route('reasons.index') }}" class="ms-2"><i class="fas fa-list"></i>
@@ -143,6 +153,10 @@
                             <li>
                                 <a href="{{route('pet-classifications.index')}}" class="ms-2"><i class="fas fa-list"></i> 
                                     Clasificación Mascotas</a>
+                            </li>
+                            <li>
+                                <a href="{{route('pets-statuses.index')}}" class="ms-2"><i class="fas fa-list"></i> 
+                                    Estados de Mascotas</a>
                             </li>
                         </ul>
                     </li>

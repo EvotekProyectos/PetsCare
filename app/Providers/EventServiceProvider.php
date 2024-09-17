@@ -5,24 +5,36 @@ namespace App\Providers;
 use App\Models\AdmissionType;
 use App\Models\Area;
 use App\Models\AttentionStatus;
+use App\Models\CoverArea;
 use App\Models\FamClassification;
+use App\Models\Family;
 use App\Models\Genre;
+use App\Models\Pet;
 use App\Models\PetClassification;
+use App\Models\PetsStatus;
 use App\Models\Reason;
 use App\Models\ReceptionType;
 use App\Models\ReproductiveStatus;
 use App\Observers\AreaObserver;
 use App\Observers\ReasonObserver;
 use App\Models\Room;
+use App\Models\Schedule;
+use App\Models\Shift;
 use App\Models\User;
 use App\Observers\AdmissionTypeObserver;
 use App\Observers\AttentionStatusObserver;
+use App\Observers\CoverAreaObserver;
 use App\Observers\FamClassificationObserver;
+use App\Observers\FamilyObserver;
 use App\Observers\ReceptionTypeObserver;
 use App\Observers\GenreObserver;
 use App\Observers\PetClassificationObserver;
+use App\Observers\PetObserver;
+use App\Observers\PetsStatusObserver;
 use App\Observers\ReproductiveStatusObserver;
 use App\Observers\RoomObserver;
+use App\Observers\ScheduleObserver;
+use App\Observers\ShiftObserver;
 use App\Observers\UserObserver;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
@@ -58,6 +70,13 @@ class EventServiceProvider extends ServiceProvider
         AdmissionType::observe(AdmissionTypeObserver::class);
         FamClassification::observe(FamClassificationObserver::class);
         PetClassification::observe(PetClassificationObserver::class);
+        Shift::observe(ShiftObserver::class);
+        PetsStatus::observe(PetsStatusObserver::class);
+        Family::observe(FamilyObserver::class);
+        Pet::observe(PetObserver::class);
+        CoverArea::observe(CoverAreaObserver::class);
+        Schedule::observe(ScheduleObserver::class);
+        
     }
 
     /**

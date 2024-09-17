@@ -30,5 +30,10 @@ class DatabaseSeeder extends Seeder
         $this->call(AdmissionTypeSeeder::class);
         $this->call(FamClassificationSeeder::class);
         $this->call(PetClassificationSeeder::class);
+        $this->call(ShiftSeeder::class);
+        $this->call(PetStatusesSeeder::class);
+        $this->call(FamiliesSeeder::class);
+        $this->call(PetSeeder::class);
+        $this->call(CoverAreaSeeder::class);
     }
 }

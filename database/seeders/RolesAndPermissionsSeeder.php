@@ -89,6 +89,36 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' =>'editar clasificacion mascotas']);
         Permission::create(['name' => 'eliminar clasificacion mascotas']);
 
+        //create shifts permissions
+        Permission::create(['name'=> 'ver panel turnos']);
+        Permission::create(['name' => 'crear turnos']);
+        Permission::create(['name' =>'editar turnos']);
+        Permission::create(['name' => 'eliminar turnos']);
+
+        //create pets statuses permissions
+        Permission::create(['name'=> 'ver panel estados mascotas']);
+        Permission::create(['name' => 'crear estados mascotas']);
+        Permission::create(['name' =>'editar estados mascotas']);
+        Permission::create(['name' => 'eliminar estados mascotas']);
+
+        //create families permissions
+        Permission::create(['name'=> 'ver panel familias']);
+        Permission::create(['name' => 'crear familias']);
+        Permission::create(['name' =>'editar familias']);
+        Permission::create(['name' => 'eliminar familias']);
+
+         //create cover areas permissions
+         Permission::create(['name'=> 'ver panel areas a cubrir']);
+         Permission::create(['name' => 'crear areas a cubrir']);
+         Permission::create(['name' =>'editar areas a cubrir']);
+         Permission::create(['name' => 'eliminar areas a cubrir']);
+
+         //create schedules permissions
+         Permission::create(['name'=> 'ver panel horarios']);
+         Permission::create(['name' => 'crear horarios']);
+         Permission::create(['name' =>'editar horarios']);
+         Permission::create(['name' => 'eliminar horarios']);
+
         // roles
         $role = Role::create(['name' => 'admin']);
         // $role->givePermissionTo(Permission::all());

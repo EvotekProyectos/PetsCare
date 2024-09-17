@@ -92,3 +92,28 @@ const deletePetClassifications = (id, table) => {
     const url = route("pet-classifications.destroy", id);
     deleteResource(url, table);
 }
+
+const deleteShifts = (id, table) => {
+    const url = route("shifts.destroy", id);
+    deleteResource(url, table);
+}
+
+const deletePetsStatuses = (id, table) => {
+    const url = route("pets-statuses.destroy", id);
+    deleteResource(url, table);
+}
+
+const deleteFamily = (id, table) => {
+    const url = route("families.destroy", id);
+    deleteResource(url, table);
+}
+
+const deleteCoverArea = (id, table) => {
+    const url = route("cover-areas.destroy", id);
+    deleteResource(url, table);
+}
+
+const deleteSchedule = (id, table) => {
+    const url = route("schedules.destroy", id);
+    deleteResource(url, table);
+}
