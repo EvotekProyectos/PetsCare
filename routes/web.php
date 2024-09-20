@@ -20,9 +20,11 @@ use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\PetsStatusController;
+use App\Http\Controllers\ReceptionController;
 use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ShiftController;
+use App\Models\Reception;
 
 /*
 |--------------------------------------------------------------------------
@@ -125,4 +127,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/pets/list', [PetController::class, 'list'])->name('pets.list');
     Route::get('/pets/preview/{family}', [PetController::class, 'preview'])->name('pets.preview');
     Route::resource('pets', PetController::class);
+
+    //RECEPTIONS
+    Route::get('/receptions/list', [ReceptionController::class, 'list'])->name('reception.list');
+    Route::resource('receptions', ReceptionController::class);
 });

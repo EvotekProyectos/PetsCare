@@ -72,7 +72,7 @@
                 <div class="form-group mb-2 mb20">
                     <label for="gender_id" class="form-label">Género</label>
                     <div class="input-group mb-3">
-                        <span class="input-group-text " style="background-color: #d3f0f3" id="basic-addon1">
+                        <span class="input-group-text" style="background-color: #d3f0f3" id="basic-addon1">
                             <span class="mdi--pets"></span>
                         </span>
                         <select name="gender_id" class="form-control @error('gender_id') is-invalid @enderror"

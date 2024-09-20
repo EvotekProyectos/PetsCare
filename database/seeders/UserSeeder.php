@@ -32,5 +32,13 @@ class UserSeeder extends Seeder
         ])->assignRole('admin');
 
         $user->givePermissionTo(Permission::all());
+
+        $user =  User::create([
+            'name' => 'Estrella Lopez',
+            'email' => 'estrella.armendariz@evotek.com.mx',
+            'password' => Hash::make('8443922106')
+        ])->assignRole('admin');
+
+        $user->givePermissionTo(Permission::all());
     }
 }
