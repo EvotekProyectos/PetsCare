@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-md-6">
-                <img src="{{ asset('img/veterinary-bro.png') }}" alt="" class="img-fluid">
+                <img src="{{ asset('img/square.jpeg') }}" alt="" class="img-fluid">
             </div>
             <div class="col-md-6 d-flex justify-content-center align-items-center flex-column">
 
@@ -90,6 +90,11 @@
                     </div>
                 </form>
 
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-12 d-flex justify-content-center align-items-center flex-column">
+                <h1 class="text-primary ">El amor . . . nuestra mejor medicina <span class="bi--heart-pulse-fill"></span></h1>
             </div>
         </div>
     </div>

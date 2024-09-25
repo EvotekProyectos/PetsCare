@@ -14,7 +14,7 @@ class CoverAreaSeeder extends Seeder
     public function run(): void
     {
         $areas = [
-            ['name' => 'Hospital', 'color' => '#ffc000'],
+            ['name' => 'Hospita Internos', 'color' => '#ffc000'],
             ['name' => 'Consulta', 'color' => '#01b0f1'],
             ['name' => 'Auxiliar', 'color' => '#fb0200'],
             ['name' => 'Quirurgicos', 'color' => '#0070c2'],

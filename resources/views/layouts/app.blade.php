@@ -41,7 +41,7 @@
     </script>
     <!-- Full Calendar JS -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
-    <script src='fullcalendar/core/locales/es.global.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@3.10.2/dist/locale/es.js'></script>
 
  
     
