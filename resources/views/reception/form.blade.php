@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="row">
 
-            <label for="reception_type_id" class="form-label">TIPO</label>
+            {{-- <label for="reception_type_id" class="form-label">TIPO</label> --}}
             <div class="col-md-4">
                 <div class="form-group mb-2">
                     <input type="radio" id="consulta" name="reception_type_id" value="1" 
@@ -91,7 +91,7 @@
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="lucide--calendar-clock"></span>
                         </span>
-                        <input type="date" name="entry_date"
+                        <input type="datetime-local" name="entry_date"
                             class="form-control @error('entry_date') is-invalid @enderror"
                             value="{{ old('entry_date', $reception?->entry_date) }}" id="entry_date"
                             placeholder="Entry Date">
@@ -194,7 +194,7 @@
 
             <div class="col-md-4" id="motivo" style="display: none">
                 <div class="form-group mb-2">
-                    <label for="name" class="form-label">MOTIVO</label>
+                    <label for="name" class="form-label">TIPO</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="vaadin--lines-list"></span>

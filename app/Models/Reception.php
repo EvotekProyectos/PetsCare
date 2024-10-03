@@ -124,5 +124,8 @@ class Reception extends Model
         return $this->belongsTo(\App\Models\User::class, 'veterinarian_id', 'id');
     }
     
-
+     public function statusHistory() {
+         return $this->hasMany(ReceptionStatusHistory::class, 'reception_id', 'id');
+    }
+    
 }

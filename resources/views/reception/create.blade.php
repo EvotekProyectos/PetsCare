@@ -16,7 +16,7 @@
                     <div class="card-header bg-transparent border-0">
                         <div class="d-flex justify-content-between align-items-center">
                             <h4 id="card_title" class="text-primary text-uppercase">
-                                <span class="ph--call-bell-fill"></span> RECEPCION
+                                <span class="ph--call-bell-fill"></span> RECEPCIÓN
                             </h4>
                         </div>
                     </div>

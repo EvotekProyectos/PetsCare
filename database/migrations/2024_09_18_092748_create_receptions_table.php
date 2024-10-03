@@ -24,8 +24,8 @@ return new class extends Migration
             $table->foreignId('veterinarian_id')->nullable()->references('id')->on('users');
             $table->foreignId('recepcionist_id')->nullable()->references('id')->on('users');
             $table->foreignId('room_id')->nullable()->references('id')->on('rooms');
-            $table->date('entry_date');
-            $table->date('exit_date')->nullable();
+            $table->dateTime('entry_date');
+            $table->dateTime('exit_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

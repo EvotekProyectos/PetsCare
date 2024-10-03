@@ -129,5 +129,8 @@ class RolesAndPermissionsSeeder extends Seeder
         $role = Role::create(['name' => 'admin']);
         // $role->givePermissionTo(Permission::all());
 
+        //assignments permissions
+        Permission::create(['name'=> 'ver panel asignaciones']);
+
     }
 }

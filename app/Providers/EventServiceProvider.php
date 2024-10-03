@@ -14,6 +14,7 @@ use App\Models\PetClassification;
 use App\Models\PetsStatus;
 use App\Models\Reason;
 use App\Models\Reception;
+use App\Models\ReceptionStatusHistory;
 use App\Models\ReceptionType;
 use App\Models\ReproductiveStatus;
 use App\Observers\AreaObserver;
@@ -33,6 +34,7 @@ use App\Observers\PetClassificationObserver;
 use App\Observers\PetObserver;
 use App\Observers\PetsStatusObserver;
 use App\Observers\ReceptionObserver;
+use App\Observers\receptionStatusHistoryObserver;
 use App\Observers\ReproductiveStatusObserver;
 use App\Observers\RoomObserver;
 use App\Observers\ScheduleObserver;
@@ -79,6 +81,7 @@ class EventServiceProvider extends ServiceProvider
         CoverArea::observe(CoverAreaObserver::class);
         Schedule::observe(ScheduleObserver::class);
         Reception::observe(ReceptionObserver::class);
+        ReceptionStatusHistory::observe(receptionStatusHistoryObserver::class);
         
     }
 
