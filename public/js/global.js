@@ -117,3 +117,8 @@ const deleteSchedule = (id, table) => {
     const url = route("schedules.destroy", id);
     deleteResource(url, table);
 }
+
+const deleteReception = (id, table) => {
+    const url = route("receptions.destroy", id);
+    deleteResource(url, table);
+}

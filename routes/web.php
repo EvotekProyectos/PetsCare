@@ -11,6 +11,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\ReasonController;
 use App\Http\Controllers\AdmissionTypeController;
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ReceptionTypeController;
 use App\Http\Controllers\AttentionStatusController;
@@ -20,9 +22,14 @@ use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\PetsStatusController;
+use App\Http\Controllers\ReceptionController;
+use App\Http\Controllers\ReceptionStatusHistoryController;
 use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ShiftController;
+use App\Models\Assignment;
+use App\Models\Reception;
+use App\Models\ReceptionStatusHistory;
 
 /*
 |--------------------------------------------------------------------------
@@ -125,4 +132,21 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/pets/list', [PetController::class, 'list'])->name('pets.list');
     Route::get('/pets/preview/{family}', [PetController::class, 'preview'])->name('pets.preview');
     Route::resource('pets', PetController::class);
+
+    //RECEPTIONS
+    Route::get('/receptions/list', [ReceptionController::class, 'list'])->name('reception.list');
+    Route::resource('receptions', ReceptionController::class);
+
+    //RECEPTIONS STATUS HISTORIES
+    Route::get('reception-status-histories', [ReceptionStatusHistoryController::class ,'list'])->name('reception-status.list');
+    Route::resource('reception-status-histories', ReceptionStatusHistoryController::class);
+
+
+    //ASSIGNAMENT
+    Route::get('/assignment', [AssignmentController::class, 'index'])->name('assignment.index');
+    Route::get('/assignment/list', [AssignmentController::class, 'list'])->name('assignment.list');
+
+    //Appointments
+
+    Route::resource('appointments', AppointmentController::class);
 });

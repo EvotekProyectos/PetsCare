@@ -72,14 +72,14 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="ms-2">
+                        <a href="{{ route('receptions.index') }}" class="ms-2">
                             <i class="fas fa-list"></i>
                             Recepción
                         </a>
                     </li>
 
                     <li>
-                        <a href="#" class=" ms-2">
+                        <a href="{{ route('assignment.index') }}" class=" ms-2">
                             <i class="fas fa-hand-holding-heart"></i>
                             Asignaciones
                         </a>

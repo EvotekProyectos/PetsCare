@@ -119,9 +119,24 @@ class RolesAndPermissionsSeeder extends Seeder
          Permission::create(['name' =>'editar horarios']);
          Permission::create(['name' => 'eliminar horarios']);
 
+        //permisos recepcion 
+        Permission::create(['name'=> 'ver panel recepciones']);
+         Permission::create(['name' => 'crear recepciones']);
+         Permission::create(['name' =>'editar recepciones']);
+         Permission::create(['name' => 'eliminar recepciones']);
+
+         //permisos recepcion 
+        Permission::create(['name'=> 'ver panel consultas']);
+        Permission::create(['name' => 'crear consultas']);
+        Permission::create(['name' =>'editar consultas']);
+        Permission::create(['name' => 'eliminar consultas']);
+
         // roles
         $role = Role::create(['name' => 'admin']);
         // $role->givePermissionTo(Permission::all());
+
+        //assignments permissions
+        Permission::create(['name'=> 'ver panel asignaciones']);
 
     }
 }
