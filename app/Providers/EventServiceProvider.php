@@ -13,6 +13,7 @@ use App\Models\Genre;
 use App\Models\Pet;
 use App\Models\PetClassification;
 use App\Models\PetsStatus;
+use App\Models\Prescription;
 use App\Models\Reason;
 use App\Models\Reception;
 use App\Models\ReceptionStatusHistory;
@@ -35,6 +36,7 @@ use App\Observers\GenreObserver;
 use App\Observers\PetClassificationObserver;
 use App\Observers\PetObserver;
 use App\Observers\PetsStatusObserver;
+use App\Observers\prescriptionsObserver;
 use App\Observers\ReceptionObserver;
 use App\Observers\receptionStatusHistoryObserver;
 use App\Observers\ReproductiveStatusObserver;
@@ -85,6 +87,7 @@ class EventServiceProvider extends ServiceProvider
         Reception::observe(ReceptionObserver::class);
         ReceptionStatusHistory::observe(receptionStatusHistoryObserver::class);
         Appointment::observe(AppointmentObserver::class);
+        Prescription::observe(prescriptionsObserver::class);
         
     }
 

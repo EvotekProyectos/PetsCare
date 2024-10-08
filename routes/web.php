@@ -22,12 +22,14 @@ use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\PetsStatusController;
+use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\ReceptionController;
 use App\Http\Controllers\ReceptionStatusHistoryController;
 use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ShiftController;
 use App\Models\Assignment;
+use App\Models\Prescription;
 use App\Models\Reception;
 use App\Models\ReceptionStatusHistory;
 
@@ -138,7 +140,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('receptions', ReceptionController::class);
 
     //RECEPTIONS STATUS HISTORIES
-    Route::get('reception-status-histories', [ReceptionStatusHistoryController::class ,'list'])->name('reception-status.list');
+    Route::get('/reception-status-histories', [ReceptionStatusHistoryController::class ,'list'])->name('reception-status.list');
     Route::resource('reception-status-histories', ReceptionStatusHistoryController::class);
 
 
@@ -147,6 +149,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/assignment/list', [AssignmentController::class, 'list'])->name('assignment.list');
 
     //Appointments
-
+    
     Route::resource('appointments', AppointmentController::class);
+
+    //PRESCRIPTIONS
+    Route::get('/prescriptions/list', [PrescriptionController::class, 'list'])->name('prescription.list');
+    Route::resource('prescriptions',PrescriptionController::class);
 });

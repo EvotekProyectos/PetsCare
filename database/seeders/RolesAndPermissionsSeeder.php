@@ -138,5 +138,11 @@ class RolesAndPermissionsSeeder extends Seeder
         //assignments permissions
         Permission::create(['name'=> 'ver panel asignaciones']);
 
+        //prescriptions permissions
+        Permission::create(['name'=> 'ver panel recetas']);
+         Permission::create(['name' => 'crear recetas']);
+         Permission::create(['name' =>'editar recetas']);
+         Permission::create(['name' => 'eliminar recetas']);
+
     }
 }
