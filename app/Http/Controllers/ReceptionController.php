@@ -11,6 +11,7 @@ use App\Models\Reason;
 use App\Models\ReceptionStatusHistory;
 use App\Models\Room;
 use App\Models\User;
+use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\Facades\DataTables;
 
 /**
@@ -112,6 +113,12 @@ class ReceptionController extends Controller
 
     public function list(){
         $receptions= Reception::with('receptionType','family','pet','reason')->get();
+        return DataTables::of($receptions)->make(true);
+    }
+
+    public function historial($id)
+    {
+        $receptions = Reception::with('receptionType','reason', 'vet')->where('pet_id', $id)->get();
         return DataTables::of($receptions)->make(true);
     }
 

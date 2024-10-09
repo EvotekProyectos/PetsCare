@@ -1,6 +1,6 @@
 <div class="row padding-1 p-1">
     <div class="col-md-12">
-        <div class="form-group mb-2 mb20">
+        <div class="form-group mb-2 mb20" hidden>
             <label for="reception_id" class="form-label">{{ __('Reception Id') }}</label>
             <div class="input-group mb-3">
                 <span class="input-group-text bg-primary-subtle" id="basic-addon1">
@@ -8,7 +8,7 @@
                 </span>
                 <input type="text" name="reception_id"
                     class="form-control @error('reception_id') is-invalid @enderror"
-                    value="{{ old('reception_id', $appointment?->reception_id) }}" id="reception_id"
+                    value="{{ $reception->id }}" id="reception_id"
                     placeholder="Reception Id">
             </div>
             {!! $errors->first('reception_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}

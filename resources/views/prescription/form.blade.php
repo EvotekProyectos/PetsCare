@@ -2,6 +2,32 @@
     <div class="col-md-12">
         <div class="row">
 
+            <div class="col-md-6" hidden>
+                <div class="form-group mb-2">
+                    <label for="name" class="form-label">reception_id</label>
+                    <div class="input-group mb-3">
+                        <input type="text" name="reception_id"
+                            class="form-control @error('reception_id') is-invalid @enderror"
+                            value="{{ $reception->id }}" id="reception_id"
+                            placeholder="reception_id">
+                        {!! $errors->first('reception_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6" hidden>
+                <div class="form-group mb-2">
+                    <label for="name" class="form-label">VET</label>
+                    <div class="input-group mb-3">
+                        <input type="text" name="veterinarian_id"
+                            class="form-control @error('veterinarian_id') is-invalid @enderror"
+                            value="{{ Auth::user()->id }}" id="veterinarian_id"
+                            placeholder="veterinarian_id">
+                        {!! $errors->first('veterinarian_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+                    </div>
+                </div>
+            </div>
+
         <div class="col-md-6">
             <div class="form-group mb-2">
                 <label for="name" class="form-label">FECHA</label>

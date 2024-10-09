@@ -28,6 +28,7 @@ use App\Http\Controllers\ReceptionStatusHistoryController;
 use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ShiftController;
+use App\Models\Appointment;
 use App\Models\Assignment;
 use App\Models\Prescription;
 use App\Models\Reception;
@@ -137,6 +138,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     //RECEPTIONS
     Route::get('/receptions/list', [ReceptionController::class, 'list'])->name('reception.list');
+    Route::get('/receptions/historial/{id}', [ReceptionController::class, 'historial'])->name('reception.historial');
     Route::resource('receptions', ReceptionController::class);
 
     //RECEPTIONS STATUS HISTORIES
@@ -149,7 +151,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/assignment/list', [AssignmentController::class, 'list'])->name('assignment.list');
 
     //Appointments
-    
+    Route::get('/appointments/consultation/{id}', [AppointmentController::class, 'consultation'])->name('appointment.consultation');
     Route::resource('appointments', AppointmentController::class);
 
     //PRESCRIPTIONS

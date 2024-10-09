@@ -40,10 +40,9 @@ class PrescriptionController extends Controller
      */
     public function store(PrescriptionRequest $request)
     {
-        Prescription::create($request->validated());
+        $new = Prescription::create($request->validated());
 
-        return redirect()->route('prescriptions.index')
-            ->with('success', 'Prescription created successfully.');
+        return response()->json($new);
     }
 
     /**
