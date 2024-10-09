@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Prescription;
 use App\Http\Requests\PrescriptionRequest;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Yajra\DataTables\Facades\DataTables;
 
 /**
@@ -41,6 +42,8 @@ class PrescriptionController extends Controller
     public function store(PrescriptionRequest $request)
     {
         $new = Prescription::create($request->validated());
+        Prescription::create($request->validated());
+        $this->authorize("create",Prescription::class);
 
         return response()->json($new);
     }
@@ -51,7 +54,7 @@ class PrescriptionController extends Controller
     public function show($id)
     {
         $prescription = Prescription::find($id);
-
+        $this->authorize("view",Prescription::class);
         return view('prescription.show', compact('prescription'));
     }
 
@@ -61,7 +64,7 @@ class PrescriptionController extends Controller
     public function edit($id)
     {
         $prescription = Prescription::find($id);
-
+        //$this->authorize("update",$prescription);
         return view('prescription.edit', compact('prescription'));
     }
 
@@ -71,21 +74,34 @@ class PrescriptionController extends Controller
     public function update(PrescriptionRequest $request, Prescription $prescription)
     {
         $prescription->update($request->validated());
-
+        $this->authorize("update",$prescription);
         return redirect()->route('prescriptions.index')
             ->with('success', 'Prescription updated successfully');
     }
 
     public function destroy($id)
     {
-        Prescription::find($id)->delete();
+        $prescription= Prescription::find($id);
+        $this->authorize("delete", $prescription);
+        $prescription->delete();
 
-        return redirect()->route('prescriptions.index')
-            ->with('success', 'Prescription deleted successfully');
+        return response()->json($prescription);
     }
 
     public function list(){
         $prescription= Prescription::with('reception','vet', 'receptionist')->get();
         return DataTables::of($prescription)->make(true);
+    }
+
+    public function imprimir(int $id)
+    {
+        $prescription = Prescription::with(
+            "vet",
+            "reception"
+        )->find($id);
+
+        $pdf = Pdf::loadView("prescription.pdf", compact("prescription"));
+
+        return $pdf->stream("PDF.pdf");
     }
 }

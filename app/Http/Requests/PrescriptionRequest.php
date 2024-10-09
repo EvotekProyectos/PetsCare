@@ -25,6 +25,7 @@ class PrescriptionRequest extends FormRequest
             'reception_id' => 'nullable|integer|exists:receptions,id',
             'veterinarian_id' => 'nullable|integer|exists:users,id',
             'recepcionist_id' => 'nullable|integer|exists:users,id',
+            'pet_id' => 'nullable|integer|exists:pets,id',
 			'date' => 'required',
 			'medicine' => 'required|string',
 			'diagnosis' => 'required|string',

@@ -32,12 +32,15 @@ $(document).ready(function () {
                 data: null,
                 render: function (data) {
                     return `
-                        <a type="button" href="${route('receptions.edit', data.id)}" class="btn btn-sm text-primary">
+                        <a type="button" href="${route('prescriptions.edit', data.id)}" class="btn btn-sm text-primary">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <button type="button" class="btn btn-sm text-primary" onclick="showAlertWithCallback(() => deleteReception(${data.id}, table));">
+                        <button type="button" class="btn btn-sm text-primary" onclick="showAlertWithCallback(() => deletePrescription(${data.id}, table));">
                             <i class="fas fa-trash"></i>
-                        </button>`;
+                        </button>
+                        <a type="button" href="${route('imprimir', data.id)}" class="btn btn-sm text-primary">
+                            <span class="material-symbols--print" weigth:10px></span>
+                        </a>`
                 }
             },
         ],

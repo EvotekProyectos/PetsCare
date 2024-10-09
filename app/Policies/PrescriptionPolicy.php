@@ -21,7 +21,7 @@ class PrescriptionPolicy
      */
     public function view(User $user, Prescription $prescription): bool
     {
-        //
+        return false;
     }
 
     /**
@@ -53,7 +53,7 @@ class PrescriptionPolicy
      */
     public function restore(User $user, Prescription $prescription): bool
     {
-        //
+        return false;
     }
 
     /**
@@ -61,6 +61,6 @@ class PrescriptionPolicy
      */
     public function forceDelete(User $user, Prescription $prescription): bool
     {
-        //
+        return false;
     }
 }

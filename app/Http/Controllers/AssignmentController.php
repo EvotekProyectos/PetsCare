@@ -13,17 +13,21 @@ class AssignmentController extends Controller
     
     public function index()
     {
-        $this->authorize("viewAny", Assignment::class);
+        $this->authorize("viewAny", Reception::class);
         return view('assignment.index');
+
     }
 
+
     public function list(){
-        $receptions = Reception::with(['receptionType','family','pet','reason',
-            'statusHistory'])->get();
+        $user = auth()->user();
+        $receptions = Reception::with(['receptionType','family','pet','reason', 'statusHistory'])
+        ->where('veterinarian_id', $user->id)
+        ->get();
     
         return DataTables::of($receptions)
              ->addColumn('status', function ($reception) {
-                 return  $reception->statusHistory->first()->attentionStatus->name ;
+                 return  $reception->statusHistory->last()->attentionStatus->name ;
              })
              ->make(true);
      }
