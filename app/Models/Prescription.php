@@ -65,6 +65,10 @@ class Prescription extends Model
      {
          return $this->belongsTo(\App\Models\User::class, 'veterinarian_id', 'id');
      }
+     public function pet()
+    {
+        return $this->belongsTo(\App\Models\Pet::class, 'pet_id', 'id');
+    }
     
 
 }

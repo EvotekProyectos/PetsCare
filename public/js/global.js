@@ -122,3 +122,8 @@ const deleteReception = (id, table) => {
     const url = route("receptions.destroy", id);
     deleteResource(url, table);
 }
+
+const deletePrescription = (id, table) => {
+    const url = route("prescriptions.destroy", id);
+    deleteResource(url, table);
+}

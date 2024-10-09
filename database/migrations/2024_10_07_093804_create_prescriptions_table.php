@@ -16,8 +16,9 @@ return new class extends Migration
             $table->foreignId('reception_id')->nullable()->references('id')->on('receptions');
             $table->foreignId('veterinarian_id')->nullable()->references('id')->on('users');
             $table->foreignId('recepcionist_id')->nullable()->references('id')->on('users');
+            $table->foreignId('pet_id')->nullable()->references('id')->on('pets');
             $table->dateTime('date');
-            $table->String('medicine');
+            $table->String('medicine'); 
             $table->text('diagnosis');
             $table->text('observations')->nullable();
             $table->timestamps();

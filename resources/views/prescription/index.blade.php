@@ -39,7 +39,7 @@
                                     <tr>
 										
 										
-										<th>Date</th>
+										<th>Fecha</th>
                                         <th>Veterinario </th>
 										<th>Medicamentos</th>
 										<th>Diagnostico</th>

@@ -149,5 +149,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     //PRESCRIPTIONS
     Route::get('/prescriptions/list', [PrescriptionController::class, 'list'])->name('prescription.list');
+    Route::get("/prescriptions/pdf/{id}", [PrescriptionController::class, "imprimir"])->name("imprimir");
     Route::resource('prescriptions',PrescriptionController::class);
+    
 });
