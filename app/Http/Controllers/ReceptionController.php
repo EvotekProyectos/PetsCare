@@ -8,8 +8,10 @@ use App\Models\AdmissionType;
 use App\Models\Area;
 use App\Models\Family;
 use App\Models\Reason;
+use App\Models\ReceptionStatusHistory;
 use App\Models\Room;
 use App\Models\User;
+use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\Facades\DataTables;
 
 /**
@@ -52,10 +54,15 @@ class ReceptionController extends Controller
      */
     public function store(ReceptionRequest $request)
     {
-        Reception::create($request->validated());
+        $reception = Reception::create($request->validated());
+
+        ReceptionStatusHistory::create([
+            'reception_id' => $reception->id, 
+            'attention_status_id' => 2,]);
+            
         $this->authorize("create", Reception::class);
         return redirect()->route('receptions.index')
-            ->with('success', 'RRecepción guardada exitósamente.');
+            ->with('success', 'Recepción guardada exitósamente.');
     }
 
     /**
@@ -108,4 +115,12 @@ class ReceptionController extends Controller
         $receptions= Reception::with('receptionType','family','pet','reason')->get();
         return DataTables::of($receptions)->make(true);
     }
+
+    public function historial($id)
+    {
+        $receptions = Reception::with('receptionType','reason', 'vet')->where('pet_id', $id)->get();
+        return DataTables::of($receptions)->make(true);
+    }
+
+    
 }

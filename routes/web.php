@@ -11,6 +11,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\ReasonController;
 use App\Http\Controllers\AdmissionTypeController;
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ReceptionTypeController;
 use App\Http\Controllers\AttentionStatusController;
@@ -20,11 +22,17 @@ use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\PetsStatusController;
+use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\ReceptionController;
+use App\Http\Controllers\ReceptionStatusHistoryController;
 use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ShiftController;
+use App\Models\Appointment;
+use App\Models\Assignment;
+use App\Models\Prescription;
 use App\Models\Reception;
+use App\Models\ReceptionStatusHistory;
 
 /*
 |--------------------------------------------------------------------------
@@ -130,5 +138,25 @@ Route::group(['middleware' => ['auth']], function () {
 
     //RECEPTIONS
     Route::get('/receptions/list', [ReceptionController::class, 'list'])->name('reception.list');
+    Route::get('/receptions/historial/{id}', [ReceptionController::class, 'historial'])->name('reception.historial');
     Route::resource('receptions', ReceptionController::class);
+
+    //RECEPTIONS STATUS HISTORIES
+    Route::get('/reception-status-histories', [ReceptionStatusHistoryController::class ,'list'])->name('reception-status.list');
+    Route::resource('reception-status-histories', ReceptionStatusHistoryController::class);
+
+
+    //ASSIGNAMENT
+    Route::get('/assignment', [AssignmentController::class, 'index'])->name('assignment.index');
+    Route::get('/assignment/list', [AssignmentController::class, 'list'])->name('assignment.list');
+
+    //Appointments
+    Route::get('/appointments/consultation/{id}', [AppointmentController::class, 'consultation'])->name('appointment.consultation');
+    Route::resource('appointments', AppointmentController::class);
+
+    //PRESCRIPTIONS
+    Route::get('/prescriptions/list', [PrescriptionController::class, 'list'])->name('prescription.list');
+    Route::get("/prescriptions/pdf/{id}", [PrescriptionController::class, "imprimir"])->name("imprimir");
+    Route::resource('prescriptions',PrescriptionController::class);
+    
 });

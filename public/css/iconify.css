@@ -119,7 +119,7 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%230455a0' d='M15 16.69V13h1.5v2.82l2.44 1.41l-.75 1.3zm-4.13 4.07L9 22l-3-2l-3 2V3h18v8.1c1.24 1.26 2 2.99 2 4.9c0 3.87-3.13 7-7 7a6.95 6.95 0 0 1-5.13-2.24m-1.14-1.65C9.26 18.17 9 17.12 9 16c0-3.87 3.13-7 7-7c1.07 0 2.09.24 3 .67V5H5v13.26l1-.66l3 2zM16 21c2.76 0 5-2.24 5-5s-2.24-5-5-5s-5 2.24-5 5s2.24 5 5 5'/%3E%3C/svg%3E");
   }
 
-    /*RECEPCION ICON*/
+  /*RECEPCION ICON*/
   .ph--call-bell-fill {
     display: inline-block;
     width: 1em;
@@ -148,7 +148,7 @@
     background-size: 100% 100%;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%230455a0' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath d='M8 2v4m8-4v4'/%3E%3Crect width='18' height='18' x='3' y='4' rx='2'/%3E%3Cpath d='M3 10h18M9 16l2 2l4-4'/%3E%3C/g%3E%3C/svg%3E");
   }
-  /*recepcion*/
+  /*recepcion azul*/
   .maki--doctor {
     display: inline-block;
     width: 1em;
@@ -174,4 +174,83 @@
     background-repeat: no-repeat;
     background-size: 100% 100%;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='4.5' cy='9.5' r='2.5' fill='%230455a0'/%3E%3Ccircle cx='9' cy='5.5' r='2.5' fill='%230455a0'/%3E%3Ccircle cx='15' cy='5.5' r='2.5' fill='%230455a0'/%3E%3Ccircle cx='19.5' cy='9.5' r='2.5' fill='%230455a0'/%3E%3Cpath fill='%230455a0' d='M17.34 14.86c-.87-1.02-1.6-1.89-2.48-2.91c-.46-.54-1.05-1.08-1.75-1.32q-.165-.06-.33-.09c-.25-.04-.52-.04-.78-.04s-.53 0-.79.05q-.165.03-.33.09c-.7.24-1.28.78-1.75 1.32c-.87 1.02-1.6 1.89-2.48 2.91c-1.31 1.31-2.92 2.76-2.62 4.79c.29 1.02 1.02 2.03 2.33 2.32c.73.15 3.06-.44 5.54-.44h.18c2.48 0 4.81.58 5.54.44c1.31-.29 2.04-1.31 2.33-2.32c.31-2.04-1.3-3.49-2.61-4.8'/%3E%3C/svg%3E");
+  }
+
+  /*PULSE HEART ICON*/
+  .bi--heart-pulse-fill {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cg fill='%230455a0'%3E%3Cpath d='M1.475 9C2.702 10.84 4.779 12.871 8 15c3.221-2.129 5.298-4.16 6.525-6H12a.5.5 0 0 1-.464-.314l-1.457-3.642l-1.598 5.593a.5.5 0 0 1-.945.049L5.889 6.568l-1.473 2.21A.5.5 0 0 1 4 9z'/%3E%3Cpath d='M.88 8C-2.427 1.68 4.41-2 7.823 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C11.59-2 18.426 1.68 15.12 8h-2.783l-1.874-4.686a.5.5 0 0 0-.945.049L7.921 8.956L6.464 5.314a.5.5 0 0 0-.88-.091L3.732 8z'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  
+  /*formula medica verde*/
+  .material-symbols--prescriptions-outline {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%230455a0' d='m16.95 20.65l1.15-1.15l-1.6-1.6l-1.15 1.15q-.35.35-.35.8t.35.8t.8.35t.8-.35m2.55-2.55l1.15-1.15q.35-.35.35-.8t-.35-.8t-.8-.35t-.8.35L17.9 16.5zm-1.125 3.975Q17.45 23 16.15 23t-2.225-.925T13 19.85t.925-2.225l3.7-3.7Q18.55 13 19.85 13t2.225.925T23 16.15t-.925 2.225zM5 19V5zm0 2q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h4.2q.325-.9 1.088-1.45T12 1t1.713.55T14.8 3H19q.825 0 1.413.588T21 5v6.125Q20.5 11 20 11t-1 .075V5H5v14h6.075Q11 19.5 11 20t.125 1zm7-16.75q.325 0 .538-.213t.212-.537t-.213-.537T12 2.75t-.537.213t-.213.537t.213.538t.537.212M7 9V7h10v2zm0 4v-2h10v.85q-.2.125-.387.288t-.388.362l-.5.5zm0 4v-2h6.725L12.5 16.225q-.2.2-.362.388T11.85 17z'/%3E%3C/svg%3E");
+  }
+
+  /*Calendario verde*/
+  .tabler--calendar-time {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22%3E%3Cg fill=%22none%22 stroke=%22%23007C84%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%222%22%3E%3Cpath d=%22M11.795 21H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4%22/%3E%3Cpath d=%22M14 18a4 4 0 1 0 8 0a4 4 0 1 0-8 0m1-15v4M7 3v4m-4 4h16%22/%3E%3Cpath d=%22M18 16.496V18l1 1%22/%3E%3C/g%3E%3C/svg%3E");
+}
+  /*doctor verde*/
+  .maki--doctor1 {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 15 15'%3E%3Cpath fill='%23007C84' d='M5.5 7A2.5 2.5 0 0 1 3 4.5v-2a.5.5 0 0 1 .5-.5H4a.5.5 0 0 0 0-1h-.5A1.5 1.5 0 0 0 2 2.5v2a3.49 3.49 0 0 0 1.51 2.87A4.4 4.4 0 0 1 5 10.5a3.5 3.5 0 1 0 7 0v-.57a2 2 0 1 0-1 0v.57a2.5 2.5 0 0 1-5 0a4.4 4.4 0 0 1 1.5-3.13A3.49 3.49 0 0 0 9 4.5v-2A1.5 1.5 0 0 0 7.5 1H7a.5.5 0 0 0 0 1h.5a.5.5 0 0 1 .5.5v2A2.5 2.5 0 0 1 5.5 7m6 2a1 1 0 1 1 0-2a1 1 0 0 1 0 2'/%3E%3C/svg%3E");
+  }
+  
+
+  /*medicamentos azul*/
+  .icon-park-twotone--medicine-bottle-one {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cdefs%3E%3Cmask id='ipTMedicineBottleOne0'%3E%3Cg fill='none' stroke='%23fff' stroke-linejoin='round' stroke-width='4'%3E%3Cpath fill='%23555' d='M13 7a3 3 0 0 1 3-3h16a3 3 0 1 1 0 6H16a3 3 0 0 1-3-3Zm.1 10.12A3 3 0 0 1 15.437 16h17.124a3 3 0 0 1 2.339 1.12l4.438 5.523a3 3 0 0 1 .661 1.88V41a3 3 0 0 1-3 3H11a3 3 0 0 1-3-3V24.523a3 3 0 0 1 .661-1.88z'/%3E%3Cpath stroke-linecap='round' d='M18 30h12m-6-6v12'/%3E%3C/g%3E%3C/mask%3E%3C/defs%3E%3Cpath fill='%230455A0' d='M0 0h48v48H0z' mask='url(%23ipTMedicineBottleOne0)'/%3E%3C/svg%3E");
+  }
+  /*receta medica azul*/
+  .material-symbols--prescriptions-outline {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%230455A0' d='m16.95 20.65l1.15-1.15l-1.6-1.6l-1.15 1.15q-.35.35-.35.8t.35.8t.8.35t.8-.35m2.55-2.55l1.15-1.15q.35-.35.35-.8t-.35-.8t-.8-.35t-.8.35L17.9 16.5zm-1.125 3.975Q17.45 23 16.15 23t-2.225-.925T13 19.85t.925-2.225l3.7-3.7Q18.55 13 19.85 13t2.225.925T23 16.15t-.925 2.225zM5 19V5zm0 2q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h4.2q.325-.9 1.088-1.45T12 1t1.713.55T14.8 3H19q.825 0 1.413.588T21 5v6.125Q20.5 11 20 11t-1 .075V5H5v14h6.075Q11 19.5 11 20t.125 1zm7-16.75q.325 0 .538-.213t.212-.537t-.213-.537T12 2.75t-.537.213t-.213.537t.213.538t.537.212M7 9V7h10v2zm0 4v-2h10v.85q-.2.125-.387.288t-.388.362l-.5.5zm0 4v-2h6.725L12.5 16.225q-.2.2-.362.388T11.85 17z'/%3E%3C/svg%3E");
+  }
+
+  /*Hospital Shield*/
+  .mage--hospital-shield-fill {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%230455a0' d='M20.945 5.069a2.75 2.75 0 0 0-1.33-1l-4.92-1.64a8.58 8.58 0 0 0-5.35 0l-4.91 1.64a2.67 2.67 0 0 0-1.83 2.54v5.28a8.44 8.44 0 0 0 4 7.16l4 2.55a2.72 2.72 0 0 0 2.84 0l4-2.55a8.54 8.54 0 0 0 2.9-3.07a8.44 8.44 0 0 0 1.05-4.09v-5.28a2.66 2.66 0 0 0-.45-1.54m-4.13 7.2a1.2 1.2 0 0 1-1.2 1.2h-1.49v1.5a1.2 1.2 0 0 1-1.2 1.2h-1.8a1.19 1.19 0 0 1-1.2-1.2v-1.53h-1.5a1.25 1.25 0 0 1-.85-.35a1.2 1.2 0 0 1-.35-.85v-1.8c0-.316.126-.618.35-.84a1.2 1.2 0 0 1 .85-.36h1.5v-1.49a1.2 1.2 0 0 1 1.2-1.2h1.8a1.15 1.15 0 0 1 .84.35a1.2 1.2 0 0 1 .36.85v1.49h1.49a1.18 1.18 0 0 1 .85.36a1.15 1.15 0 0 1 .35.84z'/%3E%3Cpath fill='%230455a0' d='M15.315 10.769v1.2h-1.94a.75.75 0 0 0-.75.75v1.95h-1.2v-1.95a.76.76 0 0 0-.75-.75h-1.95v-1.2h1.95a.75.75 0 0 0 .75-.75v-1.94h1.2v1.94a.74.74 0 0 0 .75.75z'/%3E%3C/svg%3E");
+  }
+    /*PRINT BLUE*/
+  .material-symbols--print {
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%230455A0' d='M18 7H6V3h12zm0 5.5q.425 0 .713-.288T19 11.5t-.288-.712T18 10.5t-.712.288T17 11.5t.288.713t.712.287M16 19v-4H8v4zm2 2H6v-4H2v-6q0-1.275.875-2.137T5 8h14q1.275 0 2.138.863T22 11v6h-4z'/%3E%3C/svg%3E");
   }

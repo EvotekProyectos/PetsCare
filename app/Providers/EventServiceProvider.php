@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\AdmissionType;
+use App\Models\Appointment;
 use App\Models\Area;
 use App\Models\AttentionStatus;
 use App\Models\CoverArea;
@@ -12,8 +13,10 @@ use App\Models\Genre;
 use App\Models\Pet;
 use App\Models\PetClassification;
 use App\Models\PetsStatus;
+use App\Models\Prescription;
 use App\Models\Reason;
 use App\Models\Reception;
+use App\Models\ReceptionStatusHistory;
 use App\Models\ReceptionType;
 use App\Models\ReproductiveStatus;
 use App\Observers\AreaObserver;
@@ -23,6 +26,7 @@ use App\Models\Schedule;
 use App\Models\Shift;
 use App\Models\User;
 use App\Observers\AdmissionTypeObserver;
+use App\Observers\AppointmentObserver;
 use App\Observers\AttentionStatusObserver;
 use App\Observers\CoverAreaObserver;
 use App\Observers\FamClassificationObserver;
@@ -32,7 +36,9 @@ use App\Observers\GenreObserver;
 use App\Observers\PetClassificationObserver;
 use App\Observers\PetObserver;
 use App\Observers\PetsStatusObserver;
+use App\Observers\prescriptionsObserver;
 use App\Observers\ReceptionObserver;
+use App\Observers\receptionStatusHistoryObserver;
 use App\Observers\ReproductiveStatusObserver;
 use App\Observers\RoomObserver;
 use App\Observers\ScheduleObserver;
@@ -79,6 +85,9 @@ class EventServiceProvider extends ServiceProvider
         CoverArea::observe(CoverAreaObserver::class);
         Schedule::observe(ScheduleObserver::class);
         Reception::observe(ReceptionObserver::class);
+        ReceptionStatusHistory::observe(receptionStatusHistoryObserver::class);
+        Appointment::observe(AppointmentObserver::class);
+        Prescription::observe(prescriptionsObserver::class);
         
     }
 
