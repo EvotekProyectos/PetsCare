@@ -34,7 +34,11 @@ $(document).ready(function () {
                 render: function(data) {
                     let petNames = "";
                     data.pets.forEach(pet => {
-                        petNames += `<span class="mdi--pets"></span> ${pet.name} <br> `;
+                        petNames += `
+                            <a type="button"href="${route('pet-history.index', data.id)}" class="btn btn-sm text-primary">
+                                <span class="mdi--pets"></span> ${pet.name}
+                            </a> <br> 
+                        `;
                     });
                     return petNames.trim(); 
                 }
@@ -46,6 +50,7 @@ $(document).ready(function () {
                         <a type="button" href="${route('families.edit', data.id)}" class="btn btn-sm text-primary">
                             <i class="fas fa-edit"></i>
                         </a>
+
                         <button type="button" class="btn btn-sm text-primary" onclick="showAlertWithCallback(() => deleteFamily(${data.id}, table));">
                             <i class="fas fa-trash"></i>
                         </button>`;

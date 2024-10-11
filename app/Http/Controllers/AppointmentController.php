@@ -28,6 +28,8 @@ class AppointmentController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * $appointments->perPage());
     }
 
+
+    
     /**
      * Show the form for creating a new resource.
      */
@@ -100,12 +102,13 @@ class AppointmentController extends Controller
         return response()->json($appointment);
     }
 
-    public function list()
-    {
-        $appointment = Appointment::with('reception', 'reason')->get();
 
-        return DataTables::of($appointment)->make(true);
-    }
+    public function list($id)
+{
+    $appointments = Appointment::with('reception', 'reason')->where('reception_id', $id)->get();
+    return view('appointment.index', compact('appointments'));
+}
+
 
     public function consultation(int $id)
     {

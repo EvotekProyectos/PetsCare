@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="row">
 
-            <div class="col-md-6" hidden>
+            {{-- <div class="col-md-6" hidden>
                 <div class="form-group mb-2">
                     <label for="name" class="form-label">reception_id</label>
                     <div class="input-group mb-3">
@@ -13,7 +13,7 @@
                         {!! $errors->first('reception_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <div class="col-md-6" hidden>
                 <div class="form-group mb-2">

@@ -1,6 +1,6 @@
 window.onload = function () {
     let fileRoute = Pic_route.startsWith('/') ? Pic_route.substring(1) : Pic_route;
-   
+
     if (Pic_id !== null) {
         $("#preview").attr("src", ruta + fileRoute);
     }
@@ -8,28 +8,6 @@ window.onload = function () {
         $("#preview").attr("src", imgDefault);
     }
 
-}
-
-async function AddPrescription() {
-    event.preventDefault();
-    let url = route('prescriptions.store');
-    let form = new FormData(document.getElementById("NewPrescription"));
-    let pet = await fetch(url, { method: "POST", body: form });
-
-    if (pet.ok) {
-        Swal.fire({
-            icon: "success",
-            title: "Se guardo la receta médica",
-            timer: 7000,
-            showConfirmButton: true
-        })
-    } else {
-        let resp = await pet.json();
-        Swal.fire({
-            icon: "error",
-            body: resp
-        })
-    }
 }
 
 var table = undefined;

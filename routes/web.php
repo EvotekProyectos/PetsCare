@@ -21,6 +21,7 @@ use App\Http\Controllers\FamClassificationController;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\PetController;
+use App\Http\Controllers\PetHistoryController;
 use App\Http\Controllers\PetsStatusController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\ReceptionController;
@@ -30,6 +31,7 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ShiftController;
 use App\Models\Appointment;
 use App\Models\Assignment;
+use App\Models\PetHistory;
 use App\Models\Prescription;
 use App\Models\Reception;
 use App\Models\ReceptionStatusHistory;
@@ -152,11 +154,15 @@ Route::group(['middleware' => ['auth']], function () {
 
     //Appointments
     Route::get('/appointments/consultation/{id}', [AppointmentController::class, 'consultation'])->name('appointment.consultation');
+    Route::get('/appointments/{id}', [AppointmentController::class,'list'])->name('appointment.list');
     Route::resource('appointments', AppointmentController::class);
 
     //PRESCRIPTIONS
     Route::get('/prescriptions/list', [PrescriptionController::class, 'list'])->name('prescription.list');
     Route::get("/prescriptions/pdf/{id}", [PrescriptionController::class, "imprimir"])->name("imprimir");
     Route::resource('prescriptions',PrescriptionController::class);
+
+    //PET-HISTORY
+    Route::get('/pet-history/{id}', [PetHistoryController::class, 'index'])->name('pet-history.index');
     
 });
