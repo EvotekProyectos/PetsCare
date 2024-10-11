@@ -42,7 +42,6 @@ class PrescriptionController extends Controller
     public function store(PrescriptionRequest $request)
     {
         $new = Prescription::create($request->validated());
-        Prescription::create($request->validated());
         $this->authorize("create",Prescription::class);
 
         return response()->json($new);

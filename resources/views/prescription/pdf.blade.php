@@ -48,7 +48,8 @@
             <table style="width: 100%; text-align: center;">
                 <tr>
                     <td style="align-items: center;">
-                        <img src="{{ asset('img/prueba.png') }}" style=" height: 87px;" >
+                        <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px">
+
 
                     </td>
                     <td>

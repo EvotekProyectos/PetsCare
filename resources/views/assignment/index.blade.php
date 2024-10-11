@@ -46,7 +46,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-
+                                            @csrf
                                         </tbody>
                                     </table>
                                 </div>

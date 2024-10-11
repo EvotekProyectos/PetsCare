@@ -45,15 +45,17 @@ class AppointmentController extends Controller
      */
     public function store(AppointmentRequest $request)
     {
-        Appointment::create($request->validated());
+        $new  = Appointment::create($request->validated());
         ReceptionStatusHistory::create([
             'reception_id' => $request->reception_id,
             'attention_status_id' => 1,
         ]);
         $this->authorize("create", Appointment::class);
 
-        return redirect()->route('assignment.index')
-            ->with('success', 'Consulta Finalizada Exitosamente, puedes seguir atendiendo al siguiente paciente');
+        return response()->json($new);
+
+        // return redirect()->route('assignment.index')
+        //     ->with('success', 'Consulta Finalizada Exitosamente, puedes seguir atendiendo al siguiente paciente');
     }
 
     /**
@@ -114,10 +116,10 @@ class AppointmentController extends Controller
         $reasons = Reason::all();
         $prescription = new Prescription();
         $this->authorize("create", Appointment::class);
-        ReceptionStatusHistory::create([
-            'reception_id' => $id,
-            'attention_status_id' => 3,
-        ]);
+        // ReceptionStatusHistory::create([
+        //     'reception_id' => $id,
+        //     'attention_status_id' => 3,
+        // ]);
         return view('appointment.create', compact('appointment', 'reasons', 'prescription', 'reception'));
     }
 }

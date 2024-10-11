@@ -29,6 +29,9 @@ class AssignmentController extends Controller
              ->addColumn('status', function ($reception) {
                  return  $reception->statusHistory->last()->attentionStatus->name ;
              })
+             ->addColumn('status_id', function ($reception) {
+                return  $reception->statusHistory->last()->attentionStatus->id ;
+            })
              ->make(true);
      }
     
