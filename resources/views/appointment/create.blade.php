@@ -115,7 +115,7 @@
                                 DATOS ESPECÍFICOS
                             </h5>
                         </div>
-                        <form method="POST" action="{{ route('appointments.store') }}" role="form"
+                        <form method="POST" action="{{ route('appointments.store') }}" role="form" id="NewAppointment"
                             enctype="multipart/form-data">
                             @csrf
 
@@ -137,12 +137,16 @@
 
                         </form>
                     </div>
-                    <div class="card-body">
+                    {{-- <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 id="card_title" class=" text-uppercase" style="color: #007c84">
                                 PRODUCTOS/SERVICIOS
                             </h5>
                         </div>
+                    </div> --}}
+                    <div class="col-12 mt-2 d-flex justify-content-end">
+                        <button  class="btn btn-primary btn-sm text-uppercase rounded-4" onclick="EndAppointment()">
+                            Finalizar Consulta <i class="fas fa-file-medical fa-lg"></i></button>
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
@@ -179,9 +183,10 @@
     <script>
         var ruta = "{{ asset('') }}";
         var imgDefault = "{{ asset('img/pet_pic.png') }}";
+        var Pet_Id = {{$reception->pet_id}};
         var Pic_id = {{ $reception->pet->picture_id ?? 'null' }}; 
         var Pic_route = "{{ $reception->pet->file->route ?? '' }}";
-        var Pet_Id = {{$reception->pet_id}};
+        
     </script>
     <script src="{{ asset('js/appointments/create.js') }}" defer></script>
 @endpush

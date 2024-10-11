@@ -36,10 +36,9 @@ class ReceptionStatusHistoryController extends Controller
      */
     public function store(ReceptionStatusHistoryRequest $request)
     {
-        ReceptionStatusHistory::create($request->validated());
+        $new = ReceptionStatusHistory::create($request->validated());
 
-        return redirect()->route('reception-status-histories.index')
-            ->with('success', 'ReceptionStatusHistory created successfully.');
+        return response()->json($new);
     }
 
     /**
