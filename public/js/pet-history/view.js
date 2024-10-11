@@ -48,7 +48,7 @@ $(document).ready(function () {
                             <span class="mage--hospital-shield-fill"></span>
                         </a>
 
-                        <a type="button" href="${route('imprimir', data.id)}" class="btn btn-sm text-primary">
+                        <a type="button" href="${route('prescription.imprimir', data.id)}" class="btn btn-sm text-primary">
                             <span class="material-symbols--prescriptions-outline" weigth:10px title="Formula medica"></span>
                         </a>`;
                 }

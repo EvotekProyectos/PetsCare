@@ -117,9 +117,10 @@
 
 
     </div>
+
     {{-- <div class="col-12 mt-2 d-flex justify-content-end">
         <button type="submit" class="btn btn-primary btn-sm text-uppercase rounded-4">
             <i class="fas fa-plus"></i>
             Guardar receta</button>
-    </div>
+    </div>--}}
 </div>

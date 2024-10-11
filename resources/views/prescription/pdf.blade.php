@@ -251,7 +251,7 @@
             </div>
 
             <div
-            style="border:1px solid #c5e8f7; margin-top: 60px; border-left:none; border-right:none; border-top:none; background-color: #eef7fc;">
+                style="border:1px solid #c5e8f7; margin-top: 60px; border-left:none; border-right:none; border-top:none; background-color: #eef7fc;">
                 <div>
                     <table style="width: 100%; ">
                         <tr>
@@ -273,22 +273,37 @@
                                 <strong>Fecha:</strong>
                             </p>
                         </td>
+
                         <td>
-                            <p style="font-size: 10pt;font-family:sans-serif;">{{ $prescription->date }}
+                            <p style="font-size: 10pt;font-family:sans-serif;">{{ $next->day_next_check }}
                             </p>
                         </td>
+
                         <td>
                             <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;">
                                 <strong>Hora:</strong>
                             </p>
                         </td>
+
                         <td>
                             <p style="font-size: 10pt;font-family:sans-serif;">
-                                {{ $prescription->vet->name }}</p>
+                                {{ $next->time_next_check }}</p>
+                        </td>
+                        
+                        <td>
+                            <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;">
+                                <strong>Motivo:</strong>
+                            </p>
+                        </td>
+
+                        <td>
+                            <p style="font-size: 10pt;font-family:sans-serif;">
+                                {{ $next->reason->name }}</p>
                         </td>
                     </tr>
                 </table>
             </div>
+
         </div>
 
 
