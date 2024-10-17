@@ -125,4 +125,13 @@ class AppointmentController extends Controller
         // ]);
         return view('appointment.create', compact('appointment', 'reasons', 'prescription', 'reception'));
     }
+
+    public function historic(int $id)
+    {
+        $reception = Reception::find($id);
+        $appointment = Appointment::where("reception_id", $id)->get()->first();
+        $prescription = Prescription::where("reception_id", $id)->get()->first();
+
+        return view('appointment.historic', compact('appointment', 'prescription', 'reception'));
+    }
 }

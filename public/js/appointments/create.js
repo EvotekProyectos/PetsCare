@@ -142,15 +142,29 @@ $(document).ready(function () {
                 data: null,
                 render: function (data) {
                     return `
-                        <a class="btn btn-sm btn-primary"  title="Ver datos de consulta" href="${route('appointment.list', data.id)}">
+                        <a class="btn btn-sm btn-primary"  title="Ver Detalles" href="#" onclick="Details(${data.reception_type_id}, ${data.id});">
                             <span class="mage--hospital-shield-fill"></span>
-                        </a>
-
-                        <a type="button" href="${route('prescription.imprimir', data.id)}" class="btn btn-sm text-primary">
-                            <span class="material-symbols--prescriptions-outline" weigth:10px title="Formula medica"></span>
                         </a>`;
                 }
             },
         ],
     });
 });
+
+async function Details(Type, ID) {
+    event.preventDefault();
+    let actual = Number(document.getElementById("reception_id").value);
+    if (ID === actual) {
+        Swal.fire({
+            icon: "warning",
+            title: "Este resgitro es la consulta actual",
+            timer: 7000,
+            showConfirmButton: true
+        })
+    } else {
+        if (Type === 1) {
+            window.open(route('appointment.historic', ID), '_blank');
+
+        }
+    }
+};

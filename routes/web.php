@@ -155,6 +155,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Appointments
     Route::get('/appointments/consultation/{id}', [AppointmentController::class, 'consultation'])->name('appointment.consultation');
     Route::get('/appointments/{id}', [AppointmentController::class,'list'])->name('appointment.list');
+    Route::get('/appointments/historic/{id}', [AppointmentController::class, 'historic'])->name('appointment.historic');
     Route::resource('appointments', AppointmentController::class);
 
     //PRESCRIPTIONS
