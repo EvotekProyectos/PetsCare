@@ -101,9 +101,7 @@ class PrescriptionController extends Controller
         )->find($id);
         $reception= $prescription->reception_id;
         
-        $next=Appointment::where("reception_id", $reception)->get()->First();
-        
-
+        $next=Appointment::where("reception_id", $reception)->get()->First();       
         $pdf = Pdf::loadView("prescription.pdf", compact("prescription", "next"));
 
 
