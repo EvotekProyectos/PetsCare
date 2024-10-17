@@ -89,5 +89,10 @@ class Pet extends Model
         return $this->belongsTo(\App\Models\ReproductiveStatus::class, 'reproductive_status_id', 'id');
     }
     
+    public function vaccineCertificates()
+    {
+        return $this->hasMany(VaccineCertificate::class, 'pet_id', 'id');
+    }
+
 
 }

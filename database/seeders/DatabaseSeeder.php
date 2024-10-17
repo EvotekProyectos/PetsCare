@@ -35,5 +35,6 @@ class DatabaseSeeder extends Seeder
         $this->call(FamiliesSeeder::class);
         $this->call(PetSeeder::class);
         $this->call(CoverAreaSeeder::class);
+        $this->call(ServiceSeeder::class);
     }
 }

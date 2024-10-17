@@ -23,8 +23,10 @@ use App\Observers\AreaObserver;
 use App\Observers\ReasonObserver;
 use App\Models\Room;
 use App\Models\Schedule;
+use App\Models\Service;
 use App\Models\Shift;
 use App\Models\User;
+use App\Models\VaccineCertificate;
 use App\Observers\AdmissionTypeObserver;
 use App\Observers\AppointmentObserver;
 use App\Observers\AttentionStatusObserver;
@@ -42,8 +44,10 @@ use App\Observers\receptionStatusHistoryObserver;
 use App\Observers\ReproductiveStatusObserver;
 use App\Observers\RoomObserver;
 use App\Observers\ScheduleObserver;
+use App\Observers\ServiceObserver;
 use App\Observers\ShiftObserver;
 use App\Observers\UserObserver;
+use App\Observers\VaccineCertificateObserver;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -88,6 +92,8 @@ class EventServiceProvider extends ServiceProvider
         ReceptionStatusHistory::observe(receptionStatusHistoryObserver::class);
         Appointment::observe(AppointmentObserver::class);
         Prescription::observe(prescriptionsObserver::class);
+        Service::observe(ServiceObserver::class);
+        VaccineCertificate::observe(VaccineCertificateObserver::class);
         
     }
 

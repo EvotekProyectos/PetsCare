@@ -28,13 +28,16 @@ use App\Http\Controllers\ReceptionController;
 use App\Http\Controllers\ReceptionStatusHistoryController;
 use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ShiftController;
+use App\Http\Controllers\VaccineCertificateController;
 use App\Models\Appointment;
 use App\Models\Assignment;
 use App\Models\PetHistory;
 use App\Models\Prescription;
 use App\Models\Reception;
 use App\Models\ReceptionStatusHistory;
+use App\Models\VaccineCertificate;
 
 /*
 |--------------------------------------------------------------------------
@@ -165,5 +168,14 @@ Route::group(['middleware' => ['auth']], function () {
 
     //PET-HISTORY
     Route::get('/pet-history/{id}', [PetHistoryController::class, 'index'])->name('pet-history.index');
+
+    //SERVICES
+    Route::get('/services/list', [ServiceController::class, 'list'])->name('services.list');
+    Route::resource('services', ServiceController::class);
+
+    //Vaccnation certificate
+    Route::get('/vaccine-certificates/list', [VaccineCertificateController::class, 'list'])->name('certificate.list');
+    Route::get("/vaccine-certificates/pdf/{id}", [VaccineCertificateController::class, "imprimir"])->name("certificate.imprimir");
+    Route::resource('vaccine-certificates', VaccineCertificateController::class);
     
 });

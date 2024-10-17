@@ -83,7 +83,7 @@
 
                     <div class="row mb-0">
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary-dark w-100">
+                            <button type="submit" class="btn btn-primary-dark w-100 shadow">
                                 {{ __('Login') }}
                             </button>
                         </div>
