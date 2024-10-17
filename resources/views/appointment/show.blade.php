@@ -20,10 +20,12 @@
 
                     <div class="card-body bg-white">
                         
-                        <div class="form-group mb-2 mb20">
+                        {{-- <div class="form-group mb-2 mb20">
                             <strong>Reception Id:</strong>
                             {{ $appointment->reception_id }}
-                        </div>
+                        </div> --}}
+
+
                         <div class="form-group mb-2 mb20">
                             <strong>Anamnesis:</strong>
                             {{ $appointment->anamnesis }}
@@ -48,10 +50,10 @@
                             <strong>Time Next Check:</strong>
                             {{ $appointment->time_next_check }}
                         </div>
-                        <div class="form-group mb-2 mb20">
+                        {{-- <div class="form-group mb-2 mb20">
                             <strong>Reason Next Check Id:</strong>
                             {{ $appointment->reason_next_check_id }}
-                        </div>
+                        </div> --}}
 
                     </div>
                 </div>

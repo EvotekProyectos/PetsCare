@@ -13,14 +13,14 @@
                         <div style="display: flex; justify-content: space-between; align-items: center;">
 
                             <span id="card_title">
-                                {{ __('Appointment') }}
+                                {{ __('CONSULTA') }}
                             </span>
 
-                             <div class="float-right">
+                             {{-- <div class="float-right">
                                 <a href="{{ route('appointments.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
                                   {{ __('Create New') }}
                                 </a>
-                              </div>
+                              </div> --}}
                         </div>
                     </div>
                     @if ($message = Session::get('success'))
@@ -34,16 +34,16 @@
                             <table class="table table-striped table-hover">
                                 <thead class="thead">
                                     <tr>
-                                        <th>No</th>
+                                        {{-- <th>No</th> --}}
                                         
-										<th>Reception Id</th>
-										<th>Anamnesis</th>
-										<th>Exam Details</th>
-										<th>Diagnosis</th>
-										<th>Observations</th>
-										<th>Day Next Check</th>
-										<th>Time Next Check</th>
-										<th>Reason Next Check Id</th>
+										{{-- <th>Reception Id</th> --}}
+										<th>SUBJETIVO (ANAMNESIS)</th>
+										<th>OBJETIVO (DETALLES DEL EXAMEN)</th>
+										<th>DIAGNÓSTICO PRESUNTIVO/FINAL</th>
+										<th>OBSERVACIONES</th>
+										<th>PRÓXIMO CONTROL</th>
+										<th>HORA</th>
+										<th>MOTIVO DEL PRÓXIMO CONTROL</th>
 
                                         <th></th>
                                     </tr>
@@ -51,18 +51,18 @@
                                 <tbody>
                                     @foreach ($appointments as $appointment)
                                         <tr>
-                                            <td>{{ ++$i }}</td>
+                                            {{-- <td>{{ ++$i }}</td>
                                             
-											<td>{{ $appointment->reception_id }}</td>
+											<td>{{ $appointment->reception_id }}</td> --}}
 											<td>{{ $appointment->anamnesis }}</td>
 											<td>{{ $appointment->exam_details }}</td>
 											<td>{{ $appointment->diagnosis }}</td>
 											<td>{{ $appointment->observations }}</td>
 											<td>{{ $appointment->day_next_check }}</td>
 											<td>{{ $appointment->time_next_check }}</td>
-											<td>{{ $appointment->reason_next_check_id }}</td>
+											<td>{{ $appointment->reason->name }}</td>
 
-                                            <td>
+                                            {{-- <td>
                                                 <form action="{{ route('appointments.destroy',$appointment->id) }}" method="POST">
                                                     <a class="btn btn-sm btn-primary " href="{{ route('appointments.show',$appointment->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
                                                     <a class="btn btn-sm btn-success" href="{{ route('appointments.edit',$appointment->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
@@ -70,7 +70,7 @@
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
                                                 </form>
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -78,7 +78,7 @@
                         </div>
                     </div>
                 </div>
-                {!! $appointments->links() !!}
+                {{-- {!! $appointments->links() !!} --}}
             </div>
         </div>
     </div>

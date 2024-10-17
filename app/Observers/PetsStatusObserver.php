@@ -40,7 +40,7 @@ class PetsStatusObserver
     {
         Log::create([
             'action' => 'ELIMINACIÓN DE ESTADO PARA MASCOTAS',
-            'description' => 'Se eliminoo el estado para mascotas: ' .$petsStatus->name,
+            'description' => 'Se elimino el estado para mascotas: ' .$petsStatus->name,
             'user_id' => (Auth::user()->id) 
         ]);
     }

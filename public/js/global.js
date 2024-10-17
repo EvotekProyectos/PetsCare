@@ -127,3 +127,13 @@ const deletePrescription = (id, table) => {
     const url = route("prescriptions.destroy", id);
     deleteResource(url, table);
 }
+
+const deleteService = (id, table) => {
+    const url = route("services.destroy", id);
+    deleteResource(url, table);
+}
+
+const deleteVaccinationCertificate = (id, table) => {
+    const url = route("vaccine-certificates.destroy", id);
+    deleteResource(url, table);
+}

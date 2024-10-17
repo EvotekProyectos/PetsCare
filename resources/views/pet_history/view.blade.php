@@ -1,24 +1,25 @@
 @extends('layouts.app')
 
 @section('template_title')
-    {{ __('Create') }} Appointment
+    {{ __('Create') }} PetHistory
 @endsection
 
 @section('content')
     <section class="container-fluid">
         <div class="row">
             @if ($message = Session::get('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <p>{{ $message }}</p>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <p>{{ $message }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
             <div class="col-12">
                 <div class="card bg-primary-soft border-0 p-3">
                     <div class="card-header bg-transparent border-0">
                         <div class="d-flex justify-content-between align-items-center">
                             <h4 id="card_title" class="text-primary text-uppercase">
-                                <span class="ic--twotone-pets"></span> CONSULTA
+                                <span class="ic--twotone-pets"></span> MASCOTA
                             </h4>
                         </div>
                     </div>
@@ -33,44 +34,44 @@
                                 <img src="{{ asset('img/pet_pic.png') }}" alt="Foto Mascota" id="preview"
                                     class="img-fixed"
                                     style="width: 115px; height: 115px; object-fit: cover; border-radius: 70px; ">
-                                <h5>{{ $reception->pet->name }}</h5>
+                                <h5>{{ $pet->name }}</h5>
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center" style="margin-bottom: -11px;">
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Especie: <span style="font-weight: normal">
-                                        {{ $reception->pet->specie }} </span></p>
+                                        {{ $pet->specie }} </span></p>
                             </div>
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Raza: <span style="font-weight: normal">
-                                        {{ $reception->pet->raza }} </span></p>
+                                        {{ $pet->raza }} </span></p>
                             </div>
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Género: <span style="font-weight: normal">
-                                        {{ $reception->pet->genre->name }} </span></p>
+                                        {{ $pet->genre->name }} </span></p>
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center" style="margin-bottom: -11px;">
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Descripción física: <span style="font-weight: normal">
-                                        {{ $reception->pet->physic_descrip }} </span></p>
+                                        {{ $pet->physic_descrip }} </span></p>
                             </div>
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Peso: <span style="font-weight: normal">
-                                        {{ $reception->pet->weight }} </span></p>
+                                        {{ $pet->weight }} </span></p>
                             </div>
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Clasificación: <span style="font-weight: normal">
-                                        {{ $reception->pet->petClassification->name }} </span></p>
+                                        {{ $pet->petClassification->name }} </span></p>
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center">
                             <div class="col-md-3">
                                 <p style="font-weight: bold">E. Reproductivo: <span style="font-weight: normal">
-                                        {{ $reception->pet->reproductiveStatus->name }} </span></p>
+                                        {{ $pet->reproductiveStatus->name }} </span></p>
                             </div>
                             @php
-                                $birthday = \Carbon\Carbon::parse($reception->pet->birthday);
+                                $birthday = \Carbon\Carbon::parse($pet->birthday);
                                 $now = \Carbon\Carbon::now();
 
                                 $years = $birthday->diffInYears($now);
@@ -84,75 +85,17 @@
                             </div>
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Fallecido: <span style="font-weight: normal">
-                                        {{ $reception->pet->deceased == 1 ? 'Sí' : 'No' }}
+                                        {{ $pet->deceased == 1 ? 'Sí' : 'No' }}
                                     </span></p>
                             </div>
                         </div>
-                        <div class="row d-flex justify-content-center mt-2" style="margin-bottom: -11px;">
-                            <div class="col-md-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 id="card_title" class="text-primary text-uppercase">
+                                    <span class="ic--twotone-pets"></span> historial clínico
+                                </h5>
                             </div>
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Tipo: <span style="font-weight: normal">
-                                        {{ $reception->reason->name }} </span></p>
-                            </div>
-                            <div class="col-md-3">
-                            </div>
-                        </div>
-                        <div class="row d-flex justify-content-center ">
-                            <div class="col-md-3">
-                            </div>
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Fecha: <span style="font-weight: normal">
-                                        {{ $reception->entry_date }} </span></p>
-                            </div>
-                            <div class="col-md-3">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body ">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
-                                DATOS ESPECÍFICOS
-                            </h5>
-                        </div>
-                        <form method="POST" action="{{ route('appointments.store') }}" role="form" id="NewAppointment"
-                            enctype="multipart/form-data">
-                            @csrf
-
-                            @include('appointment.form')
-
-                        </form>
-                    </div>
-                    <div class="card-body ">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h4 id="card_title" class="text-primary text-uppercase">
-                                <span class="material-symbols--prescriptions-outline "></span> FÓRMULA MÉDICA
-                            </h4>
-                        </div>
-                        <form method="POST" onsubmit="AddPrescription()" role="form" id="NewPrescription"
-                            enctype="multipart/form-data">
-                            @csrf
-
-                            @include('prescription.form')
-
-                        </form>
-                    </div>
-                    {{-- <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 id="card_title" class=" text-uppercase" style="color: #007c84">
-                                PRODUCTOS/SERVICIOS
-                            </h5>
-                        </div>
-                    </div> --}}
-                    <div class="col-12 mt-2 d-flex justify-content-end">
-                        <button  class="btn btn-primary btn-sm text-uppercase rounded-4" onclick="EndAppointment()">
-                            Finalizar Consulta <i class="fas fa-file-medical fa-lg"></i></button>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 id="card_title" class="text-primary text-uppercase">
-                                <span class="ic--twotone-pets"></span> historial clínico
-                            </h5>
+    
                         </div>
                         <div class="col-12">
                             <div class="table-responsive">
@@ -172,7 +115,18 @@
                                 </table>
                             </div>
                         </div>
+
+
                     </div>
+                    
+                    {{-- <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 id="card_title" class=" text-uppercase" style="color: #007c84">
+                                PRODUCTOS/SERVICIOS
+                            </h5>
+                        </div>
+                    </div> --}}
+                    
                 </div>
             </div>
         </div>
@@ -183,10 +137,9 @@
     <script>
         var ruta = "{{ asset('') }}";
         var imgDefault = "{{ asset('img/pet_pic.png') }}";
-        var Pet_Id = {{$reception->pet_id}};
-        var Pic_id = {{ $reception->pet->picture_id ?? 'null' }}; 
-        var Pic_route = "{{ $reception->pet->file->route ?? '' }}";
-        
+        var Pic_id = {{ $pet->picture_id ?? 'null' }}; 
+        var Pic_route = "{{ $pet->file->route ?? '' }}";
+        var Pet_Id = {{ $pet->id }};
     </script>
-    <script src="{{ asset('js/appointments/create.js') }}" defer></script>
+    <script src="{{ asset('js/pet-history/view.js') }}" defer></script>
 @endpush

@@ -28,6 +28,8 @@ class AppointmentController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * $appointments->perPage());
     }
 
+
+    
     /**
      * Show the form for creating a new resource.
      */
@@ -45,15 +47,17 @@ class AppointmentController extends Controller
      */
     public function store(AppointmentRequest $request)
     {
-        Appointment::create($request->validated());
+        $new  = Appointment::create($request->validated());
         ReceptionStatusHistory::create([
             'reception_id' => $request->reception_id,
             'attention_status_id' => 1,
         ]);
         $this->authorize("create", Appointment::class);
 
-        return redirect()->route('assignment.index')
-            ->with('success', 'Consulta Finalizada Exitosamente, puedes seguir atendiendo al siguiente paciente');
+        return response()->json($new);
+
+        // return redirect()->route('assignment.index')
+        //     ->with('success', 'Consulta Finalizada Exitosamente, puedes seguir atendiendo al siguiente paciente');
     }
 
     /**
@@ -100,12 +104,13 @@ class AppointmentController extends Controller
         return response()->json($appointment);
     }
 
-    public function list()
-    {
-        $appointment = Appointment::with('reception', 'reason')->get();
 
-        return DataTables::of($appointment)->make(true);
-    }
+    public function list($id)
+{
+    $appointments = Appointment::with('reception', 'reason')->where('reception_id', $id)->get();
+    return view('appointment.index', compact('appointments'));
+}
+
 
     public function consultation(int $id)
     {
@@ -114,10 +119,19 @@ class AppointmentController extends Controller
         $reasons = Reason::all();
         $prescription = new Prescription();
         $this->authorize("create", Appointment::class);
-        ReceptionStatusHistory::create([
-            'reception_id' => $id,
-            'attention_status_id' => 3,
-        ]);
+        // ReceptionStatusHistory::create([
+        //     'reception_id' => $id,
+        //     'attention_status_id' => 3,
+        // ]);
         return view('appointment.create', compact('appointment', 'reasons', 'prescription', 'reception'));
+    }
+
+    public function historic(int $id)
+    {
+        $reception = Reception::find($id);
+        $appointment = Appointment::where("reception_id", $id)->get()->first();
+        $prescription = Prescription::where("reception_id", $id)->get()->first();
+
+        return view('appointment.historic', compact('appointment', 'prescription', 'reception'));
     }
 }

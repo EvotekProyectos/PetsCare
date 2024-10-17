@@ -87,10 +87,12 @@
             <div class="col-md-4">
                 <div class="form-group mb-2">
                     <label for="name" class="form-label">FECHA DE INGRESO</label>
+
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="lucide--calendar-clock"></span>
                         </span>
+                        
                         <input type="datetime-local" name="entry_date"
                             class="form-control @error('entry_date') is-invalid @enderror"
                             value="{{ old('entry_date', $reception?->entry_date) }}" id="entry_date"

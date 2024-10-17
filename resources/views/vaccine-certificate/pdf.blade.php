@@ -63,9 +63,9 @@
                     </td>
                     <td>
 
-                        <p style="font-family: sans-serif; font-size: 10pt; text-transform: uppercase;">Fórmula médica
+                        <p style="font-family: sans-serif; font-size: 10pt; text-transform: uppercase;">CARTILLA
+                            VACUNACIÓN
                         </p>
-                        <p class="head">No. {{ $prescription->id }}</p>
                     </td>
                 </tr>
             </table>
@@ -76,8 +76,8 @@
                 <table style="width: 100%;">
                     <tr>
                         <th style="text-align: center; width: 20%">
-                            <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;"> Reservado al
-                                tratamiento de animales</p>
+                            <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;">CERTIFICADO DE
+                                VACUNACIÓN</p>
                         </th>
                     </tr>
                 </table>
@@ -85,19 +85,20 @@
         </div>
 
         <div
-            style="border:1px solid #c5e8f7; margin-top:0%; border-left:none; border-right:none; border-top:none; background-color: #eef7fc;">
+            style="border:1px solid #c5e8f7; margin-top:0.1%; border-left:none; border-right:none; border-top:none; background-color: #eef7fc;">
             <div>
                 <table style="width: 100%;">
                     <tr>
                         <td>
                             <p style="font-family: sans-serif; font-size: 10pt; text-transform=uppercase; margin: 0;">
-                                Datos de la
-                                familia</p>
+                                Datos de la familia</p>
                         </td>
                     </tr>
                 </table>
             </div>
         </div>
+
+
 
         <div>
             <table style="width: 100%; border-collapse: collapse;">
@@ -106,17 +107,19 @@
                         <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Nombre:</p>
 
                     </td>
+
                     <td style="text-align: left; padding: 5px 10px;">
-                        <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">
-                            {{ $prescription->pet->family->name }}
+                        <p style="font-size: 10pt; font-family: sans-serif; margin: 0;">
+                            {{ $pet->family->name }}
                         </p>
                     </td>
+
                     <td>
                         <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Teléfono:</p>
                     </td>
                     <td style="padding: 5px 10px;">
                         <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">
-                            {{ $prescription->pet->family->phone }}
+                            {{ $pet->family->phone }}
                         </p>
                     </td>
                 </tr>
@@ -143,14 +146,14 @@
                         </td>
                         <td style="padding: 5px 10px;">
                             <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{ $prescription->pet->name }}
+                                {{ $pet->name }}
                             </p>
                         <td>
                             <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Especie</p>
                         </td>
                         <td style="padding: 5px 10px;">
                             <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{ $prescription->pet->specie }}
+                                {{ $pet->specie }}
                             </p>
                         </td>
                     </tr>
@@ -160,7 +163,7 @@
                         </td>
                         <td style="padding: 5px 10px;">
                             <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{ $prescription->pet->raza }}
+                                {{ $pet->raza }}
                             </p>
                         </td>
                         <td>
@@ -168,95 +171,48 @@
                         </td>
                         <td style="padding: 5px 10px;">
                             <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{ $prescription->pet->weight }}
+                                {{ $pet->weight }}
                             </p>
                         </td>
                     </tr>
+                    <tr>
+                        <td>
+                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Género:</p>
+                        </td>
+                        <td style="padding: 5px 10px;">
+                            <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
+                                {{ $pet->gender_id }}
+                            </p>
+                        </td>
+                        
+                        
+                    </tr>
                 </table>
             </div>
 
+
+
             <div
-                style="border:1px solid #c5e8f7; margin-top: 40px; border-left:none; border-right:none; border-top:none; background-color: #eef7fc;">
-                <div>
-                    <table style="width: 100%; ">
-                        <tr>
-                            <td>
-                                <p style="font-family: sans-serif; font-size: 10pt; margin: 0;"> Detalles de la receta
-                                </p>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-
-
-            <div style="border: 1px solid #3459A4;  border-left:none; border-right:none; border-top:none;  margin: 0;">
+                style="border:1px solid #c5e8f7; margin-top:20px; border-left:none; border-right:none;  background-color: #eef7fc;">
                 <div>
                     <table style="width: 100%;">
                         <tr>
-                            <td>
-                                <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;"><strong>Fecha de
-                                        registro:</strong>
-                                </p>
-                            </td>
-                            <td>
-                                <p style="font-size: 10pt;font-family:sans-serif;">{{ $prescription->date }}</p>
-                            </td>
-                            <td>
+                            <th style="border-right:2px solid #c5e8f7; border-left:2px solid #c5e8f7;  ">
                                 <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;">
-                                    <strong>Registra:</strong>
+                                    <strong>Tipo</strong>
                                 </p>
-                            </td>
-                            <td>
-                                <p style="font-size: 10pt;font-family:sans-serif;">{{ $prescription->vet->name }}</p>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+                            </th>
 
-            <div>
-                <table style="width: 100%;">
-                    <tr>
-                        <td>
-                            <p class="head">Diagnóstico:</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <p class="body">{{ $prescription->diagnosis }}</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <p class="head">Medicamentos:</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <p class="body">{{ $prescription->medicine }}</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <p class="head">Observaciones:</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <p class="body" style="padding=50px;">{{ $prescription->observations }}</p>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <div
-                style="border:1px solid #c5e8f7; margin-top: 60px; border-left:none; border-right:none; border-top:none; background-color: #eef7fc;">
-                <div>
-                    <table style="width: 100%; ">
-                        <tr>
-                            <th>
-                                <p style="font-family: sans-serif; font-size: 10pt; margin: 0;"> Próximo control
+                            <th style="border-right:2px solid #c5e8f7;">
+                                <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;"><strong>Fecha de
+                                        aplicación</strong>
+                                </p>
+                            </th>
+                            <th style="border-right:2px solid #c5e8f7;">
+                                <p style="font-size: 10pt;font-family:sans-serif;"><strong>Nombre/ Producto</strong></p>
+                            </th>
+                            <th style="border-right:2px solid #c5e8f7;">
+                                <p style="font-size: 10pt;font-family:sans-serif;"> <strong>Próxima aplicación</strong>
                                 </p>
                             </th>
                         </tr>
@@ -264,54 +220,55 @@
                 </div>
             </div>
 
-
             <div>
-                <table style="width: 100%;">
+                <table style="width: 100%; border:1px solid #c5e8f7;">
+                    @foreach($certificate as $cert)
                     <tr>
-                        <td>
-                            <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;">
-                                <strong>Fecha:</strong>
-                            </p>
+                         <td>
+                            <p class="body" style="text-align: center;">{{ $cert->service->name }}</p> 
                         </td>
-
                         <td>
-                            <p style="font-size: 10pt;font-family:sans-serif;">{{ $next->day_next_check }}
-                            </p>
+                         <p class="body" style="text-align: center;">{{ $cert->application_date }}</p>
                         </td>
-
                         <td>
-                            <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;">
-                                <strong>Hora:</strong>
-                            </p>
+                            <p class="body" style="text-align: center;">{{ $cert->product }}</p>
                         </td>
-
                         <td>
-                            <p style="font-size: 10pt;font-family:sans-serif;">
-                                {{ $next->time_next_check }}</p>
-                        </td>
-                        
-                        <td>
-                            <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;">
-                                <strong>Motivo:</strong>
-                            </p>
-                        </td>
-
-                        <td>
-                            <p style="font-size: 10pt;font-family:sans-serif;">
-                                {{ $next->reason->name }}</p>
-                        </td>
+                            <p class="body" style="text-align: center;">{{ $cert->next_application_date }}</p>
+                        </td> 
                     </tr>
+                    @endforeach
+
                 </table>
             </div>
 
+            <div>
+                <div>
+                    <table style="width: 100%; margin-top:20%;">
+                        <tr>
+                            <td>
+
+                            </td>
+                            <th style=" align-content:center; border-top: 1px solid #000000; ">
+                                <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;"><strong>Firma
+                                        MVZ</strong>
+                                </p>
+                            </th>
+                            <td>
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+
+
+
+            <div class="footer">
+                <p>Hospital Veterinario Pets Care - Todos los derechos reservados</p>
+            </div>
         </div>
-
-
-        <div class="footer">
-            <p>Hospital Veterinario Pets Care - Todos los derechos reservados</p>
-        </div>
-    </div>
-
 
 
 </body>

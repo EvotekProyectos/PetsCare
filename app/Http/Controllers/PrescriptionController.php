@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Prescription;
 use App\Http\Requests\PrescriptionRequest;
+use App\Models\Appointment;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -42,7 +43,6 @@ class PrescriptionController extends Controller
     public function store(PrescriptionRequest $request)
     {
         $new = Prescription::create($request->validated());
-        Prescription::create($request->validated());
         $this->authorize("create",Prescription::class);
 
         return response()->json($new);
@@ -99,8 +99,11 @@ class PrescriptionController extends Controller
             "vet",
             "reception"
         )->find($id);
+        $reception= $prescription->reception_id;
+        
+        $next=Appointment::where("reception_id", $reception)->get()->First();       
+        $pdf = Pdf::loadView("prescription.pdf", compact("prescription", "next"));
 
-        $pdf = Pdf::loadView("prescription.pdf", compact("prescription"));
 
         return $pdf->stream("PDF.pdf");
     }
