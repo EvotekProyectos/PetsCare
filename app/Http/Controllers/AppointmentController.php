@@ -8,6 +8,7 @@ use App\Models\Prescription;
 use App\Models\Reason;
 use App\Models\Reception;
 use App\Models\ReceptionStatusHistory;
+use App\Models\VaccineCertificate;
 use Yajra\DataTables\Facades\DataTables;
 
 /**
@@ -38,8 +39,9 @@ class AppointmentController extends Controller
         $appointment = new Appointment();
         $reasons = Reason::all();
         $prescription = new Prescription();
+       
         $this->authorize("create", Appointment::class);
-        return view('appointment.create', compact('appointment', 'reasons', 'prescription'));
+        return view('appointment.create', compact('appointment', 'reasons', 'prescription', ));
     }
 
     /**
@@ -118,12 +120,13 @@ class AppointmentController extends Controller
         $reception = Reception::with('pet', 'reason')->findorfail($id);
         $reasons = Reason::all();
         $prescription = new Prescription();
+        $vaccineCertificate = new VaccineCertificate();
         $this->authorize("create", Appointment::class);
         // ReceptionStatusHistory::create([
         //     'reception_id' => $id,
         //     'attention_status_id' => 3,
         // ]);
-        return view('appointment.create', compact('appointment', 'reasons', 'prescription', 'reception'));
+        return view('appointment.create', compact('appointment', 'reasons', 'prescription', 'reception', 'vaccineCertificate'));
     }
 
     public function historic(int $id)

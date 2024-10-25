@@ -43,10 +43,9 @@ class VaccineCertificateController extends Controller
     public function store(VaccineCertificateRequest $request)
     {
         $this->authorize("create", VaccineCertificate::class);
-        VaccineCertificate::create($request->validated());
+        $vaccine = VaccineCertificate::create($request->validated());
 
-        return redirect()->route('vaccine-certificates.index')
-            ->with('success', 'VaccineCertificate created successfully.');
+        return response()->json($vaccine);
     }
 
     /**

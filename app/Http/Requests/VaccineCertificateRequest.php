@@ -22,18 +22,17 @@ class VaccineCertificateRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'vaccine' => 'string',
-			'lab' => 'string',
-			'lote' => 'string',
-			'observations_vaccine' => 'string',
-			'product_internal' => 'string',
-			'dose_internal' => 'string',
-			'next_internal_date' => 'required',
-			'observations_internal' => 'string',
-			'product_external' => 'string',
-			'dose_external' => 'string',
-			'next_external_date' => 'required',
-			'observations_external' => 'string',
+            'pet_id' => 'nullable|integer|exists:pets,id',
+            'service_id' => 'nullable|integer|exists:services,id',
+            'product' => 'nullable|string',
+            'lab' => 'nullable|string',
+            'lote' => 'nullable|string',
+            'dose' => 'nullable|string',
+            'application_date' => 'nullable|date',
+            'last_deworming_date' => 'nullable|date',
+            'next_application_date' => 'required|date',
+            'observations' => 'nullable|string',
+            
         ];
     }
 }
