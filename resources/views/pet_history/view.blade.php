@@ -91,11 +91,42 @@
                         </div>
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
+                                <h5 id="card_title" class=" text-uppercase" style="color: #0455A0">
+                                    <span class="map--veterinary-care"></span> PRODUCTOS/SERVICIOS
+                                </h5>
+                            </div>
+                            <div class="row">
+                                <div class="col d-flex justify-content-between align-items-center my-2">
+                                    <div class="col">
+                                        <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
+                                            onclick="window.location.href='{{ route('vaccine-certificates.show', $pet->id) }}'">
+                                            <span class="badge custom-badge-pill"><span
+                                                    class="healthicons--syringe-vaccine"></span></span>
+                                            CARTILLA Virtual
+                                        </button>
+                                    </div>
+                                </div>
+                                {{-- <div class="col d-flex justify-content-between align-items-center my-2">
+                                <div class="col">
+                                    <button  class="btn btn-costum-services btn-lg text-uppercase rounded-4" onclick="" >
+                                        <span class="badge custom-badge-pill"><span class="hugeicons--chemistry-02"></span></span> EXÁMENES DE GABINETE </button>
+                                </div>
+                            </div>
+                            <div class="col d-flex justify-content-between align-items-center my-2">
+                                <div class="col">
+                                    <button  class="btn btn-costum-services btn-lg text-uppercase rounded-4" onclick="" >
+                                        <span class="badge custom-badge-pill"><span class="hugeicons--x-ray"></span></span> IMÁGENES DIAGNÓSTICAS </button>
+                                </div>
+                            </div> --}}
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
                                 <h5 id="card_title" class="text-primary text-uppercase">
                                     <span class="ic--twotone-pets"></span> historial clínico
                                 </h5>
                             </div>
-    
+
                         </div>
                         <div class="col-12">
                             <div class="table-responsive">
@@ -115,18 +146,8 @@
                                 </table>
                             </div>
                         </div>
-
-
                     </div>
-                    
-                    {{-- <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 id="card_title" class=" text-uppercase" style="color: #007c84">
-                                PRODUCTOS/SERVICIOS
-                            </h5>
-                        </div>
-                    </div> --}}
-                    
+
                 </div>
             </div>
         </div>
@@ -137,7 +158,7 @@
     <script>
         var ruta = "{{ asset('') }}";
         var imgDefault = "{{ asset('img/pet_pic.png') }}";
-        var Pic_id = {{ $pet->picture_id ?? 'null' }}; 
+        var Pic_id = {{ $pet->picture_id ?? 'null' }};
         var Pic_route = "{{ $pet->file->route ?? '' }}";
         var Pet_Id = {{ $pet->id }};
     </script>

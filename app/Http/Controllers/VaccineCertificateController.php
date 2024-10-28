@@ -51,11 +51,12 @@ class VaccineCertificateController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(int $id)
     {
-        $vaccineCertificate = VaccineCertificate::find($id);
-        $this->authorize("view", VaccineCertificate::class);
-        return view('vaccine-certificate.show', compact('vaccineCertificate'));
+        $pet=Pet::with('family')->find($id);
+        $vaccineCertificates = VaccineCertificate::with("pet")->where("pet_id", $id)->get();
+        // $this->authorize("viewAny", VaccineCertificate::class);
+        return view('vaccine-certificate.show', compact('vaccineCertificates', 'pet'));
     }
 
     /**
@@ -89,7 +90,7 @@ class VaccineCertificateController extends Controller
     
     public function imprimir(int $id)
     {   
-        $pet=Pet::with('family')->find($id);
+        $pet=Pet::with('family','genre')->find($id);
         $certificate = VaccineCertificate::with("pet")->where("pet_id", $id)->get();
         $pdf = Pdf::loadView("vaccine-certificate.pdf", compact("certificate", "pet"));
         return $pdf->stream("PDF.pdf");
