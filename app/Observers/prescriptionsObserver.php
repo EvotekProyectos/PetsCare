@@ -13,9 +13,12 @@ class prescriptionsObserver
      */
     public function created(Prescription $prescription): void
     {
+        $pet=$prescription->pet;
+
         Log::create([
+            
             "action"=>'CREACIÓN DE FÓRMULA MÉDICA',
-            "description"=>'Se creó una nueva formula medica',
+            "description"=>'Se creó una nueva formula medica para'  .$pet->name. '',
             "user_id"=>(Auth::user()->id)??null
         ]);
     }

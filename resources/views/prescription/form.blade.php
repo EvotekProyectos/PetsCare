@@ -91,7 +91,7 @@
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="icon-park-twotone--medicine-bottle-one"></span>
                         </span>
-                        <textarea name="medicine" class="form-control @error('medicine') is-invalid @enderror" id="medicine"
+                        <textarea name="medicine"  class="form-control @error('medicine') is-invalid @enderror" id="medicine"
                             placeholder="Nombres de los medicamentos, la presentación, cantidad y forma de administración." rows="4">{{ old('medicine', $prescription?->medicine) }}</textarea>
                         {!! $errors->first('medicine', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                     </div>
@@ -107,7 +107,7 @@
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="icon-park-twotone--medicine-bottle-one"></span>
                         </span>
-                        <textarea name="observations" class="form-control @error('observations') is-invalid @enderror" id="observations"
+                        <textarea name="observations"  class="form-control @error('observations') is-invalid @enderror" id="observations"
                             placeholder="Observaciones del emisor" rows="4">{{ old('observations', $prescription?->observations) }}</textarea>
                         {!! $errors->first('observations', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                     </div>

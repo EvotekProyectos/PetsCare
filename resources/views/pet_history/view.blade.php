@@ -89,6 +89,16 @@
                                     </span></p>
                             </div>
                         </div>
+
+                        <div class="form-group mb-2">
+                        <div class="col-12 mt-2 d-flex justify-content-end">
+                            <a href="{{ route('prescription.create', ['id' => $pet->id]) }}"  class="btn btn-secundary btn-sm text-uppercase rounded-4 shadow">
+                                <span class="material-symbols--prescriptions-outline "></span> 
+                                NUEVA FÓRMULA MÉDICA</a>
+                        </div>
+ 
+                        
+                        
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h5 id="card_title" class="text-primary text-uppercase">

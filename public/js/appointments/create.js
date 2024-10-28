@@ -49,6 +49,7 @@ async function EndAppointment() {
         });
         return; // Salir de la función si 'day_next_check' está vacío
     }
+
     // Confirmación con SweetAlert2
     const result = await Swal.fire({
         title: '¿Ya terminó la consulta?',
@@ -61,6 +62,7 @@ async function EndAppointment() {
         cancelButtonText: 'No, continuar consulta.'
     });
 
+    
     if (result.isConfirmed) {
         try {
             // Enviar el formulario de la cita

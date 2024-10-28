@@ -18,11 +18,11 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('prescriptions.store') }}" role="form"
+                        <form method="POST" onsubmit="AddPrescription()" role="form"  id="NewPrescription"
                             enctype="multipart/form-data">
                             @csrf
 
-                            @include('prescription.form')
+                            @include('prescription.form2')
 
                         </form>
                     </div>
@@ -31,3 +31,7 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/prescriptions/create.js') }}" defer></script>
+@endpush
