@@ -16,11 +16,11 @@
                                 <span class="material-symbols--prescriptions-outline"></span> FORMULAS MEDICAS
                             </h4>
 
-                            <div class="float-right">
+                            {{-- <div class="float-right">
                                 <a href="{{ route('prescriptions.create') }}" class="btn btn-primary btn-sm rounded-4">
                                     <i class="fas fa-plus"></i> NUEVA FORMULA MEDICA
                                 </a>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                     @if ($message = Session::get('success'))
@@ -40,7 +40,7 @@
 										
 										
 										<th>Fecha</th>
-                                        <th>Veterinario </th>
+                                        <th>MVZ</th>
 										<th>Medicamentos</th>
 										<th>Diagnostico</th>
 										

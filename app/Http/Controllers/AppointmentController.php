@@ -72,7 +72,7 @@ class AppointmentController extends Controller
 
         return view('appointment.show', compact('appointment'));
     }
-
+  
     /**
      * Show the form for editing the specified resource.
      */

@@ -7,12 +7,15 @@ use App\Http\Requests\ReceptionRequest;
 use App\Models\AdmissionType;
 use App\Models\Area;
 use App\Models\Family;
+use App\Models\Pet;
 use App\Models\Reason;
 use App\Models\ReceptionStatusHistory;
 use App\Models\Room;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf  as Pdf;
 use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Http\Request;
 
 /**
  * Class ReceptionController
@@ -26,7 +29,7 @@ class ReceptionController extends Controller
     public function index()
     {
         $receptions = Reception::paginate();
-        $this->authorize("viewAny",Reception::class);
+        $this->authorize("viewAny", Reception::class);
 
         return view('reception.index', compact('receptions'))
             ->with('i', (request()->input('page', 1) - 1) * $receptions->perPage());
@@ -43,10 +46,10 @@ class ReceptionController extends Controller
         $families = Family::all();
         $reasons = Reason::all();
         $users = User::all();
-        $rooms= Room::all();
+        $rooms = Room::all();
 
         $this->authorize("create", Reception::class);
-        return view('reception.create', compact('reception','admissions','areas','families','reasons','users','rooms'));
+        return view('reception.create', compact('reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms'));
     }
 
     /**
@@ -57,9 +60,10 @@ class ReceptionController extends Controller
         $reception = Reception::create($request->validated());
 
         ReceptionStatusHistory::create([
-            'reception_id' => $reception->id, 
-            'attention_status_id' => 2,]);
-            
+            'reception_id' => $reception->id,
+            'attention_status_id' => 2,
+        ]);
+
         $this->authorize("create", Reception::class);
         return redirect()->route('receptions.index')
             ->with('success', 'Recepción guardada exitósamente.');
@@ -86,9 +90,9 @@ class ReceptionController extends Controller
         $families = Family::all();
         $reasons = Reason::all();
         $users = User::all();
-        $rooms= Room::all();
+        $rooms = Room::all();
         $this->authorize("update", $reception);
-        return view('reception.edit', compact('reception','admissions','areas','families','reasons','users','rooms'));
+        return view('reception.edit', compact('reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms'));
     }
 
     /**
@@ -104,23 +108,46 @@ class ReceptionController extends Controller
 
     public function destroy($id)
     {
-        $reception= Reception::find($id);
+        $reception = Reception::find($id);
         $this->authorize("delete", $reception);
         $reception->delete();
 
         return response()->json($reception);
     }
 
-    public function list(){
-        $receptions= Reception::with('receptionType','family','pet','reason')->get();
+    public function list()
+    {
+        $receptions = Reception::with('receptionType', 'family', 'pet', 'reason')->get();
         return DataTables::of($receptions)->make(true);
     }
 
     public function historial($id)
     {
-        $receptions = Reception::with('receptionType','reason', 'vet')->where('pet_id', $id)->get();
+        $receptions = Reception::with('receptionType', 'reason', 'vet')->where('pet_id', $id)->get();
         return DataTables::of($receptions)->make(true);
     }
 
+
+    public function hospital_authorization($id) {
+        $reception = Reception::find($id);
+        $pet=Pet::with('family', 'genre')->find($id);
+        return view('reception.pdf', compact("reception", "pet")); 
+     }
+
+     public function hospital_authorizationpdf(Request $request, $id)
+     {
+         $reception = Reception::find($id);
+         $pet = Pet::with('family', 'genre')->find($id);
+         
+         $signature = $request->input('signature');
+
+         $pdf = PDF::loadView('reception.pdf', compact('reception', 'pet', 'signature'));
+         return $pdf->stream("hospitalizacion.pdf");
+     }
+ 
     
-}
+     
+
+    }
+
+    
