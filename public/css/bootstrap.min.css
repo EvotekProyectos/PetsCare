@@ -3685,6 +3685,28 @@ fieldset:disabled .btn {
     --bs-btn-disabled-border-color: #212529
 }
 
+.btn-costum-services {
+    --bs-btn-color: #000000;
+    --bs-btn-bg: #ffffff;
+    --bs-btn-border-color: #ffffff;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #0455A0;
+    --bs-btn-hover-border-color: #0a58ca;
+    --bs-btn-focus-shadow-rgb: 49, 132, 253;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #0a58ca;
+    --bs-btn-active-border-color: #ffffff;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #0455A0;
+    --bs-btn-disabled-border-color: #0455A0;
+}
+
+.btn-costum-services:hover .custom-badge-pill {
+  background-color: #ffffff !important; 
+  color: #000000; 
+}
+
 .btn-outline-primary {
     --bs-btn-color: #0d6efd;
     --bs-btn-border-color: #0d6efd;
@@ -9799,6 +9821,17 @@ fieldset:disabled .btn {
 .bg-primary {
     --bs-bg-opacity: 1;
     background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity)) !important
+}
+.custom-badge-pill {
+    background-color: #D3F0F3 !important; 
+    color: #000000; 
+    border-radius: 50rem; 
+    padding: 0.5em 1em; 
+}
+
+.custom-badge-pill:hover {
+    background-color: #ffffff !important; 
+    color: #000000; 
 }
 
 .bg-secondary {

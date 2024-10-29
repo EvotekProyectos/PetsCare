@@ -38,8 +38,8 @@ $(document).ready(function () {
                         <button type="button" class="btn btn-sm text-primary" onclick="showAlertWithCallback(() => deletePrescription(${data.id}, table));">
                             <i class="fas fa-trash"></i>
                         </button>
-                        <a type="button" href="${route('imprimir', data.id)}" class="btn btn-sm text-primary">
-                            <span class="material-symbols--print" weigth:10px></span>
+                       <a type="button" href="${route('prescription.imprimir', data.id)}" class="btn btn-sm text-primary">
+                            <span class="material-symbols--prescriptions-outline" weigth:10px title="Formula medica"></span>
                         </a>`
                 }
             },

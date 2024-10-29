@@ -297,8 +297,8 @@
                         {!! $errors->first('exit_date', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                     </div>
                 </div>
-
             </div>
+
         </div>
         <div class="col-12 mt-2 d-flex justify-content-end">
             <button type="submit" class="btn btn-primary btn-sm text-uppercase rounded-4">

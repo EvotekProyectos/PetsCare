@@ -144,6 +144,10 @@ Route::group(['middleware' => ['auth']], function () {
     //RECEPTIONS
     Route::get('/receptions/list', [ReceptionController::class, 'list'])->name('reception.list');
     Route::get('/receptions/historial/{id}', [ReceptionController::class, 'historial'])->name('reception.historial');
+    Route::get('/receptions/hospital/{id}', [ReceptionController::class, 'hospital_authorization'])->name('hospital.list');
+    
+    Route::get('/receptions/hospital/pdf/{id}', [ReceptionController::class, 'hospital_authorizationpdf'])->name('hospital.pdf');
+    
     Route::resource('receptions', ReceptionController::class);
 
     //RECEPTIONS STATUS HISTORIES
@@ -163,6 +167,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     //PRESCRIPTIONS
     Route::get('/prescriptions/list', [PrescriptionController::class, 'list'])->name('prescription.list');
+    Route::get("/prescriptions/create/{id}", [PrescriptionController::class, 'create'])->name('prescription.create');
     Route::get("/prescriptions/pdf/{id}", [PrescriptionController::class, "imprimir"])->name("prescription.imprimir");
     Route::resource('prescriptions',PrescriptionController::class);
 

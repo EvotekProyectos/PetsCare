@@ -70,5 +70,6 @@ class Prescription extends Model
         return $this->belongsTo(\App\Models\Pet::class, 'pet_id', 'id');
     }
     
+    
 
 }

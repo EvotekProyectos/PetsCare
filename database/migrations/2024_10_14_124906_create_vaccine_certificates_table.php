@@ -23,6 +23,7 @@ return new class extends Migration
             $table->date("last_deworming_date")->nullable();
             $table->date("next_application_date")->nullable();
             $table->text("observations")->nullable();
+            $table->foreignId('vet_id')->nullable()->references('id')->on('users');
             $table->timestamps();
             $table->softDeletes();
         });

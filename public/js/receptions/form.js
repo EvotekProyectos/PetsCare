@@ -34,9 +34,7 @@ function togglee(radio) {
         case 2:
             document.getElementById("adm").style.display = "block";
             document.getElementById("area").style.display = "block";
-            document.getElementById("motivo").style.display = "block";
             document.getElementById("mvz").style.display = "block";
-            document.getElementById("salida").style.display = "block";
             break;
         case 3:
             document.getElementById("mvz").style.display = "block";

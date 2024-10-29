@@ -18,7 +18,7 @@
                             {{ method_field('PATCH') }}
                             @csrf
 
-                            @include('prescription.form')
+                            @include('prescription.form2')
 
                         </form>
                     </div>

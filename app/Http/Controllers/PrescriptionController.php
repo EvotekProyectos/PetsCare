@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Prescription;
 use App\Http\Requests\PrescriptionRequest;
 use App\Models\Appointment;
+use App\Models\Pet;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Client\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 /**
@@ -30,22 +32,32 @@ class PrescriptionController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        $prescription = new Prescription();
-        $this->authorize("create",Prescription::class);
-        return view('prescription.create', compact('prescription'));
-    }
+
+    //   public function create()
+    //   {
+    //       $prescription = new Prescription();
+    //       $this->authorize("create",Prescription::class);
+    //       return view('prescription.create', compact('prescription'));
+    //   }
+
+      public function create($id)
+      {   $pet = Pet::find($id);
+          $prescription = new Prescription();
+          $this->authorize("create",Prescription::class);
+          return view('prescription.create', compact('prescription','pet'));
+     }
+
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(PrescriptionRequest $request)
-    {
-        $new = Prescription::create($request->validated());
-        $this->authorize("create",Prescription::class);
-
-        return response()->json($new);
+     public function store(PrescriptionRequest $request)
+     {
+         $new = Prescription::create($request->validated());
+         $this->authorize("create",Prescription::class);
+         
+         return response()->json($new);
+        
     }
 
     /**
@@ -103,8 +115,8 @@ class PrescriptionController extends Controller
         
         $next=Appointment::where("reception_id", $reception)->get()->First();       
         $pdf = Pdf::loadView("prescription.pdf", compact("prescription", "next"));
-
-
         return $pdf->stream("PDF.pdf");
     }
+
+   
 }
