@@ -145,9 +145,6 @@ class ReceptionController extends Controller
          return $pdf->stream("hospitalizacion.pdf");
      }
  
-    
-     
-
     }
 
     
