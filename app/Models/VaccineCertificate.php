@@ -48,7 +48,7 @@ class VaccineCertificate extends Model
      *
      * @var array
      */
-    protected $fillable = ['pet_id', 'service_id', 'vaccine', 'lab', 'lote', 'application_date', 'next_vaccination_date', 'observations_vaccine', 'product_internal', 'dose_internal', 'last_deworming_internal', 'next_internal_date', 'observations_internal', 'product_external', 'dose_external', 'last_deworming_external', 'next_external_date', 'observations_external'];
+    protected $fillable = ['pet_id', 'service_id', 'product', 'lab', 'lote', 'dose', 'application_date', 'last_deworming_date', 'next_application_date', 'observations', 'vet_id'];
 
 
     /**
@@ -66,6 +66,11 @@ class VaccineCertificate extends Model
     {
         return $this->belongsTo(\App\Models\Service::class, 'service_id', 'id');
     }
+
+    public function vet()
+     {
+         return $this->belongsTo(\App\Models\User::class, 'vet_id', 'id');
+     }
     
 
 }

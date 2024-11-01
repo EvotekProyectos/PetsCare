@@ -181,7 +181,7 @@
                         </td>
                         <td style="padding: 5px 10px;">
                             <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{ $pet->gender_id }}
+                                {{ $pet->genre->name }}
                             </p>
                         </td>
                         

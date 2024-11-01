@@ -18,9 +18,9 @@ return new class extends Migration
             $table->foreignId('recepcionist_id')->nullable()->references('id')->on('users');
             $table->foreignId('pet_id')->nullable()->references('id')->on('pets');
             $table->dateTime('date');
-            $table->text('medicine'); 
-            $table->text('diagnosis');
-            $table->text('observations')->nullable();
+            $table->longText('medicine'); 
+            $table->longText('diagnosis');
+            $table->longText('observations')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -44,15 +44,20 @@ $(document).ready(function () {
                 data: null,
                 render: function (data) {
                     return `
-                        <a class="btn btn-sm btn-primary"  title="Ver datos de consulta" href="${route('appointment.list', data.id)}">
+                        <a class="btn btn-sm btn-primary"  title="Ver Detalles" href="#" onclick="Details(${data.reception_type_id}, ${data.id});">
                             <span class="mage--hospital-shield-fill"></span>
-                        </a>
-
-                        <a type="button" href="${route('prescription.imprimir', data.id)}" class="btn btn-sm text-primary">
-                            <span class="material-symbols--prescriptions-outline" weigth:10px title="Formula medica"></span>
                         </a>`;
                 }
             },
         ],
     });
 });
+
+
+async function Details(Type, ID) {
+    event.preventDefault();
+    if (Type === 1) {
+        window.location.href = route('appointment.historic', ID);
+
+    }
+};
