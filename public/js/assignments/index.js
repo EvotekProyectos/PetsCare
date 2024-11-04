@@ -1,4 +1,21 @@
-var table = undefined;
+// Definimos los colores correspondientes para cada estado
+const attentionStatuses = {
+    "Atendido": "#56BF2F",
+    "En espera": "#FF2C2C",
+    "En consulta": "#FFBE33"
+};
+
+const reasons = {
+    "Consulta General": "#6CC3E3",
+    "Consulta de Seguimiento": "#917AAC",
+    "Medicina Preventiva": "#F8A693",
+    "Consulta especialidad": "#FFF7952",
+    "Curación/Cambio de vendaje":"#95FFEA",
+    "Retiro de sutura": "#FF69B42",
+    "Servicios externos": "#A52A2A",
+    "Estudios de laboratorio":"#FF69B4"
+};
+
 $(document).ready(function () {
     table = $('#table').DataTable({
         ajax: route('assignment.list'),
@@ -8,14 +25,12 @@ $(document).ready(function () {
             {
                 data: 'entry_date',
             },
-
             {
                 data: null,
                 render: function (data) {
                     return data.reception_type ? data.reception_type.name : '';
                 }
             },
-
             {
                 data: null,
                 render: function (data) {
@@ -29,22 +44,35 @@ $(document).ready(function () {
                 }
             },
             {
-                data: null,
+                data: 'reason',
                 render: function (data) {
-                    return data.reason ? data.reason.name : '';
+                    if (reasons[data]) {
+                        return `<span style="background-color: ${reasons[data]}; padding: 5px; color: white; border-radius: 5px;">${data}</span>`;
+                    }
+                    return data || '';
                 }
+            
             },
             {
                 data: null,
                 render: function (data) {
-                    return data.status ? data.status : '';
+                    return data.room ? data.room.name : '';
+                }
+            },
+            {
+                data: 'status',
+                render: function (data) {
+            
+                    if (attentionStatuses[data]) {
+                        return `<span style="background-color: ${attentionStatuses[data]}; padding: 5px; color: white; border-radius: 5px;">${data}</span>`;
+                    }
+                    return data || '';
                 }
             },
             {
                 data: null,
                 render: function (data) {
                     return `
-                        
                         <button type="button" class="btn btn-sm text-primary" onclick="Attend(${data.reception_type_id}, ${data.id}, ${data.status_id} );">
                             <span class="mage--hospital-shield-fill"></span>
                         </button>`;
@@ -53,6 +81,7 @@ $(document).ready(function () {
         ],
     });
 });
+
 
 async function Attend(Type, ID, Status) {
     event.preventDefault();
@@ -90,4 +119,5 @@ async function Attend(Type, ID, Status) {
             }
         }
     };
+
 }

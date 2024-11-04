@@ -90,6 +90,12 @@
                             Familias
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('families.index') }}" class=" ms-2">
+                            <i class="fa-solid fa-file" style="color: #FFD43B;"></i>
+                            Formatos
+                        </a>
+                    </li>
 
                     <li>
                         <a href="#pageSubmenu" data-bs-toggle="collapse" aria-expanded="false"

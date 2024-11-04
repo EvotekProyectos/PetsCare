@@ -1,3 +1,14 @@
+const reasons = {
+    "Consulta General": "#6CC3E3",
+    "Consulta de Seguimiento": "#917AAC",
+    "Medicina Preventiva": "#F8A693",
+    "Consulta especialidad": "#FFF7952",
+    "Curación/Cambio de vendaje":"#95FFEA",
+    "Retiro de sutura": "#FF69B42",
+    "Servicios externos": "#A52A2A",
+    "Estudios de laboratorio":"#FF69B4"
+};
+
 var table = undefined;
 $(document).ready(function () {
     table = $('#table').DataTable({
@@ -29,9 +40,18 @@ $(document).ready(function () {
                 }
             },
             {
+                data: 'reason',
+                render: function (data) {
+            
+                    if (reasons[data]) {
+                        return `<span style="background-color: ${reasons[data]}; padding: 5px; color: black; border-radius: 5px;">${data}</span>`;
+                    }
+                    return data || '';
+                }
+            }, {
                 data: null,
                 render: function (data) {
-                    return data.reason ? data.reason.name : '';
+                    return data.room ? data.room.name : '';
                 }
             },
             {

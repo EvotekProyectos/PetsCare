@@ -62,6 +62,7 @@
 </head>
 
 <body>
+    <input type="text" style="display: none" value="{{ route('hospital.pdf', $reception->id)}}" id="reception">
     <div>
         <table style="width: 100%; text-align: center;">
             <tr>
@@ -337,21 +338,21 @@
                 </td>
 
                 <td>
-                    <div class="col-6">
-                        <button class="btnEnviar btn btn-lmx" data-target="canvas">Enviar</button>
-                    </div>
+                    <form class="col-6">
+                        <button class="btnEnviar btn btn-lmx">Enviar</button>
+                    </form>
                 </td>
             </tr>
         </table>
     </div>
 
-    @push('scripts')
-
+   
+    <script src="{{ asset('js/jquery.min.js') }}" ></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
     <script src="{{ asset('js/receptions/hospital_auth.js') }}" defer></script>
-    @endpush 
+
 </body>
 
 </html>
