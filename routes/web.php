@@ -25,6 +25,8 @@ use App\Http\Controllers\PetController;
 use App\Http\Controllers\PetHistoryController;
 use App\Http\Controllers\PetsStatusController;
 use App\Http\Controllers\PrescriptionController;
+use App\Http\Controllers\ProductClassificationController;
+use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\ReceptionController;
 use App\Http\Controllers\ReceptionStatusHistoryController;
 use App\Http\Controllers\ReproductiveStatusController;
@@ -147,7 +149,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/receptions/historial/{id}', [ReceptionController::class, 'historial'])->name('reception.historial');
     Route::get('/receptions/hospital/{id}', [ReceptionController::class, 'hospital_authorization'])->name('hospital.list');
     
-    Route::get('/receptions/hospital/pdf/{id}', [ReceptionController::class, 'hospital_authorizationpdf'])->name('hospital.pdf');
+    Route::post('/receptions/hospital/pdf/{id}', [ReceptionController::class, 'hospital_authorizationpdf'])->name('hospital.pdf');
     
     Route::resource('receptions', ReceptionController::class);
 
@@ -179,7 +181,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/services/list', [ServiceController::class, 'list'])->name('services.list');
     Route::resource('services', ServiceController::class);
 
-    //Vaccnation certificate
+    //Vacucnation certificate
     Route::get('/vaccine-certificates/list', [VaccineCertificateController::class, 'list'])->name('certificate.list');
     Route::get("/vaccine-certificates/pdf/{id}", [VaccineCertificateController::class, "imprimir"])->name("certificate.imprimir");
     Route::resource('vaccine-certificates', VaccineCertificateController::class);
@@ -187,5 +189,12 @@ Route::group(['middleware' => ['auth']], function () {
     //Hospitalizations
 
     Route::resource('hospitalizations', HospitalizationController::class);
+    //PRODUCT CLASSIFICATIONS
+    Route::resource('product-classifications', ProductClassificationController::class);
+
+    //PRODUCT TYPES
+    Route::resource('product-types', ProductTypeController::class);
+
+
     
 });

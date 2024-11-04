@@ -47,20 +47,21 @@ document.querySelector(".btnLimpiar[data-target=canvas]").onclick = function() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 };
 
-document.querySelector(".btnEnviar[data-target=canvas]").click();
+document.querySelector(".btnLimpiar[data-target=canvas]").click();
 
 //     // $(document).ready(function(){
  $("form").on("submit", function(e) {
+    e.preventDefault()
      const formData = new FormData(this);
       formData.append("signature", canvas.toDataURL());
  
       $.ajax({
-        url:  "{{ route('hospital.list', $reception->id)}}",
+        url:  document.getElementById('reception'),
         type: "post",
          headers: {
              "X-CSRF-Token": $("#csrf").attr("content"),
           },
-          dataType: "json",
+        //   dataType: "json",
           contentType: false,
          processData: false,
          data: formData,

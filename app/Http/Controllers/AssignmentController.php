@@ -21,7 +21,7 @@ class AssignmentController extends Controller
 
     public function list(){
         $user = auth()->user();
-        $receptions = Reception::with(['receptionType','family','pet','reason', 'statusHistory'])
+        $receptions = Reception::with(['receptionType','family','pet','reason', 'room','statusHistory'])
         ->where('veterinarian_id', $user->id)
         ->get();
     

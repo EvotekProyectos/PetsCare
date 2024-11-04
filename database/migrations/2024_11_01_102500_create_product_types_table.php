@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reasons', function (Blueprint $table) {
+        Schema::create('product_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('color')->nullable();
+            $table->foreignId('product_classification_id')->nullable()->references('id')->on('product_classifications');
+            $table->string("microsip_id")->nullable();
+            $table->string("name")->nullable();
+            $table->string("price")->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reasons');
+        Schema::dropIfExists('product_types');
     }
 };

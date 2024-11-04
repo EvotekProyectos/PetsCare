@@ -42,7 +42,7 @@
                                                 <th>Familia</th>
                                                 <th>Mascota</th>
                                                 <th>Motivo</th>
-                                           
+                                                <th>Consultorio</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>

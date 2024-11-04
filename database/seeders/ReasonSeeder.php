@@ -14,14 +14,14 @@ class ReasonSeeder extends Seeder
     public function run(): void
     {
         $reasons = [
-            ['name' => 'Consulta General'],
-            ['name' => 'Consulta de Seguimiento'],
-            ['name' => 'Medicina Preventiva'],
-            ['name' => 'Consulta especialidad'],
-            ['name' => 'Curación/Cambio de vendaje'],
-            ['name' => 'Retiro de sutura'],
-            ['name' => 'Servicios externos'],
-            ['name' => 'Estudios de laboratorio'],
+            ['name' => 'Consulta General', "color" => '#6cc3e3'],
+            ['name' => 'Consulta de Seguimiento', "color" => '#917aac'],
+            ['name' => 'Medicina Preventiva', "color" => 'f8a693'],
+            ['name' => 'Consulta especialidad', "color" => 'fff795'],
+            ['name' => 'Curación/Cambio de vendaje',"color" => '#95ffea'],
+            ['name' => 'Retiro de sutura', "color" => '#FF69B4'],
+            ['name' => 'Servicios externos', "color" => '#A52A2A'],
+            ['name' => 'Estudios de laboratorio',"color" => '#FF69B4'],
         ];
 
         foreach ($reasons as $reason){
