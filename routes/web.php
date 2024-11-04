@@ -19,6 +19,7 @@ use App\Http\Controllers\AttentionStatusController;
 use App\Http\Controllers\CoverAreaController;
 use App\Http\Controllers\FamClassificationController;
 use App\Http\Controllers\FamilyController;
+use App\Http\Controllers\HospitalizationController;
 use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\PetHistoryController;
@@ -182,5 +183,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/vaccine-certificates/list', [VaccineCertificateController::class, 'list'])->name('certificate.list');
     Route::get("/vaccine-certificates/pdf/{id}", [VaccineCertificateController::class, "imprimir"])->name("certificate.imprimir");
     Route::resource('vaccine-certificates', VaccineCertificateController::class);
+
+    //Hospitalizations
+
+    Route::resource('hospitalizations', HospitalizationController::class);
     
 });
