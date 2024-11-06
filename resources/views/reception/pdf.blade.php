@@ -5,7 +5,6 @@
     <style type="text/css">
         @import url(https://themes.googleusercontent.com/fonts/css?kit=fOEonugfEEW2k3BWBOC73CXHfZMcH88HuPcErL5npACHpuVWaP-GHFPZzt35558q);
 
-
         .head {
             color: #646c9a;
             font-weight: 700;
@@ -352,7 +351,9 @@
 
 
     <script src="{{ asset('js/receptions/hospital_auth.js') }}" defer></script>
-
+    <script>
+        const RECEPTION_ID = "{{ $reception->id }}"; 
+    </script>
 </body>
 
 </html>

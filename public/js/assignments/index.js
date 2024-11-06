@@ -9,11 +9,11 @@ const reasons = {
     "Consulta General": "#6CC3E3",
     "Consulta de Seguimiento": "#917AAC",
     "Medicina Preventiva": "#F8A693",
-    "Consulta especialidad": "#FFF7952",
+    "Consulta especialidad": "#FFDE59",
     "Curación/Cambio de vendaje":"#95FFEA",
-    "Retiro de sutura": "#FF69B42",
-    "Servicios externos": "#A52A2A",
-    "Estudios de laboratorio":"#FF69B4"
+    "Retiro de sutura": "#FC9BCC",
+    "Servicios externos": "#CD4D4D",
+    "Estudios de laboratorio":"#FE9900"
 };
 
 $(document).ready(function () {
@@ -46,13 +46,15 @@ $(document).ready(function () {
             {
                 data: 'reason',
                 render: function (data) {
-                    if (reasons[data]) {
-                        return `<span style="background-color: ${reasons[data]}; padding: 5px; color: white; border-radius: 5px;">${data}</span>`;
+                    const reasonName = data && data.name ? data.name : '';
+
+                    if (reasonName && reasons[reasonName]) {
+                        return `<span style="background-color: ${reasons[reasonName]}; padding: 5px; color: black; border-radius: 5px;">${reasonName}</span>`;
                     }
-                    return data || '';
+                    
+                    return reasonName || '';
                 }
-            
-            },
+            },            
             {
                 data: null,
                 render: function (data) {

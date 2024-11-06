@@ -47,9 +47,10 @@ class ReceptionController extends Controller
         $reasons = Reason::all();
         $users = User::all();
         $rooms = Room::all();
+        $pets= Pet::all();
 
         $this->authorize("create", Reception::class);
-        return view('reception.create', compact('reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms'));
+        return view('reception.create', compact('reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms', 'pets'));
     }
 
     /**
@@ -117,7 +118,7 @@ class ReceptionController extends Controller
 
     public function list()
     {
-        $receptions = Reception::with('receptionType', 'family', 'pet', 'reason','room')->get();
+        $receptions = Reception::with('receptionType', 'family', 'pet', 'reason', 'room')->get();
         return DataTables::of($receptions)->make(true);
     }
 
@@ -128,23 +129,33 @@ class ReceptionController extends Controller
     }
 
 
-    public function hospital_authorization($id) {
+    public function hospital_authorization($id)
+    {
         $reception = Reception::find($id);
-        $pet=Pet::with('family', 'genre')->find($id);
-        return view('reception.pdf', compact("reception", "pet")); 
-     }
+        $pet = Pet::with('family', 'genre')->find($id);
+        return view('reception.pdf', compact("reception", "pet"));
+    }
 
      public function hospital_authorizationpdf(Request $request, $id)
      {
          $reception = Reception::find($id);
          $pet = Pet::with('family', 'genre')->find($id);
-         
-         $signature = $request->input('signature');
+
+         $signatureDataUrl = $request->input('signature');
 
          $pdf = PDF::loadView('reception.pdf', compact('reception', 'pet', 'signature'));
          return $pdf->stream("reception.pdf");
      }
- 
-    }
 
-    
+     public function viewPdf(Request $request, $id)
+     {
+         $reception = Reception::find($id);
+         $pet = Pet::with('family', 'genre')->find($id);
+
+         $signatureDataUrl = $request->input('signature');
+
+         $pdf = PDF::loadView('reception.pdf', compact('reception', 'pet', 'signature'));
+         return $pdf->stream("reception.pdf");
+     }
+
+}

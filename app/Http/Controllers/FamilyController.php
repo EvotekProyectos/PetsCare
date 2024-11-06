@@ -109,4 +109,36 @@ class FamilyController extends Controller
 
         return DataTables::of($family) ->make(true);
     }
+
+    // Controlador para obtener datos de la familia y mascotas según ID de familia
+public function getFamilyData($family_id)
+{
+    $family = Family::with('pets')->find($family_id);
+    return response()->json([
+        'family' => $family,
+        'pets' => $family->pets,
+    ]);
+}
+
+// Controlador para obtener datos de la familia y mascotas según número de teléfono
+public function getPhoneData($phone)
+{
+    $family = Family::where('phone', $phone)->with('pets')->first();
+    return response()->json([
+        'family' => $family,
+        'pets' => $family->pets,
+    ]);
+}
+
+// Controlador para obtener datos de la familia y mascota según ID de mascota
+public function getPetData($pet_id)
+{
+    $pet = Pet::find($pet_id);
+    $family = $pet->family;
+    $pets = $family->pets;
+    return response()->json([
+        'family' => $family,
+        'pets' => $pets,
+    ]);
+}
 }
