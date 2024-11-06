@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProductType;
 use App\Http\Requests\ProductTypeRequest;
+use App\Models\ProductClassification;
 
 /**
  * Class ProductTypeController
@@ -28,7 +29,9 @@ class ProductTypeController extends Controller
     public function create()
     {
         $productType = new ProductType();
-        return view('product-type.create', compact('productType'));
+        $classifications = ProductClassification::all();
+
+        return view('product-type.create', compact('productType','classifications'));
     }
 
     /**
@@ -58,8 +61,9 @@ class ProductTypeController extends Controller
     public function edit($id)
     {
         $productType = ProductType::find($id);
+        $classifications = ProductClassification::all();
 
-        return view('product-type.edit', compact('productType'));
+        return view('product-type.edit', compact('productType','classifications'));
     }
 
     /**

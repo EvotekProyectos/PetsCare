@@ -162,5 +162,11 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'crear hospitalizaciones']);
         Permission::create(['name' => 'editar hospitalizaciones']);
         Permission::create(['name' => 'eliminar hospitalizaciones']);
+
+        ////red sheets
+        Permission::create(['name' => 'ver panel hoja roja']);
+        Permission::create(['name' => 'crear hoja roja']);
+        Permission::create(['name' => 'editar hoja roja']);
+        Permission::create(['name' => 'eliminar hoja roja']);
     }
 }

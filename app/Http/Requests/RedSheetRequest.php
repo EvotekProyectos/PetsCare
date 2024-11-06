@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProductTypeRequest extends FormRequest
+class RedSheetRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,13 @@ class ProductTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'product_classification_id' => 'required|exists:product_classifications,id',
-			'microsip_id' => 'string',
-			'name' => 'string',
-			'price' => 'string',
+            'reception_id' => 'nullable|integer|exists:receptions,id',
+            'lab_type_id' => 'nullable|integer|exists:product_types,id',
+            'imaging_type_id' => 'nullable|integer|exists:product_types,id',
+            'service_type_id' => 'nullable|integer|exists:product_types,id',
+            'observations' => 'nullable|string',
+			'day_count' => 'required',
+            'vet_id' => 'nullable|integer|exists:users,id',
         ];
     }
 }

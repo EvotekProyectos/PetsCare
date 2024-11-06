@@ -81,7 +81,13 @@
                     <li>
                         <a href="{{ route('assignment.index') }}" class=" ms-2">
                             <i class="fas fa-hand-holding-heart"></i>
-                            Asignaciones
+                            Asignaciones de Consulta
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('assignment.hospital') }}" class=" ms-2">
+                            <i class="fas fa-hand-holding-heart"></i>
+                            Asignaciones de Hospital
                         </a>
                     </li>
                     <li>

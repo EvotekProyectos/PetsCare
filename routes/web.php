@@ -29,6 +29,7 @@ use App\Http\Controllers\ProductClassificationController;
 use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\ReceptionController;
 use App\Http\Controllers\ReceptionStatusHistoryController;
+use App\Http\Controllers\RedSheetController;
 use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ServiceController;
@@ -41,6 +42,7 @@ use App\Models\Prescription;
 use App\Models\Reception;
 use App\Models\ReceptionStatusHistory;
 use App\Models\VaccineCertificate;
+use FontLib\Table\Type\name;
 
 /*
 |--------------------------------------------------------------------------
@@ -159,8 +161,10 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     //ASSIGNAMENT
-    Route::get('/assignment', [AssignmentController::class, 'index'])->name('assignment.index');
-    Route::get('/assignment/list', [AssignmentController::class, 'list'])->name('assignment.list');
+    Route::get('/assignment/appointments', [AssignmentController::class, 'index'])->name('assignment.index');
+    Route::get('/assignment/appointments/list', [AssignmentController::class, 'appointments'])->name('assignment.appointments');
+    Route::get('/assignment/hospitaizations', [AssignmentController::class, 'hospital'])->name('assignment.hospital');
+    Route::get('/assignment/hospitaizations/list', [AssignmentController::class, 'hospitalizations'])->name('assignment.hospitalizations');
 
     //Appointments
     Route::get('/appointments/consultation/{id}', [AppointmentController::class, 'consultation'])->name('appointment.consultation');
@@ -194,6 +198,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     //PRODUCT TYPES
     Route::resource('product-types', ProductTypeController::class);
+
+    //RED SHEETS FOR HOSPITALIZATION DAYS
+    Route::get('/hospitalizations/entries/{id}', [RedSheetController::class, 'entry'])->name("redsheet.entry");
+    Route::resource('red-sheets', RedSheetController::class);
 
 
     

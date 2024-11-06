@@ -3,7 +3,15 @@
         
         <div class="form-group mb-2 mb20">
             <label for="product_classification_id" class="form-label">{{ __('Product Classification Id') }}</label>
-            <input type="text" name="product_classification_id" class="form-control @error('product_classification_id') is-invalid @enderror" value="{{ old('product_classification_id', $productType?->product_classification_id) }}" id="product_classification_id" placeholder="Product Classification Id">
+            <select name="product_classification_id" id="product_classification_id" class="form-control @error('product_classification_id') is-invalid @enderror">
+                <option value="">Selecciona la clasificación del producto </option>
+                @foreach ($classifications as $class)
+                    <option value="{{ $class->id }}" name="product_classification_id"
+                        {{ old('product_classification_id', $productType?->product_classification_id) == $class->id ? 'selected' : '' }}>
+                        {{ $class->name }}
+                    </option>
+                @endforeach
+            </select>
             {!! $errors->first('product_classification_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="form-group mb-2 mb20">
@@ -27,3 +35,6 @@
         <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
     </div>
 </div>
+
+
+
