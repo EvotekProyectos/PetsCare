@@ -117,7 +117,7 @@ class ReceptionController extends Controller
 
     public function list()
     {
-        $receptions = Reception::with('receptionType', 'family', 'pet', 'reason')->get();
+        $receptions = Reception::with('receptionType', 'family', 'pet', 'reason','room')->get();
         return DataTables::of($receptions)->make(true);
     }
 
@@ -142,12 +142,9 @@ class ReceptionController extends Controller
          $signature = $request->input('signature');
 
          $pdf = PDF::loadView('reception.pdf', compact('reception', 'pet', 'signature'));
-         return $pdf->stream("hospitalizacion.pdf");
+         return $pdf->stream("reception.pdf");
      }
  
-    
-     
-
     }
 
     

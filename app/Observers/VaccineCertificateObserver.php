@@ -13,9 +13,12 @@ class VaccineCertificateObserver
      */
     public function created(VaccineCertificate $vaccineCertificate): void
     {
+        $pets= $vaccineCertificate->pet;
+        $type = $vaccineCertificate->service;
+
         Log::create([
-            "action" => "CREACION DE NUEVO CERTIFICADO VACUNACION ",
-            'description' => 'Se creo un nuevo certificado vacunacion: ' ,
+            "action" => "NUEVO REGISTRO EN CARTILLA VIRTUAL",
+            'description' => 'A la mascota ' . $pets->name. ' se le registro una ' .$type->name,
             'user_id' => (Auth::user()->id) ?? null
         ]);
     }

@@ -81,13 +81,25 @@
                     <li>
                         <a href="{{ route('assignment.index') }}" class=" ms-2">
                             <i class="fas fa-hand-holding-heart"></i>
-                            Asignaciones
+                            Asignaciones de Consulta
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('assignment.hospital') }}" class=" ms-2">
+                            <i class="fas fa-hand-holding-heart"></i>
+                            Asignaciones de Hospital
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('families.index') }}" class=" ms-2">
                             <span class="fluent-mdl2--family"></span>
                             Familias
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('families.index') }}" class=" ms-2">
+                            <i class="fa-solid fa-file" style="color: #FFD43B;"></i>
+                            Formatos
                         </a>
                     </li>
 

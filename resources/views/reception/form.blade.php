@@ -140,6 +140,10 @@
                 </div>
             </div>
 
+            
+            
+            
+
             <div class="col-md-4" id="adm" style="display: none">
                 <div class="form-group mb-2">
                     <label for="name" class="form-label">ADMISIÓN</label>

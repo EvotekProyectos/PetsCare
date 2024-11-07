@@ -15,8 +15,8 @@ class AttentionStatusSeeder extends Seeder
     {
         $attentionStatuses = [
             ["name" => 'Atendido', "color" => "#56BF2F"],
-            ["name" => 'En espera', "color" => "#EEF515"],
-            ["name" => 'En consulta', "color" => "#1534F5"],
+            ["name" => 'En espera', "color" => "#FF2C2C"],
+            ["name" => 'En consulta', "color" => "#FFBE33"],
         ];
 
         foreach ($attentionStatuses as $as) {

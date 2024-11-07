@@ -19,13 +19,18 @@ use App\Http\Controllers\AttentionStatusController;
 use App\Http\Controllers\CoverAreaController;
 use App\Http\Controllers\FamClassificationController;
 use App\Http\Controllers\FamilyController;
+use App\Http\Controllers\FollowUpController;
+use App\Http\Controllers\HospitalizationController;
 use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\PetHistoryController;
 use App\Http\Controllers\PetsStatusController;
 use App\Http\Controllers\PrescriptionController;
+use App\Http\Controllers\ProductClassificationController;
+use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\ReceptionController;
 use App\Http\Controllers\ReceptionStatusHistoryController;
+use App\Http\Controllers\RedSheetController;
 use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ServiceController;
@@ -38,6 +43,7 @@ use App\Models\Prescription;
 use App\Models\Reception;
 use App\Models\ReceptionStatusHistory;
 use App\Models\VaccineCertificate;
+use FontLib\Table\Type\name;
 
 /*
 |--------------------------------------------------------------------------
@@ -146,7 +152,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/receptions/historial/{id}', [ReceptionController::class, 'historial'])->name('reception.historial');
     Route::get('/receptions/hospital/{id}', [ReceptionController::class, 'hospital_authorization'])->name('hospital.list');
     
-    Route::get('/receptions/hospital/pdf/{id}', [ReceptionController::class, 'hospital_authorizationpdf'])->name('hospital.pdf');
+    Route::post('/receptions/hospital/pdf/{id}', [ReceptionController::class, 'hospital_authorizationpdf'])->name('hospital.pdf');
     
     Route::resource('receptions', ReceptionController::class);
 
@@ -156,8 +162,10 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     //ASSIGNAMENT
-    Route::get('/assignment', [AssignmentController::class, 'index'])->name('assignment.index');
-    Route::get('/assignment/list', [AssignmentController::class, 'list'])->name('assignment.list');
+    Route::get('/assignment/appointments', [AssignmentController::class, 'index'])->name('assignment.index');
+    Route::get('/assignment/appointments/list', [AssignmentController::class, 'appointments'])->name('assignment.appointments');
+    Route::get('/assignment/hospitaizations', [AssignmentController::class, 'hospital'])->name('assignment.hospital');
+    Route::get('/assignment/hospitaizations/list', [AssignmentController::class, 'hospitalizations'])->name('assignment.hospitalizations');
 
     //Appointments
     Route::get('/appointments/consultation/{id}', [AppointmentController::class, 'consultation'])->name('appointment.consultation');
@@ -178,9 +186,29 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/services/list', [ServiceController::class, 'list'])->name('services.list');
     Route::resource('services', ServiceController::class);
 
-    //Vaccnation certificate
+    //Vacucnation certificate
     Route::get('/vaccine-certificates/list', [VaccineCertificateController::class, 'list'])->name('certificate.list');
     Route::get("/vaccine-certificates/pdf/{id}", [VaccineCertificateController::class, "imprimir"])->name("certificate.imprimir");
     Route::resource('vaccine-certificates', VaccineCertificateController::class);
+
+    //Hospitalizations
+
+    Route::resource('hospitalizations', HospitalizationController::class);
+    //PRODUCT CLASSIFICATIONS
+    Route::resource('product-classifications', ProductClassificationController::class);
+
+    //PRODUCT TYPES
+    Route::resource('product-types', ProductTypeController::class);
+
+    //RED SHEETS FOR HOSPITALIZATION DAYS
+    Route::get('/hospitalizations/entries/{id}', [RedSheetController::class, 'entry'])->name("redsheet.entry");
+    Route::get('/red-sheets/recap/{id}', [RedSheetController::class, 'recap'])->name("red-sheets.recap");
+    Route::resource('red-sheets', RedSheetController::class);
+
+    //FOLLOW UPS 
+
+    Route::resource('follow-ups', FollowUpController::class);
+
+
     
 });

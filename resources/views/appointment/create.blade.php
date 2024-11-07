@@ -8,11 +8,11 @@
     <section class="container-fluid">
         <div class="row">
             @if ($message = Session::get('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <p>{{ $message }}</p>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <p>{{ $message }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
             <div class="col-12">
                 <div class="card bg-primary-soft border-0 p-3">
                     <div class="card-header bg-transparent border-0">
@@ -144,28 +144,36 @@
                             </h5>
                         </div>
                         <div class="row">
-                        <div class="col d-flex justify-content-between align-items-center my-2">
-                            <div class="col">
-                                <button  class="btn btn-costum-services btn-lg text-uppercase rounded-4" onclick="OpenCarnet()" >
-                                    <span class="badge custom-badge-pill"><span class="healthicons--syringe-vaccine"></span></span> CARTILLA Virtual </button>
+                            <div class="col d-flex justify-content-between align-items-center my-2">
+                                <div class="col">
+                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
+                                        onclick="OpenCarnet()">
+                                        <span class="badge custom-badge-pill"><span
+                                                class="healthicons--syringe-vaccine"></span></span> CARTILLA Virtual
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col d-flex justify-content-between align-items-center my-2">
+                                <div class="col">
+                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
+                                        onclick="">
+                                        <span class="badge custom-badge-pill"><span
+                                                class="hugeicons--chemistry-02"></span></span> EXÁMENES DE GABINETE
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col d-flex justify-content-between align-items-center my-2">
+                                <div class="col">
+                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
+                                        onclick="">
+                                        <span class="badge custom-badge-pill"><span
+                                                class="hugeicons--x-ray"></span></span> IMÁGENES DIAGNÓSTICAS </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="col d-flex justify-content-between align-items-center my-2">
-                            <div class="col">
-                                <button  class="btn btn-costum-services btn-lg text-uppercase rounded-4" onclick="" >
-                                    <span class="badge custom-badge-pill"><span class="hugeicons--chemistry-02"></span></span> EXÁMENES DE GABINETE </button>
-                            </div>
-                        </div>
-                        <div class="col d-flex justify-content-between align-items-center my-2">
-                            <div class="col">
-                                <button  class="btn btn-costum-services btn-lg text-uppercase rounded-4" onclick="" >
-                                    <span class="badge custom-badge-pill"><span class="hugeicons--x-ray"></span></span> IMÁGENES DIAGNÓSTICAS </button>
-                            </div>
-                        </div>
-                    </div>
                     </div>
                     <div class="col-12 mt-2 d-flex justify-content-end">
-                        <button  class="btn btn-primary btn-lg text-uppercase rounded-4" onclick="EndAppointment()">
+                        <button class="btn btn-primary btn-lg text-uppercase rounded-4" onclick="EndAppointment()">
                             Finalizar Consulta <i class="fas fa-file-medical fa-lg"></i></button>
                     </div>
                     <div class="card-body">
@@ -234,10 +242,9 @@
     <script>
         var ruta = "{{ asset('') }}";
         var imgDefault = "{{ asset('img/pet_pic.png') }}";
-        var Pet_Id = {{$reception->pet_id}};
-        var Pic_id = {{ $reception->pet->picture_id ?? 'null' }}; 
+        var Pet_Id = {{ $reception->pet_id }};
+        var Pic_id = {{ $reception->pet->picture_id ?? 'null' }};
         var Pic_route = "{{ $reception->pet->file->route ?? '' }}";
-        
     </script>
     <script src="{{ asset('js/appointments/create.js') }}" defer></script>
 @endpush

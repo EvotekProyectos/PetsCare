@@ -156,5 +156,23 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'crear cartilla vacunación']);
         Permission::create(['name' => 'editar cartilla vacunación']);
         Permission::create(['name' => 'eliminar cartilla vacunación']);
+
+        ////hospitalizations
+        Permission::create(['name' => 'ver panel hospitalizaciones']);
+        Permission::create(['name' => 'crear hospitalizaciones']);
+        Permission::create(['name' => 'editar hospitalizaciones']);
+        Permission::create(['name' => 'eliminar hospitalizaciones']);
+
+        ////red sheets
+        Permission::create(['name' => 'ver panel hoja roja']);
+        Permission::create(['name' => 'crear hoja roja']);
+        Permission::create(['name' => 'editar hoja roja']);
+        Permission::create(['name' => 'eliminar hoja roja']);
+
+        ////follow ups
+        Permission::create(['name' => 'ver panel seguimientos']);
+        Permission::create(['name' => 'crear seguimientos']);
+        Permission::create(['name' => 'editar seguimientos']);
+        Permission::create(['name' => 'eliminar seguimientos']);
     }
 }

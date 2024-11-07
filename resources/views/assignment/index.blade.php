@@ -12,14 +12,9 @@
                     <div class="card-header bg-transparent border-0"">
                         <div class="d-flex justify-content-between align-items-center">
                             <h4 id="card_title" class="text-primary text-uppercase">
-                                <span class="ic--twotone-pets"></span> ASIGNACIONES
+                                <span class="ic--twotone-pets"></span> CONSULTAS
                             </h4>
 
-                            {{-- <div class="float-right">
-                                <a href="{{ route('receptions.create') }}" class="btn btn-primary btn-sm rounded-4">
-                                    <i class="fas fa-plus"></i> NUEVA RECEPCION
-                                </a>
-                            </div> --}}
                         </div>
                     </div>
                     @if ($message = Session::get('success'))
@@ -41,12 +36,13 @@
                                                 <th>Familia</th>
                                                 <th>Mascota</th>
                                                 <th>Motivo</th>
+                                                <th>Consultorio</th>
                                                 <th>Estado</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @csrf
+                                        
                                         </tbody>
                                     </table>
                                 </div>

@@ -1,3 +1,14 @@
+const reasons = {
+    "1": "#6CC3E3",
+    "2": "#917AAC",
+    "3": "#F8A693",
+    "4": "#FFF7952",
+    "5":"#95FFEA",
+    "6": "#FF69B42",
+    "7": "#A52A2A",
+    "8":"#FF69B4"
+};
+
 var table = undefined;
 $(document).ready(function () {
     table = $('#table').DataTable({
@@ -31,7 +42,17 @@ $(document).ready(function () {
             {
                 data: null,
                 render: function (data) {
-                    return data.reason ? data.reason.name : '';
+                    if (data && data.reason_id && reasons[data.reason_id]) {
+                        return `<span style="background-color: ${reasons[data.reason_id]}; padding: 5px; color: black; border-radius: 5px;">
+                                    ${data.reason.name}
+                                </span>`;
+                    }
+                    return '';
+                }
+            }, {
+                data: null,
+                render: function (data) {
+                    return data.room ? data.room.name : '';
                 }
             },
             {

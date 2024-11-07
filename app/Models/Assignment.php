@@ -27,5 +27,11 @@ class Assignment extends Model
     {
         return $this->belongsTo(\App\Models\User::class, 'recepcion_id', 'id');
     }
+
+    public function room()
+    {
+        return $this->belongsTo(\App\Models\Room::class, 'room_id', 'id');
+    }
+    
     
 }

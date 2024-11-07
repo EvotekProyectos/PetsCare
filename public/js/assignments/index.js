@@ -1,21 +1,36 @@
-var table = undefined;
+// Definimos los colores correspondientes para cada estado
+const attentionStatuses = {
+    "Atendido": "#56BF2F",
+    "En espera": "#FF2C2C",
+    "En consulta": "#FFBE33"
+};
+
+const reasons = {
+    "1": "#6CC3E3",
+    "2": "#917AAC",
+    "3": "#F8A693",
+    "4": "#FFF7952",
+    "5":"#95FFEA",
+    "6": "#FF69B42",
+    "7": "#A52A2A",
+    "8":"#FF69B4"
+};
+
 $(document).ready(function () {
     table = $('#table').DataTable({
-        ajax: route('assignment.list'),
+        ajax: route('assignment.appointments'),
         responsive: true,
         order: [0, 'desc'],
         columns: [
             {
                 data: 'entry_date',
             },
-
             {
                 data: null,
                 render: function (data) {
                     return data.reception_type ? data.reception_type.name : '';
                 }
             },
-
             {
                 data: null,
                 render: function (data) {
@@ -31,20 +46,35 @@ $(document).ready(function () {
             {
                 data: null,
                 render: function (data) {
-                    return data.reason ? data.reason.name : '';
+                    if (data && data.reason_id && reasons[data.reason_id]) {
+                        return `<span style="background-color: ${reasons[data.reason_id]}; padding: 5px; color: black; border-radius: 5px;">
+                                    ${data.reason.name}
+                                </span>`;
+                    }
+                    return '';
                 }
+            
             },
             {
                 data: null,
                 render: function (data) {
-                    return data.status ? data.status : '';
+                    return data.room ? data.room.name : '';
+                }
+            },
+            {
+                data: 'status',
+                render: function (data) {
+            
+                    if (attentionStatuses[data]) {
+                        return `<span style="background-color: ${attentionStatuses[data]}; padding: 5px; color: white; border-radius: 5px;">${data}</span>`;
+                    }
+                    return data || '';
                 }
             },
             {
                 data: null,
                 render: function (data) {
                     return `
-                        
                         <button type="button" class="btn btn-sm text-primary" onclick="Attend(${data.reception_type_id}, ${data.id}, ${data.status_id} );">
                             <span class="mage--hospital-shield-fill"></span>
                         </button>`;
@@ -53,6 +83,7 @@ $(document).ready(function () {
         ],
     });
 });
+
 
 async function Attend(Type, ID, Status) {
     event.preventDefault();
@@ -90,4 +121,5 @@ async function Attend(Type, ID, Status) {
             }
         }
     };
+
 }
