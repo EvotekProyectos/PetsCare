@@ -149,15 +149,118 @@
                                 PROCEDIMIENTOS DEL DÍA
                             </h5>
                         </div>
-                        <form method="POST" action="{{ route('red-sheets.store') }}"  role="form" enctype="multipart/form-data">
+                        <form method="POST" onsubmit="NewEntry()"  role="form" enctype="multipart/form-data" id="NewRedSheet">
                             @csrf
 
                             @include('red-sheet.form')
 
                         </form>
                     </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col d-flex justify-content-between align-items-center my-2">
+                                <div class="col">
+                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
+                                        onclick="OpenCarnet()">
+                                        <span class="badge custom-badge-pill"><span 
+                                            class="healthicons--surgical-sterilization-outline"></span></span> Cirugía
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col d-flex justify-content-between align-items-center my-2">
+                                <div class="col">
+                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
+                                        onclick="OpenFollowUps()">
+                                        <span class="badge custom-badge-pill"><span 
+                                            class="clarity--note-edit-line"></span></span> Seguimientos
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col d-flex justify-content-between align-items-center my-2">
+                                <div class="col">
+                                    <button  class="btn btn-costum-services btn-lg text-uppercase rounded-4"
+                                    onclick="window.open('{{ route('pet-history.index', $reception->pet_id) }}', '_blank')" >
+                                        <span class="badge custom-badge-pill"><span 
+                                            class="akar-icons--folder-add"></span></span> Historial Clínico </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 id="card_title" class="text-primary text-uppercase">
+                                <span class="ic--twotone-pets"></span> HOJA ROJA
+                            </h5>
+                        </div>
+                        <div class="col-12">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover responsive w-100" id="table">
+                                    <thead class="thead table-primary text-uppercase">
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Día</th>
+                                            <th>Servicio</th>
+                                            <th>Laboratorio</th>
+                                            <th>imagenologia</th>
+                                            <th>Observaciones</th>
+                                            <th>M.V.Z.</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <div class="modal" id="ModalFollowUps" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="background-color: #e9eced; border-radius: 20px;">
+                <div class="modal-header">
+                    <div class="col-11 d-flex justify-content-between align-items-center">
+                        <h5 id="card_title" class=" text-uppercase" style="color: #0455A0">
+                            <span class="clarity--note-edit-line"></span> SEGUIMIENTOS
+                        </h5>
+                    </div>
+                    <div class="col-1">
+                        <button type="button" class="btn-close" onclick="CloseFollowUp()" aria-label="Close"></button>
+                    </div>
+
+                </div>
+                <div class="modal-body" style="width: 100%;">
+                    <div class="row">
+                        <div class="col-12">
+                            <form method="POST" onsubmit="AddFollowUp()" id="NewFollowUp" role="form" enctype="multipart/form-data">
+                                @csrf
+                            @include('follow-up.form')
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="CloseFollowUp()">
+                        Cerrar
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
+
+@push('scripts')
+    <script>
+        var ruta = "{{ asset('') }}";
+        var imgDefault = "{{ asset('img/pet_pic.png') }}";
+        var Reception_Id = {{ $reception->id }};
+        var Pet_Id = {{ $reception->pet_id }};
+        var Pic_id = {{ $reception->pet->picture_id ?? 'null' }};
+        var Pic_route = "{{ $reception->pet->file->route ?? '' }}";
+    </script>
+    <script src="{{ asset('js/hospitalizations/createredsheets.js') }}" defer></script>
+@endpush

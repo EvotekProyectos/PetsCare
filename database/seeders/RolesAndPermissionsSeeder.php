@@ -173,5 +173,11 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'ver panel cirugías']);
         Permission::create(['name' => 'crear cirugía']);
         Permission::create(['name' => 'editar cirugía']);
+
+        ////follow ups
+        Permission::create(['name' => 'ver panel seguimientos']);
+        Permission::create(['name' => 'crear seguimientos']);
+        Permission::create(['name' => 'editar seguimientos']);
+        Permission::create(['name' => 'eliminar seguimientos']);
     }
 }

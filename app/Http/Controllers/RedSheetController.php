@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\RedSheet;
 use App\Http\Requests\RedSheetRequest;
+use App\Models\FollowUp;
 use App\Models\ProductType;
 use App\Models\Reception;
+use Yajra\DataTables\Facades\DataTables;
 
 /**
  * Class RedSheetController
@@ -40,11 +42,13 @@ class RedSheetController extends Controller
      */
     public function store(RedSheetRequest $request)
     {
-        RedSheet::create($request->validated());
+        $new = RedSheet::create($request->validated());
         $this->authorize("create", RedSheet::class);
 
-        return redirect()->route('red-sheets.index')
-            ->with('success', 'RedSheet created successfully.');
+        return response()->json($new);
+
+        // return redirect()->route('red-sheets.index')
+        //     ->with('success', 'RedSheet created successfully.');
     }
 
     /**
@@ -95,7 +99,16 @@ class RedSheetController extends Controller
         $redSheet = new RedSheet();
         $reception = Reception::with('pet', 'admissionType', 'area')->findorfail($id);
         $products = ProductType::all();
+        $followUp = new FollowUp();
         $this->authorize("create", RedSheet::class);
-        return view('red-sheet.create', compact('redSheet', 'reception', 'products'));
+        return view('red-sheet.create', compact('redSheet', 'reception', 'products', 'followUp'));
+    }
+
+    public function recap(int $id)
+    {
+        $redsheets = RedSheet::with('vet', 'imaging', 'lab', 'service')->where('reception_id', $id)->get();
+
+        return DataTables::of($redsheets) ->make(true);
+
     }
 }

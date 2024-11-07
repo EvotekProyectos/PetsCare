@@ -46,7 +46,7 @@ class RedSheet extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function Imaging()
+    public function imaging()
     {
         return $this->belongsTo(\App\Models\ProductType::class, 'imaging_type_id', 'id');
     }
@@ -54,7 +54,7 @@ class RedSheet extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function Lab()
+    public function lab()
     {
         return $this->belongsTo(\App\Models\ProductType::class, 'lab_type_id', 'id');
     }
@@ -70,7 +70,7 @@ class RedSheet extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function Service()
+    public function service()
     {
         return $this->belongsTo(\App\Models\ProductType::class, 'service_type_id', 'id');
     }
@@ -78,7 +78,7 @@ class RedSheet extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user()
+    public function vet()
     {
         return $this->belongsTo(\App\Models\User::class, 'vet_id', 'id');
     }
