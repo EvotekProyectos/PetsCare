@@ -1,3 +1,18 @@
+<style>
+.select2-container .select2-selection--single {
+    height: 2rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+.input-group .select2-container {
+    width: auto !important;
+    flex: 1 1 auto;
+}
+</style>
+
 <div class="row padding-1 p-1">
     <div class="col-md-12">
         <div class="row">
@@ -104,44 +119,46 @@
 
             <div class="col-md-4">
                 <div class="form-group mb-2">
-                    <label for="name" class="form-label">FAMILIA/PROPIETARIO</label>
+                    <label for="family_id" class="form-label">FAMILIA/PROPIETARIO</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="fluent-mdl2--family text-primary"></span>
                         </span>
-                        <select name="family_id" class="form-control @error('family_id') is-invalid @enderror"
-                            id="family_id" onchange="getpets(this.value)">
-                            <option value=""> Selecciona la familia</option>
+                        <select name="family_id" class="form-control select2 @error('family_id') is-invalid @enderror"
+                            id="family_id" onchange="getpets(this.value)" style="width: 100%;">
+                            <option value="">Selecciona la familia</option>
                             @foreach ($families as $family)
-                                <option value="{{ $family->id }}" name="family_id"
+                                <option value="{{ $family->id }}"
                                     {{ old('family_id', $reception?->family_id) == $family->id ? 'selected' : '' }}>
-                                    {{ $family->name }}</option>
+                                    {{ $family->name }} {{ $family->phone }}</option>
                             @endforeach
                         </select>
-                        {!! $errors->first('family_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                     </div>
                 </div>
             </div>
+            
 
             <div class="col-md-4">
                 <div class="form-group mb-2">
-                    <label for="name" class="form-label">MASCOTA</label>
+                    <label for="pet_id" class="form-label">MASCOTA</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="ic--twotone-pets"></span>
                         </span>
+
                         <select name="pet_id" class="form-control @error('pet_id') is-invalid @enderror"
                             id="pet_id">
-                            <option value="" name="pet_id"> Selecciona la mascota</option>
+
+                            <option value="">Selecciona la mascota</option>
+                            {{-- @foreach ($pets as $pet)
+                                <option value="{{ $pet->id }}"
+                                    {{ old('pet_id', $reception?->pet_id) == $pet->id ? 'selected' : '' }}>
+                                    {{ $pet->name }} </option>
+                            @endforeach --}}
                         </select>
-                        {{-- value="{{ old('pet_id', $reception?->pet_id) }}" id="pet_id" placeholder="Pet Id"> --}}
-                        {{-- {!! $errors->first('pet_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!} --}}
                     </div>
                 </div>
             </div>
-
-            
-            
             
 
             <div class="col-md-4" id="adm" style="display: none">

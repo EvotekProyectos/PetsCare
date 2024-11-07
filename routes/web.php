@@ -35,6 +35,7 @@ use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ShiftController;
+use App\Http\Controllers\SurgeryController;
 use App\Http\Controllers\VaccineCertificateController;
 use App\Models\Appointment;
 use App\Models\Assignment;
@@ -108,7 +109,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Genres
     Route::get('/genres/list', [GenreController::class, 'list'])->name('genres.list');
     Route::resource('genres', GenreController::class);
-    
+
     //Reproductive Statuses
     Route::get('/reproductive-statuses/list', [ReproductiveStatusController::class, 'list'])->name('reproductive-statuses.list');
     Route::resource('reproductive-statuses', ReproductiveStatusController::class);
@@ -145,19 +146,28 @@ Route::group(['middleware' => ['auth']], function () {
     //Pets
     Route::get('/pets/list', [PetController::class, 'list'])->name('pets.list');
     Route::get('/pets/preview/{family}', [PetController::class, 'preview'])->name('pets.preview');
+
+    Route::get('/pets/{pet}/family', [PetController::class, 'getFamilyByPet'])->name('pets.family');
     Route::resource('pets', PetController::class);
 
     //RECEPTIONS
     Route::get('/receptions/list', [ReceptionController::class, 'list'])->name('reception.list');
     Route::get('/receptions/historial/{id}', [ReceptionController::class, 'historial'])->name('reception.historial');
+
     Route::get('/receptions/hospital/{id}', [ReceptionController::class, 'hospital_authorization'])->name('hospital.list');
-    
+
     Route::post('/receptions/hospital/pdf/{id}', [ReceptionController::class, 'hospital_authorizationpdf'])->name('hospital.pdf');
-    
+    Route::get('/receptions/hospital/pdf/view/{id}', [ReceptionController::class, 'viewPdf'])->name('hospital.pdf.view');
+  
+
+    Route::get('/family-data/{id}', [FamilyController::class, 'getFamilyData'])->name('family.data');
+    Route::get('/phone-data/{phone}', [FamilyController::class, 'getPhoneData'])->name('phone.data');
+    Route::get('/pet-data/{id}', [FamilyController::class, 'getPetData'])->name('pet.data');
+
     Route::resource('receptions', ReceptionController::class);
 
     //RECEPTIONS STATUS HISTORIES
-    Route::get('/reception-status-histories', [ReceptionStatusHistoryController::class ,'list'])->name('reception-status.list');
+    Route::get('/reception-status-histories', [ReceptionStatusHistoryController::class, 'list'])->name('reception-status.list');
     Route::resource('reception-status-histories', ReceptionStatusHistoryController::class);
 
 
@@ -169,7 +179,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     //Appointments
     Route::get('/appointments/consultation/{id}', [AppointmentController::class, 'consultation'])->name('appointment.consultation');
-    Route::get('/appointments/{id}', [AppointmentController::class,'list'])->name('appointment.list');
+    Route::get('/appointments/{id}', [AppointmentController::class, 'list'])->name('appointment.list');
     Route::get('/appointments/historic/{id}', [AppointmentController::class, 'historic'])->name('appointment.historic');
     Route::resource('appointments', AppointmentController::class);
 
@@ -177,7 +187,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/prescriptions/list', [PrescriptionController::class, 'list'])->name('prescription.list');
     Route::get("/prescriptions/create/{id}", [PrescriptionController::class, 'create'])->name('prescription.create');
     Route::get("/prescriptions/pdf/{id}", [PrescriptionController::class, "imprimir"])->name("prescription.imprimir");
-    Route::resource('prescriptions',PrescriptionController::class);
+    Route::resource('prescriptions', PrescriptionController::class);
 
     //PET-HISTORY
     Route::get('/pet-history/{id}', [PetHistoryController::class, 'index'])->name('pet-history.index');
@@ -205,6 +215,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/red-sheets/recap/{id}', [RedSheetController::class, 'recap'])->name("red-sheets.recap");
     Route::resource('red-sheets', RedSheetController::class);
 
+    //SURGERIES
+    Route::get("/surgeries/create/{id}", [SurgeryController::class, 'create'])->name('surgeries.create');
+    Route::resource('surgeries', SurgeryController::class);
     //FOLLOW UPS 
 
     Route::resource('follow-ups', FollowUpController::class);

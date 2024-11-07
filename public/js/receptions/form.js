@@ -1,3 +1,13 @@
+$(document).ready(function () {
+    $('#family_id').select2({
+        placeholder: 'Buscar Familia',
+        width: 'resolve'
+    });
+    $('#pet_id').select2({
+         placeholder: 'Buscar Mascota'
+     });
+});
+
 async function getpets(family_id) {
     let url = route("pets.preview", family_id)
     let peticion = await fetch(url)
@@ -13,6 +23,9 @@ async function getpets(family_id) {
     }
 
 }
+
+
+
 
 function togglee(radio) {
     document.getElementById("adm").style.display = "none";
@@ -49,6 +62,5 @@ function togglee(radio) {
         default:
             break;
     }
-
-
 }
+

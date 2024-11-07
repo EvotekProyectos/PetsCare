@@ -5,7 +5,6 @@
     <style type="text/css">
         @import url(https://themes.googleusercontent.com/fonts/css?kit=fOEonugfEEW2k3BWBOC73CXHfZMcH88HuPcErL5npACHpuVWaP-GHFPZzt35558q);
 
-
         .head {
             color: #646c9a;
             font-weight: 700;
@@ -319,9 +318,10 @@
         <p style="margin-top: 2%;">
             <b>Firma y nombre:</b>
         </p>
-        @if (isset($signature))
-            <img src="{{ $signature }}" alt="Firma del propietario" style="width: 200px; height: 100px;">
-        @endif
+        @if (isset($signatureDataUrl))
+        <img src="{{ $signatureDataUrl }}" alt="Firma del propietario" style="width: 200px; height: 100px;">
+    @endif
+    
     </div>
 
 
@@ -348,11 +348,14 @@
 
    
     <script src="{{ asset('js/jquery.min.js') }}" ></script>
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
     <script src="{{ asset('js/receptions/hospital_auth.js') }}" defer></script>
-
+    <script>
+        const RECEPTION_ID = "{{ $reception->id }}"; 
+    </script>
 </body>
 
 </html>

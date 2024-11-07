@@ -98,7 +98,7 @@
                     </li>
                     <li>
                         <a href="{{ route('families.index') }}" class=" ms-2">
-                            <i class="fa-solid fa-file" style="color: #FFD43B;"></i>
+                            <span class="fluent--document-28-filled"></span>
                             Formatos
                         </a>
                     </li>

@@ -49,7 +49,8 @@ $(document).ready(function () {
                     }
                     return '';
                 }
-            }, {
+            },  
+             {
                 data: null,
                 render: function (data) {
                     return data.room ? data.room.name : '';

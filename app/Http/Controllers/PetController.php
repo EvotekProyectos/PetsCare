@@ -132,12 +132,15 @@ class PetController extends Controller
         return DataTables::of("$pets")->make(true);
     }
 
-    public function preview($family)
-    {
-        $pets = Pet::with("file")
-            ->where("family_id", $family)->get();
+   
+     public function preview($family)
+     {
+         $pets = Pet::with("file")
+             ->where("family_id", $family)->get();
 
-        return response()->json($pets);
-    }
+         return response()->json($pets);
+     }
+
+
 
 }
