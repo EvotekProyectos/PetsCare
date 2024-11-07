@@ -19,6 +19,7 @@ use App\Http\Controllers\AttentionStatusController;
 use App\Http\Controllers\CoverAreaController;
 use App\Http\Controllers\FamClassificationController;
 use App\Http\Controllers\FamilyController;
+use App\Http\Controllers\HospitalizationController;
 use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\PetHistoryController;
@@ -28,10 +29,12 @@ use App\Http\Controllers\ProductClassificationController;
 use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\ReceptionController;
 use App\Http\Controllers\ReceptionStatusHistoryController;
+use App\Http\Controllers\RedSheetController;
 use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ShiftController;
+use App\Http\Controllers\SurgeryController;
 use App\Http\Controllers\VaccineCertificateController;
 use App\Models\Appointment;
 use App\Models\Assignment;
@@ -40,6 +43,7 @@ use App\Models\Prescription;
 use App\Models\Reception;
 use App\Models\ReceptionStatusHistory;
 use App\Models\VaccineCertificate;
+use FontLib\Table\Type\name;
 
 /*
 |--------------------------------------------------------------------------
@@ -153,7 +157,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/receptions/hospital/pdf/{id}', [ReceptionController::class, 'hospital_authorizationpdf'])->name('hospital.pdf');
     Route::get('/receptions/hospital/pdf/view/{id}', [ReceptionController::class, 'viewPdf'])->name('hospital.pdf.view');
-
+  
 
     Route::get('/family-data/{id}', [FamilyController::class, 'getFamilyData'])->name('family.data');
     Route::get('/phone-data/{phone}', [FamilyController::class, 'getPhoneData'])->name('phone.data');
@@ -167,8 +171,10 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     //ASSIGNAMENT
-    Route::get('/assignment', [AssignmentController::class, 'index'])->name('assignment.index');
-    Route::get('/assignment/list', [AssignmentController::class, 'list'])->name('assignment.list');
+    Route::get('/assignment/appointments', [AssignmentController::class, 'index'])->name('assignment.index');
+    Route::get('/assignment/appointments/list', [AssignmentController::class, 'appointments'])->name('assignment.appointments');
+    Route::get('/assignment/hospitaizations', [AssignmentController::class, 'hospital'])->name('assignment.hospital');
+    Route::get('/assignment/hospitaizations/list', [AssignmentController::class, 'hospitalizations'])->name('assignment.hospitalizations');
 
     //Appointments
     Route::get('/appointments/consultation/{id}', [AppointmentController::class, 'consultation'])->name('appointment.consultation');
@@ -194,9 +200,22 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get("/vaccine-certificates/pdf/{id}", [VaccineCertificateController::class, "imprimir"])->name("certificate.imprimir");
     Route::resource('vaccine-certificates', VaccineCertificateController::class);
 
+    //Hospitalizations
+
+    Route::resource('hospitalizations', HospitalizationController::class);
     //PRODUCT CLASSIFICATIONS
     Route::resource('product-classifications', ProductClassificationController::class);
 
     //PRODUCT TYPES
     Route::resource('product-types', ProductTypeController::class);
+
+    //RED SHEETS FOR HOSPITALIZATION DAYS
+    Route::get('/hospitalizations/entries/{id}', [RedSheetController::class, 'entry'])->name("redsheet.entry");
+    Route::resource('red-sheets', RedSheetController::class);
+
+    //SURGERIES
+    Route::get("/surgeries/create/{id}", [SurgeryController::class, 'create'])->name('surgeries.create');
+    Route::resource('surgeries', SurgeryController::class);
+
+    
 });

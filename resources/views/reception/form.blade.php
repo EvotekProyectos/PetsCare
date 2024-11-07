@@ -145,9 +145,16 @@
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="ic--twotone-pets"></span>
                         </span>
+
                         <select name="pet_id" class="form-control @error('pet_id') is-invalid @enderror"
-                            id="pet_id" >
+                            id="pet_id">
+
                             <option value="">Selecciona la mascota</option>
+                            {{-- @foreach ($pets as $pet)
+                                <option value="{{ $pet->id }}"
+                                    {{ old('pet_id', $reception?->pet_id) == $pet->id ? 'selected' : '' }}>
+                                    {{ $pet->name }} </option>
+                            @endforeach --}}
                         </select>
                     </div>
                 </div>

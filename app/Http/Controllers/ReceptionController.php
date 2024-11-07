@@ -136,26 +136,22 @@ class ReceptionController extends Controller
         return view('reception.pdf', compact("reception", "pet"));
     }
 
-     public function hospital_authorizationpdf(Request $request, $id)
-     {
-         $reception = Reception::find($id);
-         $pet = Pet::with('family', 'genre')->find($id);
+    public function hospital_authorizationpdf(Request $request, $id)
+{
+    $reception = Reception::find($id);
+    $pet = Pet::with('family', 'genre')->find($id);
+    $signatureDataUrl = $request->input('signature');
 
-         $signatureDataUrl = $request->input('signature');
+    // Generar el PDF
+    $pdf = PDF::loadView('reception.pdf', compact('reception', 'pet', 'signatureDataUrl'));
 
-         $pdf = PDF::loadView('reception.pdf', compact('reception', 'pet', 'signature'));
-         return $pdf->stream("reception.pdf");
-     }
+    // Guardar el PDF en un archivo o en un almacenamiento temporal
+    $pdfPath = storage_path('app/public/receptions/reception_' . $id . '.pdf');
+    $pdf->save($pdfPath);
 
-     public function viewPdf(Request $request, $id)
-     {
-         $reception = Reception::find($id);
-         $pet = Pet::with('family', 'genre')->find($id);
+    // Redirigir a una ruta que devuelva el PDF
+    return response()->download($pdfPath)->deleteFileAfterSend(true);
+}
 
-         $signatureDataUrl = $request->input('signature');
-
-         $pdf = PDF::loadView('reception.pdf', compact('reception', 'pet', 'signature'));
-         return $pdf->stream("reception.pdf");
-     }
 
 }

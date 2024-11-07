@@ -318,9 +318,10 @@
         <p style="margin-top: 2%;">
             <b>Firma y nombre:</b>
         </p>
-        @if (isset($signature))
-            <img src="{{ $signature }}" alt="Firma del propietario" style="width: 200px; height: 100px;">
-        @endif
+        @if (isset($signatureDataUrl))
+        <img src="{{ $signatureDataUrl }}" alt="Firma del propietario" style="width: 200px; height: 100px;">
+    @endif
+    
     </div>
 
 
@@ -347,6 +348,7 @@
 
    
     <script src="{{ asset('js/jquery.min.js') }}" ></script>
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 

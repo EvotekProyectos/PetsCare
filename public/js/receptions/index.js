@@ -1,12 +1,12 @@
 const reasons = {
-    "Consulta General": "#6CC3E3",
-    "Consulta de Seguimiento": "#917AAC",
-    "Medicina Preventiva": "#F8A693",
-    "Consulta especialidad": "#FFDE59",
-    "Curación/Cambio de vendaje":"#95FFEA",
-    "Retiro de sutura": "#FC9BCC",
-    "Servicios externos": "#CD4D4D",
-    "Estudios de laboratorio":"#FE9900"
+    "1": "#6CC3E3",
+    "2": "#917AAC",
+    "3": "#F8A693",
+    "4": "#FFF7952",
+    "5":"#95FFEA",
+    "6": "#FF69B42",
+    "7": "#A52A2A",
+    "8":"#FF69B4"
 };
 
 var table = undefined;
@@ -40,15 +40,14 @@ $(document).ready(function () {
                 }
             },
             {
-                data: 'reason',
+                data: null,
                 render: function (data) {
-                    const reasonName = data && data.name ? data.name : '';
-
-                    if (reasonName && reasons[reasonName]) {
-                        return `<span style="background-color: ${reasons[reasonName]}; padding: 5px; color: black; border-radius: 5px;">${reasonName}</span>`;
+                    if (data && data.reason_id && reasons[data.reason_id]) {
+                        return `<span style="background-color: ${reasons[data.reason_id]}; padding: 5px; color: black; border-radius: 5px;">
+                                    ${data.reason.name}
+                                </span>`;
                     }
-                    
-                    return reasonName || '';
+                    return '';
                 }
             },  
              {

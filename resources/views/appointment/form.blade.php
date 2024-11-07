@@ -20,7 +20,7 @@
                     <label for="anamnesis" class="form-label">SUBJETIVO (ANAMNESIS)</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
-                            <span class="vaadin--lines-list"></span>
+                            <span class="healthicons--surgical-sterilization-outline"></span>
                         </span>
                         <textarea rows="2" name="anamnesis" class="form-control @error('anamnesis') is-invalid @enderror"
                            id="anamnesis">{{ old('anamnesis', $appointment?->anamnesis) }} </textarea>

@@ -64,13 +64,15 @@ $("form").on("submit", function (e) {
         url: "/receptions/hospital/pdf/" + RECEPTION_ID, 
         type: "post",
         headers: {
-            "X-CSRF-Token": $("#csrf").attr("content"),
+            "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content'),
         },
         contentType: false,
         processData: false,
         data: formData,
-        success: function () {
-            window.open("/receptions/hospital/pdf/" + RECEPTION_ID);
+        success: function (response) {
+            // Aquí puedes manejar la respuesta, por ejemplo:
+            // Si estás devolviendo el PDF como respuesta, puedes abrirlo directamente
+            window.open(response.url); // Asegúrate de devolver la URL del PDF en la respuesta
         },
         error: function (error) {
             console.error("Error:", error);

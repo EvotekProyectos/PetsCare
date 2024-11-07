@@ -18,7 +18,7 @@ class prescriptionsObserver
         Log::create([
             
             "action"=>'CREACIÓN DE FÓRMULA MÉDICA',
-            "description"=>'Se creó una nueva formula medica para'  .$pet->name. '',
+            "description"=>'Se creó una nueva formula medica para '  .$pet->name. '',
             "user_id"=>(Auth::user()->id)??null
         ]);
     }
@@ -30,7 +30,7 @@ class prescriptionsObserver
     {
         Log::create([
             "action"=>'EDICIÓN DE FORMULA MEDICA',
-            "description"=>'Se editó una formula medica',
+            "description"=>'Se editó una formula medica ',
             "user_id"=>(Auth::user()->id)??null
         ]);
     }
@@ -42,7 +42,7 @@ class prescriptionsObserver
     {
         Log::create([
             "action"=>'ELIMINACIÓN DE FORMULA MEDICA',
-            "description"=>'Se eliminó una formula medica',
+            "description"=>'Se eliminó una formula medica ',
             "user_id"=>(Auth::user()->id)??null
         ]);
     }

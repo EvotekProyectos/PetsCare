@@ -76,8 +76,9 @@ class PrescriptionController extends Controller
     public function edit($id)
     {
         $prescription = Prescription::find($id);
-        //$this->authorize("update",$prescription);
-        return view('prescription.edit', compact('prescription'));
+        $pet = $prescription->pet;
+        $this->authorize("update",$prescription);
+        return view('prescription.edit', compact('prescription', 'pet'));
     }
 
     /**

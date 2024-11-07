@@ -3,9 +3,9 @@ $(document).ready(function () {
         placeholder: 'Buscar Familia',
         width: 'resolve'
     });
-    // $('#pet_id').select2({
-    //     placeholder: 'Buscar Mascota'
-    // });
+    $('#pet_id').select2({
+         placeholder: 'Buscar Mascota'
+     });
 });
 
 async function getpets(family_id) {
@@ -23,6 +23,7 @@ async function getpets(family_id) {
     }
 
 }
+
 
 
 

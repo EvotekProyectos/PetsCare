@@ -1,24 +1,19 @@
 @extends('layouts.app')
 
 @section('template_title')
-    {{ __('Create') }} Appointment
+    {{ __('Create') }} Red Sheet
 @endsection
 
 @section('content')
     <section class="container-fluid">
         <div class="row">
-            @if ($message = Session::get('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <p>{{ $message }}</p>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
             <div class="col-12">
+
                 <div class="card bg-primary-soft border-0 p-3">
                     <div class="card-header bg-transparent border-0">
                         <div class="d-flex justify-content-between align-items-center">
                             <h4 id="card_title" class="text-primary text-uppercase">
-                                <span class="ic--twotone-pets"></span> CONSULTA
+                                <span class="ic--twotone-pets"></span> HOSPITALIZACIÓN
                             </h4>
                         </div>
                     </div>
@@ -92,8 +87,18 @@
                             <div class="col-md-3">
                             </div>
                             <div class="col-md-3">
-                                <p style="font-weight: bold">Tipo: <span style="font-weight: normal">
-                                        {{ $reception->reason->name }} </span></p>
+                                <p style="font-weight: bold">Admisión: <span style="font-weight: normal">
+                                        {{ $reception->admissionType->name }} </span></p>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-center " style="margin-bottom: -11px;">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-3">
+                                <p style="font-weight: bold">Area: <span style="font-weight: normal">
+                                    {{ $reception->area->name }} </span></p>
                             </div>
                             <div class="col-md-3">
                             </div>
@@ -109,142 +114,50 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-body ">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
-                                DATOS ESPECÍFICOS
-                            </h5>
-                        </div>
-                        <form method="POST" action="{{ route('appointments.store') }}" role="form" id="NewAppointment"
-                            enctype="multipart/form-data">
-                            @csrf
-
-                            @include('appointment.form')
-
-                        </form>
-                    </div>
-                    <div class="card-body ">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h4 id="card_title" class="text-primary text-uppercase">
-                                <span class="material-symbols--prescriptions-outline "></span> FÓRMULA MÉDICA
-                            </h4>
-                        </div>
-                        <form method="POST" onsubmit="AddPrescription()" role="form" id="NewPrescription"
-                            enctype="multipart/form-data">
-                            @csrf
-
-                            @include('prescription.form')
-
-                        </form>
-                    </div>
                     <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 id="card_title" class=" text-uppercase" style="color: #0455A0">
-                                <span class="map--veterinary-care"></span> PRODUCTOS/SERVICIOS
-                            </h5>
-                        </div>
                         <div class="row">
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
-                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
+                                    <button class="btn btn-costum-services btn-sm text-uppercase rounded-4"
                                         onclick="OpenCarnet()">
-                                        <span class="badge custom-badge-pill"><span
-                                                class="healthicons--syringe-vaccine"></span></span> CARTILLA Virtual
+                                        <span class="badge custom-badge-pill"><span 
+                                            class="mynaui--inbox-up"></span></span> Dar Alta
                                     </button>
                                 </div>
                             </div>
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
-                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
+                                    <button class="btn btn-costum-services btn-sm text-uppercase rounded-4"
                                         onclick="">
                                         <span class="badge custom-badge-pill"><span
-                                                class="hugeicons--chemistry-02"></span></span> EXÁMENES DE GABINETE
+                                             class="clarity--two-way-arrows-line"></span></span> Trasladar
                                     </button>
                                 </div>
                             </div>
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
-                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
+                                    <button class="btn btn-costum-services btn-sm text-uppercase rounded-4"
                                         onclick="">
-                                        <span class="badge custom-badge-pill"><span
-                                                class="hugeicons--x-ray"></span></span> IMÁGENES DIAGNÓSTICAS </button>
+                                        <span class="badge custom-badge-pill"><span class="ph--cross-duotone"></span></span> Falleció </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 mt-2 d-flex justify-content-end">
-                        <button class="btn btn-primary btn-lg text-uppercase rounded-4" onclick="EndAppointment()">
-                            Finalizar Consulta <i class="fas fa-file-medical fa-lg"></i></button>
-                    </div>
-                    <div class="card-body">
+                    <div class="row card-body ">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h5 id="card_title" class="text-primary text-uppercase">
-                                <span class="ic--twotone-pets"></span> historial clínico
+                            <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
+                                PROCEDIMIENTOS DEL DÍA
                             </h5>
                         </div>
-                        <div class="col-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover responsive w-100" id="table">
-                                    <thead class="thead table-primary text-uppercase">
-                                        <tr>
-                                            <th>Fecha</th>
-                                            <th>M.V.Z</th>
-                                            <th>Recepción</th>
-                                            <th>Tipo</th>
-                                            <th>Detalles</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                        <form method="POST" action="{{ route('red-sheets.store') }}"  role="form" enctype="multipart/form-data">
+                            @csrf
 
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                            @include('red-sheet.form')
+
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content" style="background-color: #e9eced; border-radius: 20px;">
-                <div class="modal-header">
-                    <div class="col-11 d-flex justify-content-between align-items-center">
-                        <h5 id="card_title" class=" text-uppercase" style="color: #0455A0">
-                            <span class="map--veterinary-care"></span> VACUNAS Y DESPARACITACIONES
-                        </h5>
-                    </div>
-                    <div class="col-1">
-                        <button type="button" class="btn-close" onclick="closeModal()" aria-label="Close"></button>
-                    </div>
-
-                </div>
-                <div class="modal-body" style="width: 100%;">
-                    <div class="row">
-                        <div class="col-12">
-                            @include('vaccine-certificate.form')
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">
-                        Cerrar
-                    </button>
-
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
-
-@push('scripts')
-    <script>
-        var ruta = "{{ asset('') }}";
-        var imgDefault = "{{ asset('img/pet_pic.png') }}";
-        var Pet_Id = {{ $reception->pet_id }};
-        var Pic_id = {{ $reception->pet->picture_id ?? 'null' }};
-        var Pic_route = "{{ $reception->pet->file->route ?? '' }}";
-    </script>
-    <script src="{{ asset('js/appointments/create.js') }}" defer></script>
-@endpush
