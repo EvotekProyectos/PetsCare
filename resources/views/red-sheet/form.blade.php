@@ -12,6 +12,22 @@
             </div>
             {!! $errors->first('reception_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
+        <div class="form-group mb-2 mb20" >
+            @php
+                use Carbon\Carbon;
+                $entryDate = Carbon::parse($reception->entry_date)->format("Y-m-d 00:00:00");
+                $today = Carbon::now()->format("Y-m-d 00:00:00");
+                $dayCount = $entryDate <= $today ? Carbon::parse($entryDate)->diffInDays($today) + 1  : 1;
+            @endphp
+            <label for="day_count" class="form-label">DÍA:</label>
+            <div class="input-group mb-3">
+                <span class="input-group-text bg-primary-subtle" id="basic-addon1">
+                    <span class="vaadin--lines-list"></span></span>
+                <input type="text" name="day_count" class="form-control @error('day_count') is-invalid @enderror"
+                    value="{{ old('day_count', $dayCount) }}" id="day_count" placeholder="Day Count">
+            </div>
+            {!! $errors->first('day_count', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+        </div>
         <div class="form-group mb-2 mb20">
             <label for="service_type_id" class="form-label">SERVICIOS</label>
             <div class="input-group mb-3">
@@ -86,21 +102,7 @@
             </div>
             {!! $errors->first('observations', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-        <div class="form-group mb-2 mb20" hidden>
-            @php
-                $entryDate = \Carbon\Carbon::parse($reception->entry_date);
-                $today = \Carbon\Carbon::now();
-                $dayCount = $entryDate->diffInDays($today) + 1;
-            @endphp
-            <label for="day_count" class="form-label">DÍA:</label>
-            <div class="input-group mb-3">
-                <span class="input-group-text bg-primary-subtle" id="basic-addon1">
-                    <span class="vaadin--lines-list"></span></span>
-                <input type="text" name="day_count" class="form-control @error('day_count') is-invalid @enderror"
-                    value="{{ old('day_count', $dayCount) }}" id="day_count" placeholder="Day Count">
-            </div>
-            {!! $errors->first('day_count', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-        </div>
+
         <div class="form-group mb-2 mb20" hidden>
             <label for="vet_id" class="form-label">{{ __('Vet Id') }}</label>
             <div class="input-group mb-3">
@@ -113,7 +115,7 @@
         </div>
 
     </div>
-    <div class="col-md-12 mt20 mt-2">
-        <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
+    <div class="col-12 mt-2 d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary">Registrar</button>
     </div>
 </div>

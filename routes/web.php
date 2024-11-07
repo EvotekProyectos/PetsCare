@@ -19,6 +19,7 @@ use App\Http\Controllers\AttentionStatusController;
 use App\Http\Controllers\CoverAreaController;
 use App\Http\Controllers\FamClassificationController;
 use App\Http\Controllers\FamilyController;
+use App\Http\Controllers\FollowUpController;
 use App\Http\Controllers\HospitalizationController;
 use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\PetController;
@@ -201,7 +202,12 @@ Route::group(['middleware' => ['auth']], function () {
 
     //RED SHEETS FOR HOSPITALIZATION DAYS
     Route::get('/hospitalizations/entries/{id}', [RedSheetController::class, 'entry'])->name("redsheet.entry");
+    Route::get('/red-sheets/recap/{id}', [RedSheetController::class, 'recap'])->name("red-sheets.recap");
     Route::resource('red-sheets', RedSheetController::class);
+
+    //FOLLOW UPS 
+
+    Route::resource('follow-ups', FollowUpController::class);
 
 
     
