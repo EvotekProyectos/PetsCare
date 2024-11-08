@@ -61,7 +61,7 @@
 </head>
 
 <body>
-    <input type="text" style="display: none" value="{{ route('hospital.pdf', $reception->id)}}" id="reception">
+    <input type="hidden" value="{{ route('hospital.pdf', $reception->id) }}" id="reception">
     <div>
         <table style="width: 100%; text-align: center;">
             <tr>
@@ -103,8 +103,8 @@
 
     <div>
         <table style="width: 100%; border-collapse: collapse;">
-                <p>Fecha: {{ $reception->entry_date }}</p>
-            
+            <p>Fecha: {{ $reception->entry_date }}</p>
+
             <tr>
                 <td>
                     <p>El que suscribe: {{ $reception->pet->family->name }} </p>
@@ -314,47 +314,34 @@
 
 
 
+
     <div>
-        <p style="margin-top: 2%;">
-            <b>Firma y nombre:</b>
-        </p>
+        <p style="margin-top: 2%;"><b>Firma y nombre:</b></p>
+
         @if (isset($signatureDataUrl))
-        <img src="{{ $signatureDataUrl }}" alt="Firma del propietario" style="width: 200px; height: 100px;">
-    @endif
-    
-    </div>
-
-
-    <div class="row mx-0 t>
-        <div class="col-6">
+            <img src="{{ $signatureDataUrl }}" alt="Firma del propietario" style="width: 200px; height: 100px;">
+        @else
             <canvas id="canvas" class="border border-dark p-0" width="200" height="100"></canvas>
-        </div>
-        <table>
-            <tr>
-                <td>
-                    <div class="col-6">
-                        <button class="btnLimpiar btn btn-lmx" data-target="canvas">Limpiar</button>
-                    </div>
-                </td>
-
-                <td>
-                    <form class="col-6">
-                        <button class="btnEnviar btn btn-lmx">Enviar</button>
-                    </form>
-                </td>
-            </tr>
-        </table>
+        @endif
     </div>
 
-   
-    <script src="{{ asset('js/jquery.min.js') }}" ></script>
-
+    @if (!isset($isPdf) || !$isPdf)
+        <div class="row mx-0">
+            <div class="col-6">
+                <button class="btnLimpiar btn btn-lmx" data-target="canvas">Limpiar</button>
+            </div>
+            <div class="col-6">
+                <form>
+                    <button class="btnEnviar btn btn-lmx">Aceptar</button>
+                </form>
+            </div>
+        </div>
+    @endif
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/receptions/hospital_auth.js') }}" defer></script>
     <script>
-        const RECEPTION_ID = "{{ $reception->id }}"; 
+        const RECEPTION_ID = "{{ $reception->id }}";
     </script>
 </body>
 

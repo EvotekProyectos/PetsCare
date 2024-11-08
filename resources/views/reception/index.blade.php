@@ -43,6 +43,7 @@
                                                 <th>Mascota</th>
                                                 <th>Motivo</th>
                                                 <th>Consultorio</th>
+                                                <th>Area</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>

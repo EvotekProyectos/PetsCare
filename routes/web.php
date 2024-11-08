@@ -141,6 +141,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     //Families
     Route::get('/families/list', [FamilyController::class, 'list'])->name('families.list');
+    Route::get('/families/get-family-by-pet/{pet_id}', [ReceptionController::class, 'getFamilyByPet'])->name('families.getFamilyByPet');
+
     Route::resource('families', FamilyController::class);
 
     //Pets
@@ -153,11 +155,8 @@ Route::group(['middleware' => ['auth']], function () {
     //RECEPTIONS
     Route::get('/receptions/list', [ReceptionController::class, 'list'])->name('reception.list');
     Route::get('/receptions/historial/{id}', [ReceptionController::class, 'historial'])->name('reception.historial');
-
     Route::get('/receptions/hospital/{id}', [ReceptionController::class, 'hospital_authorization'])->name('hospital.list');
-
     Route::post('/receptions/hospital/pdf/{id}', [ReceptionController::class, 'hospital_authorizationpdf'])->name('hospital.pdf');
-    Route::get('/receptions/hospital/pdf/view/{id}', [ReceptionController::class, 'viewPdf'])->name('hospital.pdf.view');
   
 
     Route::get('/family-data/{id}', [FamilyController::class, 'getFamilyData'])->name('family.data');
@@ -218,8 +217,8 @@ Route::group(['middleware' => ['auth']], function () {
     //SURGERIES
     Route::get("/surgeries/create/{id}", [SurgeryController::class, 'create'])->name('surgeries.create');
     Route::resource('surgeries', SurgeryController::class);
+   
     //FOLLOW UPS 
-
     Route::resource('follow-ups', FollowUpController::class);
 
 

@@ -10,9 +10,9 @@
             <div class="col-md-12">
 
                 <div class="card card-default">
-                    <div class="card-header">
+                    {{-- <div class="card-header">
                         <span class="card-title">{{ __('Update') }} Prescription</span>
-                    </div>
+                    </div> --}}
                     <div class="card-body bg-white">
                         <form method="POST" action="{{ route('prescriptions.update', $prescription->id) }}"  role="form" enctype="multipart/form-data">
                             {{ method_field('PATCH') }}

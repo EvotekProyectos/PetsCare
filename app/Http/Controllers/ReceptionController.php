@@ -16,6 +16,7 @@ use Barryvdh\DomPDF\Facade\Pdf  as Pdf;
 use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class ReceptionController
@@ -47,10 +48,10 @@ class ReceptionController extends Controller
         $reasons = Reason::all();
         $users = User::all();
         $rooms = Room::all();
-        $pets= Pet::all();
+        $pets = Pet::all(); // Aquí consultas todas las mascotas
 
         $this->authorize("create", Reception::class);
-        return view('reception.create', compact('reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms', 'pets'));
+        return view('reception.create', compact('reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms', 'pets')); // Asegúrate de pasar $pets correctamente
     }
 
     /**
@@ -66,9 +67,15 @@ class ReceptionController extends Controller
         ]);
 
         $this->authorize("create", Reception::class);
+        if ($request->reception_type_id == 2) {
+            return redirect()->route('hospital.list', ['id' => $reception->id])
+                ->with('success', 'Recepción de hospitalización guardada exitosamente.');
+        }
+
         return redirect()->route('receptions.index')
-            ->with('success', 'Recepción guardada exitósamente.');
+            ->with('success', 'Recepción guardada exitosamente.');
     }
+
 
     /**
      * Display the specified resource.
@@ -118,7 +125,7 @@ class ReceptionController extends Controller
 
     public function list()
     {
-        $receptions = Reception::with('receptionType', 'family', 'pet', 'reason', 'room')->get();
+        $receptions = Reception::with('receptionType', 'family', 'pet', 'reason', 'room', 'area')->get();
         return DataTables::of($receptions)->make(true);
     }
 
@@ -137,20 +144,33 @@ class ReceptionController extends Controller
     }
 
     public function hospital_authorizationpdf(Request $request, $id)
-{
-    $reception = Reception::find($id);
-    $pet = Pet::with('family', 'genre')->find($id);
-    $signatureDataUrl = $request->input('signature');
+    {
+        $reception = Reception::find($id);
+        $pet = Pet::with('family', 'genre')->find($id);
+        $signatureDataUrl = $request->input('signature');
 
-    // Generar el PDF
-    $pdf = PDF::loadView('reception.pdf', compact('reception', 'pet', 'signatureDataUrl'));
+        // Genearar `isPdf` para el id de los botones 
+        $pdf = PDF::loadView('reception.pdf', [
+            'reception' => $reception,
+            'pet' => $pet,
+            'signatureDataUrl' => $signatureDataUrl,
+            'isPdf' => true
+        ]);
 
-    // Guardar el PDF en un archivo o en un almacenamiento temporal
-    $pdfPath = storage_path('app/public/receptions/reception_' . $id . '.pdf');
-    $pdf->save($pdfPath);
+        $pdfPath = 'public/receptions/reception_' . $id . '.pdf';
+        Storage::put($pdfPath, $pdf->output());
 
-    // Redirigir a una ruta que devuelva el PDF
-    return response()->download($pdfPath)->deleteFileAfterSend(true);
+        $pdfUrl = Storage::url($pdfPath);
+        return response()->json(['url' => $pdfUrl]);
+    }
+
+     public function getFamilyByPet($pet_id)
+ {
+     $pet = Pet::find($pet_id);
+     if ($pet && $pet->family) {
+         return response()->json($pet->family); // Devuelve la familia de la mascota
+     }
+     return response()->json(null, 404);
 }
 
 
