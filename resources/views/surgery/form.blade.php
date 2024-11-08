@@ -159,7 +159,7 @@
                             <span class="vaadin--lines-list"></span>
                         </span>
                         <textarea name="observations"class="form-control @error('observations') is-invalid @enderror"
-                         rows="2" id="observations"> {{ old('observations', $surgery?->observations) }} </textarea>
+                         rows="2" id="observations_surgery"> {{ old('observations', $surgery?->observations) }} </textarea>
                     </div>
                     {!! $errors->first('observations', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                 </div>

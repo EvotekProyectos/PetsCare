@@ -7,6 +7,7 @@ use App\Http\Requests\RedSheetRequest;
 use App\Models\FollowUp;
 use App\Models\ProductType;
 use App\Models\Reception;
+use App\Models\Surgery;
 use Yajra\DataTables\Facades\DataTables;
 
 /**
@@ -100,8 +101,9 @@ class RedSheetController extends Controller
         $reception = Reception::with('pet', 'admissionType', 'area')->findorfail($id);
         $products = ProductType::all();
         $followUp = new FollowUp();
+        $surgery = new Surgery();
         $this->authorize("create", RedSheet::class);
-        return view('red-sheet.create', compact('redSheet', 'reception', 'products', 'followUp'));
+        return view('red-sheet.create', compact('redSheet', 'reception', 'products', 'followUp', 'surgery'));
     }
 
     public function recap(int $id)

@@ -216,10 +216,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('red-sheets', RedSheetController::class);
 
     //SURGERIES
-    Route::get("/surgeries/create/{id}", [SurgeryController::class, 'create'])->name('surgeries.create');
+    Route::get('/surgeries/entries/{id}', [SurgeryController::class, 'entry'])->name("surgeries.entry");
+    Route::get("/surgeries/create/{id}", [SurgeryController::class, 'create'])->name('surgeries.creater');
     Route::resource('surgeries', SurgeryController::class);
     //FOLLOW UPS 
-
+    Route::get('/follow-ups/entries/{id}', [FollowUpController::class, 'entry'])->name("followup.entry");
     Route::resource('follow-ups', FollowUpController::class);
 
 

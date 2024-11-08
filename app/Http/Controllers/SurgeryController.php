@@ -7,6 +7,7 @@ use App\Http\Requests\SurgeryRequest;
 use App\Models\ProductType;
 use App\Models\Reception;
 use App\Models\User;
+use Yajra\DataTables\Facades\DataTables;
 
 /**
  * Class SurgeryController
@@ -47,9 +48,10 @@ class SurgeryController extends Controller
         $surgery = new Surgery($request->validated());
         $surgery->vet_id = auth()->id();
         $surgery->save();
-    
-        return redirect()->route('surgeries.index')
-            ->with('success', 'Surgery created successfully.');
+
+        return response()->json($surgery);
+        // return redirect()->route('surgeries.index')
+        //     ->with('success', 'Surgery created successfully.');
     }
     
     /**
@@ -95,5 +97,12 @@ class SurgeryController extends Controller
 
         return redirect()->route('surgeries.index')
             ->with('success', 'Surgery deleted successfully');
+    }
+
+    public function entry($id)
+    {
+        $surgery = Surgery::with('vet', 'service')->where('reception_id', $id)->get();
+
+        return DataTables::of($surgery) ->make(true);
     }
 }

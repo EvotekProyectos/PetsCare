@@ -98,7 +98,7 @@
                             </div>
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Area: <span style="font-weight: normal">
-                                    {{ $reception->area->name }} </span></p>
+                                        {{ $reception->area->name }} </span></p>
                             </div>
                             <div class="col-md-3">
                             </div>
@@ -120,36 +120,42 @@
                                 <div class="col">
                                     <button class="btn btn-costum-services btn-sm text-uppercase rounded-4"
                                         onclick="OpenCarnet()">
-                                        <span class="badge custom-badge-pill"><span 
-                                            class="mynaui--inbox-up"></span></span> Dar Alta
+                                        <span class="badge custom-badge-pill"><span class="mynaui--inbox-up"></span></span>
+                                        Dar Alta
                                     </button>
                                 </div>
                             </div>
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
-                                    <button class="btn btn-costum-services btn-sm text-uppercase rounded-4"
-                                        onclick="">
+                                    <button class="btn btn-costum-services btn-sm text-uppercase rounded-4" onclick="">
                                         <span class="badge custom-badge-pill"><span
-                                             class="clarity--two-way-arrows-line"></span></span> Trasladar
+                                                class="clarity--two-way-arrows-line"></span></span> Trasladar
                                     </button>
                                 </div>
                             </div>
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
-                                    <button class="btn btn-costum-services btn-sm text-uppercase rounded-4"
-                                        onclick="">
-                                        <span class="badge custom-badge-pill"><span class="ph--cross-duotone"></span></span> Falleció </button>
+                                    <button class="btn btn-costum-services btn-sm text-uppercase rounded-4" onclick="">
+                                        <span class="badge custom-badge-pill"><span class="ph--cross-duotone"></span></span>
+                                        Falleció </button>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    @php
+                        use Carbon\Carbon;
+                        $entryDate = Carbon::parse($reception->entry_date)->format('Y-m-d 00:00:00');
+                        $today = Carbon::now()->format('Y-m-d 00:00:00');
+                        $dayCount = $entryDate <= $today ? Carbon::parse($entryDate)->diffInDays($today) + 1 : 1;
+                    @endphp
                     <div class="row card-body ">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
-                                PROCEDIMIENTOS DEL DÍA
+                                PROCEDIMIENTOS DEL DÍA {{ $dayCount }}
                             </h5>
                         </div>
-                        <form method="POST" onsubmit="NewEntry()"  role="form" enctype="multipart/form-data" id="NewRedSheet">
+                        <form method="POST" onsubmit="NewEntry()" role="form" enctype="multipart/form-data"
+                            id="NewRedSheet">
                             @csrf
 
                             @include('red-sheet.form')
@@ -161,9 +167,9 @@
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
                                     <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
-                                        onclick="OpenCarnet()">
-                                        <span class="badge custom-badge-pill"><span 
-                                            class="healthicons--surgical-sterilization-outline"></span></span> Cirugía
+                                        onclick="OpenSurgeries()">
+                                        <span class="badge custom-badge-pill"><span
+                                                class="healthicons--surgical-sterilization-outline"></span></span> Cirugía
                                     </button>
                                 </div>
                             </div>
@@ -171,23 +177,27 @@
                                 <div class="col">
                                     <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
                                         onclick="OpenFollowUps()">
-                                        <span class="badge custom-badge-pill"><span 
-                                            class="clarity--note-edit-line"></span></span> Seguimientos
+                                        <span class="badge custom-badge-pill"><span
+                                                class="clarity--note-edit-line"></span></span> Seguimientos
                                     </button>
                                 </div>
                             </div>
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
-                                    <button  class="btn btn-costum-services btn-lg text-uppercase rounded-4"
-                                    onclick="window.open('{{ route('pet-history.index', $reception->pet_id) }}', '_blank')" >
-                                        <span class="badge custom-badge-pill"><span 
-                                            class="akar-icons--folder-add"></span></span> Historial Clínico </button>
+                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
+                                        onclick="window.open('{{ route('pet-history.index', $reception->pet_id) }}', '_blank')">
+                                        <span class="badge custom-badge-pill"><span
+                                                class="akar-icons--folder-add"></span></span> Historial Clínico </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
+                    <div class="card-body" id="DisplayRedSheet">
+                        <h5 id="card_title" class="text-primary text-uppercase">
+                            <span class="ic--twotone-pets"></span> RESUMEN DÍAS HOSPITALIZADO
+                        </h5>
+                        <div id="table-container"></div>
+                        {{-- <div class="d-flex justify-content-between align-items-center">
                             <h5 id="card_title" class="text-primary text-uppercase">
                                 <span class="ic--twotone-pets"></span> HOJA ROJA
                             </h5>
@@ -203,6 +213,65 @@
                                             <th>Laboratorio</th>
                                             <th>imagenologia</th>
                                             <th>Observaciones</th>
+                                            <th>M.V.Z.</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div> --}}
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 id="card_title" class="text-primary text-uppercase">
+                                <span class="ic--twotone-pets"></span> Seguimientos
+                            </h5>
+                        </div>
+                        <div class="col-12">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover responsive w-100" id="follow-ups">
+                                    <thead class="thead table-primary text-uppercase">
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Hora</th>
+                                            <th>Detalles</th>
+                                            <th>Temperatura</th>
+                                            <th>Sistolica</th>
+                                            <th>Diastolica</th>
+                                            <th>Media</th>
+                                            <th>Nivel de glycemia</th>
+                                            <th>M.V.Z.</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 id="card_title" class="text-primary text-uppercase">
+                                <span class="ic--twotone-pets"></span> Cirugias
+                            </h5>
+                        </div>
+                        <div class="col-12">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover responsive w-100" id="surgeries">
+                                    <thead class="thead table-primary text-uppercase">
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Nombre</th>
+                                            <th>Descripción</th>
+                                            <th>Pre anestecico</th>
+                                            <th>Anestecico</th>
+                                            <th>Otras medicinas</th>
+                                            <th>Tratamiento</th>
+                                            <th>Observaciones</th>
+                                            <th>Complicaciones</th>
                                             <th>M.V.Z.</th>
                                         </tr>
                                     </thead>
@@ -235,19 +304,55 @@
                 <div class="modal-body" style="width: 100%;">
                     <div class="row">
                         <div class="col-12">
-                            <form method="POST" onsubmit="AddFollowUp()" id="NewFollowUp" role="form" enctype="multipart/form-data">
+                            <form method="POST" onsubmit="AddFollowUp()" id="NewFollowUp" role="form"
+                                enctype="multipart/form-data">
                                 @csrf
-                            @include('follow-up.form')
+                                @include('follow-up.form')
                             </form>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                {{-- <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="CloseFollowUp()">
                         Cerrar
                     </button>
 
+                </div> --}}
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="ModalSurgeries" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="background-color: #e9eced; border-radius: 20px;">
+                <div class="modal-header">
+                    <div class="col-11 d-flex justify-content-between align-items-center">
+                        <h5 id="card_title" class=" text-uppercase" style="color: #0455A0">
+                            <span class="healthicons--surgical-sterilization-outline"></span> CIRUGÍAS
+                        </h5>
+                    </div>
+                    <div class="col-1">
+                        <button type="button" class="btn-close" onclick="CloseSurgeries()" aria-label="Close"></button>
+                    </div>
+
                 </div>
+                <div class="modal-body" style="width: 100%;">
+                    <div class="row">
+                        <div class="col-12">
+                            <form method="POST" onsubmit="AddSurgery()" id="NewSurgery" role="form"
+                                enctype="multipart/form-data">
+                                @csrf
+                                @include('surgery.form')
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {{-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="CloseSurgeries()">
+                        Cerrar
+                    </button>
+
+                </div> --}}
             </div>
         </div>
     </div>
