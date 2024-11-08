@@ -96,12 +96,12 @@
                             Familias
                         </a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a href="{{ route('families.index') }}" class=" ms-2">
                             <span class="fluent--document-28-filled"></span>
                             Formatos
                         </a>
-                    </li>
+                    </li> --}}
 
                     <li>
                         <a href="#pageSubmenu" data-bs-toggle="collapse" aria-expanded="false"

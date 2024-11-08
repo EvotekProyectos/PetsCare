@@ -1,16 +1,16 @@
 <style>
-.select2-container .select2-selection--single {
-    height: 2rem;
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-    border: 1px solid #ced4da;
-    border-radius: 0.25rem;
-}
+    .select2-container .select2-selection--single {
+        height: 2rem;
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+    }
 
-.input-group .select2-container {
-    width: auto !important;
-    flex: 1 1 auto;
-}
+    .input-group .select2-container {
+        width: auto !important;
+        flex: 1 1 auto;
+    }
 </style>
 
 <div class="row padding-1 p-1">
@@ -20,9 +20,9 @@
             {{-- <label for="reception_type_id" class="form-label">TIPO</label> --}}
             <div class="col-md-4">
                 <div class="form-group mb-2">
-                    <input type="radio" id="consulta" name="reception_type_id" value="1" 
-                    {{ old('reception_type_id', $reception?->reception_type_id) == 1 ? 'checked' : ''  }}
-                     onchange="togglee(this)">
+                    <input type="radio" id="consulta" name="reception_type_id" value="1"
+                        {{ old('reception_type_id', $reception?->reception_type_id) == 1 ? 'checked' : '' }}
+                        onchange="togglee(this)">
 
                     <label for="consulta" class="radio-label">
                         <img src="{{ asset('img/consulta.png') }}" alt="Foto Mascota" id="preview" class="img-fixed"
@@ -34,7 +34,7 @@
             <div class="col-md-4">
                 <div class="form-group mb-2">
                     <input type="radio" id="hospital" name="reception_type_id" value="2"
-                    {{ old('reception_type_id', $reception?->reception_type_id) == 2 ? 'checked' : ''  }}
+                        {{ old('reception_type_id', $reception?->reception_type_id) == 2 ? 'checked' : '' }}
                         onchange="togglee(this)">
 
                     <label for="hospital" class="radio-label">
@@ -47,7 +47,7 @@
             <div class="col-md-4">
                 <div class="form-group mb-2">
                     <input type="radio" id="estetica" name="reception_type_id" value="3"
-                    {{ old('reception_type_id', $reception?->reception_type_id) == 3 ? 'checked' : ''  }}
+                        {{ old('reception_type_id', $reception?->reception_type_id) == 3 ? 'checked' : '' }}
                         onchange="togglee(this)">
                     <label for="estetica" class="radio-label">
                         <img src="{{ asset('img/estetica.png') }}" alt="Foto estetica" class="img-fixed"
@@ -76,24 +76,24 @@
             <div class="col-md-4">
                 <div class="form-group mb-2">
                     <input type="radio" id="hotel" name="reception_type_id" value="4"
-                    {{ old('reception_type_id', $reception?->reception_type_id) == 4 ? 'checked' : ''  }}
+                        {{ old('reception_type_id', $reception?->reception_type_id) == 4 ? 'checked' : '' }}
                         onchange="togglee(this)">
-                        <label for="hotel" class="radio-label">
-                            <img src="{{ asset('img/hotel.png') }}" alt="Foto estetica" class="img-fixed"
-                                style="width: 25px; height: 25px; object-fit: cover; ">
-                     <span> Hotel</label>
+                    <label for="hotel" class="radio-label">
+                        <img src="{{ asset('img/hotel.png') }}" alt="Foto estetica" class="img-fixed"
+                            style="width: 25px; height: 25px; object-fit: cover; ">
+                        <span> Hotel</label>
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="form-group mb-2">
                     <input type="radio" id="cremacion" name="reception_type_id" value="5"
-                    {{ old('reception_type_id', $reception?->reception_type_id) == 5 ? 'checked' : ''  }}
+                        {{ old('reception_type_id', $reception?->reception_type_id) == 5 ? 'checked' : '' }}
                         onchange="togglee(this)">
-                        <label for="cremacion" class="radio-label">
-                            <img src="{{ asset('img/cremacion.png') }}" alt="Foto estetica" class="img-fixed"
-                                style="width: 25px; height: 25px; object-fit: cover; ">
-                    <span> Cremación</label>
+                    <label for="cremacion" class="radio-label">
+                        <img src="{{ asset('img/cremacion.png') }}" alt="Foto estetica" class="img-fixed"
+                            style="width: 25px; height: 25px; object-fit: cover; ">
+                        <span> Cremación</label>
                 </div>
             </div>
         </div>
@@ -107,7 +107,7 @@
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="lucide--calendar-clock"></span>
                         </span>
-                        
+
                         <input type="datetime-local" name="entry_date"
                             class="form-control @error('entry_date') is-invalid @enderror"
                             value="{{ old('entry_date', $reception?->entry_date) }}" id="entry_date"
@@ -117,7 +117,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+             <div class="col-md-4">
                 <div class="form-group mb-2">
                     <label for="family_id" class="form-label">FAMILIA/PROPIETARIO</label>
                     <div class="input-group mb-3">
@@ -137,30 +137,28 @@
                 </div>
             </div>
             
-
             <div class="col-md-4">
                 <div class="form-group mb-2">
                     <label for="pet_id" class="form-label">MASCOTA</label>
                     <div class="input-group mb-3">
-                        <span class="input-group-text bg-primary-subtle" id="basic-addon1">
+                        <span class="input-group-text bg-primary-subtle" id="basic-addon2">
                             <span class="ic--twotone-pets"></span>
                         </span>
-
-                        <select name="pet_id" class="form-control @error('pet_id') is-invalid @enderror"
-                            id="pet_id">
-
+                        <select name="pet_id" class="form-control select2 @error('pet_id') is-invalid @enderror"
+                                id="pet_id" onchange="getFamily(this.value)" style="width: 100%;">
                             <option value="">Selecciona la mascota</option>
-                            {{-- @foreach ($pets as $pet)
-                                <option value="{{ $pet->id }}"
+                            @foreach ($pets as $pet)
+                                <option value="{{ $pet->id }}" 
                                     {{ old('pet_id', $reception?->pet_id) == $pet->id ? 'selected' : '' }}>
-                                    {{ $pet->name }} </option>
-                            @endforeach --}}
+                                    {{ $pet->name }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
             </div>
-            
 
+          
             <div class="col-md-4" id="adm" style="display: none">
                 <div class="form-group mb-2">
                     <label for="name" class="form-label">ADMISIÓN</label>

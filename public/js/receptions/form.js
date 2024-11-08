@@ -4,7 +4,8 @@ $(document).ready(function () {
         width: 'resolve'
     });
     $('#pet_id').select2({
-         placeholder: 'Buscar Mascota'
+         placeholder: 'Buscar Mascota',
+          width: 'resolve'
      });
 });
 
@@ -19,12 +20,20 @@ async function getpets(family_id) {
         });
         document.getElementById("pet_id").innerHTML = html
 
-
     }
-
 }
 
-
+ async function getFamily(pet_id) {
+     let url = route("families.getFamilyByPet", pet_id); 
+     let peticion = await fetch(url);
+     if (peticion.ok) {
+         let family = await peticion.json();
+         if (family) {
+             $('#family_id').val(family.id).trigger('change');
+             getPets(family.id); 
+         }
+     }
+ }
 
 
 function togglee(radio) {

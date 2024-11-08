@@ -31,17 +31,21 @@ $(document).ready(function () {
             },
             {
                 data: null,
-                render: function(data) {
+                render: function (data) {
                     let petNames = "";
                     data.pets.forEach(pet => {
+                        let textColorClass = pet.deceased === 1 ? 'text-secondary' : 'text-primary';
+                        let deceasedIcon = pet.deceased === 1 ? '<span class="mdi--cross"></span> ' : ''; 
+
                         petNames += `
-                            <a type="button"href="${route('pet-history.index', data.id)}" class="btn btn-sm text-primary">
-                                <span class="mdi--pets"></span> ${pet.name}
-                            </a> <br> 
-                        `;
-                    });
-                    return petNames.trim(); 
-                }
+            <a type="button" href="${route('pet-history.index', data.id)}" class="btn btn-sm ${textColorClass}">
+                ${deceasedIcon}<span class="mdi--pets"></span> ${pet.name}
+            </a> <br> 
+        `;
+    });
+    return petNames.trim(); 
+}
+
             },
             {
                 data: null,

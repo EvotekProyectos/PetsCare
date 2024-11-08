@@ -70,9 +70,8 @@ $("form").on("submit", function (e) {
         processData: false,
         data: formData,
         success: function (response) {
-            // Aquí puedes manejar la respuesta, por ejemplo:
-            // Si estás devolviendo el PDF como respuesta, puedes abrirlo directamente
-            window.open(response.url); // Asegúrate de devolver la URL del PDF en la respuesta
+            window.open(response.url, '_blank');
+            window.location.href = "/receptions";
         },
         error: function (error) {
             console.error("Error:", error);

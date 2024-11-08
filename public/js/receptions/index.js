@@ -9,6 +9,14 @@ const reasons = {
     "8":"#FF69B4"
 };
 
+const areas= {
+    "1": "#079dd1",
+    "2": "#f52528",
+    "3": "#85c98b",
+    "4": "#f8a693",
+    "5": "#71459e",
+};
+
 var table = undefined;
 $(document).ready(function () {
     table = $('#table').DataTable({
@@ -55,6 +63,19 @@ $(document).ready(function () {
                 render: function (data) {
                     return data.room ? data.room.name : '';
                 }
+            },
+            {
+                data: null,
+                render: function (data) {
+                    if (!data || data.area === null) {
+                        return '';
+                    }
+                if (areas[data.area_id]) {
+                        return `<span style="background-color: ${areas[data.area_id]}; padding: 5px; color: white; border-radius: 5px;">${data.area.name}</span>`;
+                    }
+                    return data || '';
+                }
+            
             },
             {
                 data: null,
