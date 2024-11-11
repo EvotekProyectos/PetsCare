@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AdmissionType;
 use App\Models\Area;
 use App\Models\Family;
+use App\Models\Pet;
 use App\Models\Reason;
 use App\Models\Reception;
 use App\Models\Room;
@@ -37,8 +38,9 @@ class HomeController extends Controller
         $reasons = Reason::all();
         $users = User::all();
         $rooms= Room::all();
+        $pets = Pet::all();
 
         $this->authorize("create", Reception::class);
-        return view('reception.create', compact('reception','admissions','areas','families','reasons','users','rooms'));
+        return view('reception.create', compact('reception','admissions','areas','families','reasons','users','rooms','pets'));
     }
 }

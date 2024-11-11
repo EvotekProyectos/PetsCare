@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FollowUp;
 use App\Http\Requests\FollowUpRequest;
+use Yajra\DataTables\Facades\DataTables;
 
 /**
  * Class FollowUpController
@@ -89,5 +90,12 @@ class FollowUpController extends Controller
 
         return redirect()->route('follow-ups.index')
             ->with('success', 'FollowUp deleted successfully');
+    }
+
+    public function entry($id)
+    {
+        $followups = FollowUp::with('vet')->where('reception_id', $id)->get();
+
+        return DataTables::of($followups) ->make(true);
     }
 }

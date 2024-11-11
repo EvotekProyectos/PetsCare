@@ -56,7 +56,7 @@ class Surgery extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function productType()
+    public function service()
     {
         return $this->belongsTo(\App\Models\ProductType::class, 'surgery_type_id', 'id');
     }
@@ -64,7 +64,7 @@ class Surgery extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user()
+    public function vet()
     {
         return $this->belongsTo(\App\Models\User::class, 'vet_id', 'id');
     }

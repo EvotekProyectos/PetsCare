@@ -12,13 +12,8 @@
             </div>
             {!! $errors->first('reception_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-        <div class="form-group mb-2 mb20" >
-            @php
-                use Carbon\Carbon;
-                $entryDate = Carbon::parse($reception->entry_date)->format("Y-m-d 00:00:00");
-                $today = Carbon::now()->format("Y-m-d 00:00:00");
-                $dayCount = $entryDate <= $today ? Carbon::parse($entryDate)->diffInDays($today) + 1  : 1;
-            @endphp
+        <div class="form-group mb-2 mb20" hidden>
+            
             <label for="day_count" class="form-label">DÍA:</label>
             <div class="input-group mb-3">
                 <span class="input-group-text bg-primary-subtle" id="basic-addon1">
