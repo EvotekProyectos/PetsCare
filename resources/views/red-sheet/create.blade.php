@@ -163,7 +163,7 @@
                                     <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
                                         onclick="OpenCarnet()">
                                         <span class="badge custom-badge-pill"><span 
-                                            class="healthicons--surgical-sterilization-outline"></span></span> Cirugía
+                                            class="healthicons--surgical-sterilization-outline"></span></span> PROCEDIMIENTOS
                                     </button>
                                 </div>
                             </div>

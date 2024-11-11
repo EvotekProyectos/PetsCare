@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('pets', function (Blueprint $table) {
             $table->id();
+            $table->string("number_chip")->nullable();
             $table->foreignId('family_id')->nullable()->references('id')->on('families');
             $table->string("name");
             $table->foreignId('picture_id')->nullable()->references('id')->on('files');
