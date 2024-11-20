@@ -21,6 +21,9 @@ return new class extends Migration
             $table->longText('medicine'); 
             $table->longText('diagnosis');
             $table->longText('observations')->nullable();
+            $table->date("day_next_check")->nullable();
+            $table->time("time_next_check")->nullable();
+            $table->foreignId('reason_next_check_id')->nullable()->references('id')->on('reasons');
             $table->timestamps();
             $table->softDeletes();
         });

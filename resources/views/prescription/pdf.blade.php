@@ -275,7 +275,7 @@
                         </td>
 
                         <td>
-                            <p style="font-size: 10pt;font-family:sans-serif;">{{ $next?->day_next_check }}
+                            <p style="font-size: 10pt;font-family:sans-serif;">{{ $next->day_next_check ?? $prescription->day_next_check }}
                             </p>
                         </td>
 
@@ -287,7 +287,7 @@
 
                         <td>
                             <p style="font-size: 10pt;font-family:sans-serif;">
-                                {{ $next?->time_next_check }}</p>
+                                {{ $next->time_next_check  ?? $prescription->time_next_check }}</p>
                         </td>
                         
                         <td>
@@ -298,7 +298,7 @@
 
                         <td>
                             <p style="font-size: 10pt;font-family:sans-serif;">
-                                {{ $next?->reason->name }}</p>
+                                {{ $next->reason->name ?? $prescription->reason->name }}</p>
                         </td>
                     </tr>
                 </table>

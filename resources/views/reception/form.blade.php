@@ -147,12 +147,12 @@
                         <select name="pet_id" class="form-control select2 @error('pet_id') is-invalid @enderror"
                                 id="pet_id" onchange="getFamily(this.value)" style="width: 100%;">
                             <option value="">Selecciona la mascota</option>
-                            <!-- @foreach ($pets as $pet)
+                            @foreach ($pets as $pet)
                                 <option value="{{ $pet->id }}" 
                                     {{ old('pet_id', $reception?->pet_id) == $pet->id ? 'selected' : '' }}>
-                                    {{ $pet->name }}
+                                    {{ $pet->name }} {{ $pet->number_chip }}
                                 </option>
-                            @endforeach -->
+                            @endforeach 
                         </select>
                     </div>
                 </div>

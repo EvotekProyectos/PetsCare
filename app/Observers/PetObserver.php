@@ -35,14 +35,14 @@ class PetObserver
     /**
      * Handle the Pet "deleted" event.
      */
-    public function deleted(Pet $pet): void
-    {
-        Log::create([
-            'action' => 'ELIMINACIÓN DE MASCOTA',
-            'description' => 'Se elimino la mascota: ' .$pet->name,
-            'user_id' => (Auth::user()->id)
-        ]);
-    }
+    // public function deleted(Pet $pet): void
+    // {
+    //     Log::create([
+    //         'action' => 'ELIMINACIÓN DE MASCOTA',
+    //         'description' => 'Se elimino la mascota: ' .$pet->name,
+    //         'user_id' => (Auth::user()->id)
+    //     ]);
+    // }
 
     /**
      * Handle the Pet "restored" event.

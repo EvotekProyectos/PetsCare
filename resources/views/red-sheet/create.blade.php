@@ -5,6 +5,8 @@
 @endsection
 
 @section('content')
+<input type="hidden" id="reception_id_followup" value="{{ $reception->id }}">
+
     <section class="container-fluid">
         <div class="row">
             <div class="col-12">
@@ -119,7 +121,7 @@
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
                                     <button class="btn btn-costum-services btn-sm text-uppercase rounded-4"
-                                        onclick="OpenCarnet()">
+                                        onclick="OpenPrescription({{ $reception->pet->id }})">
                                         <span class="badge custom-badge-pill"><span class="mynaui--inbox-up"></span></span>
                                         Dar Alta
                                     </button>
@@ -151,7 +153,7 @@
                     <div class="row card-body ">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
-                                PROCEDIMIENTOS DEL DÍA {{ $dayCount }}
+                                 DÍA {{ $dayCount }}
                             </h5>
                         </div>
                         <form method="POST" onsubmit="NewEntry()" role="form" enctype="multipart/form-data"
@@ -169,7 +171,7 @@
                                     <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
                                         onclick="OpenSurgeries()">
                                         <span class="badge custom-badge-pill"><span
-                                                class="healthicons--surgical-sterilization-outline"></span></span> Cirugía
+                                                class="healthicons--surgical-sterilization-outline"></span></span> PROCEDIMIENTOS
                                     </button>
                                 </div>
                             </div>
@@ -252,7 +254,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-body">
+                    {{-- <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 id="card_title" class="text-primary text-uppercase">
                                 <span class="ic--twotone-pets"></span> Cirugias
@@ -265,13 +267,7 @@
                                         <tr>
                                             <th>Fecha</th>
                                             <th>Nombre</th>
-                                            <th>Descripción</th>
-                                            <th>Pre anestecico</th>
-                                            <th>Anestecico</th>
-                                            <th>Otras medicinas</th>
-                                            <th>Tratamiento</th>
                                             <th>Observaciones</th>
-                                            <th>Complicaciones</th>
                                             <th>M.V.Z.</th>
                                         </tr>
                                     </thead>
@@ -281,7 +277,7 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -366,6 +362,8 @@
         var Pet_Id = {{ $reception->pet_id }};
         var Pic_id = {{ $reception->pet->picture_id ?? 'null' }};
         var Pic_route = "{{ $reception->pet->file->route ?? '' }}";
+
+        document.getElementById("reception_id_followup").value = Reception_Id;
     </script>
     <script src="{{ asset('js/hospitalizations/createredsheets.js') }}" defer></script>
 @endpush

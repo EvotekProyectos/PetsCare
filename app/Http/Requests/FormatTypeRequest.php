@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SurgeryRequest extends FormRequest
+class FormatTypeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,7 @@ class SurgeryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'reception_id' => 'nullable|integer|exists:receptions,id',
-            'product_type_id' => 'nullable|integer|exists:product_types,id',
-            'date'=>'required',
-            'observations'=> 'string',
-            'vet_id'=> 'nullable|integer|exists:users,id',
+			'name' => 'required|string',
         ];
     }
 }
