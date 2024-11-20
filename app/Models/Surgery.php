@@ -42,7 +42,7 @@ class Surgery extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_id', 'surgery_type_id', 'surgery_date', 'surgery_description', 'preanesthetic', 'anesthetic', 'other_medicines', 'treatment', 'observations', 'complications', 'vet_id'];
+    protected $fillable = ['reception_id', 'product_type_id', 'date', 'observations',  'vet_id'];
 
 
     /**
@@ -58,7 +58,7 @@ class Surgery extends Model
      */
     public function service()
     {
-        return $this->belongsTo(\App\Models\ProductType::class, 'surgery_type_id', 'id');
+        return $this->belongsTo(\App\Models\ProductType::class, 'product_type_id', 'id');
     }
     
     /**

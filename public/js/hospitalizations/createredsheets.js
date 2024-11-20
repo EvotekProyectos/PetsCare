@@ -117,6 +117,8 @@ $(document).ready(function () {
 
 async function OpenFollowUps() {
     document.getElementById("reception_id_followup").value = Reception_Id;
+    console.log(Reception_Id);
+    
     $('#ModalFollowUps').modal('show');
 }
 
@@ -212,7 +214,8 @@ async function OpenPrescription(petId) {
 async function OpenSurgeries() {
     const receptionId = document.getElementById("reception_id_followup").value;
 
-        const response = await fetch(`http://pets-care.test/check-surgeries-requirements/${receptionId}`);
+        const url = route('surgery.checkRequirements', receptionId) ; 
+        const response = await fetch(url);
         const data = await response.json();
 
         if (data.status === 'ok') {
@@ -470,7 +473,7 @@ $(document).ready(function () {
         order: [0, 'desc'],
         columns: [
             {
-                data: 'surgery_date',
+                data: 'date',
                 render: function (data) {
                     if (data) {
                         let date = new Date(data);

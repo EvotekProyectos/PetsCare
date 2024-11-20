@@ -8,7 +8,7 @@
                     <span class="vaadin--lines-list"></span></span>
                 <input type="text" name="reception_id"
                     class="form-control @error('reception_id') is-invalid @enderror"
-                    value="{{ old('reception_id', $followUp?->reception_id) }}" id="reception_id_followup"
+                    value="{{$reception->id}}" id="reception_id_followup"
                     placeholder="Reception Id">
             </div>
             {!! $errors->first('reception_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}

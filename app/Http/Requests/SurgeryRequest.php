@@ -25,7 +25,7 @@ class SurgeryRequest extends FormRequest
             'reception_id' => 'nullable|integer|exists:receptions,id',
             'product_type_id' => 'nullable|integer|exists:product_types,id',
             'date'=>'required',
-            'observations'=> 'string',
+            'observations'=> 'nullable|string',
             'vet_id'=> 'nullable|integer|exists:users,id',
         ];
     }

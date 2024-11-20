@@ -32,25 +32,25 @@
 
             <div class="col-md-6">
                 <div class="form-group mb-2 mb20">
-                    <label for="surgery_type_id" class="form-label">TIPO DE CIRUGÍA</label>
+                    <label for="product_type_id" class="form-label">TIPO DE CIRUGÍA</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="vaadin--lines-list"></span>
                         </span>
-                        <select name="surgery_type_id"
-                            class="form-control @error('surgery_type_id') is-invalid @enderror" id="surgery_type_id">
+                        <select name="product_type_id"
+                            class="form-control @error('product_type_id') is-invalid @enderror" id="product_type_id">
                             <option value="">Selecciona el tipo de cirugía</option>
                             @foreach ($products as $product)
                                 @if ($product->product_classification_id == 1)
-                                    <option value="{{ $product->id }}" name="surgery_type_id"
-                                        {{ old('surgery_type_id', $surgery?->surgery_type_id) == $product->id ? 'selected' : '' }}>
+                                    <option value="{{ $product->id }}" name="product_type_id"
+                                        {{ old('product_type_id', $surgery?->surgery_type_id) == $product->id ? 'selected' : '' }}>
                                         {{ $product->name }}</option>
                                 @endif
                             @endforeach
                         </select>
                     </div>
                     {!! $errors->first(
-                        'surgery_type_id',
+                        'product_type_id',
                         '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>',
                     ) !!}
                 </div>
