@@ -8,7 +8,7 @@ const reasons = {
     "5": "#71459e",
 };
 
-$(document).ready(function () {
+$(dosument).ready(function () {
     table = $('#table').DataTable({
         ajax: route('assignment.hospitalizations'),
         responsive: true,

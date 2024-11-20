@@ -43,25 +43,6 @@ $(document).ready(function () {
             {
                 data: null,
                 render: function (data) {
-                    return data.redSheets ? data.redSheets.lab_type_id: '';
-                }
-            },
-            {
-                data: 'redSheets',
-                render: function (data) {
-                        return data.map(sheet => sheet.description).join(', ');
-                }
-            },
-
-            {
-                data: null,
-                render: function (data) {
-                    return data.reason ? data.reason.name : '';
-                }
-            },
-            {
-                data: null,
-                render: function (data) {
                     return `
                         <a class="btn btn-sm btn-primary"  title="Ver Detalles" href="#" onclick="Details(${data.reception_type_id}, ${data.id});">
                             <span class="mage--hospital-shield-fill"></span>
