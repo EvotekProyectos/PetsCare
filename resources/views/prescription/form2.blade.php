@@ -119,7 +119,72 @@
         </div>
 
         </form>
-    </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group mb-2 mb20">
+                    <label for="day_next_check" class="form-label">PRÓXIMO CONTROL</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-primary-subtle" id="basic-addon1">
+                            <i class="fas fa-calendar text-primary"></i>
+                        </span>
+                        <input type="date" name="day_next_check"
+                            class="form-control @error('day_next_check') is-invalid @enderror"
+                            value="{{ old('day_next_check', $prescription?->day_next_check) }}" id="day_next_check"
+                            placeholder="Day Next Check">
+                    {!! $errors->first(
+                        'day_next_check',
+                        '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>',
+                    ) !!}
+                    </div>
+                </div>
+            </div>
+                              
+             <div class="col-md-3">
+                <div class="form-group mb-2 mb20">
+                    <label for="time_next_check" class="form-label">HORA</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-primary-subtle" id="basic-addon1">
+                            <i class="fa fa-clock text-primary"></i>
+                        </span>
+                        <input type="time" name="time_next_check"
+                            class="form-control @error('time_next_check') is-invalid @enderror"
+                            value="{{ old('time_next_check' , $prescription?->time_next_check) }}" id="time_next_check"
+                            placeholder="Time Next Check">
+                    </div>
+                    {!! $errors->first(
+                        'time_next_check',
+                        '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>',
+                    ) !!}
+                </div>
+            </div>
+
+           <div class="col-md-6">
+                 <div class="form-group mb-2 mb20">
+                    <label for="reason_next_check_id" class="form-label">Tipo de proxima consulta</label>
+                   <div class="input-group mb-3">
+                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
+                             <span class="vaadin--lines-list"></span>
+                         </span>
+                         <select name="reason_next_check_id"
+                             class="form-control @error('reason_next_check_id') is-invalid @enderror"
+                             id="reason_next_check_id">
+                             <option value=""> Selecciona el tipo</option>
+                             @foreach ($reasons as $reason)
+                                 <option value="{{ $reason->id }}" name="reason_next_check_id"
+                                     {{ old('reason_next_check_id') == $reason->id ? 'selected' : '' }}>
+                                     {{ $reason->name }}</option>
+                             @endforeach
+                         </select>
+                     </div>
+                     {!! $errors->first(
+                         'reason_next_check_id',
+                         '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>',
+                     ) !!}
+                 </div>
+            </div>
+        </div>
+    </div> 
 
     <div class="col-12 mt-2 d-flex justify-content-end">
         <button type="submit" class="btn btn-primary btn-sm text-uppercase rounded-4">

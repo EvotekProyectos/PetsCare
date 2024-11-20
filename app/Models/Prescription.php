@@ -38,7 +38,7 @@ class Prescription extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_id', 'veterinarian_id', 'recepcionist_id', 'date', 'medicine', 'diagnosis', 'observations', 'pet_id'];
+    protected $fillable = ['reception_id', 'veterinarian_id', 'recepcionist_id', 'date', 'medicine', 'diagnosis', 'observations', 'pet_id', 'reason_next_check_id'];
 
 
     /**
@@ -70,6 +70,12 @@ class Prescription extends Model
         return $this->belongsTo(\App\Models\Pet::class, 'pet_id', 'id');
     }
     
-    
+        /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function reason()
+    {
+        return $this->belongsTo(\App\Models\Reason::class, 'reason_next_check_id', 'id');
+    }
 
 }

@@ -8,9 +8,12 @@ use App\Models\AdmissionType;
 use App\Models\Area;
 use App\Models\Family;
 use App\Models\Pet;
+use App\Models\Prescription;
 use App\Models\Reason;
 use App\Models\ReceptionStatusHistory;
+use App\Models\RedSheet;
 use App\Models\Room;
+use App\Models\Surgery;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf  as Pdf;
 use Yajra\DataTables\Contracts\DataTable;
@@ -131,11 +134,45 @@ class ReceptionController extends Controller
         return DataTables::of($receptions)->make(true);
     }
 
+    // public function historial($id)
+    // {
+    //     $receptions = Reception::with('receptionType', 'reason', 'vet')->where('pet_id', $id)->get();
+    //     $redSheet=RedSheet::with('reception')->where('reception_id->pet_id', $id)->get();
+    //     $surgery=Surgery::with('reception')->where('reception_id->pet_id', $id)->get();
+    //     $prescription=Prescription::where('pet_id', $id)->get();
+    //     return DataTables::of($receptions, $redSheet, $surgery,$prescription)->make(true);
+    // }
+
     public function historial($id)
     {
-        $receptions = Reception::with('receptionType', 'reason', 'vet')->where('pet_id', $id)->get();
-        return DataTables::of($receptions)->make(true);
+        $receptions = Reception::with('receptionType', 'reason', 'vet') ->where('pet_id', $id)->get();
+    
+        $redSheets = RedSheet::whereHas('reception', function ($query) use ($id) 
+        {$query->where('pet_id', $id); })->with('reception')->get();
+    
+        $surgeries = Surgery::whereHas('reception', function ($query) use ($id) {
+                        $query->where('pet_id', $id);})->with('reception')->get();
+    
+        $prescriptions = Prescription::where('pet_id', $id)->get();
+    
+        $data = [];
+        foreach ($receptions as $reception) {
+            $data[] = [
+                'entry_date' => $reception->entry_date,
+                'vet_name' => $reception->vet->name ?? '',
+                'reception_type' => $reception->receptionType->name ?? '',
+                'reason' => $reception->reason->name ?? '',
+                'reception_id' => $reception->id,
+                'pet_id' => $reception->pet_id,
+                'redSheets' => $redSheets->pluck('description')->toArray(),
+                'surgeries' => $surgeries->pluck('surgery_type')->toArray(),
+                'prescriptions' => $prescriptions->pluck('medicine')->toArray(),
+            ];
+        }
+    
+        return DataTables::of($receptions, $redSheets, $surgeries, $prescriptions)->make(true);
     }
+    
 
 
     public function hospital_authorization($id)
@@ -170,7 +207,7 @@ class ReceptionController extends Controller
  {
      $pet = Pet::find($pet_id);
      if ($pet && $pet->family) {
-         return response()->json($pet->family); // Devuelve la familia de la mascota
+         return response()->json($pet->family); 
      }
      return response()->json(null, 404);
 }

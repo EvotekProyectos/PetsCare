@@ -53,7 +53,7 @@ class AdmissionTypePolicy
      */
     public function restore(User $user, AdmissionType $admissionType): bool
     {
-        //
+        return false;
     }
 
     /**
@@ -61,6 +61,6 @@ class AdmissionTypePolicy
      */
     public function forceDelete(User $user, AdmissionType $admissionType): bool
     {
-        //
+        return false;
     }
 }

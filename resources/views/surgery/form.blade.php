@@ -16,16 +16,16 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group mb-2 mb20">
-                    <label for="surgery_date" class="form-label">FECHA DE REALIZACIÓN</label>
+                    <label for="date" class="form-label">FECHA DE REALIZACIÓN</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="lucide--calendar-clock "></span>
                         </span>
-                        <input type="datetime-local" name="surgery_date"
-                            class="form-control @error('surgery_date') is-invalid @enderror"
-                            value="{{ old('surgery_date', $surgery?->surgery_date) }}" id="surgery_date"
+                        <input type="datetime-local" name="date"
+                            class="form-control @error('date') is-invalid @enderror"
+                            value="{{ old('date', $surgery?->date) }}" id="date"
                             placeholder="Surgery Date">
-                        {!! $errors->first('surgery_date', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+                        {!! $errors->first('date', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                     </div>
                 </div>
             </div>
@@ -57,7 +57,7 @@
             </div>
         </div>
 
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-md-12">
                 <div class="form-group mb-2 mb20">
                     <label for="surgery_description" class="form-label">DESCRIPCIÓN QUIRURGÍCA</label>
@@ -149,7 +149,7 @@
                     </div>
                     {!! $errors->first('treatment', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                 </div>
-            </div>
+            </div> --}}
 
             <div class="col-md-6">
                 <div class="form-group mb-2 mb20">
@@ -167,7 +167,7 @@
 
         </div>
 
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-md-12">
                 <div class="form-group mb-2 mb20">
                     <label for="complications" class="form-label">COMPLICACIONES</label>
@@ -184,7 +184,7 @@
                     ) !!}
                 </div>
             </div>
-        </div>
+        </div> --}}
 
             <div class="form-group mb-2 mb20" hidden>
                 <label for="vet_id" class="form-label">{{ __('Vet Id') }}</label>

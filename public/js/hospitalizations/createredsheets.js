@@ -156,10 +156,77 @@ async function AddFollowUp() {
     }
 }
 
-async function OpenSurgeries() {
-    // document.getElementById("reception_id_followup").value = Reception_Id;
-    $('#ModalSurgeries').modal('show');
+
+// async function OpenSurgeries() {
+//     // document.getElementById("reception_id_followup").value = Reception_Id;
+//     $('#ModalSurgeries').modal('show');
+// }
+
+
+//  async function OpenSurgeries() {
+//     document.getElementById("reception_id_followup").value = Reception_Id;
+//   window.open(route('surgery.checkRequirements', Reception_Id ))
+//  }
+
+
+// async function OpenSurgeries() {
+//     // Obtener el valor de `receptionId` desde el elemento `reception_id_followup`
+//     const receptionId = document.getElementById("reception_id_followup").value;
+
+//     try {
+//         // Hacemos la solicitud `fetch` con el valor correcto de `receptionId`
+//         const response = await fetch(`/check-surgeries-requirements/${receptionId}`);
+//         const data = await response.json();
+
+//         if (data.status === 'ok') {
+//             $('#ModalSurgeries').modal('show');
+//         } else {
+//             alert(data.message); 
+//         }
+//     } catch (error) {
+//         console.error("Error al verificar los requisitos:", error);
+//         alert("Hubo un error al verificar los requisitos.");
+//     }
+// }
+
+async function OpenPrescription(petId) {
+    const result = await Swal.fire({
+        title: '¿Dar de alta a este paciente?',
+        text: "Confirma su atención",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, dar alta.',
+        cancelButtonText: 'No, regresar.'
+    });
+
+    if (result.isConfirmed) {
+        window.location.href = `/prescriptions/create/${petId}`;
+    }
+
 }
+
+
+
+async function OpenSurgeries() {
+    const receptionId = document.getElementById("reception_id_followup").value;
+
+        const response = await fetch(`http://pets-care.test/check-surgeries-requirements/${receptionId}`);
+        const data = await response.json();
+
+        if (data.status === 'ok') {
+            $('#ModalSurgeries').modal('show');
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: data.message || 'Ocurrió un error al verificar los requisitos.',
+            });
+}
+}
+
+
 
 async function AddSurgery() {
     event.preventDefault();
@@ -187,15 +254,9 @@ async function AddSurgery() {
 }
 
 function CloseSurgeries() {
-    document.getElementById("surgery_date").value = "";
-    document.getElementById("surgery_type_id").value = "";
-    document.getElementById("surgery_description").value = "";
-    document.getElementById("preanesthetic").value = "";
-    document.getElementById("anesthetic").value = "";
-    document.getElementById("other_medicines").value = "";
-    document.getElementById("treatment").value = "";
-    document.getElementById("observations_surgery").value = "";
-    document.getElementById("complications").value = "";
+    document.getElementById("date").value = "";
+    document.getElementById("product_type_id").value = "";
+    document.getElementById("observations").value = "";
     $('#ModalSurgeries').modal('hide');
 }
 
@@ -434,27 +495,8 @@ $(document).ready(function () {
                     return data.service ? data.service.name : '';
                 }
             },
-
-            {
-                data: 'surgery_description'
-            },
-            {
-                data: 'preanesthetic'
-            },
-            {
-                data: 'anesthetic',
-            },
-            {
-                data: 'other_medicines',
-            },
-            {
-                data: 'treatment',
-            },
             {
                 data: 'observations',
-            },
-            {
-                data: 'complications',
             },
             {
                 data: null,

@@ -88,7 +88,7 @@
         </div>
 
         <div class="form-group mb-2 mb20">
-            <label for="observations" class="form-label">{{ __('Observations') }}</label>
+            <label for="observations" class="form-label">OBSERVACIONES</label>
             <div class="input-group mb-3">
                 <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                     <span class="vaadin--lines-list"></span></span>
@@ -111,6 +111,8 @@
 
     </div>
     <div class="col-12 mt-2 d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary">Registrar</button>
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-plus"></i>
+            Registrar</button>
     </div>
 </div>

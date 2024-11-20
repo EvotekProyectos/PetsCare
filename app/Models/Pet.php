@@ -46,7 +46,7 @@ class Pet extends Model
      *
      * @var array
      */
-    protected $fillable = ['family_id', 'name', 'picture_id', 'specie', 'raza', 'gender_id', 'birthday', 'reproductive_status_id', 'weight', 'physic_descrip', 'notes', 'pet_classification_id', 'deceased'];
+    protected $fillable = ['numer_chip','family_id', 'name', 'picture_id', 'specie', 'raza', 'gender_id', 'birthday', 'reproductive_status_id', 'weight', 'physic_descrip', 'notes', 'pet_classification_id', 'deceased'];
 
 
     /**

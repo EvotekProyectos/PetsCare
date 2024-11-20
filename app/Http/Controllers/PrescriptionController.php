@@ -6,6 +6,7 @@ use App\Models\Prescription;
 use App\Http\Requests\PrescriptionRequest;
 use App\Models\Appointment;
 use App\Models\Pet;
+use App\Models\Reason;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Client\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -43,8 +44,9 @@ class PrescriptionController extends Controller
       public function create($id)
       {   $pet = Pet::find($id);
           $prescription = new Prescription();
+          $reasons = Reason::all();
           $this->authorize("create",Prescription::class);
-          return view('prescription.create', compact('prescription','pet'));
+          return view('prescription.create', compact('prescription','pet', 'reasons'));
      }
 
 
@@ -77,8 +79,9 @@ class PrescriptionController extends Controller
     {
         $prescription = Prescription::find($id);
         $pet = $prescription->pet;
+        $reasons = Reason::all();
         $this->authorize("update",$prescription);
-        return view('prescription.edit', compact('prescription', 'pet'));
+        return view('prescription.edit', compact('prescription', 'pet', 'reasons'));
     }
 
     /**

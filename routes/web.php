@@ -219,6 +219,8 @@ Route::group(['middleware' => ['auth']], function () {
     //SURGERIES
     Route::get('/surgeries/entries/{id}', [SurgeryController::class, 'entry'])->name("surgeries.entry");
     Route::get("/surgeries/create/{id}", [SurgeryController::class, 'create'])->name('surgeries.creater');
+    Route::get('/check-surgeries-requirements/{id}', [SurgeryController::class, 'checkRequirements'])->name("surgery.checkRequirements");
+
     Route::resource('surgeries', SurgeryController::class);
    
     //FOLLOW UPS 

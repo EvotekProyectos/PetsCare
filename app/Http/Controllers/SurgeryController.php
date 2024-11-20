@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Surgery;
 use App\Http\Requests\SurgeryRequest;
+use App\Models\ProductClassification;
 use App\Models\ProductType;
 use App\Models\Reception;
+use App\Models\RedSheet;
 use App\Models\User;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -104,5 +106,19 @@ class SurgeryController extends Controller
         $surgery = Surgery::with('vet', 'service')->where('reception_id', $id)->get();
 
         return DataTables::of($surgery) ->make(true);
+    }
+
+    public function checkRequirements($id)
+    {
+        $hasLabAndImaging = RedSheet::where('reception_id', $id)
+            ->whereNotNull('lab_type_id')
+            ->whereNotNull('imaging_type_id')
+            ->exists();
+    
+        if ($hasLabAndImaging) {
+            return response()->json(['status' => 'ok']);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Se requiere al menos un registro de laboratorio y uno de imagenología.']);
+        }
     }
 }
