@@ -143,9 +143,6 @@
                                             <th>M.V.Z</th>
                                             <th>Recepción</th>
                                             <th>Tipo</th>
-                                            <th>Procedimiento</th>
-                                            <th></th>
-                                            <th>Detalles</th>
                                             <th>Detalles</th>
                                         </tr>
                                     </thead>
