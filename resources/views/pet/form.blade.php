@@ -36,6 +36,22 @@
                     </div>
                 </div>
             </div>
+           
+                <div class="col-md-4">
+                    <div class="form-group mb-2 mb20">
+                        <label for="number_chip" class="form-label">#CHIP</label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text " style="background-color: #d3f0f3" id="basic-addon1">
+                                <span class="mdi--pets"></span>
+                            </span>
+                            <input type="text" name="number_chip" class="form-control @error('number_chip') is-invalid @enderror"
+                                value="{{ old('number_chip', $pet?->number_chip) }}" id="number_chip" placeholder="Número chip de la mascota">
+                            {!! $errors->first('number_chip', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+                        </div>
+                    </div>
+                </div>
+                
+
             <div class="col-md-4">
                 <div class="form-group mb-2 mb20">
                     <label for="specie" class="form-label">Especie</label>
@@ -50,6 +66,10 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+            <div class="row">
+                <!-- Third Row -->
             <div class="col-md-4">
                 <div class="form-group mb-2 mb20">
                     <label for="raza" class="form-label">{{ __('Raza') }}</label>
@@ -64,10 +84,9 @@
                     </div>
                 </div>
             </div>
-        </div>
+        
 
-        <div class="row">
-            <!-- Third Row -->
+       
             <div class="col-md-4">
                 <div class="form-group mb-2 mb20">
                     <label for="gender_id" class="form-label">Género</label>
@@ -104,6 +123,10 @@
                 </div>
             </div>
 
+        </div>
+
+        <div class="row">
+            <!-- Fourth Row -->
             <div class="col-md-4">
                 <div class="form-group mb-2 mb20">
                     <label for="reproductive_status_id" class="form-label">Estado Reproductivo</label>
@@ -127,10 +150,9 @@
                     </div>
                 </div>
             </div>
-        </div>
+        
 
-        <div class="row">
-            <!-- Fourth Row -->
+        
             <div class="col-md-4">
                 <div class="form-group mb-2 mb20">
                     <label for="weight" class="form-label">Peso</label>
@@ -164,7 +186,10 @@
                     </div>
                 </div>
             </div>
+        </div>
 
+        <div class="row">
+            <!-- Fifth Row -->
             <div class="col-md-4">
                 <div class="form-group mb-2 mb20">
                     <label for="notes" class="form-label">Notas</label>
@@ -179,10 +204,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="row">
-            <!-- Fifth Row -->
+        
             <div class="col-md-4">
                 <div class="form-group mb-2 mb20">
                     <label for="pet_classification_id" class="form-label">Clasificación de la mascota</label>
@@ -209,7 +231,7 @@
             </div>
 
             <div class="col-md-4">
-                <div class="form-group mb-2 mb20">
+                <div class="form-group mb-2 mb20" style="margin-top: 30px;">
                     <div class="input-group mb-3 ">
                         <input type="hidden" name="deceased" value="0">
                         <input type="checkbox" name="deceased" id="deceased" value="1"
@@ -220,10 +242,11 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="col-md-4">
+            {{-- <div class="col-md-4">
 
-            </div>
+            </div> --}}
         </div>
     </div>
     <div class="col-12 mt-2 d-flex justify-content-end">

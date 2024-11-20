@@ -24,6 +24,7 @@ class PetRequest extends FormRequest
         return [
             'family_id' => 'required|integer|exists:families,id',
 			'name' => 'required|string',
+            'number_chip'=>'nullable|string',
             'picture_id' => 'nullable|integer|exists:files,id',
 			'specie' => 'required|string',
 			'raza' => 'nullable|string',
