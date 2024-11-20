@@ -185,7 +185,7 @@ async function OpenCarnet() {
     document.getElementById("pet_id1").value = Pet_Id;
     document.getElementById("pet_id2").value = Pet_Id;
     document.getElementById("pet_id3").value = Pet_Id;
-    $('#myModal').modal('show');
+    $('#ModalCertificate').modal('show');
 }
 
 async function Register() {
@@ -298,5 +298,77 @@ function closeModal() {
     document.getElementById("last_deworming_date3").value = "";
     document.getElementById("next_application_date3").value = "";
     document.getElementById("observations3").value = "";
-    $('#myModal').modal('hide');
+    $('#ModalCertificate').modal('hide');
+}
+
+async function OpenLabs() {
+    document.getElementById("reception_id_labs").value = Reception_Id;
+    $('#ModalLab').modal('show');
+}
+
+async function OpenImgs() {
+    document.getElementById("reception_id_img").value = Reception_Id;
+    $('#ModalImg').modal('show');
+}
+
+async function AddLabs() {
+    event.preventDefault();
+    let url = route('appointment-services.store');
+    let form = new FormData(document.getElementById("NewLab"));
+    let pet = await fetch(url, { method: "POST", body: form });
+    let resp = await pet.json();
+
+    if (pet.ok) {
+        Swal.fire({
+            icon: "success",
+            title: "Se guardo el laboratorio con exito",
+            timer: 7000,
+            showConfirmButton: true
+        })
+        
+        closeModalLabs()
+    } else {
+        let resp = await pet.json();
+        Swal.fire({
+            icon: "error",
+            body: resp
+        })
+    }
+}
+
+function closeModalLabs() {
+    document.getElementById("lab_type_id").value = "";
+    document.getElementById("observations_labs").value = "";
+    $('#ModalLab').modal('hide');
+}
+
+async function AddImgs() {
+    event.preventDefault();
+    let url = route('appointment-services.store');
+    let form = new FormData(document.getElementById("NewImg"));
+    let pet = await fetch(url, { method: "POST", body: form });
+    let resp = await pet.json();
+
+    if (pet.ok) {
+        Swal.fire({
+            icon: "success",
+            title: "Se guardo la imagenologia con exito",
+            timer: 7000,
+            showConfirmButton: true
+        })
+        
+        closeModalImgs()
+    } else {
+        let resp = await pet.json();
+        Swal.fire({
+            icon: "error",
+            body: resp
+        })
+    }
+}
+
+function closeModalImgs() {
+    document.getElementById("imaging_type_id").value = "";
+    document.getElementById("observations_img").value = "";
+    $('#ModalImg').modal('hide');
 }

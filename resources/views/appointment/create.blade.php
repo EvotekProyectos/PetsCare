@@ -156,7 +156,7 @@
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
                                     <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
-                                        onclick="">
+                                        onclick="OpenLabs()">
                                         <span class="badge custom-badge-pill"><span
                                                 class="hugeicons--chemistry-02"></span></span> EXÁMENES DE GABINETE
                                     </button>
@@ -165,7 +165,7 @@
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
                                     <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
-                                        onclick="">
+                                        onclick="OpenImgs()">
                                         <span class="badge custom-badge-pill"><span
                                                 class="hugeicons--x-ray"></span></span> IMÁGENES DIAGNÓSTICAS </button>
                                 </div>
@@ -205,8 +205,65 @@
             </div>
         </div>
     </section>
+    <div class="modal" id="ModalLab" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="background-color: #e9eced; border-radius: 20px;">
+                <div class="modal-header">
+                    <div class="col-11 d-flex justify-content-between align-items-center">
+                        <h5 id="card_title" class=" text-uppercase" style="color: #0455A0">
+                            <span class="hugeicons--chemistry-02"></span> Exámenes de Gabinete
+                        </h5>
+                    </div>
+                    <div class="col-1">
+                        <button type="button" class="btn-close" onclick="closeModalLabs()" aria-label="Close"></button>
+                    </div>
 
-    <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+                </div>
+                <div class="modal-body" style="width: 100%;">
+                    <div class="row">
+                        <div class="col-12">
+                            <form method="POST" onsubmit="AddLabs()" id="NewLab" role="form"
+                                enctype="multipart/form-data">
+                                @csrf
+                                @include('appointment-service.formlab')
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="ModalImg" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="background-color: #e9eced; border-radius: 20px;">
+                <div class="modal-header">
+                    <div class="col-11 d-flex justify-content-between align-items-center">
+                        <h5 id="card_title" class=" text-uppercase" style="color: #0455A0">
+                            <span class="hugeicons--x-ray"></span> Imágenes Diagnósticas
+                        </h5>
+                    </div>
+                    <div class="col-1">
+                        <button type="button" class="btn-close" onclick="closeModalImgs()" aria-label="Close"></button>
+                    </div>
+
+                </div>
+                <div class="modal-body" style="width: 100%;">
+                    <div class="row">
+                        <div class="col-12">
+                            <form method="POST" onsubmit="AddImgs()" id="NewImg" role="form"
+                                enctype="multipart/form-data">
+                                @csrf
+                                @include('appointment-service.form')
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="ModalCertificate" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
         <div class="modal-dialog" role="document">
             <div class="modal-content" style="background-color: #e9eced; border-radius: 20px;">
                 <div class="modal-header">
@@ -222,16 +279,20 @@
                 </div>
                 <div class="modal-body" style="width: 100%;">
                     <div class="row">
+                        <div class="col-8"></div>
+                        <div class="col-3">
+                            <button class="btn btn-costum-services btn-sm text-uppercase rounded-4"
+                                onclick="window.location.href='{{ route('vaccine-certificates.show', $reception->pet_id) }}'">
+                                Ver Cartilla
+                            </button>
+                        </div>
+                        <div class="col-1"></div>
+                    </div>
+                    <div class="row">
                         <div class="col-12">
                             @include('vaccine-certificate.form')
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">
-                        Cerrar
-                    </button>
-
                 </div>
             </div>
         </div>
@@ -242,6 +303,7 @@
     <script>
         var ruta = "{{ asset('') }}";
         var imgDefault = "{{ asset('img/pet_pic.png') }}";
+        var Reception_Id = {{ $reception->id }};
         var Pet_Id = {{ $reception->pet_id }};
         var Pic_id = {{ $reception->pet->picture_id ?? 'null' }};
         var Pic_route = "{{ $reception->pet->file->route ?? '' }}";

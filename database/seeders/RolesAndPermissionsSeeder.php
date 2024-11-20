@@ -179,5 +179,11 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'crear seguimientos']);
         Permission::create(['name' => 'editar seguimientos']);
         Permission::create(['name' => 'eliminar seguimientos']);
+
+        ////red sheets
+        Permission::create(['name' => 'ver panel servicios consultas']);
+        Permission::create(['name' => 'crear servicios consultas']);
+        Permission::create(['name' => 'editar servicios consultas']);
+        Permission::create(['name' => 'eliminar servicios consultas']);
     }
 }

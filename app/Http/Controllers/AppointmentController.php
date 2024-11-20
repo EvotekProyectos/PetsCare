@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Http\Requests\AppointmentRequest;
+use App\Models\AppointmentService;
 use App\Models\Prescription;
+use App\Models\ProductType;
 use App\Models\Reason;
 use App\Models\Reception;
 use App\Models\ReceptionStatusHistory;
@@ -121,12 +123,14 @@ class AppointmentController extends Controller
         $reasons = Reason::all();
         $prescription = new Prescription();
         $vaccineCertificate = new VaccineCertificate();
+        $appointmentService = new AppointmentService();
+        $products = ProductType::all();
         $this->authorize("create", Appointment::class);
         // ReceptionStatusHistory::create([
         //     'reception_id' => $id,
         //     'attention_status_id' => 3,
         // ]);
-        return view('appointment.create', compact('appointment', 'reasons', 'prescription', 'reception', 'vaccineCertificate'));
+        return view('appointment.create', compact('appointment', 'reasons', 'prescription', 'reception', 'vaccineCertificate', 'products','appointmentService'));
     }
 
     public function historic(int $id)
