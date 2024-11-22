@@ -228,7 +228,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('follow-ups', FollowUpController::class);
 
     //Appointment Services
-
+    Route::get('appointment-services/labs/{id}', [AppointmentServiceController::class, 'getLabs'])->name("appointment-services.labs");
+    Route::get('appointment-services/imgs/{id}', [AppointmentServiceController::class, 'getImgs'])->name("appointment-services.imgs");
     Route::resource('appointment-services', AppointmentServiceController::class);
 
     

@@ -179,6 +179,47 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 id="card_title" class="text-primary text-uppercase">
+                                <span class="ic--twotone-pets"></span> Registros
+                            </h5>
+                        </div>
+                        <div class="row">
+                        <div class="col-6">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover responsive w-100" id="DataLabs">
+                                    <thead class="thead table-primary text-uppercase">
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Observaciones</th>
+                                            <th>M.V.Z.</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover responsive w-100" id="DataImgs">
+                                    <thead class="thead table-primary text-uppercase">
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Observaciones</th>
+                                            <th>M.V.Z.</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 id="card_title" class="text-primary text-uppercase">
                                 <span class="ic--twotone-pets"></span> historial clínico
                             </h5>
                         </div>

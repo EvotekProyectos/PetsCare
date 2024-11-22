@@ -80,7 +80,7 @@ class PetController extends Controller
     {
         $pet = Pet::with('file')->find($id);
         $fam_id = $pet->family_id;
-        $family = Family::where("id", $fam_id)->first();;
+        $family = Family::where("id", $fam_id)->first();
         $genders = Genre::all();
         $ReproductiveStatuses = ReproductiveStatus::all();
         $PetClassifications = PetClassification::all();

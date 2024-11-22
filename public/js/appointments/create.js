@@ -325,7 +325,7 @@ async function AddLabs() {
             timer: 7000,
             showConfirmButton: true
         })
-        
+        LabTable.ajax.reload();
         closeModalLabs()
     } else {
         let resp = await pet.json();
@@ -356,7 +356,7 @@ async function AddImgs() {
             timer: 7000,
             showConfirmButton: true
         })
-        
+        ImgTable.ajax.reload();
         closeModalImgs()
     } else {
         let resp = await pet.json();
@@ -372,3 +372,61 @@ function closeModalImgs() {
     document.getElementById("observations_img").value = "";
     $('#ModalImg').modal('hide');
 }
+
+var LabTable = undefined;
+$(document).ready(function () {
+    LabTable = $('#DataLabs').DataTable({
+        ajax: route('appointment-services.labs', Reception_Id),
+        responsive: true,
+        order: [0, 'desc'],
+        columns: [
+            {
+                data: null,
+                render: function (data) {
+                    return data.lab ? data.lab.name : '';
+                }
+            },
+
+            {
+                data: 'observations',
+                
+            },
+
+            {
+                data: null,
+                render: function (data) {
+                    return data.vet ? data.vet.name : '';
+                }
+            },
+        ],
+    });
+});
+
+var ImgTable = undefined;
+$(document).ready(function () {
+    ImgTable = $('#DataImgs').DataTable({
+        ajax: route('appointment-services.imgs', Reception_Id),
+        responsive: true,
+        order: [0, 'desc'],
+        columns: [
+            {
+                data: null,
+                render: function (data) {
+                    return data.imaging ? data.imaging.name : '';
+                }
+            },
+
+            {
+                data: 'observations',
+                
+            },
+
+            {
+                data: null,
+                render: function (data) {
+                    return data.vet ? data.vet.name : '';
+                }
+            },
+        ],
+    });
+});

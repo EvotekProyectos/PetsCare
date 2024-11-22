@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AppointmentService;
 use App\Http\Requests\AppointmentServiceRequest;
 use App\Models\ProductType;
+use Yajra\DataTables\Facades\DataTables;
 
 /**
  * Class AppointmentServiceController
@@ -91,5 +92,18 @@ class AppointmentServiceController extends Controller
 
         return redirect()->route('appointment-services.index')
             ->with('success', 'AppointmentService deleted successfully');
+    }
+    public function getLabs(int $id)
+    {
+        $data = AppointmentService::with('vet','lab')->where("reception_id", $id)->whereNotNull("lab_type_id")->get();
+
+        return DataTables::of($data) ->make(true);
+    }
+
+    public function getImgs(int $id)
+    {
+        $data = AppointmentService::with('vet','imaging')->where("reception_id", $id)->whereNotNull("imaging_type_id")->get();
+
+        return DataTables::of($data) ->make(true);
     }
 }
