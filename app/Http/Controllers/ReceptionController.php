@@ -7,6 +7,7 @@ use App\Http\Requests\ReceptionRequest;
 use App\Models\AdmissionType;
 use App\Models\Area;
 use App\Models\Family;
+use App\Models\Format;
 use App\Models\Pet;
 use App\Models\Prescription;
 use App\Models\Reason;
@@ -198,7 +199,14 @@ class ReceptionController extends Controller
         Storage::put($pdfPath, $pdf->output());
 
         $pdfUrl = Storage::url($pdfPath);
-        return response()->json(['url' => $pdfUrl]);
+
+        $format = new Format();
+        $format->format_type_id = 1; 
+        $format->reception_id = $id;
+        $format->format_pdf = $pdfPath; 
+        $format->save();
+
+        return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
     }
 
      public function getFamilyByPet($pet_id)

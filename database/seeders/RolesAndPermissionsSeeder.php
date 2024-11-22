@@ -173,11 +173,24 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'ver panel cirugías']);
         Permission::create(['name' => 'crear cirugía']);
         Permission::create(['name' => 'editar cirugía']);
+        Permission::create(['name' => 'eliminar cirugía']);
 
         ////follow ups
         Permission::create(['name' => 'ver panel seguimientos']);
         Permission::create(['name' => 'crear seguimientos']);
         Permission::create(['name' => 'editar seguimientos']);
         Permission::create(['name' => 'eliminar seguimientos']);
+
+        //FORMAT TYPES
+        Permission::create(['name' => 'Ver panel Tipo de Formatos']);
+        Permission::create(['name' => 'Crear tipo de formato']);
+        Permission::create(['name' => 'Editar tipo de formato']);
+        Permission::create(['name' => 'Eliminar tipo de formato']);
+
+        //FORMATS
+        Permission::create(['name' => 'Ver panel de Formatos']);
+        Permission::create(['name' => 'Crear formato']);
+        Permission::create(['name' => 'Editar formato']);
+        Permission::create(['name' => 'Eliminar formato']);
     }
 }

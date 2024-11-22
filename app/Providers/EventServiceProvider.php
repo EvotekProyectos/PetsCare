@@ -9,6 +9,8 @@ use App\Models\AttentionStatus;
 use App\Models\CoverArea;
 use App\Models\FamClassification;
 use App\Models\Family;
+use App\Models\Format;
+use App\Models\FormatType;
 use App\Models\Genre;
 use App\Models\Hospitalization;
 use App\Models\Pet;
@@ -35,6 +37,8 @@ use App\Observers\AttentionStatusObserver;
 use App\Observers\CoverAreaObserver;
 use App\Observers\FamClassificationObserver;
 use App\Observers\FamilyObserver;
+use App\Observers\FormatTypesObserver;
+use App\Observers\FormatsObserver;
 use App\Observers\ReceptionTypeObserver;
 use App\Observers\GenreObserver;
 use App\Observers\HospitalizationObserver;
@@ -100,6 +104,8 @@ class EventServiceProvider extends ServiceProvider
         VaccineCertificate::observe(VaccineCertificateObserver::class);
         Hospitalization::observe(HospitalizationObserver::class);
         Surgery::observe(SurgeryObserver::class);
+        FormatType::observe(FormatTypesObserver::class);
+        Format::observe(FormatsObserver::class);
         
     }
 

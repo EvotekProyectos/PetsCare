@@ -20,6 +20,8 @@ use App\Http\Controllers\CoverAreaController;
 use App\Http\Controllers\FamClassificationController;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\FollowUpController;
+use App\Http\Controllers\FormatController;
+use App\Http\Controllers\FormatTypeController;
 use App\Http\Controllers\HospitalizationController;
 use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\PetController;
@@ -225,6 +227,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/follow-ups/entries/{id}', [FollowUpController::class, 'entry'])->name("followup.entry");
     Route::resource('follow-ups', FollowUpController::class);
 
+    //FORMAT TYPES
+    Route::resource('format-types', FormatTypeController::class);
+
+    //FORMATS
+    Route::resource('formats', FormatController::class);
+
 
     
 });
+ 

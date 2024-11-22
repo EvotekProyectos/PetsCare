@@ -2,24 +2,24 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\Response;
-use App\Models\Surgery;
+use App\Models\Format;
 use App\Models\User;
+use Illuminate\Auth\Access\Response;
 
-class SurgeryPolicy
+class FormatPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $user->can("ver panel cirugías");
+        return $user->can("Ver panel de Formatos");
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Surgery $surgery): bool
+    public function view(User $user, Format $format): bool
     {
         return false;
     }
@@ -29,29 +29,29 @@ class SurgeryPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can("crear cirugía");
+        return $user ->can("Crear formato");
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Surgery $surgery): bool
+    public function update(User $user, Format $format): bool
     {
-        return $user->can("editar cirugía");
+        return $user ->can("Editar formato");
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Surgery $surgery): bool
+    public function delete(User $user, Format $format): bool
     {
-        return $user ->can("eliminar cirugía");
+        return $user ->can("Eliminar formato");
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Surgery $surgery): bool
+    public function restore(User $user, Format $format): bool
     {
         return false;
     }
@@ -59,7 +59,7 @@ class SurgeryPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Surgery $surgery): bool
+    public function forceDelete(User $user, Format $format): bool
     {
         return false;
     }
