@@ -95,3 +95,14 @@ function first(value) {
     }
 
 }
+
+$(document).ready(function () {
+    $('#family_id').select2({
+        placeholder: 'Buscar Familia',
+        width: 'resolve'
+    });
+    $('#pet_id').select2({
+         placeholder: 'Buscar Mascota',
+          width: 'resolve'
+     });
+});

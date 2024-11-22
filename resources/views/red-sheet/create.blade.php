@@ -129,7 +129,7 @@
                             </div>
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
-                                    <button class="btn btn-costum-services btn-sm text-uppercase rounded-4" onclick="">
+                                    <button class="btn btn-costum-services btn-sm text-uppercase rounded-4" onclick="Transfer()">
                                         <span class="badge custom-badge-pill"><span
                                                 class="clarity--two-way-arrows-line"></span></span> Trasladar
                                     </button>
@@ -199,31 +199,6 @@
                             <span class="ic--twotone-pets"></span> RESUMEN DÍAS HOSPITALIZADO
                         </h5>
                         <div id="table-container"></div>
-                        {{-- <div class="d-flex justify-content-between align-items-center">
-                            <h5 id="card_title" class="text-primary text-uppercase">
-                                <span class="ic--twotone-pets"></span> HOJA ROJA
-                            </h5>
-                        </div>
-                        <div class="col-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover responsive w-100" id="table">
-                                    <thead class="thead table-primary text-uppercase">
-                                        <tr>
-                                            <th>Fecha</th>
-                                            <th>Día</th>
-                                            <th>Servicio</th>
-                                            <th>Laboratorio</th>
-                                            <th>imagenologia</th>
-                                            <th>Observaciones</th>
-                                            <th>M.V.Z.</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div> --}}
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
@@ -254,7 +229,7 @@
                             </div>
                         </div>
                     </div>
-                    {{-- <div class="card-body">
+                    <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 id="card_title" class="text-primary text-uppercase">
                                 <span class="ic--twotone-pets"></span> Cirugias
@@ -277,7 +252,7 @@
                                 </table>
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -357,6 +332,7 @@
 @push('scripts')
     <script>
         var ruta = "{{ asset('') }}";
+        var admisiones = @json($admissions);
         var imgDefault = "{{ asset('img/pet_pic.png') }}";
         var Reception_Id = {{ $reception->id }};
         var Pet_Id = {{ $reception->pet_id }};

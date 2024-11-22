@@ -2,15 +2,15 @@ function fetchAndRenderData() {
     $.ajax({
         url: route('red-sheets.recap', Reception_Id),
         method: 'GET',
-        success: function(response) {
+        success: function (response) {
             // Pass response data to the function for rendering
             renderData(response.data);
         },
-        error: function(error) {
+        error: function (error) {
             console.error("Error fetching data:", error);
         }
     });
-    }
+}
 window.onload = function () {
     fetchAndRenderData()
     if (Pic_id !== null) {
@@ -61,7 +61,7 @@ $(document).ready(function () {
         columns: [
             {
                 data: 'created_at',
-                render: function(data) {
+                render: function (data) {
                     if (data) {
                         let date = new Date(data);
                         let formattedDate = date.toLocaleDateString('en-US', {
@@ -117,6 +117,8 @@ $(document).ready(function () {
 
 async function OpenFollowUps() {
     document.getElementById("reception_id_followup").value = Reception_Id;
+    console.log(Reception_Id);
+    
     $('#ModalFollowUps').modal('show');
 }
 
@@ -212,7 +214,8 @@ async function OpenPrescription(petId) {
 async function OpenSurgeries() {
     const receptionId = document.getElementById("reception_id_followup").value;
 
-        const response = await fetch(`http://pets-care.test/check-surgeries-requirements/${receptionId}`);
+        const url = route('surgery.checkRequirements', receptionId) ; 
+        const response = await fetch(url);
         const data = await response.json();
 
         if (data.status === 'ok') {
@@ -415,7 +418,7 @@ $(document).ready(function () {
         columns: [
             {
                 data: 'created_at',
-                render: function(data) {
+                render: function (data) {
                     if (data) {
                         let date = new Date(data);
                         let formattedDate = date.toLocaleDateString('en-US', {
@@ -470,8 +473,8 @@ $(document).ready(function () {
         order: [0, 'desc'],
         columns: [
             {
-                data: 'surgery_date',
-                render: function(data) {
+                data: 'date',
+                render: function (data) {
                     if (data) {
                         let date = new Date(data);
                         let formattedDate = date.toLocaleDateString('en-US', {
@@ -507,3 +510,54 @@ $(document).ready(function () {
         ],
     });
 });
+
+async function Transfer() {
+    event.preventDefault();
+    Swal.fire({
+        title: 'Vas a trasladar a este paciente',
+        icon: "question",
+        html: `Decide cúal es el nuevo tipo de admisión`,
+        input: 'select',
+        inputOptions: getAdm(admisiones),
+        inputPlaceholder: 'Selecciona la admisión',
+        showCancelButton: true,
+        confirmButtonText: 'Asignar',
+        cancelButtonText: 'Cancelar',
+        inputValidator: (value) => {
+            return new Promise((resolve) => {
+                if (value === '') {
+                    resolve('Debes seleccionar una admisión');
+                } else {
+                    resolve();
+                }
+            });
+        }
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            const form = new FormData();
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            form.append("_token", token);
+            form.append("_method", "PUT"); 
+            form.append("admission_type_id", result.value); 
+
+            let url = route('reception.transfer', Reception_Id); 
+            let pet = await fetch(url, {
+                method: "POST", 
+                body: form
+            });
+            if (pet.ok) {
+                window.location.reload();
+
+            }
+        }
+
+    });
+}
+
+function getAdm(AdminssionData) {
+    return AdminssionData.reduce((options, Adminssion) => {
+        options[Adminssion.id] = Adminssion.name;
+
+        return options;
+    }, {});
+}

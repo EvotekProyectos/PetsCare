@@ -192,5 +192,11 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'Crear formato']);
         Permission::create(['name' => 'Editar formato']);
         Permission::create(['name' => 'Eliminar formato']);
+
+        ////red sheets
+        Permission::create(['name' => 'ver panel servicios consultas']);
+        Permission::create(['name' => 'crear servicios consultas']);
+        Permission::create(['name' => 'editar servicios consultas']);
+        Permission::create(['name' => 'eliminar servicios consultas']);
     }
 }

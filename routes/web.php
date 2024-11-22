@@ -12,6 +12,7 @@ use App\Http\Controllers\GenreController;
 use App\Http\Controllers\ReasonController;
 use App\Http\Controllers\AdmissionTypeController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\AppointmentServiceController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ReceptionTypeController;
@@ -155,6 +156,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('pets', PetController::class);
 
     //RECEPTIONS
+    Route::put('/receptions/update/{id}',[ReceptionController::class, 'transfer'])->name('reception.transfer');
     Route::get('/receptions/list', [ReceptionController::class, 'list'])->name('reception.list');
     Route::get('/receptions/historial/{id}', [ReceptionController::class, 'historial'])->name('reception.historial');
     Route::get('/receptions/hospital/{id}', [ReceptionController::class, 'hospital_authorization'])->name('hospital.list');
@@ -233,6 +235,10 @@ Route::group(['middleware' => ['auth']], function () {
     //FORMATS
     Route::resource('formats', FormatController::class);
 
+    //Appointment Services
+    Route::get('appointment-services/labs/{id}', [AppointmentServiceController::class, 'getLabs'])->name("appointment-services.labs");
+    Route::get('appointment-services/imgs/{id}', [AppointmentServiceController::class, 'getImgs'])->name("appointment-services.imgs");
+    Route::resource('appointment-services', AppointmentServiceController::class);
 
     
 });

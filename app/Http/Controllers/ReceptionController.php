@@ -21,6 +21,7 @@ use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use PhpParser\Node\Expr\FuncCall;
 
 /**
  * Class ReceptionController
@@ -103,8 +104,9 @@ class ReceptionController extends Controller
         $reasons = Reason::all();
         $users = User::all();
         $rooms = Room::all();
+        $pets = Pet::all();
         $this->authorize("update", $reception);
-        return view('reception.edit', compact('reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms'));
+        return view('reception.edit', compact('reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms', 'pets'));
     }
 
     /**
@@ -217,6 +219,18 @@ class ReceptionController extends Controller
      }
      return response()->json(null, 404);
 }
+
+    public function transfer(Request $request, $id){
+        $reception = Reception::findOrFail($id);
+
+        $reception->update($request->validate([
+            'admission_type_id' => 'integer|exists:admission_types,id',
+        ]));
+        $this->authorize("update", $reception);
+
+        return response()->json($reception);
+
+    }
 
 
 }

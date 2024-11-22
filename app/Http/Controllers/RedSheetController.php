@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RedSheet;
 use App\Http\Requests\RedSheetRequest;
+use App\Models\AdmissionType;
 use App\Models\FollowUp;
 use App\Models\ProductType;
 use App\Models\Reception;
@@ -89,7 +90,7 @@ class RedSheetController extends Controller
     public function destroy($id)
     {
         $redSheet = RedSheet::find($id);
-        $this->authorize("update", $redSheet);
+        $this->authorize("delete", $redSheet);
         $redSheet->delete();
 
         return response()->json($redSheet);
@@ -102,8 +103,9 @@ class RedSheetController extends Controller
         $products = ProductType::all();
         $followUp = new FollowUp();
         $surgery = new Surgery();
+        $admissions = AdmissionType::all();
         $this->authorize("create", RedSheet::class);
-        return view('red-sheet.create', compact('redSheet', 'reception', 'products', 'followUp', 'surgery'));
+        return view('red-sheet.create', compact('redSheet', 'reception', 'products', 'followUp', 'surgery', 'admissions'));
     }
 
     public function recap(int $id)

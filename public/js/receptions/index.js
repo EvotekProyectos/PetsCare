@@ -50,8 +50,8 @@ $(document).ready(function () {
             {
                 data: null,
                 render: function (data) {
-                    if (data && data.reason_id && reasons[data.reason_id]) {
-                        return `<span style="background-color: ${reasons[data.reason_id]}; padding: 5px; color: black; border-radius: 5px;">
+                    if (data && data.reason_id  ) {
+                        return `<span style="background-color: ${data.reason.color}; padding: 5px; color: black; border-radius: 5px;">
                                     ${data.reason.name}
                                 </span>`;
                     }
