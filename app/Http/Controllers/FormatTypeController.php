@@ -15,8 +15,8 @@ class FormatTypeController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {    $this->authorize("viewAny", FormatType::class);
-        $formatTypes = FormatType::paginate();
+    {    $formatTypes = FormatType::paginate(); 
+        $this->authorize("viewAny", FormatType::class);
        
         return view('format-type.index', compact('formatTypes'))
             ->with('i', (request()->input('page', 1) - 1) * $formatTypes->perPage());
@@ -26,9 +26,9 @@ class FormatTypeController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    { $this->authorize("create", FormatType::class);
+    { 
         $formatType = new FormatType();
-       
+        $this->authorize("create", FormatType::class);
         return view('format-type.create', compact('formatType'));
     }
 

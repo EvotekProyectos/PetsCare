@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\Format;
 use App\Models\Pet;
 use App\Models\PetHistory;
 use App\Models\Prescription;
+use App\Models\Reception;
 use Illuminate\Http\Request;
 
 class PetHistoryController extends Controller
@@ -20,9 +22,14 @@ class PetHistoryController extends Controller
         $petHistory = $pet->petClassification;
         $petHistory = $pet->file;
         $petHistory = $pet->reproductiveStatus;
-        return view('pet_history.view' , compact('pet', 'petHistory'));
+
+        $reception = $pet->reception;
+
+
+        return view('pet_history.view' , compact('pet', 'petHistory', 'reception'));
 
     }
+
 }
 
 

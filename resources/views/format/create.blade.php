@@ -9,12 +9,19 @@
         <div class="row">
             <div class="col-md-12">
 
-                <div class="card card-default">
-                    <div class="card-header">
-                        <span class="card-title">{{ __('Create') }} Format</span>
+                <div class="card bg-primary-soft border-0 p-3">
+                    <div class="card-header bg-transparent border-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4 id="card_title" class="text-primary text-uppercase">
+                                <span class="fluent--document-28-filled "></span> FORMATOS
+                            </h4>
+                        </div>
                     </div>
-                    <div class="card-body bg-white">
+                    <div class="card-body">
                         <form method="POST" action="{{ route('formats.store') }}"  role="form" enctype="multipart/form-data">
+                            
+                            <input type="hidden" name="pet_id" value="{{ $pet->id }}">
+
                             @csrf
 
                             @include('format.form')

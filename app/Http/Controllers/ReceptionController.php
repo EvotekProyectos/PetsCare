@@ -211,6 +211,9 @@ class ReceptionController extends Controller
         return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
     }
 
+
+
+
      public function getFamilyByPet($pet_id)
  {
      $pet = Pet::find($pet_id);

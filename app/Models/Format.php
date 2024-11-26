@@ -33,7 +33,7 @@ class Format extends Model
      *
      * @var array
      */
-    protected $fillable = ['format_type_id', 'reception_id', 'format_pdf'];
+    protected $fillable = ['format_type_id', 'reception_id', 'format_pdf' ,'pet_id'];
 
 
     /**
@@ -52,5 +52,11 @@ class Format extends Model
         return $this->belongsTo(\App\Models\Reception::class, 'reception_id', 'id');
     }
     
-
+    public function pet()
+    {
+        return $this->belongsTo(\App\Models\Pet::class, 'pet_id', 'id');
+    }
 }
+
+
+

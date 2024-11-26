@@ -121,6 +121,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/fam-classifications/list', [FamClassificationController::class, 'list'])->name('fam-classifications.list');
     Route::resource('fam-classifications', FamClassificationController::class);
 
+    Route::get('/family-data/{id}', [FamilyController::class, 'getFamilyData'])->name('family.data');
+    Route::get('/phone-data/{phone}', [FamilyController::class, 'getPhoneData'])->name('phone.data');
+    Route::get('/pet-data/{id}', [FamilyController::class, 'getPetData'])->name('pet.data');
+
+
     //Pet Classifications
     Route::get('/pet-classifications/list', [PetClassificationController::class, 'list'])->name('pet-classifications.list');
     Route::resource('pet-classifications', PetClassificationController::class);
@@ -161,13 +166,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/receptions/historial/{id}', [ReceptionController::class, 'historial'])->name('reception.historial');
     Route::get('/receptions/hospital/{id}', [ReceptionController::class, 'hospital_authorization'])->name('hospital.list');
     Route::post('/receptions/hospital/pdf/{id}', [ReceptionController::class, 'hospital_authorizationpdf'])->name('hospital.pdf');
-  
-
-    Route::get('/family-data/{id}', [FamilyController::class, 'getFamilyData'])->name('family.data');
-    Route::get('/phone-data/{phone}', [FamilyController::class, 'getPhoneData'])->name('phone.data');
-    Route::get('/pet-data/{id}', [FamilyController::class, 'getPetData'])->name('pet.data');
-
     Route::resource('receptions', ReceptionController::class);
+
+
 
     //RECEPTIONS STATUS HISTORIES
     Route::get('/reception-status-histories', [ReceptionStatusHistoryController::class, 'list'])->name('reception-status.list');
@@ -233,6 +234,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('format-types', FormatTypeController::class);
 
     //FORMATS
+    Route::get("/formats/{id}", [FormatController::class, 'list'])->name('formats.list');
+    Route::get("/formats/create/{id}", [FormatController::class, 'add'])->name('formats.add');
+    Route::get('/formats/hospital/{id}', [FormatController::class, 'hospital_authorization'])->name('format.hospital');
+    Route::post('/formats/hospital/pdf/{id}', [FormatController::class, 'generateHospitalAuthorizationPdf'])->name('format-hospital.pdf'); 
     Route::resource('formats', FormatController::class);
 
     //Appointment Services

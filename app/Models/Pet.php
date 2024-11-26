@@ -94,5 +94,11 @@ class Pet extends Model
         return $this->hasMany(VaccineCertificate::class, 'pet_id', 'id');
     }
 
+   
+        public function receptions()
+        {
+            return $this->hasMany(Reception::class);
+        }
+
 
 }

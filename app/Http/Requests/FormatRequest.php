@@ -24,6 +24,7 @@ class FormatRequest extends FormRequest
         return [
             'format_type_id' => 'nullable|integer|exists:format_types,id',
 			'reception_id' => 'nullable|integer|exists:receptions,id',
+            'pet_id' => 'nullable|integer|exists:pets,id',
             'format_pdf' => 'required|string',
         ];
     }

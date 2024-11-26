@@ -159,38 +159,6 @@ async function AddFollowUp() {
 }
 
 
-// async function OpenSurgeries() {
-//     // document.getElementById("reception_id_followup").value = Reception_Id;
-//     $('#ModalSurgeries').modal('show');
-// }
-
-
-//  async function OpenSurgeries() {
-//     document.getElementById("reception_id_followup").value = Reception_Id;
-//   window.open(route('surgery.checkRequirements', Reception_Id ))
-//  }
-
-
-// async function OpenSurgeries() {
-//     // Obtener el valor de `receptionId` desde el elemento `reception_id_followup`
-//     const receptionId = document.getElementById("reception_id_followup").value;
-
-//     try {
-//         // Hacemos la solicitud `fetch` con el valor correcto de `receptionId`
-//         const response = await fetch(`/check-surgeries-requirements/${receptionId}`);
-//         const data = await response.json();
-
-//         if (data.status === 'ok') {
-//             $('#ModalSurgeries').modal('show');
-//         } else {
-//             alert(data.message); 
-//         }
-//     } catch (error) {
-//         console.error("Error al verificar los requisitos:", error);
-//         alert("Hubo un error al verificar los requisitos.");
-//     }
-// }
-
 async function OpenPrescription(petId) {
     const result = await Swal.fire({
         title: '¿Dar de alta a este paciente?',
@@ -205,6 +173,7 @@ async function OpenPrescription(petId) {
 
     if (result.isConfirmed) {
         window.location.href = `/prescriptions/create/${petId}`;
+        
     }
 
 }

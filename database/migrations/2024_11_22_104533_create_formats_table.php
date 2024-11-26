@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('format_type_id')->nullable()->references('id')->on('format_types');
             $table->foreignId('reception_id')->nullable()->references('id')->on('receptions');
+            $table->foreignId('pet_id')->nullable()->references('id')->on('pets');
             $table->text('format_pdf');
             $table->timestamps();
             $table->softDeletes();

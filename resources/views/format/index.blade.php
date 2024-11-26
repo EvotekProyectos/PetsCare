@@ -34,11 +34,11 @@
                             <table class="table table-striped table-hover">
                                 <thead class="thead">
                                     <tr>
-                                        <th>No</th>
+                                        {{-- <th>No</th> --}}
                                         
-										<th>Format Type Id</th>
-										<th>Reception Id</th>
-										<th>Format Pdf</th>
+										<th>Tipo de formato</th>
+										<th>Tipo de recepción</th>
+										<th>Formato</th>
 
                                         <th></th>
                                     </tr>
@@ -46,12 +46,17 @@
                                 <tbody>
                                     @foreach ($formats as $format)
                                         <tr>
-                                            <td>{{ ++$i }}</td>
+                                            {{-- <td>{{ ++$i }}</td> --}}
                                             
 											<td>{{ $format->format_type_id }}</td>
 											<td>{{ $format->reception_id }}</td>
-											<td>{{ $format->format_pdf }}</td>
-
+											<td>
+                                                <a href="{{ Storage::url($format->format_pdf) }}" 
+                                                class="btn btn-primary" 
+                                                target="_blank">
+                                                Ver PDF
+                                                </a>
+                                            </td>
                                             <td>
                                                 <form action="{{ route('formats.destroy',$format->id) }}" method="POST">
                                                     <a class="btn btn-sm btn-primary " href="{{ route('formats.show',$format->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
