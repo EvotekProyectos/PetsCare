@@ -217,6 +217,11 @@ Route::group(['middleware' => ['auth']], function () {
     //RED SHEETS FOR HOSPITALIZATION DAYS
     Route::get('/hospitalizations/entries/{id}', [RedSheetController::class, 'entry'])->name("redsheet.entry");
     Route::get('/red-sheets/recap/{id}', [RedSheetController::class, 'recap'])->name("red-sheets.recap");
+
+   Route::post('/redSheet/discharge', [redSheetController::class, 'discharge']);
+
+
+
     Route::resource('red-sheets', RedSheetController::class);
 
     //SURGERIES
@@ -234,7 +239,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('format-types', FormatTypeController::class);
 
     //FORMATS
-    Route::get("/formats/{id}", [FormatController::class, 'list'])->name('formats.list');
+    Route::get("/formats/list/{id}", [FormatController::class, 'list'])->name('formats.list');
+    
     Route::get("/formats/create/{id}", [FormatController::class, 'add'])->name('formats.add');
     Route::get('/formats/hospital/{id}', [FormatController::class, 'hospital_authorization'])->name('format.hospital');
     Route::post('/formats/hospital/pdf/{id}', [FormatController::class, 'generateHospitalAuthorizationPdf'])->name('format-hospital.pdf'); 

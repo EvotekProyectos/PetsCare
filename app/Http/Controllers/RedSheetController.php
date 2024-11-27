@@ -6,9 +6,12 @@ use App\Models\RedSheet;
 use App\Http\Requests\RedSheetRequest;
 use App\Models\AdmissionType;
 use App\Models\FollowUp;
+use App\Models\Log;
+use App\Models\Prescription;
 use App\Models\ProductType;
 use App\Models\Reception;
 use App\Models\Surgery;
+use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 /**
@@ -115,4 +118,29 @@ class RedSheetController extends Controller
         return DataTables::of($redsheets) ->make(true);
 
     }
+
+    public function discharge(Request $request)
+    {
+        // $request->validate([
+        //     'petId' => 'required|exists:pets,id',
+        //     'receptionId' => 'required|exists:receptions,id',
+        // ]);
+
+        try {
+            // Actualizar el `exit_date` en la tabla receptions
+            $reception = Reception::findOrFail($request->receptionId);
+            $reception->exit_date = now();
+            $reception->save();
+
+
+            return response()->json([
+                'message' => 'Paciente dado de alta y prescripción creada.',
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+
+    
 }

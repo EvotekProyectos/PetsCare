@@ -159,7 +159,25 @@ async function AddFollowUp() {
 }
 
 
-async function OpenPrescription(petId) {
+// async function OpenPrescription(petId) {
+//     const result = await Swal.fire({
+//         title: '¿Dar de alta a este paciente?',
+//         text: "Confirma su atención",
+//         icon: 'question',
+//         showCancelButton: true,
+//         confirmButtonColor: '#3085d6',
+//         cancelButtonColor: '#d33',
+//         confirmButtonText: 'Sí, dar alta.',
+//         cancelButtonText: 'No, regresar.'
+//     });
+
+//     if (result.isConfirmed) {
+//         window.location.href = `/prescriptions/create/${petId}`;
+//     }
+
+// }
+
+async function OpenPrescription(petId, receptionId) {
     const result = await Swal.fire({
         title: '¿Dar de alta a este paciente?',
         text: "Confirma su atención",
@@ -172,12 +190,26 @@ async function OpenPrescription(petId) {
     });
 
     if (result.isConfirmed) {
-        window.location.href = `/prescriptions/create/${petId}`;
-        
+            const response = await fetch(`/redSheet/discharge`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ petId, receptionId })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                Swal.fire(
+                    'Paciente dado de alta',
+                    'Se ha registrado la salida.'
+                );
+                window.location.href = `/prescriptions/create/${petId}`;
+            } else {
+                Swal.fire('Error', data.message || 'No se pudo dar de alta.', 'error');
+            }
     }
-
 }
-
 
 
 async function OpenSurgeries() {
