@@ -47,6 +47,7 @@ class AssignmentController extends Controller
         $user = auth()->user();
         $receptions = Reception::with(['admissionType', 'family', 'pet', 'vet', 'area'])
             ->where('reception_type_id', 2)
+            ->whereNull('exit_date')
             ->get();
 
         return DataTables::of($receptions)

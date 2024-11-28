@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Hospitalization;
 use App\Http\Requests\HospitalizationRequest;
+use App\Models\Reception;
 
 /**
  * Class HospitalizationController
@@ -82,5 +83,11 @@ class HospitalizationController extends Controller
 
         return redirect()->route('hospitalizations.index')
             ->with('success', 'Hospitalization deleted successfully');
+    }
+
+    public function historic(int $id){
+        $reception = Reception::find($id);
+
+        return view('hospitalization.historic', compact('reception'));
     }
 }

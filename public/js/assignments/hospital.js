@@ -57,6 +57,9 @@ $(document).ready(function () {
                     return `
                         <a type="button" href="${route('redsheet.entry', data.id)}" class="btn btn-sm text-primary">
                             <span class="mage--hospital-shield-fill"></span>
+                        </a>
+                        <a type="button" href="${route('hospitalization.historic', data.id)}" class="btn btn-sm text-primary">
+                            <span class="material-symbols--folder-eye-sharp"></span>
                         </a>`;
                 }
             },

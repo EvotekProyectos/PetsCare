@@ -111,8 +111,33 @@ class RedSheetController extends Controller
     public function recap(int $id)
     {
         $redsheets = RedSheet::with('vet', 'imaging', 'lab', 'service')->where('reception_id', $id)->get();
+        $surgeries = Surgery::with('surgery','vet')->where('reception_id', $id)->get();
 
-        return DataTables::of($redsheets) ->make(true);
+        // return DataTables::of($surgeries) ->make(true);
+        $combinedData = $surgeries->map(function ($surgery) use ($redsheets) {
+            $surgeryDate = \Carbon\Carbon::parse($surgery->date)->format('Y-m-d');
+
+            $date_count = 0;
+        
+            $matchingRedSheet = $redsheets->first(function ($redsheet) use ($surgeryDate) {
+                $redsheetDate = \Carbon\Carbon::parse($redsheet->created_at)->format('Y-m-d');
+                return $redsheetDate == $surgeryDate;  
+            });
+        
+            if ($matchingRedSheet) {
+                $date_count = $matchingRedSheet->day_count; 
+            }
+            $surgery->setAttribute('day_count', $date_count);
+        
+            return $surgery;
+        });
+
+        $allData = [
+            'surgeries' => $combinedData,
+            'redsheets' => $redsheets,
+        ];
+        
+        return DataTables::of($allData)->make(true);
 
     }
 }
