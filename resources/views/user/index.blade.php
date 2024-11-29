@@ -16,7 +16,7 @@
                                 <i class="fas fa-user"></i> Usuarios
                             </h4>
 
-                            <a href="{{ route('register') }}" class="btn btn-primary btn-sm rounded-4" data-placement="left">
+                            <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm rounded-4" data-placement="left">
                                 <i class="fas fa-plus"></i> CREAR NUEVO USUARIO
                             </a>
                         </div>
@@ -31,7 +31,7 @@
                     <div class="card-body">
                         <div class="row">
 
-                            <div class="col-12 col-lg-9">
+                            <div class="col-12">
                                 <div class="table-responsive">
                                     <table class="table table-striped table-hover responsive w-100" id="table">
                                         <thead class="thead table-primary text-uppercase">
@@ -48,14 +48,13 @@
                                     </table>
                                 </div>
                             </div>
-                            @can('ver permisos usuarios')
+                            {{-- @can('ver permisos usuarios')
                                 <div class="col-md-3 rounded-4 border border-4 border-primary-subtle p-3 text-center">
                                     <p id="textUserName" class="mb-0 text-black text-secondary fw-semibold">Nombre</p>
                                     <p class="mb-0 text-black">Cuenta con los siguientes permisos de acuerdo a su tipo de
                                         usuario:</p>
                                     <p id="textUserType" class="text-black fw-semibold">TIPO USUARIO</p>
                                     <form id="formPermissionCheck" action="" method="POST">
-                                        {{-- {{ method_field('PATCH') }} --}}
                                         @csrf
                                         @foreach ($permisos as $permiso)
                                             <div class="form-check text-start">
@@ -74,7 +73,7 @@
                                         </div>
                                     </form>
                                 </div>
-                            @endcan
+                            @endcan --}}
                         </div>
  
                     </div>

@@ -13,7 +13,7 @@ class FamilyPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user ->can("ver panel familias");
+        return $user->can("ver panel familias");
     }
 
     /**
@@ -29,7 +29,7 @@ class FamilyPolicy
      */
     public function create(User $user): bool
     {
-        return $user ->can("crear familias");
+        return $user->can("crear familias");
     }
 
     /**
@@ -37,7 +37,7 @@ class FamilyPolicy
      */
     public function update(User $user, Family $family): bool
     {
-        return $user ->can("editar familias");
+        return $user->can("editar familias");
     }
 
     /**
@@ -45,7 +45,7 @@ class FamilyPolicy
      */
     public function delete(User $user, Family $family): bool
     {
-        return $user ->can("eliminar familias");
+        return $user->can("eliminar familias");
     }
 
     /**

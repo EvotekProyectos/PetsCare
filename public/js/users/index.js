@@ -12,7 +12,7 @@ $(document).ready(function () {
             {
                 data: null,
                 render: function (data) {
-                    return data.roles.length >0 ? data.roles[0].name : 'Sin rol asignado';
+                    return data.roles.length > 0 ? data.roles[0].name.toUpperCase() : 'Sin rol asignado';
                 }
             },
             {
@@ -21,9 +21,6 @@ $(document).ready(function () {
                     return `
                         <a type="button" href="${route('users.edit', data.id)}" class="btn btn-sm text-primary">
                             <i class="fas fa-edit"></i>
-                        </a>
-                        <a type="button" class="btn btn-sm text-primary" onclick="getPermissions(${data.id})">
-                            <i class="fas fa-lock"></i>
                         </a>
                         <button type="button" class="btn btn-sm text-primary" onclick="showAlertWithCallback(() => deleteUser(${data.id}, table));">
                             <i class="fas fa-trash"></i>

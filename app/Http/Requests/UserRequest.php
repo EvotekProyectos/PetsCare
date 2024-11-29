@@ -21,9 +21,18 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-			'name' => 'required|string',
-			'email' => 'required|string',
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+            'role_name' => 'required'
         ];
+
+        if ($this->isMethod('patch') || $this->isMethod('put')) { // Para editar
+            $rules['email'] = 'required|email|max:255|unique:users,email,' . $this->route('user')->id;
+            $rules['password'] = 'nullable|string|min:8|confirmed'; // Permitir campos opcionales
+        }
+
+        return $rules;
     }
 }

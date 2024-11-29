@@ -13,7 +13,7 @@ class ShiftPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user ->can("ver panel turnos");
+        return $user->can("ver panel turnos");
     }
 
     /**
@@ -29,7 +29,7 @@ class ShiftPolicy
      */
     public function create(User $user): bool
     {
-        return $user ->can("crear turnos");
+        return $user->can("crear turnos");
     }
 
     /**
@@ -37,7 +37,7 @@ class ShiftPolicy
      */
     public function update(User $user, Shift $shift): bool
     {
-        return $user ->can("editar turnos");
+        return $user->can("editar turnos");
     }
 
     /**
@@ -45,7 +45,7 @@ class ShiftPolicy
      */
     public function delete(User $user, Shift $shift): bool
     {
-        return $user ->can("eliminar turnos");
+        return $user->can("eliminar turnos");
     }
 
     /**

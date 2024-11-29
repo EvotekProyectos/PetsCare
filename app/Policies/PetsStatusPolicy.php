@@ -13,7 +13,7 @@ class PetsStatusPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user ->can("ver panel estados mascotas");
+        return $user->can("ver panel estados mascotas");
     }
 
     /**
@@ -29,7 +29,7 @@ class PetsStatusPolicy
      */
     public function create(User $user): bool
     {
-        return $user ->can("crear estados mascotas");
+        return $user->can("crear estados mascotas");
     }
 
     /**
@@ -37,7 +37,7 @@ class PetsStatusPolicy
      */
     public function update(User $user, PetsStatus $petsStatus): bool
     {
-        return $user ->can("editar estados mascotas");
+        return $user->can("editar estados mascotas");
     }
 
     /**
@@ -45,7 +45,7 @@ class PetsStatusPolicy
      */
     public function delete(User $user, PetsStatus $petsStatus): bool
     {
-        return $user ->can("eliminar estados mascotas");
+        return $user->can("eliminar estados mascotas");
     }
 
     /**

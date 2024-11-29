@@ -19,171 +19,173 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create users permissions
-        Permission::create(['name' => 'ver panel usuarios']);
-        Permission::create(['name' => 'crear usuarios']);
-        Permission::create(['name' => 'editar usuarios']);
-        Permission::create(['name' => 'eliminar usuarios']);
+        Permission::create(['name' => 'ver panel usuarios', 'type' => 'usuarios']);
+        Permission::create(['name' => 'crear usuarios', 'type' => 'usuarios']);
+        Permission::create(['name' => 'editar usuarios', 'type' => 'usuarios']);
+        Permission::create(['name' => 'eliminar usuarios', 'type' => 'usuarios']);
 
         // create rooms permissions
-        Permission::create(['name' => 'ver panel consultorios']);
-        Permission::create(['name' => 'crear consultorios']);
-        Permission::create(['name' => 'editar consultorios']);
-        Permission::create(['name' => 'eliminar consultorios']);
+        Permission::create(['name' => 'ver panel consultorios', 'type' => 'consultorios']);
+        Permission::create(['name' => 'crear consultorios', 'type' => 'consultorios']);
+        Permission::create(['name' => 'editar consultorios', 'type' => 'consultorios']);
+        Permission::create(['name' => 'eliminar consultorios', 'type' => 'consultorios']);
 
         // create permissions 
-        Permission::create(['name' => 'ver permisos usuarios']);
-        Permission::create(['name' => 'editar permisos usuarios']);
+        Permission::create(['name' => 'ver permisos usuarios', 'type' => 'permisos']);
+        Permission::create(['name' => 'editar permisos usuarios', 'type' => 'permisos']);
 
         // create logs permissions
-        Permission::create(['name' => 'ver panel bitácora']);
+        Permission::create(['name' => 'ver panel bitácora', 'type' => 'bitácora']);
 
         // create reasons permissions
-        Permission::create(['name' => 'ver panel motivos']);
-        Permission::create(['name' => 'crear motivos']);
-        Permission::create(['name' => 'editar motivos']);
-        Permission::create(['name' => 'eliminar motivos']);
+        Permission::create(['name' => 'ver panel motivos', 'type' => 'motivos']);
+        Permission::create(['name' => 'crear motivos', 'type' => 'motivos']);
+        Permission::create(['name' => 'editar motivos', 'type' => 'motivos']);
+        Permission::create(['name' => 'eliminar motivos', 'type' => 'motivos']);
 
         // create areas permissions
-        Permission::create(['name' => 'ver panel areas']);
-        Permission::create(['name' => 'crear areas']);
-        Permission::create(['name' => 'editar areas']);
-        Permission::create(['name' => 'eliminar areas']);
+        Permission::create(['name' => 'ver panel areas', 'type' => 'áreas']);
+        Permission::create(['name' => 'crear areas', 'type' => 'áreas']);
+        Permission::create(['name' => 'editar areas', 'type' => 'áreas']);
+        Permission::create(['name' => 'eliminar areas', 'type' => 'áreas']);
 
         // create attention statuses permissions
-        Permission::create(['name' => 'ver panel estados de atención']);
-        Permission::create(['name' => 'crear estados de atención']);
-        Permission::create(['name' => 'editar estados de atención']);
-        Permission::create(['name' => 'eliminar estados de atención']);
+        Permission::create(['name' => 'ver panel estados de atención', 'type' => 'estados de atención']);
+        Permission::create(['name' => 'crear estados de atención', 'type' => 'estados de atención']);
+        Permission::create(['name' => 'editar estados de atención', 'type' => 'estados de atención']);
+        Permission::create(['name' => 'eliminar estados de atención', 'type' => 'estados de atención']);
 
         // create reception types permissions
-        Permission::create(['name' => 'ver panel tipos de recepción']);
-        Permission::create(['name' => 'crear tipos de recepción']);
-        Permission::create(['name' => 'editar tipos de recepción']);
-        Permission::create(['name' => 'eliminar tipos de recepción']);
+        Permission::create(['name' => 'ver panel tipos de recepción', 'type' => 'tipos de recepción']);
+        Permission::create(['name' => 'crear tipos de recepción', 'type' => 'tipos de recepción']);
+        Permission::create(['name' => 'editar tipos de recepción', 'type' => 'tipos de recepción']);
+        Permission::create(['name' => 'eliminar tipos de recepción', 'type' => 'tipos de recepción']);
 
         // create genres permissions
-        Permission::create(['name' => 'ver panel generos']);
-        Permission::create(['name' => 'crear generos']);
-        Permission::create(['name' => 'editar generos']);
-        Permission::create(['name' => 'eliminar generos']);
+        Permission::create(['name' => 'ver panel generos', 'type' => 'géneros']);
+        Permission::create(['name' => 'crear generos', 'type' => 'géneros']);
+        Permission::create(['name' => 'editar generos', 'type' => 'géneros']);
+        Permission::create(['name' => 'eliminar generos', 'type' => 'géneros']);
 
         //cretae reproductive status perissions
-        Permission::create(['name' => 'ver panel estados reproductivos']);
-        Permission::create(['name' => 'crear estados reproductivos']);
-        Permission::create(['name' => 'editar estados reproductivos']);
-        Permission::create(['name' => 'eliminar estados reproductivos']);
+        Permission::create(['name' => 'ver panel estados reproductivos', 'type' => 'estados reproductivos']);
+        Permission::create(['name' => 'crear estados reproductivos', 'type' => 'estados reproductivos']);
+        Permission::create(['name' => 'editar estados reproductivos', 'type' => 'estados reproductivos']);
+        Permission::create(['name' => 'eliminar estados reproductivos', 'type' => 'estados reproductivos']);
         // create admission types permissions
-        Permission::create(['name' => 'ver panel tipos de ingreso']);
-        Permission::create(['name' => 'crear tipos de ingreso']);
-        Permission::create(['name' => 'editar tipos de ingreso']);
-        Permission::create(['name' => 'eliminar tipos de ingreso']);
+        Permission::create(['name' => 'ver panel tipos de ingreso', 'type' => 'tipos de ingreso']);
+        Permission::create(['name' => 'crear tipos de ingreso', 'type' => 'tipos de ingreso']);
+        Permission::create(['name' => 'editar tipos de ingreso', 'type' => 'tipos de ingreso']);
+        Permission::create(['name' => 'eliminar tipos de ingreso', 'type' => 'tipos de ingreso']);
 
         //create family classification permissions
-        Permission::create(['name' => 'ver panel clasificaciones familias']);
-        Permission::create(['name' => 'crear clasificaciones familias']);
-        Permission::create(['name' => 'editar clasificaciones familias']);
-        Permission::create(['name' => 'eliminar clasificaciones familias']);
+        Permission::create(['name' => 'ver panel clasificaciones familias', 'type' => 'clasificacion de familias']);
+        Permission::create(['name' => 'crear clasificaciones familias', 'type' => 'clasificacion de familias']);
+        Permission::create(['name' => 'editar clasificaciones familias', 'type' => 'clasificacion de familias']);
+        Permission::create(['name' => 'eliminar clasificaciones familias', 'type' => 'clasificacion de familias']);
 
         //create pet classificaion permissions
-        Permission::create(['name' => 'ver panel clasificacion mascotas']);
-        Permission::create(['name' => 'crear clasificacion mascotas']);
-        Permission::create(['name' => 'editar clasificacion mascotas']);
-        Permission::create(['name' => 'eliminar clasificacion mascotas']);
+        Permission::create(['name' => 'ver panel clasificacion mascotas', 'type' => 'clasificación de mascotas']);
+        Permission::create(['name' => 'crear clasificacion mascotas', 'type' => 'clasificación de mascotas']);
+        Permission::create(['name' => 'editar clasificacion mascotas', 'type' => 'clasificación de mascotas']);
+        Permission::create(['name' => 'eliminar clasificacion mascotas', 'type' => 'clasificación de mascotas']);
 
         //create shifts permissions
-        Permission::create(['name' => 'ver panel turnos']);
-        Permission::create(['name' => 'crear turnos']);
-        Permission::create(['name' => 'editar turnos']);
-        Permission::create(['name' => 'eliminar turnos']);
+        Permission::create(['name' => 'ver panel turnos', 'type' => 'turnos']);
+        Permission::create(['name' => 'crear turnos', 'type' => 'turnos']);
+        Permission::create(['name' => 'editar turnos', 'type' => 'turnos']);
+        Permission::create(['name' => 'eliminar turnos', 'type' => 'turnos']);
 
         //create pets statuses permissions
-        Permission::create(['name' => 'ver panel estados mascotas']);
-        Permission::create(['name' => 'crear estados mascotas']);
-        Permission::create(['name' => 'editar estados mascotas']);
-        Permission::create(['name' => 'eliminar estados mascotas']);
+        Permission::create(['name' => 'ver panel estados mascotas', 'type' => 'estado de mascotas']);
+        Permission::create(['name' => 'crear estados mascotas', 'type' => 'estado de mascotas']);
+        Permission::create(['name' => 'editar estados mascotas', 'type' => 'estado de mascotas']);
+        Permission::create(['name' => 'eliminar estados mascotas', 'type' => 'estado de mascotas']);
 
         //create families permissions
-        Permission::create(['name' => 'ver panel familias']);
-        Permission::create(['name' => 'crear familias']);
-        Permission::create(['name' => 'editar familias']);
-        Permission::create(['name' => 'eliminar familias']);
+        Permission::create(['name' => 'ver panel familias', 'type' => 'familias']);
+        Permission::create(['name' => 'crear familias', 'type' => 'familias']);
+        Permission::create(['name' => 'editar familias', 'type' => 'familias']);
+        Permission::create(['name' => 'eliminar familias', 'type' => 'familias']);
 
         //create cover areas permissions
-        Permission::create(['name' => 'ver panel areas a cubrir']);
-        Permission::create(['name' => 'crear areas a cubrir']);
-        Permission::create(['name' => 'editar areas a cubrir']);
-        Permission::create(['name' => 'eliminar areas a cubrir']);
+        Permission::create(['name' => 'ver panel areas a cubrir', 'type' => 'áreas a cubrir']);
+        Permission::create(['name' => 'crear areas a cubrir', 'type' => 'áreas a cubrir']);
+        Permission::create(['name' => 'editar areas a cubrir', 'type' => 'áreas a cubrir']);
+        Permission::create(['name' => 'eliminar areas a cubrir', 'type' => 'áreas a cubrir']);
 
         //create schedules permissions
-        Permission::create(['name' => 'ver panel horarios']);
-        Permission::create(['name' => 'crear horarios']);
-        Permission::create(['name' => 'editar horarios']);
-        Permission::create(['name' => 'eliminar horarios']);
+        Permission::create(['name' => 'ver panel horarios', 'type' => 'horarios']);
+        Permission::create(['name' => 'crear horarios', 'type' => 'horarios']);
+        Permission::create(['name' => 'editar horarios', 'type' => 'horarios']);
+        Permission::create(['name' => 'eliminar horarios', 'type' => 'horarios']);
 
         //permisos recepcion 
-        Permission::create(['name' => 'ver panel recepciones']);
-        Permission::create(['name' => 'crear recepciones']);
-        Permission::create(['name' => 'editar recepciones']);
-        Permission::create(['name' => 'eliminar recepciones']);
+        Permission::create(['name' => 'ver panel recepciones', 'type' => 'recepciones']);
+        Permission::create(['name' => 'crear recepciones', 'type' => 'recepciones']);
+        Permission::create(['name' => 'editar recepciones', 'type' => 'recepciones']);
+        Permission::create(['name' => 'eliminar recepciones', 'type' => 'recepciones']);
 
         //permisos recepcion 
-        Permission::create(['name' => 'ver panel consultas']);
-        Permission::create(['name' => 'crear consultas']);
-        Permission::create(['name' => 'editar consultas']);
-        Permission::create(['name' => 'eliminar consultas']);
-
-        // roles
-        $role = Role::create(['name' => 'admin']);
-        // $role->givePermissionTo(Permission::all());
+        Permission::create(['name' => 'ver panel consultas', 'type' => 'consultas']);
+        Permission::create(['name' => 'crear consultas', 'type' => 'consultas']);
+        Permission::create(['name' => 'editar consultas', 'type' => 'consultas']);
+        Permission::create(['name' => 'eliminar consultas', 'type' => 'consultas']);
 
         //assignments permissions
-        Permission::create(['name' => 'ver panel asignaciones']);
+        Permission::create(['name' => 'ver panel asignaciones', 'type' => 'asignaciones']);
 
         //prescriptions permissions
-        Permission::create(['name' => 'ver panel recetas']);
-        Permission::create(['name' => 'crear recetas']);
-        Permission::create(['name' => 'editar recetas']);
-        Permission::create(['name' => 'eliminar recetas']);
+        Permission::create(['name' => 'ver panel recetas', 'type' => 'recetas']);
+        Permission::create(['name' => 'crear recetas', 'type' => 'recetas']);
+        Permission::create(['name' => 'editar recetas', 'type' => 'recetas']);
+        Permission::create(['name' => 'eliminar recetas', 'type' => 'recetas']);
 
-        ////services
-        Permission::create(['name' => 'ver panel servicios']);
-        Permission::create(['name' => 'crear servicios']);
-        Permission::create(['name' => 'editar servicios']);
-        Permission::create(['name' => 'eliminar servicios']);
+        //services
+        Permission::create(['name' => 'ver panel servicios', 'type' => 'servicios']);
+        Permission::create(['name' => 'crear servicios', 'type' => 'servicios']);
+        Permission::create(['name' => 'editar servicios', 'type' => 'servicios']);
+        Permission::create(['name' => 'eliminar servicios', 'type' => 'servicios']);
 
-        ////services
-        Permission::create(['name' => 'ver panel cartilla vacunación']);
-        Permission::create(['name' => 'crear cartilla vacunación']);
-        Permission::create(['name' => 'editar cartilla vacunación']);
-        Permission::create(['name' => 'eliminar cartilla vacunación']);
+        //services
+        Permission::create(['name' => 'ver panel cartilla vacunación', 'type' => 'cartilla vacunación']);
+        Permission::create(['name' => 'crear cartilla vacunación', 'type' => 'cartilla vacunación']);
+        Permission::create(['name' => 'editar cartilla vacunación', 'type' => 'cartilla vacunación']);
+        Permission::create(['name' => 'eliminar cartilla vacunación', 'type' => 'cartilla vacunación']);
 
-        ////hospitalizations
-        Permission::create(['name' => 'ver panel hospitalizaciones']);
-        Permission::create(['name' => 'crear hospitalizaciones']);
-        Permission::create(['name' => 'editar hospitalizaciones']);
-        Permission::create(['name' => 'eliminar hospitalizaciones']);
+        //hospitalizations
+        Permission::create(['name' => 'ver panel hospitalizaciones', 'type' => 'hospitalizaciones']);
+        Permission::create(['name' => 'crear hospitalizaciones', 'type' => 'hospitalizaciones']);
+        Permission::create(['name' => 'editar hospitalizaciones', 'type' => 'hospitalizaciones']);
+        Permission::create(['name' => 'eliminar hospitalizaciones', 'type' => 'hospitalizaciones']);
 
-        ////red sheets
-        Permission::create(['name' => 'ver panel hoja roja']);
-        Permission::create(['name' => 'crear hoja roja']);
-        Permission::create(['name' => 'editar hoja roja']);
-        Permission::create(['name' => 'eliminar hoja roja']);
+        //red sheets
+        Permission::create(['name' => 'ver panel hoja roja', 'type' => 'hoja roja']);
+        Permission::create(['name' => 'crear hoja roja', 'type' => 'hoja roja']);
+        Permission::create(['name' => 'editar hoja roja', 'type' => 'hoja roja']);
+        Permission::create(['name' => 'eliminar hoja roja', 'type' => 'hoja roja']);
 
-        ////Surgery
-        Permission::create(['name' => 'ver panel cirugías']);
-        Permission::create(['name' => 'crear cirugía']);
-        Permission::create(['name' => 'editar cirugía']);
+        //Surgery
+        Permission::create(['name' => 'ver panel cirugías', 'type' => 'cirugías']);
+        Permission::create(['name' => 'crear cirugía', 'type' => 'cirugías']);
+        Permission::create(['name' => 'editar cirugía', 'type' => 'cirugías']);
 
-        ////follow ups
-        Permission::create(['name' => 'ver panel seguimientos']);
-        Permission::create(['name' => 'crear seguimientos']);
-        Permission::create(['name' => 'editar seguimientos']);
-        Permission::create(['name' => 'eliminar seguimientos']);
+        //follow ups
+        Permission::create(['name' => 'ver panel seguimientos', 'type' => 'seguimientos']);
+        Permission::create(['name' => 'crear seguimientos', 'type' => 'seguimientos']);
+        Permission::create(['name' => 'editar seguimientos', 'type' => 'seguimientos']);
+        Permission::create(['name' => 'eliminar seguimientos', 'type' => 'seguimientos']);
 
-        ////red sheets
-        Permission::create(['name' => 'ver panel servicios consultas']);
-        Permission::create(['name' => 'crear servicios consultas']);
-        Permission::create(['name' => 'editar servicios consultas']);
-        Permission::create(['name' => 'eliminar servicios consultas']);
+        //red sheets
+        Permission::create(['name' => 'ver panel servicios consultas', 'type' => 'sevicios consultas']);
+        Permission::create(['name' => 'crear servicios consultas', 'type' => 'sevicios consultas']);
+        Permission::create(['name' => 'editar servicios consultas', 'type' => 'sevicios consultas']);
+        Permission::create(['name' => 'eliminar servicios consultas', 'type' => 'sevicios consultas']);
+
+        // roles
+        $role = Role::create(['name' => 'administrador']);
+        $role->givePermissionTo(Permission::all());
+        $role = Role::create(['name' => 'recepcionista']);
+        $role = Role::create(['name' => 'medico']);
     }
 }

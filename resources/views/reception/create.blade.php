@@ -1,10 +1,9 @@
 @extends('layouts.app')
 
-@section('template_title')
-    {{ __('Create') }} Reception
-@endsection
+@section('home', 'active border-start border-3 border-primary') 
 
 @push('styles')
+
 <link rel="stylesheet" href="{{ asset('css/receptions/form.css') }}">
 @endpush
 
