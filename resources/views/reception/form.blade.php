@@ -24,7 +24,7 @@
                         {{ old('reception_type_id', $reception?->reception_type_id) == 1 ? 'checked' : '' }}
                         onchange="togglee(this)">
 
-                    <label for="consulta" class="radio-label">
+                    <label for="consulta" class="radio-label shadow border-0">
                         <img src="{{ asset('img/consulta.png') }}" alt="Foto Mascota" id="preview" class="img-fixed"
                             style="width: 25px; height: 25px; object-fit: cover; ">
                         </span> Consulta</label>
@@ -37,7 +37,7 @@
                         {{ old('reception_type_id', $reception?->reception_type_id) == 2 ? 'checked' : '' }}
                         onchange="togglee(this)">
 
-                    <label for="hospital" class="radio-label">
+                    <label for="hospital" class="radio-label  shadow border-0">
                         <img src="{{ asset('img/hospital.png') }}" alt="Foto hospital" class="img-fixed"
                             style="width: 25px; height: 25px; object-fit: cover; ">
                         <span>Hospitalización</label>
@@ -49,7 +49,7 @@
                     <input type="radio" id="estetica" name="reception_type_id" value="3"
                         {{ old('reception_type_id', $reception?->reception_type_id) == 3 ? 'checked' : '' }}
                         onchange="togglee(this)">
-                    <label for="estetica" class="radio-label">
+                    <label for="estetica" class="radio-label  shadow border-0">
                         <img src="{{ asset('img/estetica.png') }}" alt="Foto estetica" class="img-fixed"
                             style="width: 25px; height: 25px; object-fit: cover; ">
                         <span>
@@ -78,7 +78,7 @@
                     <input type="radio" id="hotel" name="reception_type_id" value="4"
                         {{ old('reception_type_id', $reception?->reception_type_id) == 4 ? 'checked' : '' }}
                         onchange="togglee(this)">
-                    <label for="hotel" class="radio-label">
+                    <label for="hotel" class="radio-label  shadow border-0">
                         <img src="{{ asset('img/hotel.png') }}" alt="Foto estetica" class="img-fixed"
                             style="width: 25px; height: 25px; object-fit: cover; ">
                         <span> Hotel</label>
@@ -90,7 +90,7 @@
                     <input type="radio" id="cremacion" name="reception_type_id" value="5"
                         {{ old('reception_type_id', $reception?->reception_type_id) == 5 ? 'checked' : '' }}
                         onchange="togglee(this)">
-                    <label for="cremacion" class="radio-label">
+                    <label for="cremacion" class="radio-label  shadow border-0">
                         <img src="{{ asset('img/cremacion.png') }}" alt="Foto estetica" class="img-fixed"
                             style="width: 25px; height: 25px; object-fit: cover; ">
                         <span> Cremación</label>
@@ -117,7 +117,7 @@
                 </div>
             </div>
 
-             <div class="col-md-4">
+            <div class="col-md-4">
                 <div class="form-group mb-2">
                     <label for="family_id" class="form-label">FAMILIA/PROPIETARIO</label>
                     <div class="input-group mb-3">
@@ -136,7 +136,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-md-4">
                 <div class="form-group mb-2">
                     <label for="pet_id" class="form-label">MASCOTA</label>
@@ -145,20 +145,20 @@
                             <span class="ic--twotone-pets"></span>
                         </span>
                         <select name="pet_id" class="form-control select2 @error('pet_id') is-invalid @enderror"
-                                id="pet_id" onchange="getFamily(this.value)" style="width: 100%;">
+                            id="pet_id" onchange="getFamily(this.value)" style="width: 100%;">
                             <option value="">Selecciona la mascota</option>
                             @foreach ($pets as $pet)
-                                <option value="{{ $pet->id }}" 
+                                <option value="{{ $pet->id }}"
                                     {{ old('pet_id', $reception?->pet_id) == $pet->id ? 'selected' : '' }}>
                                     {{ $pet->name }} {{ $pet->number_chip }}
                                 </option>
-                            @endforeach 
+                            @endforeach
                         </select>
                     </div>
                 </div>
             </div>
 
-          
+
             <div class="col-md-4" id="adm" style="display: none">
                 <div class="form-group mb-2">
                     <label for="name" class="form-label">ADMISIÓN</label>

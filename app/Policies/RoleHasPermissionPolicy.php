@@ -2,26 +2,26 @@
 
 namespace App\Policies;
 
-use App\Models\Room;
+use App\Models\RoleHasPermission;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class RoomPolicy
+class RoleHasPermissionPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $user->can("ver panel consultorios");
+        return $user->hasPermissionTo('ver permisos usuarios');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Room $room): bool
+    public function view(User $user, RoleHasPermission $roleHasPermission): bool
     {
-        return false;
+        //
     }
 
     /**
@@ -29,38 +29,38 @@ class RoomPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can("crear consultorios");
+        
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Room $room): bool
+    public function update(User $user): bool
     {
-        return $user->can("editar consultorios");
+        return $user->hasPermissionTo('editar permisos usuarios');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Room $room): bool
+    public function delete(User $user, RoleHasPermission $roleHasPermission): bool
     {
-        return $user->can("eliminar consultorios");
+        //
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Room $room): bool
+    public function restore(User $user, RoleHasPermission $roleHasPermission): bool
     {
-        return false;
+        //
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Room $room): bool
+    public function forceDelete(User $user, RoleHasPermission $roleHasPermission): bool
     {
-        return false;
+        //
     }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Spatie\Permission\Models\Permission;
 use Yajra\DataTables\Facades\DataTables;
@@ -59,7 +61,8 @@ class UserController extends Controller
     {
         $user = new User();
         $this->authorize("create", User::class);
-        return view('user.create', compact('user'));
+        $roles = Role::all();
+        return view('user.create', compact('user', 'roles'));
     }
 
     /**
@@ -67,10 +70,11 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-        User::create($request->validated());
+        $user = User::create($request->validated());
+        $user->syncRoles($request->role_name);
 
         return redirect()->route('users.index')
-            ->with('success', 'User created successfully.');
+            ->with('success', 'Usuario creado con éxito.');
     }
 
     /**
@@ -88,9 +92,10 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user = User::find($id);
+        $user = User::with('roles')->findOrFail($id);
         $this->authorize("update", User::class);
-        return view('user.edit', compact('user'));
+        $roles = Role::all();
+        return view('user.edit', compact('user', 'roles'));
     }
 
     /**
@@ -99,10 +104,16 @@ class UserController extends Controller
     public function update(UserRequest $request, User $user)
     {
         $this->authorize("update", $user);
-        $user->update($request->validated());
+        $data = $request->validated();
+        // dd($data['password']);
 
+        if (empty($data['password'])) {
+            unset($data['password']);
+        }
+        $user->update($data);
+        $user->syncRoles($request->role_name);
         return redirect()->route('users.index')
-            ->with('success', 'User updated successfully');
+            ->with('success', 'Usuario actualizado con éxito');
     }
 
     public function destroy($id)
@@ -113,6 +124,6 @@ class UserController extends Controller
 
         return response()->json($user);
         // return redirect()->route('users.index')
-        //     ->with('success', 'User deleted successfully');
+        //     ->with('success', 'User deleted con éxito');
     }
 }
