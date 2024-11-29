@@ -54,8 +54,10 @@
     --bs-danger-text-emphasis: #58151c;
     --bs-light-text-emphasis: #495057;
     --bs-dark-text-emphasis: #495057;
-    --bs-primary-bg-subtle: #DDF7FF; /* figma */
-    --bs-green-bg-subtle: #D3F0F3; /* figma */
+    --bs-primary-bg-subtle: #DDF7FF;
+    /* figma */
+    --bs-green-bg-subtle: #D3F0F3;
+    /* figma */
     --bs-secondary-bg-subtle: #e2e3e5;
     --bs-success-bg-subtle: #d1e7dd;
     --bs-info-bg-subtle: #cff4fc;
@@ -2692,7 +2694,7 @@ textarea.form-control-lg {
     padding-top: .25rem;
     padding-bottom: .25rem;
     padding-left: .5rem;
-    font-size: .875rem;
+    font-size: .75rem;
     border-radius: var(--bs-border-radius-sm)
 }
 
@@ -3549,6 +3551,7 @@ fieldset:disabled .btn {
     --bs-btn-disabled-bg: #DDF7FF;
     --bs-btn-disabled-border-color: #DDF7FF
 }
+
 .btn-primaryGreen {
     --bs-btn-color: #D3F0F3;
     --bs-btn-bg: #DDF7FF;
@@ -3703,8 +3706,8 @@ fieldset:disabled .btn {
 }
 
 .btn-costum-services:hover .custom-badge-pill {
-  background-color: #ffffff !important; 
-  color: #000000; 
+    background-color: #ffffff !important;
+    color: #000000;
 }
 
 .btn-outline-primary {
@@ -9516,7 +9519,7 @@ fieldset:disabled .btn {
 
 .text-primary1 {
     /* --bs-text-opacity: 1; */
-    color: #007C84 
+    color: #007C84
 }
 
 .text-secondary {
@@ -9822,16 +9825,17 @@ fieldset:disabled .btn {
     --bs-bg-opacity: 1;
     background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity)) !important
 }
+
 .custom-badge-pill {
-    background-color: #D3F0F3 !important; 
-    color: #000000; 
-    border-radius: 50rem; 
-    padding: 0.5em 1em; 
+    background-color: #D3F0F3 !important;
+    color: #000000;
+    border-radius: 50rem;
+    padding: 0.5em 1em;
 }
 
 .custom-badge-pill:hover {
-    background-color: #ffffff !important; 
-    color: #000000; 
+    background-color: #ffffff !important;
+    color: #000000;
 }
 
 .bg-secondary {
@@ -9919,8 +9923,25 @@ fieldset:disabled .btn {
     --bs-bg-opacity: 1
 }
 
-.bg-primary-soft{
+.bg-primary-soft {
     background-color: rgba(234, 238, 244, .4) !important
+}
+
+.megamenu-primary {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: transparent
+    --bs-btn-border-color: #fff;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--bs-primary-bg-subtle);
+    --bs-btn-hover-border-color: var(--bs-primary-bg-subtle);
+    --bs-btn-focus-shadow-rgb: 49, 132, 253;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: var(--bs-primary-bg-subtle);
+    --bs-btn-active-border-color: var(--bs-primary-bg-subtle);
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #0455A0;
+    --bs-btn-disabled-border-color: #0455A0
 }
 
 .bg-primary-subtle {
@@ -9934,6 +9955,10 @@ fieldset:disabled .btn {
 
 .bg-success-subtle {
     background-color: var(--bs-success-bg-subtle) !important
+}
+
+.bg-success-soft {
+    background-color: rgba(234, 243, 244, .4) !important
 }
 
 .bg-info-subtle {

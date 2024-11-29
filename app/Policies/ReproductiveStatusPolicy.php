@@ -13,7 +13,7 @@ class ReproductiveStatusPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user ->can("ver panel estados reproductivos");
+        return $user->can("ver panel estados reproductivos");
     }
 
     /**
@@ -29,7 +29,7 @@ class ReproductiveStatusPolicy
      */
     public function create(User $user): bool
     {
-        return $user ->can("crear estados reproductivos");
+        return $user->can("crear estados reproductivos");
     }
 
     /**
@@ -37,7 +37,7 @@ class ReproductiveStatusPolicy
      */
     public function update(User $user, ReproductiveStatus $reproductiveStatus): bool
     {
-        return $user ->can("editar estados reproductivos");
+        return $user->can("editar estados reproductivos");
     }
 
     /**
@@ -45,7 +45,7 @@ class ReproductiveStatusPolicy
      */
     public function delete(User $user, ReproductiveStatus $reproductiveStatus): bool
     {
-        return $user ->can("eliminar estados reproductivos");
+        return $user->can("eliminar estados reproductivos");
     }
 
     /**

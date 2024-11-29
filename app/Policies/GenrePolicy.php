@@ -13,7 +13,7 @@ class GenrePolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user ->can("ver panel generos");
+        return $user->can("ver panel generos");
     }
 
     /**
@@ -29,7 +29,7 @@ class GenrePolicy
      */
     public function create(User $user): bool
     {
-        return $user ->can("crear generos");
+        return $user->can("crear generos");
     }
 
     /**
@@ -37,7 +37,7 @@ class GenrePolicy
      */
     public function update(User $user, Genre $genre): bool
     {
-        return $user ->can("editar generos");
+        return $user->can("editar generos");
     }
 
     /**
@@ -45,7 +45,7 @@ class GenrePolicy
      */
     public function delete(User $user, Genre $genre): bool
     {
-        return $user ->can("eliminar generos");
+        return $user->can("eliminar generos");
     }
 
     /**

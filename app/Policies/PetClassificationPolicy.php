@@ -13,7 +13,7 @@ class PetClassificationPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user ->can("ver panel clasificacion mascotas");
+        return $user->can("ver panel clasificacion mascotas");
     }
 
     /**
@@ -29,7 +29,7 @@ class PetClassificationPolicy
      */
     public function create(User $user): bool
     {
-        return $user ->can("crear clasificacion mascotas");
+        return $user->can("crear clasificacion mascotas");
     }
 
     /**
@@ -37,7 +37,7 @@ class PetClassificationPolicy
      */
     public function update(User $user, PetClassification $petClassification): bool
     {
-        return $user ->can("editar clasificacion mascotas");
+        return $user->can("editar clasificacion mascotas");
     }
 
     /**
@@ -45,7 +45,7 @@ class PetClassificationPolicy
      */
     public function delete(User $user, PetClassification $petClassification): bool
     {
-        return $user ->can("eliminar clasificacion mascotas");
+        return $user->can("eliminar clasificacion mascotas");
     }
 
     /**

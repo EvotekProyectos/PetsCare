@@ -13,7 +13,7 @@ class FamClassificationPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user ->can("ver panel clasificaciones familias");
+        return $user->can("ver panel clasificaciones familias");
     }
 
     /**
@@ -29,7 +29,7 @@ class FamClassificationPolicy
      */
     public function create(User $user): bool
     {
-        return $user ->can("crear clasificaciones familias");
+        return $user->can("crear clasificaciones familias");
     }
 
     /**
@@ -37,7 +37,7 @@ class FamClassificationPolicy
      */
     public function update(User $user, FamClassification $famClassification): bool
     {
-        return $user ->can("editar clasificaciones familias");
+        return $user->can("editar clasificaciones familias");
     }
 
     /**
@@ -45,7 +45,7 @@ class FamClassificationPolicy
      */
     public function delete(User $user, FamClassification $famClassification): bool
     {
-        return $user ->can("eliminar clasificaciones familias");
+        return $user->can("eliminar clasificaciones familias");
     }
 
     /**

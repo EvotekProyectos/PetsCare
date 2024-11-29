@@ -13,7 +13,7 @@ class SchedulePolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user ->can("ver panel horarios");
+        return $user->can("ver panel horarios");
     }
 
     /**
@@ -29,7 +29,7 @@ class SchedulePolicy
      */
     public function create(User $user): bool
     {
-        return $user ->can("crear horarios");
+        return $user->can("crear horarios");
     }
 
     /**
@@ -37,7 +37,7 @@ class SchedulePolicy
      */
     public function update(User $user, Schedule $schedule): bool
     {
-        return $user ->can("editar horarios");
+        return $user->can("editar horarios");
     }
 
     /**
@@ -45,7 +45,7 @@ class SchedulePolicy
      */
     public function delete(User $user, Schedule $schedule): bool
     {
-        return $user ->can("eliminar horarios");
+        return $user->can("eliminar horarios");
     }
 
     /**

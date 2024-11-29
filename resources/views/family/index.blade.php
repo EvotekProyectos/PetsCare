@@ -4,7 +4,7 @@
     Family
 @endsection
 
-
+@section('families', 'active border-start border-3 border-primary') 
 
 @section('content')
     <div class="container-fluid">

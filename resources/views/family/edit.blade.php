@@ -3,7 +3,7 @@
 @section('template_title')
     {{ __('Update') }} Family
 @endsection
-
+@section('families', 'active border-start border-3 border-primary') 
 @section('content')
     <section class="container-fluid">
         <div class="row">
