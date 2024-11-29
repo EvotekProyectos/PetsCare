@@ -52,15 +52,15 @@ class Surgery extends Model
     {
         return $this->belongsTo(\App\Models\Reception::class, 'reception_id', 'id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function service()
+    public function surgery()
     {
         return $this->belongsTo(\App\Models\ProductType::class, 'product_type_id', 'id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -68,6 +68,9 @@ class Surgery extends Model
     {
         return $this->belongsTo(\App\Models\User::class, 'vet_id', 'id');
     }
-    
 
+    public function redSheet()
+    {
+        return $this->belongsTo(RedSheet::class, 'reception_id', 'reception_id');
+    }
 }

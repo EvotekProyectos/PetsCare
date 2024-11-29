@@ -103,7 +103,7 @@ class SurgeryController extends Controller
 
     public function entry($id)
     {
-        $surgery = Surgery::with('vet', 'service')->where('reception_id', $id)->get();
+        $surgery = Surgery::with('vet', 'surgery')->where('reception_id', $id)->get();
 
         return DataTables::of($surgery) ->make(true);
     }

@@ -1,16 +1,3 @@
-function fetchAndRenderData() {
-    $.ajax({
-        url: route('red-sheets.recap', Reception_Id),
-        method: 'GET',
-        success: function (response) {
-            // Pass response data to the function for rendering
-            renderData(response.data);
-        },
-        error: function (error) {
-            console.error("Error fetching data:", error);
-        }
-    });
-}
 window.onload = function () {
     fetchAndRenderData()
     if (Pic_id !== null) {
@@ -26,6 +13,153 @@ window.onload = function () {
     // document.getElementById("time").value = `${hours}:${minutes}`;
 
 }
+
+function fetchAndRenderData() {
+    $.ajax({
+        url: route('red-sheets.recap', Reception_Id),
+        method: 'GET',
+        success: function (response) {
+            const Data = response.data.flat(); 
+            const normalizedData = normalizeData(Data); 
+            renderData(normalizedData); 
+        },
+        error: function (error) {
+            console.error("Error fetching data:", error);
+        }
+    });
+}
+function normalizeData(data) {
+    return data.map(entry => ({
+        ...entry,
+        lab: entry.lab || null,
+        imaging: entry.imaging || null,
+        service: entry.service || null,
+        surgery: entry.surgery || null,
+        observations: entry.observations || 'Sin observaciones',
+        vet: entry.vet || { name: 'Desconocido' },
+    }));
+}
+
+function renderData(data) {
+    
+    const groupedData = data.reduce((acc, item) => {
+        acc[item.day_count] = acc[item.day_count] || [];
+        acc[item.day_count].push(item);
+        return acc;
+    }, {});
+
+    let grandTotal = 0;
+    
+    $('#table-container').empty(); 
+
+    for (const [dayCount, entries] of Object.entries(groupedData)) {
+        const dayHeader = `<h5>Día ${dayCount}</h5>`;
+        $('#table-container').append(dayHeader);
+
+        let total = 0;
+        entries.forEach(entry => {
+            if (entry.lab && entry.lab.price) {
+                total += parseFloat(entry.lab.price);
+            }
+            if (entry.service && entry.service.price) {
+                total += parseFloat(entry.service.price);
+            }
+            if (entry.imaging && entry.imaging.price) {
+                total += parseFloat(entry.imaging.price);
+            }
+            if (entry.surgery && entry.surgery.price) {
+                total += parseFloat(entry.surgery.price);
+            }
+        });
+        grandTotal += total;
+
+        
+        const table = `
+            <table class="table table-striped table-hover responsive w-100" style="background-color: #2596be;">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Nombre</th>
+                        <th>Observaciones</th>
+                        <th>M.V.Z.</th>
+                        <th>Precio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${entries.map(entry => renderEntryRow(entry)).join('')}
+                    <!-- Row for total price -->
+                    <tr>
+                        <td colspan="4"><strong>SubTotal de día</strong></td>
+                        <td><strong>$${total.toFixed(2)}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        `;
+        $('#table-container').append(table);
+    }
+    const totalFinalSection = `
+        <div class="total-final" style="margin-top: 20px; text-align: right; font-weight: bold;">
+            <h4>Total Final: $${grandTotal.toFixed(2)}</h4>
+        </div>
+    `;
+    $('#table-container').append(totalFinalSection);
+}
+
+
+function renderEntryRow(entry) {
+    let rows = '';
+
+    if (entry.lab) {
+        rows += `
+            <tr>
+                <td>Laboratorio</td>
+                <td>${entry.lab.name}</td>
+                <td>${entry.observations || ''}</td>
+                <td>${entry.vet ? entry.vet.name : ''}</td>
+                <td>$${entry.lab.price}</td>
+            </tr>
+        `;
+    }
+
+    if (entry.imaging) {
+        rows += `
+            <tr>
+                <td>Imagenologia</td>
+                <td>${entry.imaging.name}</td>
+                <td>${entry.observations || ''}</td>
+                <td>${entry.vet ? entry.vet.name : ''}</td>
+                <td>$${entry.imaging.price}</td>
+            </tr>
+        `;
+    }
+
+    if (entry.service) {
+        rows += `
+            <tr>
+                <td>Servicio</td>
+                <td>${entry.service.name}</td>
+                <td>${entry.observations || ''}</td>
+                <td>${entry.vet ? entry.vet.name : ''}</td>
+                <td>$${entry.service.price}</td>
+            </tr>
+        `;
+    }
+    if (entry.surgery) {
+        rows += `
+            <tr>
+                <td>Cirugia</td>
+                <td>${entry.surgery.name}</td>
+                <td>${entry.observations || ''}</td>
+                <td>${entry.vet ? entry.vet.name : ''}</td>
+                <td>$${entry.surgery.price}</td>
+            </tr>
+        `;
+    }
+
+    return rows;
+}
+
+
 
 async function NewEntry() {
     event.preventDefault();
@@ -52,68 +186,7 @@ async function NewEntry() {
     }
 }
 
-var table = undefined;
-$(document).ready(function () {
-    table = $('#table').DataTable({
-        ajax: route('red-sheets.recap', Reception_Id),
-        responsive: true,
-        order: [0, 'desc'],
-        columns: [
-            {
-                data: 'created_at',
-                render: function (data) {
-                    if (data) {
-                        let date = new Date(data);
-                        let formattedDate = date.toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric'
-                        });
-                        let formattedTime = date.toLocaleTimeString('en-US', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        });
-                        return `${formattedDate} ${formattedTime}`;
-                    }
-                    return '';
-                }
-            },
 
-            {
-                data: 'day_count',
-            },
-
-            {
-                data: null,
-                render: function (data) {
-                    return data.service ? data.service.name : '';
-                }
-            },
-
-            {
-                data: null,
-                render: function (data) {
-                    return data.lab ? data.lab.name : '';
-                }
-            },
-            {
-                data: null,
-                render: function (data) {
-                    return data.imaging ? data.imaging.name : '';
-                }
-            },
-            {
-                data: 'observations',
-            },
-            {
-                data: null,
-                render: function (data) {
-                    return data.vet ? data.vet.name : '';
-                }
-            },
-        ],
-    });
-});
 
 async function OpenFollowUps() {
     document.getElementById("reception_id_followup").value = Reception_Id;
@@ -246,7 +319,7 @@ async function AddSurgery() {
             timer: 7000,
             showConfirmButton: true
         })
-        surgerytable.ajax.reload();
+        fetchAndRenderData()
         CloseSurgeries()
     } else {
         let resp = await pet.json();
@@ -263,149 +336,6 @@ function CloseSurgeries() {
     document.getElementById("observations").value = "";
     $('#ModalSurgeries').modal('hide');
 }
-
-
-
-// function renderData(data) {
-//     // Group data by day_count
-//     const groupedData = data.reduce((acc, item) => {
-//         acc[item.day_count] = acc[item.day_count] || [];
-//         acc[item.day_count].push(item);
-//         return acc;
-//     }, {});
-
-//     // Clear existing data in your display table
-//     $('#table-container').empty(); // Assuming an element with id `table-container`
-
-//     // Iterate over grouped data and create HTML
-//     for (const [dayCount, entries] of Object.entries(groupedData)) {
-//         // Create a section header for each day_count
-//         const dayHeader = `<h5>Día ${dayCount}</h5>`;
-//         $('#table-container').append(dayHeader);
-
-//         // Create a table for each day_count
-//         const table = `
-//             <table class="table table-striped table-hover table-red" style="background-color: red">
-//                 <thead>
-//                     <tr>
-//                         <th>Tipo</th>
-//                         <th>Nombre</th>
-//                         <th>Observaciones</th>
-//                         <th>M.V.Z.</th>
-//                         <th>Precio</th>
-//                     </tr>
-//                 </thead>
-//                 <tbody>
-//                     ${entries.map(entry => renderEntryRow(entry)).join('')}
-//                 </tbody>
-//             </table>
-//         `;
-//         $('#table-container').append(table);
-//     }
-// }
-
-function renderData(data) {
-    // Group data by day_count
-    const groupedData = data.reduce((acc, item) => {
-        acc[item.day_count] = acc[item.day_count] || [];
-        acc[item.day_count].push(item);
-        return acc;
-    }, {});
-
-    // Clear existing data in your display table
-    $('#table-container').empty(); // Assuming an element with id `table-container`
-
-    // Iterate over grouped data and create HTML
-    for (const [dayCount, entries] of Object.entries(groupedData)) {
-        // Create a section header for each day_count
-        const dayHeader = `<h5>Día ${dayCount}</h5>`;
-        $('#table-container').append(dayHeader);
-
-        // Calculate the total for the current day_count group
-        let total = 0;
-        entries.forEach(entry => {
-            if (entry.lab && entry.lab.price) {
-                total += parseFloat(entry.lab.price);
-            }
-            if (entry.service && entry.service.price) {
-                total += parseFloat(entry.service.price);
-            }
-            if (entry.imaging && entry.imaging.price) {
-                total += parseFloat(entry.imaging.price);
-            }
-        });
-
-        // Create a table for each day_count
-        const table = `
-            <table class="table table-striped table-hover" style="background-color: #ffdddd;">
-                <thead>
-                    <tr>
-                        <th>Tipo</th>
-                        <th>Nombre</th>
-                        <th>Observaciones</th>
-                        <th>M.V.Z.</th>
-                        <th>Precio</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${entries.map(entry => renderEntryRow(entry)).join('')}
-                    <!-- Row for total price -->
-                    <tr>
-                        <td colspan="4"><strong>SubTotal de día</strong></td>
-                        <td><strong>$${total.toFixed(2)}</strong></td>
-                    </tr>
-                </tbody>
-            </table>
-        `;
-        $('#table-container').append(table);
-    }
-}
-// Function to create rows for each entry based on available data
-function renderEntryRow(entry) {
-    let rows = '';
-
-    // Check and add lab entry row if exists
-    if (entry.lab) {
-        rows += `
-            <tr>
-                <td>Laboratorio</td>
-                <td>${entry.lab.name}</td>
-                <td>${entry.observations || ''}</td>
-                <td>${entry.vet ? entry.vet.name : ''}</td>
-                <td>$${entry.lab.price}</td>
-            </tr>
-        `;
-    }
-
-    // Check and add imaging entry row if exists
-    if (entry.imaging) {
-        rows += `
-            <tr>
-                <td>Imagenologia</td>
-                <td>${entry.imaging.name}</td>
-                <td>${entry.observations || ''}</td>
-                <td>${entry.vet ? entry.vet.name : ''}</td>
-                <td>$${entry.imaging.price}</td>
-            </tr>
-        `;
-    }
-
-    // Check and add service entry row if exists
-    if (entry.service) {
-        rows += `
-            <tr>
-                <td>Servicio</td>
-                <td>${entry.service.name}</td>
-                <td>${entry.observations || ''}</td>
-                <td>${entry.vet ? entry.vet.name : ''}</td>
-                <td>$${entry.service.price}</td>
-            </tr>
-        `;
-    }
-
-    return rows;
-}
-
 
 
 
@@ -466,51 +396,51 @@ $(document).ready(function () {
     });
 });
 
-var surgerytable = undefined;
-$(document).ready(function () {
-    surgerytable = $('#surgeries').DataTable({
-        ajax: route('surgeries.entry', Reception_Id),
-        responsive: true,
-        order: [0, 'desc'],
-        columns: [
-            {
-                data: 'date',
-                render: function (data) {
-                    if (data) {
-                        let date = new Date(data);
-                        let formattedDate = date.toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric'
-                        });
-                        let formattedTime = date.toLocaleTimeString('en-US', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        });
-                        return `${formattedDate} ${formattedTime}`;
-                    }
-                    return '';
-                }
-            },
+// var surgerytable = undefined;
+// $(document).ready(function () {
+//     surgerytable = $('#surgeries').DataTable({
+//         ajax: route('surgeries.entry', Reception_Id),
+//         responsive: true,
+//         order: [0, 'desc'],
+//         columns: [
+//             {
+//                 data: 'date',
+//                 render: function (data) {
+//                     if (data) {
+//                         let date = new Date(data);
+//                         let formattedDate = date.toLocaleDateString('en-US', {
+//                             year: 'numeric',
+//                             month: 'short',
+//                             day: 'numeric'
+//                         });
+//                         let formattedTime = date.toLocaleTimeString('en-US', {
+//                             hour: '2-digit',
+//                             minute: '2-digit'
+//                         });
+//                         return `${formattedDate} ${formattedTime}`;
+//                     }
+//                     return '';
+//                 }
+//             },
 
-            {
-                data: null,
-                render: function (data) {
-                    return data.service ? data.service.name : '';
-                }
-            },
-            {
-                data: 'observations',
-            },
-            {
-                data: null,
-                render: function (data) {
-                    return data.vet ? data.vet.name : '';
-                }
-            },
-        ],
-    });
-});
+//             {
+//                 data: null,
+//                 render: function (data) {
+//                     return data.service ? data.service.name : '';
+//                 }
+//             },
+//             {
+//                 data: 'observations',
+//             },
+//             {
+//                 data: null,
+//                 render: function (data) {
+//                     return data.vet ? data.vet.name : '';
+//                 }
+//             },
+//         ],
+//     });
+// });
 
 async function Transfer() {
     event.preventDefault();

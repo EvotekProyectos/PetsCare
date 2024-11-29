@@ -40,7 +40,7 @@ class RedSheet extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_id', 'lab_type_id', 'imaging_type_id', 'service_type_id', 'observations', 'day_count', 'vet_id'];
+    protected $fillable = ['reception_id', 'lab_type_id', 'imaging_type_id', 'service_type_id', 'observations', 'day_count', 'vet_id',];
 
 
     /**
@@ -50,7 +50,7 @@ class RedSheet extends Model
     {
         return $this->belongsTo(\App\Models\ProductType::class, 'imaging_type_id', 'id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -58,7 +58,7 @@ class RedSheet extends Model
     {
         return $this->belongsTo(\App\Models\ProductType::class, 'lab_type_id', 'id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -66,7 +66,7 @@ class RedSheet extends Model
     {
         return $this->belongsTo(\App\Models\Reception::class, 'reception_id', 'id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -74,7 +74,7 @@ class RedSheet extends Model
     {
         return $this->belongsTo(\App\Models\ProductType::class, 'service_type_id', 'id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -82,6 +82,9 @@ class RedSheet extends Model
     {
         return $this->belongsTo(\App\Models\User::class, 'vet_id', 'id');
     }
-    
 
+    public function surgeries()
+    {
+        return $this->hasMany(Surgery::class, 'reception_id', 'reception_id');
+    }
 }

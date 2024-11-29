@@ -214,7 +214,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('vaccine-certificates', VaccineCertificateController::class);
 
     //Hospitalizations
-   
+    Route::get('/hospitalizations/historic/{id}', [HospitalizationController::class, 'historic'])->name('hospitalization.historic');   
     Route::resource('hospitalizations', HospitalizationController::class);
     //PRODUCT CLASSIFICATIONS
     Route::resource('product-classifications', ProductClassificationController::class);

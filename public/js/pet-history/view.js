@@ -61,6 +61,10 @@ async function Details(Type, ID) {
         window.location.href = route('appointment.historic', ID);
 
     }
+    if (Type === 2) {
+        window.location.href = route('hospitalization.historic', ID);
+
+    }
 };
 
 
