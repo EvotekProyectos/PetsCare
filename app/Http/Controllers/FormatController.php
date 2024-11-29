@@ -10,6 +10,7 @@ use App\Models\Reception;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf  as Pdf;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 /**
  * Class FormatController
@@ -28,19 +29,92 @@ class FormatController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * $formats->perPage());
     }
     
-        public function list($id)
-        {
-        $pet = Pet::findOrFail($id);
-            $receptions = $pet->receptions;
-            $formats = Format::whereIn('reception_id', $receptions->pluck('id'))->orWhere('pet_id', $id)->get();
-            $this->authorize("viewAny", Format::class);
-          return view('format.view', compact('formats', 'pet', 'receptions'));
-         
-     }
+    public function create()
+    {
+        $format = new Format();
+        $format_types= FormatType::all();
+        $this->authorize("create", Format::class);
+        return view('format.create', compact('format', 'format_types'));
+    }
 
 
+    public function add($id)
+    {   
+        $pet = Pet::find($id);
+        $format = new Format();
+        $format_types= FormatType::all();
+        $this->authorize("create", Format::class);
+        return view('format.create', compact('format','pet', 'format_types'));
+    }
+
+    public function store(FormatRequest $request)
+    {
+        Format::create($request->validated());
+        $this->authorize("create", Format::class);
+
+        return redirect()->route('formats.index')
+            ->with('success', 'Format created successfully.');
+    }
+
+
+    public function show($id)
+    {
+        $format = Format::find($id);
+         $this->authorize("view", $format);
+        return view('format.show', compact('format'));
+    }
+
+   
+    public function edit($id)
+    {
+        $format = Format::find($id);
+        $this->authorize("update", $format);
+        return view('format.edit', compact('format'));
+    }
+
+   
+    public function update(FormatRequest $request, Format $format)
+    {
+        $format->update($request->validated());
+        $this->authorize("update", $format);
+        return redirect()->route('formats.index')
+            ->with('success', 'Format updated successfully');
+    }
+
+    public function destroy($id)
+    {
+        $format=Format::find($id);
+        $this->authorize("update", $format);
+        $format->delete();
+
+        return response()->json($format);
+    }
+
+     public function list()
+     {
+         $formats = Format::with('reception' , 'formatType', 'pet')->get();
+          return DataTables::of($formats)->make(true);  
+    }
     
 
+     public function listOne($id)
+     {
+         $pet = Pet::findOrFail($id); 
+        $receptions = $pet->receptions;
+         $formats = Format::with('reception' , 'formatType', 'pet')->whereIn('reception_id', $receptions->pluck('id')->toArray())->orWhere('pet_id', $id)->get();
+      
+         return DataTables::of($formats)->make(true);  
+      }
+
+
+      public function format_list($id)
+      {
+          $this->authorize("viewAny", Format::class);
+          $pet = Pet::findOrFail($id); 
+          return view('format.view', compact('pet'));
+      }
+      
+    
     public function hospital_authorization($id)
     {
         $pet = Pet::with('family', 'genre')->find($id);
@@ -76,83 +150,5 @@ class FormatController extends Controller
     }
     
    
-
     
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $format = new Format();
-        $format_types= FormatType::all();
-        $this->authorize("create", Format::class);
-        return view('format.create', compact('format', 'format_types'));
-    }
-
-
-    public function add($id)
-    {   
-        $pet = Pet::find($id);
-        $format = new Format();
-        $format_types= FormatType::all();
-        $this->authorize("create", Format::class);
-        return view('format.create', compact('format','pet', 'format_types'));
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(FormatRequest $request)
-    {
-        Format::create($request->validated());
-        $this->authorize("create", Format::class);
-
-        return redirect()->route('formats.index')
-            ->with('success', 'Format created successfully.');
-    }
-
-    
-
-
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        $format = Format::find($id);
-         $this->authorize("view", $format);
-        return view('format.show', compact('format'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        $format = Format::find($id);
-        $this->authorize("update", $format);
-        return view('format.edit', compact('format'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(FormatRequest $request, Format $format)
-    {
-        $format->update($request->validated());
-        $this->authorize("update", $format);
-        return redirect()->route('formats.index')
-            ->with('success', 'Format updated successfully');
-    }
-
-    public function destroy($id)
-    {
-        $format=Format::find($id);
-        $this->authorize("update", $format);
-        $format->delete();
-
-        return response()->json($format);
-    }
 }

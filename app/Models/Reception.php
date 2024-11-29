@@ -127,5 +127,15 @@ class Reception extends Model
      public function statusHistory() {
          return $this->hasMany(ReceptionStatusHistory::class, 'reception_id', 'id');
     }
+
+    public function redSheet()
+    {
+        return $this->belongsTo(\App\Models\RedSheet::class, 'red_sheet_id', 'id');
+    }
+
+    public function surgery()
+    {
+        return $this->belongsTo(\App\Models\Surgery::class, 'surgery_id', 'id');
+    }
     
 }

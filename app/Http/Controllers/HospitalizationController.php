@@ -83,4 +83,7 @@ class HospitalizationController extends Controller
         return redirect()->route('hospitalizations.index')
             ->with('success', 'Hospitalization deleted successfully');
     }
+
+
+
 }

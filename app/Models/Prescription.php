@@ -38,7 +38,7 @@ class Prescription extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_id', 'veterinarian_id', 'recepcionist_id', 'date', 'medicine', 'diagnosis', 'observations', 'pet_id', 'reason_next_check_id'];
+    protected $fillable = ['reception_id', 'veterinarian_id', 'recepcionist_id', 'date', 'medicine', 'diagnosis', 'observations', 'pet_id', 'day_next_check','time_next_check', 'reason_next_check_id'];
 
 
     /**

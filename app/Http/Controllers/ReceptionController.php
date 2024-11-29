@@ -187,6 +187,7 @@ class ReceptionController extends Controller
     {
         $reception = Reception::find($id);
         $pet = Pet::with('family', 'genre')->find($id);
+        
         $signatureDataUrl = $request->input('signature');
 
         // Genearar `isPdf` para el id de los botones 
@@ -235,5 +236,35 @@ class ReceptionController extends Controller
 
     }
 
+    public function cuenta($id)
+    {
+        $reception = Reception::with('pet')->where('id', $id)->first();
+         $redSheets = RedSheet::where('reception_id', $id)->with('imaging','lab', 'service')->get();
+        $surgeries = Surgery::where('reception_id', $id)->with('service')->get();
+    
+        $data = [
+            'reception' => $reception,
+             'redSheets' => $redSheets,
+            'surgeries' => $surgeries,
+        ];
+        return DataTables::of($data)->make(true);
+    }
+    
+    public function cuentaView($id)
+    {
+        $reception = Reception::with('pet')->where('id', $id)->first();
+         $redSheets = RedSheet::where('reception_id', $id)->with('imaging','lab', 'service')->get();
+        $surgeries = Surgery::where('reception_id', $id)->with('service')->get();
+    
+        $data = [
+            'reception' => $reception,
+             'redSheets' => $redSheets,
+            'surgeries' => $surgeries,
+        ];
+
+        return view('hospitalization.cuenta', ['receptionId' => $id, 'data']);
+    }
+
+    
 
 }

@@ -121,25 +121,14 @@ class RedSheetController extends Controller
 
     public function discharge(Request $request)
     {
-        // $request->validate([
-        //     'petId' => 'required|exists:pets,id',
-        //     'receptionId' => 'required|exists:receptions,id',
-        // ]);
-
-        try {
-            // Actualizar el `exit_date` en la tabla receptions
             $reception = Reception::findOrFail($request->receptionId);
             $reception->exit_date = now();
             $reception->save();
 
-
             return response()->json([
-                'message' => 'Paciente dado de alta y prescripción creada.',
+                'message' => 'Paciente dado de alta.',
             ], 200);
 
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
-        }
     }
 
     

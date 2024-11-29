@@ -16,7 +16,7 @@ class FormatTypeController extends Controller
      */
     public function index()
     {    $formatTypes = FormatType::paginate(); 
-        $this->authorize("viewAny", FormatType::class);
+         $this->authorize("viewAny", FormatType::class);
        
         return view('format-type.index', compact('formatTypes'))
             ->with('i', (request()->input('page', 1) - 1) * $formatTypes->perPage());
@@ -36,11 +36,10 @@ class FormatTypeController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(FormatTypeRequest $request)
-    {    $this->authorize("create", FormatType::class);
+    {   
+        $this->authorize("create", FormatType::class);
         FormatType::create($request->validated());
        
-       
-
         return redirect()->route('format-types.index')
             ->with('success', 'FormatType created successfully.');
     }
@@ -51,7 +50,7 @@ class FormatTypeController extends Controller
     public function show($id)
     {
         $formatType = FormatType::find($id);
-        $this->authorize("view", $formatType);
+        // $this->authorize("view", $formatType);
         return view('format-type.show', compact('formatType'));
     }
 

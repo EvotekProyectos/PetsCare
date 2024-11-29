@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $('#table').DataTable({
         ajax: {
-            url: route('list_index'),
+            url: route('formats.list', petId),
             dataSrc: 'data'
         },
         responsive: true,
@@ -13,21 +13,16 @@ $(document).ready(function () {
             {
                 data: null,
                 render: function (data) {
-                    return data.format_type ? data.format_type.name : '';
-                }
-            },
-            {
-                data: null,
-                render: function (data) {
                     return data.reception ? data.reception.reception_type_id : '';
                 }
             },
             {
                 data: null,
                 render: function (data) {
-                    return data.pet ? data.pet.name : '';
+                    return data.format_type ? data.format_type.name : '';
                 }
             },
+          
             { 
                 data: 'format_pdf',
                 render: function (data) {

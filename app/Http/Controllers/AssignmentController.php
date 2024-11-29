@@ -53,4 +53,22 @@ class AssignmentController extends Controller
         return DataTables::of($receptions)
             ->make(true);
     }
+
+    public function hospital_altas()
+    {
+        $this->authorize("viewAny", Reception::class);
+        return view('hospitalization.table_recep');
+    }
+
+     public function altas()
+     {
+         $user = auth()->user();
+         $receptions = Reception::with(['admissionType', 'family', 'pet', 'vet', 'area'])
+             ->where('reception_type_id', 2)
+             ->get();
+
+         return DataTables::of($receptions)
+             ->make(true);
+     }
+
 }

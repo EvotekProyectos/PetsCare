@@ -115,7 +115,7 @@
                              </div>
                              <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
-                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4" onclick="window.location.href='{{ route('formats.list', $pet->id) }}'">
+                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4" onclick="window.location.href='{{ route('formats.created', $pet->id) }}'">
                                         <span class="badge custom-badge-pill"><span class="material-symbols--prescriptions-outline"></span></span> FORMATOS
                                     </button>
                                 </div>

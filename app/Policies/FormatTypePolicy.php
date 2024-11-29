@@ -6,14 +6,14 @@ use App\Models\FormatType;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class FormatTypesPolicy
+class FormatTypePolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $user->can("Ver panel Tipo de Formatos");
+        return $user->can('Ver panel Tipo de Formatos');
     }
 
     /**
@@ -29,7 +29,7 @@ class FormatTypesPolicy
      */
     public function create(User $user): bool
     {
-        return $user ->can("Crear tipo de formato");
+        return $user ->can('Crear tipo de formato');
     }
 
     /**
@@ -37,7 +37,7 @@ class FormatTypesPolicy
      */
     public function update(User $user, FormatType $formatType): bool
     {
-        return $user ->can("Editar tipo de formato");
+        return $user ->can('Editar tipo de formato');
     }
 
     /**
@@ -45,7 +45,7 @@ class FormatTypesPolicy
      */
     public function delete(User $user, FormatType $formatType): bool
     {
-        return $user ->can("Eliminar tipo de formato");
+        return $user ->can('Eliminar tipo de formato');
     }
 
     /**

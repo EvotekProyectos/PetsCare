@@ -163,8 +163,14 @@ Route::group(['middleware' => ['auth']], function () {
     //RECEPTIONS
     Route::put('/receptions/update/{id}',[ReceptionController::class, 'transfer'])->name('reception.transfer');
     Route::get('/receptions/list', [ReceptionController::class, 'list'])->name('reception.list');
+
     Route::get('/receptions/historial/{id}', [ReceptionController::class, 'historial'])->name('reception.historial');
     Route::get('/receptions/hospital/{id}', [ReceptionController::class, 'hospital_authorization'])->name('hospital.list');
+
+    Route::get('/hospitalization/cuenta/{id}',[ReceptionController::class, 'cuenta'])->name('cuenta');
+    
+    Route::get('/hospitalization/cuenta/view/{id}',[ReceptionController::class, 'cuentaView'])->name('cuenta.view');
+
     Route::post('/receptions/hospital/pdf/{id}', [ReceptionController::class, 'hospital_authorizationpdf'])->name('hospital.pdf');
     Route::resource('receptions', ReceptionController::class);
 
@@ -180,6 +186,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/assignment/appointments/list', [AssignmentController::class, 'appointments'])->name('assignment.appointments');
     Route::get('/assignment/hospitaizations', [AssignmentController::class, 'hospital'])->name('assignment.hospital');
     Route::get('/assignment/hospitaizations/list', [AssignmentController::class, 'hospitalizations'])->name('assignment.hospitalizations');
+    Route::get('/assignment/hospitalizations/altas', [AssignmentController::class, 'hospital_altas'])->name('hospitalization.altas');
+    Route::get('/assignment/altas/list', [AssignmentController::class, 'altas'])->name('assignment.altas');
 
     //Appointments
     Route::get('/appointments/consultation/{id}', [AppointmentController::class, 'consultation'])->name('appointment.consultation');
@@ -206,7 +214,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('vaccine-certificates', VaccineCertificateController::class);
 
     //Hospitalizations
-
+   
     Route::resource('hospitalizations', HospitalizationController::class);
     //PRODUCT CLASSIFICATIONS
     Route::resource('product-classifications', ProductClassificationController::class);
@@ -217,11 +225,7 @@ Route::group(['middleware' => ['auth']], function () {
     //RED SHEETS FOR HOSPITALIZATION DAYS
     Route::get('/hospitalizations/entries/{id}', [RedSheetController::class, 'entry'])->name("redsheet.entry");
     Route::get('/red-sheets/recap/{id}', [RedSheetController::class, 'recap'])->name("red-sheets.recap");
-
-   Route::post('/redSheet/discharge', [redSheetController::class, 'discharge']);
-
-
-
+    Route::post('/redSheet/discharge', [redSheetController::class, 'discharge']);
     Route::resource('red-sheets', RedSheetController::class);
 
     //SURGERIES
@@ -239,8 +243,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('format-types', FormatTypeController::class);
 
     //FORMATS
-    Route::get("/formats/list/{id}", [FormatController::class, 'list'])->name('formats.list');
-    
+    Route::get("/formats/list", [FormatController::class, 'list'])->name('list_index');
+
+    Route::get("/formats/list/{id}", [FormatController::class, 'listOne'])->name('formats.list');
+
+    Route::get("/formats/created/{id}", [FormatController::class, 'format_list'])->name('formats.created');
+
+
+
     Route::get("/formats/create/{id}", [FormatController::class, 'add'])->name('formats.add');
     Route::get('/formats/hospital/{id}', [FormatController::class, 'hospital_authorization'])->name('format.hospital');
     Route::post('/formats/hospital/pdf/{id}', [FormatController::class, 'generateHospitalAuthorizationPdf'])->name('format-hospital.pdf'); 
