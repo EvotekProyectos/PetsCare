@@ -249,21 +249,7 @@ class ReceptionController extends Controller
         ];
         return DataTables::of($data)->make(true);
     }
-    
-    public function cuentaView($id)
-    {
-        $reception = Reception::with('pet')->where('id', $id)->first();
-         $redSheets = RedSheet::where('reception_id', $id)->with('imaging','lab', 'service')->get();
-        $surgeries = Surgery::where('reception_id', $id)->with('service')->get();
-    
-        $data = [
-            'reception' => $reception,
-             'redSheets' => $redSheets,
-            'surgeries' => $surgeries,
-        ];
 
-        return view('hospitalization.cuenta', ['receptionId' => $id, 'data']);
-    }
 
     
 

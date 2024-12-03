@@ -330,6 +330,7 @@
     </div>
 @endsection
 
+
 @push('scripts')
     <script>
         var ruta = "{{ asset('') }}";

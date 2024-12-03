@@ -9,7 +9,20 @@ $(document).ready(function () {
         columns: [
             {
                 data: 'created_at',
-            },
+                render: function (data, type, row) {
+                    if (data) {
+                        const date = new Date(data);
+                        const year = date.getFullYear();
+                        const month = String(date.getMonth() + 1).padStart(2, '0'); 
+                        const day = String(date.getDate()).padStart(2, '0');
+                        const hours = String(date.getHours()).padStart(2, '0');
+                        const minutes = String(date.getMinutes()).padStart(2, '0');
+                        const seconds = String(date.getSeconds()).padStart(2, '0');
+                        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                    }
+                    return ''; 
+                }
+            },  
             {
                 data: null,
                 render: function (data) {
@@ -23,16 +36,23 @@ $(document).ready(function () {
                 }
             },
           
-            { 
+            {
+               
                 data: 'format_pdf',
                 render: function (data) {
+                    const newPath = data.replace('/formats/created/public/', 'storage/');
                     return `
-                        <a href="${data}" class="btn btn-primary" target="_blank">
+                         <a href="${newPath}" class="btn btn-primary" target="_blank">
                         Ver PDF
                         </a>
                     `;
                 }
             }
+
+              
+              
+            
+            
         ]
     });
 });

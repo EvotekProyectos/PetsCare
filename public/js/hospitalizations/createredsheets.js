@@ -231,8 +231,7 @@ async function AddFollowUp() {
     }
 }
 
-
-// async function OpenPrescription(petId) {
+// async function OpenPrescription(petId, receptionId) {
 //     const result = await Swal.fire({
 //         title: '¿Dar de alta a este paciente?',
 //         text: "Confirma su atención",
@@ -245,9 +244,25 @@ async function AddFollowUp() {
 //     });
 
 //     if (result.isConfirmed) {
-//         window.location.href = `/prescriptions/create/${petId}`;
+//             const response = await fetch(`/redSheet/discharge`, {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+//                 },
+//                 body: JSON.stringify({ petId, receptionId })
+//             });
+//             const data = await response.json();
+//             if (response.ok) {
+//                 Swal.fire(
+//                     'Paciente dado de alta',
+//                     'Se ha registrado la salida.'
+//                 );
+//                 window.location.href = `/prescriptions/create/${petId}`;
+//             } else {
+//                 Swal.fire('Error', data.message || 'No se pudo dar de alta.', 'error');
+//             }
 //     }
-
 // }
 
 async function OpenPrescription(petId, receptionId) {
@@ -263,6 +278,31 @@ async function OpenPrescription(petId, receptionId) {
     });
 
     if (result.isConfirmed) {
+        // Paso 2: Selección del tipo de alta
+        const { value: selectedType } = await Swal.fire({
+            title: 'Selecciona el tipo de alta',
+            html: `
+                <select id="dischargeType" class="swal2-input">
+                    <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="Alta normal" style="color: #2BEA91;">Alta normal</option>
+                    <option value="Alta voluntaria" style="color: #2DAAF8;">Alta voluntaria</option>
+                    <option value="Alta por fallecimiento" style="color: #F862AA;">Alta por fallecimiento</option>
+                </select>
+            `,
+            focusConfirm: false,
+            preConfirm: () => {
+                return document.getElementById('dischargeType').value;
+            }
+        });
+
+        if (!selectedType) {
+            Swal.fire('Error', 'Debes seleccionar un tipo de alta.', 'error');
+            return;
+        }
+
+        // Paso 3: Según el tipo de alta seleccionado, realizamos diferentes acciones
+        if (selectedType === "Alta normal") {
+            // Alta normal
             const response = await fetch(`/redSheet/discharge`, {
                 method: 'POST',
                 headers: {
@@ -281,9 +321,20 @@ async function OpenPrescription(petId, receptionId) {
             } else {
                 Swal.fire('Error', data.message || 'No se pudo dar de alta.', 'error');
             }
-    }
-}
+        } else if (selectedType === "Alta voluntaria") {
+            // Alta voluntaria
+            const nameFamily = $("#name_family").val();
+            const reason = $("#reason").val();
 
+             // Redirigir a la ruta de alta voluntaria
+             window.location.href = `/alta-voluntaria/${receptionId}`;
+            } else if (selectedType === "Alta por fallecimiento") {
+                // Aquí puedes agregar el código para la "Alta por fallecimiento"
+                Swal.fire('Alta por fallecimiento', 'El proceso de alta por fallecimiento se ha registrado.');
+            }
+        }
+        
+}
 
 async function OpenSurgeries() {
     const receptionId = document.getElementById("reception_id_followup").value;

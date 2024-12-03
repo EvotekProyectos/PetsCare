@@ -6,6 +6,8 @@ use App\Models\RedSheet;
 use App\Http\Requests\RedSheetRequest;
 use App\Models\AdmissionType;
 use App\Models\FollowUp;
+use App\Models\HospitalDischarge;
+use App\Models\Hospitalization;
 use App\Models\Log;
 use App\Models\Prescription;
 use App\Models\ProductType;
@@ -150,11 +152,43 @@ class RedSheetController extends Controller
             $reception->exit_date = now();
             $reception->save();
 
+            $hospitalization = new Hospitalization();
+            $hospitalization->reception_id = $request->receptionId;
+            $hospitalization->exit_date = now();  
+            $hospitalization->hospital_discharges_id=1;
+            $hospitalization->save();
+
             return response()->json([
                 'message' => 'Paciente dado de alta.',
             ], 200);
 
     }
-
+    
+    public function dischargePatient(Request $request) {
+        $request->validate([
+            'receptionId' => 'required|exists:hospitalizations,reception_id',
+            'dischargeType' => 'required|string'
+        ]);
+    
+        $discharge = HospitalDischarge::where('name', $request->dischargeType)->first();
+    
+        if (!$discharge) {
+            return response()->json(['message' => 'Tipo de alta no válido.'], 400);
+        }
+    
+        $hospitalization = Hospitalization::where('reception_id', $request->receptionId)->first();
+    
+        if (!$hospitalization) {
+            return response()->json(['message' => 'Hospitalización no encontrada.'], 404);
+        }
+    
+        $hospitalization->update([
+            'hospital_discharges_id' => $discharge->id,
+            'exit_date' => now() // Asegura que se registre la fecha de salida actual
+        ]);
+    
+        return response()->json(['message' => 'Alta registrada exitosamente.']);
+    }
+    
     
 }

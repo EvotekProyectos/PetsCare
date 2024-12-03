@@ -9,6 +9,7 @@ window.onload = function () {
     }
 
 }
+let paymentHistory = [];
 
 function fetchAndRenderData() {
     $.ajax({
@@ -24,6 +25,7 @@ function fetchAndRenderData() {
         }
     });
 }
+
 function normalizeData(data) {
     return data.map(entry => ({
         ...entry,
@@ -36,16 +38,16 @@ function normalizeData(data) {
     }));
 }
 
+let grandTotal = 0; 
+
 function renderData(data) {
-    
     const groupedData = data.reduce((acc, item) => {
         acc[item.day_count] = acc[item.day_count] || [];
         acc[item.day_count].push(item);
         return acc;
     }, {});
 
-    let grandTotal = 0;
-    
+    grandTotal = 0;
     $('#table-container').empty(); 
 
     for (const [dayCount, entries] of Object.entries(groupedData)) {
@@ -69,7 +71,6 @@ function renderData(data) {
         });
         grandTotal += total;
 
-        
         const table = `
             <table class="table table-striped table-hover responsive w-100" style="background-color: #2596be;">
                 <thead>
@@ -93,13 +94,124 @@ function renderData(data) {
         `;
         $('#table-container').append(table);
     }
-    const totalFinalSection = `
-        <div class="total-final" style="margin-top: 20px; text-align: right; font-weight: bold;">
-            <h4>Total Final: $${grandTotal.toFixed(2)}</h4>
-        </div>
-    `;
-    $('#table-container').append(totalFinalSection);
-}
+
+     const totalFinalSection = `
+     <div class="total-final" style="margin-top: 20px; text-align: right; font-weight: bold;">
+         <h4>Total Final: $${grandTotal.toFixed(2)}</h4>
+     </div>
+     <div id="payment-history-container" style="margin-top: 20px;">
+         <h5>Historial de pagos</h5>
+         <table id="payment-history" class="table table-striped table-hover responsive w-100" style="background-color: #2596be;">
+             <thead>
+                 <tr>
+                       <th>Fecha</th>
+                       <th>Recepcionista</th>
+                       <th>Método de Pago</th>
+                        <th>Monto</th>
+                        <th>Comentarios</th>
+                 </tr>
+             </thead>
+             <tbody>
+             </tbody>
+         </table>
+     </div>
+ `;
+$('#table-container').append(totalFinalSection);
+ }
+
+ function handlePayment() {
+ const modal = `
+     <div id="payment-modal" class="modal" tabindex="-1" role="dialog">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <h5 class="modal-title">Realizar pago</h5>
+                    </div>
+                    <div class="modal-body">
+                        <h3>Total pendiente: <strong>$${grandTotal.toFixed(2)}</strong></h3>
+                        
+                        <div class="form-group">
+                            <label for="payment-method">Método de pago:</label>
+                            <select id="payment-method" class="form-control">
+                                <option value="Efectivo">Efectivo</option>
+                                <option value="Tarjeta">Tarjeta</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment-amount">Ingrese el monto a pagar:</label>
+                            <input type="number" id="payment-amount" class="form-control" min="0" max="${grandTotal}" step="0.01" placeholder="Monto a pagar">
+                        </div>
+                        <div class="form-group">
+                            <label for="payment-comments">Comentarios:</label>
+                            <input type="text" id="payment-comments" class="form-control" placeholder="Comentarios del pago">
+                        </div>
+                    </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-primary" id="confirm-payment">Pagar</button>
+                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+ `;
+ $('body').append(modal);
+ $('#payment-modal').modal('show');
+
+
+ $('#confirm-payment').on('click', function () {
+     const paymentAmount = parseFloat($('#payment-amount').val());
+     const paymentMethod = $('#payment-method').val();
+     const paymentComments = $('#payment-comments').val();
+
+
+     if (isNaN(paymentAmount) || paymentAmount <= 0 || paymentAmount > grandTotal) {
+         alert("Ingrese un monto válido.");
+         return;
+     }
+
+     grandTotal -= paymentAmount; 
+
+     const paymentDate = new Date().toLocaleString(); 
+
+     paymentHistory.push({
+            date: paymentDate,
+            method: paymentMethod,
+            amount: paymentAmount,
+           
+            comments: paymentComments || 'Sin comentarios',
+        });
+
+     $('#payment-history tbody').append(`
+        <tr>
+            <td>${paymentDate}</td>
+            <td>${paymentMethod}</td>
+            <td>$${paymentAmount.toFixed(2)}</td>
+            
+            <td>${paymentComments || 'Sin comentarios'}</td>
+        </tr>
+    `);
+
+     $('#payment-modal').modal('hide');
+     $('#payment-modal').remove();
+     $('.total-final h4').text(`Total Final: $${grandTotal.toFixed(2)}`);
+
+     if (grandTotal === 0) {
+         alert("Pago completado. ¡Gracias!");
+     } else {
+         alert(`Pago de $${paymentAmount.toFixed(2)} realizado con éxito. Total pendiente: $${grandTotal.toFixed(2)}.`);
+     }
+ });
+
+ $('#payment-modal').on('hidden.bs.modal', function () {
+     $('#payment-modal').remove();
+ });
+ }
+
+ $(document).on('click', '.btn-primary.btn-sm', function () {
+ handlePayment();
+ });
+
 
 
 function renderEntryRow(entry) {

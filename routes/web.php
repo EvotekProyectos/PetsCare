@@ -23,6 +23,7 @@ use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\FollowUpController;
 use App\Http\Controllers\FormatController;
 use App\Http\Controllers\FormatTypeController;
+use App\Http\Controllers\HospitalDischargeController;
 use App\Http\Controllers\HospitalizationController;
 use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\PetController;
@@ -166,11 +167,6 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/receptions/historial/{id}', [ReceptionController::class, 'historial'])->name('reception.historial');
     Route::get('/receptions/hospital/{id}', [ReceptionController::class, 'hospital_authorization'])->name('hospital.list');
-
-    Route::get('/hospitalization/cuenta/{id}',[ReceptionController::class, 'cuenta'])->name('cuenta');
-    
-    Route::get('/hospitalization/cuenta/view/{id}',[ReceptionController::class, 'cuentaView'])->name('cuenta.view');
-
     Route::post('/receptions/hospital/pdf/{id}', [ReceptionController::class, 'hospital_authorizationpdf'])->name('hospital.pdf');
     Route::resource('receptions', ReceptionController::class);
 
@@ -214,7 +210,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('vaccine-certificates', VaccineCertificateController::class);
 
     //Hospitalizations
+    Route::get('/alta-voluntaria/{id}', [HospitalizationController::class, 'altaVoluntaria'])->name('alta.voluntaria');
+    Route::post('/alta-voluntaria/pdf/{id}', [HospitalizationController::class, 'altaVoluntariapdf'])->name('altaVoluntaria.pdf');
+    
     Route::get('/hospitalizations/historic/{id}', [HospitalizationController::class, 'historic'])->name('hospitalization.historic');   
+    
     Route::resource('hospitalizations', HospitalizationController::class);
     //PRODUCT CLASSIFICATIONS
     Route::resource('product-classifications', ProductClassificationController::class);
@@ -225,7 +225,11 @@ Route::group(['middleware' => ['auth']], function () {
     //RED SHEETS FOR HOSPITALIZATION DAYS
     Route::get('/hospitalizations/entries/{id}', [RedSheetController::class, 'entry'])->name("redsheet.entry");
     Route::get('/red-sheets/recap/{id}', [RedSheetController::class, 'recap'])->name("red-sheets.recap");
+    
     Route::post('/redSheet/discharge', [redSheetController::class, 'discharge']);
+
+    Route::post('/hospitalizations/discharge', [RedSheetController::class, 'dischargePatient']);
+
     Route::resource('red-sheets', RedSheetController::class);
 
     //SURGERIES
@@ -243,7 +247,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('format-types', FormatTypeController::class);
 
     //FORMATS
-    Route::get("/formats/list", [FormatController::class, 'list'])->name('list_index');
+    Route::get("/formats/list", [FormatController::class, 'list'])->name('list.index');
 
     Route::get("/formats/list/{id}", [FormatController::class, 'listOne'])->name('formats.list');
 
@@ -261,6 +265,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('appointment-services/imgs/{id}', [AppointmentServiceController::class, 'getImgs'])->name("appointment-services.imgs");
     Route::resource('appointment-services', AppointmentServiceController::class);
 
+    //HOSPITAL DISCHARGE
+    Route::resource('hospital-discharges', HospitalDischargeController::class);
     
 });
  

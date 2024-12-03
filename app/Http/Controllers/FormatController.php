@@ -90,12 +90,18 @@ class FormatController extends Controller
         return response()->json($format);
     }
 
-     public function list()
-     {
-         $formats = Format::with('reception' , 'formatType', 'pet')->get();
-          return DataTables::of($formats)->make(true);  
-    }
-    
+      public function list()
+      {  
+          $receptions = Reception::with('receptionType', 'pet')->get();        
+          $formats = Format::with('reception' , 'formatType', 'pet')->get();
+         //  //return DataTables::of($formats, $receptions)->make(true);  
+         $combinedData = $receptions->merge($formats);
+          // $data = $receptions->merge($formats);
+
+     // Devuelve los datos combinados a DataTables
+     return DataTables::of($combinedData)->make(true);
+     }
+
 
      public function listOne($id)
      {
