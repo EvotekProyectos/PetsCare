@@ -1,13 +1,3 @@
-// Definimos los colores correspondientes para cada estado
-
-const reasons = {
-    "1": "#079dd1",
-    "2": "#f52528",
-    "3": "#85c98b",
-    "4": "#f8a693",
-    "5": "#71459e",
-};
-
 $(document).ready(function () {
     table = $('#table').DataTable({
         ajax: route('assignment.altas'),
@@ -59,8 +49,19 @@ $(document).ready(function () {
                 data: 'exit_date',
             },
         ],
+            rowCallback: function (row, data) {
+                const colors = {
+                    1: '#2BEA91', // Color para id=1
+                    2: '#2DAAF8', // Color para id=2
+                };
+
+                if (data.hospitalizations && data.hospitalizations.length > 0) {
+                    const dischargeId = data.hospitalizations[0].hospital_discharges_id;
+                    if (colors[dischargeId]) {
+                        $(row).css('background-color', colors[dischargeId]);
+                    }
+                }
+            },
+        });
     });
-});
-
-
 

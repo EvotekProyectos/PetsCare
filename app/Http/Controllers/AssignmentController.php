@@ -62,13 +62,12 @@ class AssignmentController extends Controller
 
      public function altas()
      {
-         $user = auth()->user();
-         $receptions = Reception::with(['admissionType', 'family', 'pet', 'vet', 'area'])
-             ->where('reception_type_id', 2)
-             ->get();
+        $receptions = Reception::with(['admissionType', 'family', 'pet', 'vet', 'area', 'hospitalizations'])
+        ->where('reception_type_id', 2) ->get();
 
-         return DataTables::of($receptions)
-             ->make(true);
-     }
+         return DataTables::of($receptions) ->make(true);
+    }
 
 }
+
+

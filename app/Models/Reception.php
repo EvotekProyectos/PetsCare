@@ -138,4 +138,9 @@ class Reception extends Model
         return $this->belongsTo(\App\Models\Surgery::class, 'surgery_id', 'id');
     }
     
+    public function hospitalizations()
+{
+    return $this->hasMany(Hospitalization::class, 'reception_id');
+}
+    
 }

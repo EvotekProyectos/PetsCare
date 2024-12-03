@@ -105,7 +105,7 @@ function renderData(data) {
              <thead>
                  <tr>
                        <th>Fecha</th>
-                       <th>Recepcionista</th>
+                    
                        <th>Método de Pago</th>
                         <th>Monto</th>
                         <th>Comentarios</th>
@@ -196,11 +196,32 @@ $('#table-container').append(totalFinalSection);
      $('#payment-modal').remove();
      $('.total-final h4').text(`Total Final: $${grandTotal.toFixed(2)}`);
 
-     if (grandTotal === 0) {
-         alert("Pago completado. ¡Gracias!");
-     } else {
-         alert(`Pago de $${paymentAmount.toFixed(2)} realizado con éxito. Total pendiente: $${grandTotal.toFixed(2)}.`);
-     }
+    async function showPaymentCompleted() {
+        await Swal.fire({
+            title: '¡Pago completado!',
+            text: 'Gracias por su pago.',
+            icon: 'success',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Aceptar'
+        });
+    }
+
+    async function showPartialPayment(paymentAmount, grandTotal) {
+        await Swal.fire({
+            title: 'Pago realizado',
+            text: `Pago de $${paymentAmount.toFixed(2)} realizado con éxito. Total pendiente: $${grandTotal.toFixed(2)}.`,
+            icon: 'info',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Aceptar'
+    });
+}
+
+// Ejemplo de uso
+if (grandTotal === 0) {
+    showPaymentCompleted();
+} else {
+    showPartialPayment(paymentAmount, grandTotal);
+}
  });
 
  $('#payment-modal').on('hidden.bs.modal', function () {

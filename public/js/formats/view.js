@@ -23,12 +23,12 @@ $(document).ready(function () {
                     return ''; 
                 }
             },  
-            {
-                data: null,
-                render: function (data) {
-                    return data.reception ? data.reception.reception_type_id : '';
-                }
-            },
+            // {
+            //     data: null,
+            //     render: function (data) {
+            //         return data.reception ? data.reception.reception_type_id : '';
+            //     }
+            // },
             {
                 data: null,
                 render: function (data) {
@@ -36,18 +36,18 @@ $(document).ready(function () {
                 }
             },
           
-            {
+            // {
                
-                data: 'format_pdf',
-                render: function (data) {
-                    const newPath = data.replace('/formats/created/public/', 'storage/');
-                    return `
-                         <a href="${newPath}" class="btn btn-primary" target="_blank">
-                        Ver PDF
-                        </a>
-                    `;
-                }
-            }
+            //     data: 'format_pdf',
+            //     render: function (data) {
+            //         const newPath = data.replace('/formats/created/public/', 'storage/');
+            //         return `
+            //              <a href="${newPath}" class="btn btn-primary" target="_blank">
+            //             Ver PDF
+            //             </a>
+            //         `;
+            //     }
+            // }
 
               
               

@@ -45,5 +45,6 @@ class Hospitalization extends Model
         return $this->belongsTo(\App\Models\Reception::class, 'reception_id', 'id');
     }
     
+    
 
 }

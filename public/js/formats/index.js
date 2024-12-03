@@ -29,12 +29,12 @@ $(document).ready(function () {
                     return data.format_type ? data.format_type.name : '';
                 }
             },
-            {
-                data: null,
-                render: function (data) {
-                    return data.reception_type ? data.reception_type.name : '';
-                }
-            },
+            // {
+            //     data: null,
+            //     render: function (data) {
+            //         return data.reception ? data.reception.reception_type_id : '';
+            //     }
+            // },
              {
                  data: null,
                  render: function (data) {

@@ -37,9 +37,9 @@
                                         <thead class="thead table-primary text-uppercase">
                                             <tr>
                                                 <th>Fecha</th>
-                                                <th>Tipo de recepción</th>
+                                                {{-- <th>Tipo de recepción</th> --}}
                                                 <th>Tipo de formato</th>
-                                                <th>Formato</th>
+                                                {{-- <th>Formato</th> --}}
                                                 {{-- <th>Acciones</th> --}}
                                             </tr>
                                         </thead>
