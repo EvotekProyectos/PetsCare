@@ -14,6 +14,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link rel="icon" href="{{ asset('img/logo-petscare.png') }}" type="image/gif" sizes="16x16">
 
     <!-- Scripts -->
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
@@ -64,27 +65,26 @@
 
                 <ul class="list-unstyled components ps-4 pe-3">
 
-                    {{-- <p>Dummy Heading</p> --}}
-                    <li class="active border-start border-3 border-primary">
-                        <a href="#homeSubmenu" class="ms-2">
+                    <li class="@yield('home')">
+                        <a href="{{route('receptions.create')}}" class="ms-2">
                             <i class="fas fa-home"></i>
                             Inicio
                         </a>
                     </li>
-                    <li>
+                    <li class="@yield('receptions')">
                         <a href="{{ route('receptions.index') }}" class="ms-2">
                             <i class="fas fa-list"></i>
                             Recepción
                         </a>
                     </li>
 
-                    <li>
+                    <li class="@yield('assignments')">
                         <a href="{{ route('assignment.index') }}" class=" ms-2">
                             <i class="fas fa-hand-holding-heart"></i>
                             Asignaciones de Consulta
                         </a>
                     </li>
-                    <li>
+                    <li class="@yield('hospitalizations')">
                         <a href="{{ route('assignment.hospital') }}" class=" ms-2">
                             <i class="fas fa-hand-holding-heart"></i>
                             Asignaciones de Hospital
@@ -96,7 +96,7 @@
                            Hospitalizaciones
                         </a>
                     </li>
-                    <li>
+                    <li class="@yield('families')">
                         <a href="{{ route('families.index') }}" class=" ms-2">
                             <span class="fluent-mdl2--family"></span>
                             Familias
@@ -109,16 +109,25 @@
                         </a>
                     </li> --}}
 
-                    <li>
-                        <a href="#pageSubmenu" data-bs-toggle="collapse" aria-expanded="false"
+                    <li class="@yield('megamenu')">
+
+                        <a href="{{ route('megamenu') }}" class=" ms-2">
+                            <i class="fas fa-cogs"></i>
+                            Configuración
+                        </a>
+                       {{-- <a href="#pageSubmenu" data-bs-toggle="collapse" aria-expanded="false"
                             class="dropdown dropdown-toggle  ms-2">
                             <i class="fas fa-cogs"></i>
                             Configuración
                         </a>
-                        <ul class="collapse list-unstyled" id="pageSubmenu">
+                         <ul class="collapse list-unstyled" id="pageSubmenu">
                             <li>
                                 <a href="{{ route('logs.index') }}" class="ms-2"><i class="fa fa-calendar-check"></i>
                                     Bitácora</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('role-has-permissions.index') }}" class="ms-2"><i class="fas fa-user"></i>
+                                    Roles y permisos</a>
                             </li>
                             <li>
                                 <a href="{{ route('users.index') }}" class="ms-2"><i class="fas fa-user"></i>
@@ -176,7 +185,7 @@
                                 <a href="{{route('pets-statuses.index')}}" class="ms-2"><i class="fas fa-list"></i> 
                                     Estados de Mascotas</a>
                             </li>
-                        </ul>
+                        </ul> --}}
                     </li>
                 </ul>
 
@@ -281,6 +290,10 @@
     <script src="{{ asset('js/select2.min.js') }}" defer></script>
     {{-- MOMENT JS --}}
     <script src="{{ asset('js/momentjs.min.js') }}" defer></script>
+    {{-- FIXEDHEADER --}}
+    <script src="{{ asset('js/dataTables.fixedHeader.min.js') }}" defer></script>
+    {{-- rowgroup --}}
+    <script src="{{ asset('js/dataTables.rowGroup.js') }}" defer></script>
     {{-- sweetalert JS --}}
     <script src="{{ asset('js/sweetalert2.all.min.js') }}" defer></script>
     <script type="text/javascript">

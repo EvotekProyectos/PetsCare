@@ -1,23 +1,44 @@
 <?php
 
+use App\Models\Reception;
+use App\Models\Assignment;
+use App\Models\PetHistory;
+use App\Models\Appointment;
 use Dotenv\Store\FileStore;
+use App\Models\Prescription;
+use FontLib\Table\Type\name;
+use App\Models\VaccineCertificate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Models\ReceptionStatusHistory;
 use App\Http\Controllers\LogController;
+use App\Http\Controllers\PetController;
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GenreController;
+use App\Http\Controllers\ShiftController;
+use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\ReasonController;
-use App\Http\Controllers\AdmissionTypeController;
-use App\Http\Controllers\AppointmentController;
-use App\Http\Controllers\AppointmentServiceController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\SurgeryController;
+use App\Http\Controllers\FollowUpController;
+use App\Http\Controllers\RedSheetController;
+use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\CoverAreaController;
+use App\Http\Controllers\ReceptionController;
 use App\Http\Controllers\AssignmentController;
+use App\Http\Controllers\PetHistoryController;
+use App\Http\Controllers\PetsStatusController;
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\ProductTypeController;
+use App\Http\Controllers\PrescriptionController;
+use App\Http\Controllers\AdmissionTypeController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ReceptionTypeController;
 use App\Http\Controllers\AttentionStatusController;
-use App\Http\Controllers\CoverAreaController;
+use App\Http\Controllers\HospitalizationController;
 use App\Http\Controllers\FamClassificationController;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\FollowUpController;
@@ -26,29 +47,12 @@ use App\Http\Controllers\FormatTypeController;
 use App\Http\Controllers\HospitalDischargeController;
 use App\Http\Controllers\HospitalizationController;
 use App\Http\Controllers\PetClassificationController;
-use App\Http\Controllers\PetController;
-use App\Http\Controllers\PetHistoryController;
-use App\Http\Controllers\PetsStatusController;
-use App\Http\Controllers\PrescriptionController;
-use App\Http\Controllers\ProductClassificationController;
-use App\Http\Controllers\ProductTypeController;
-use App\Http\Controllers\ReceptionController;
-use App\Http\Controllers\ReceptionStatusHistoryController;
-use App\Http\Controllers\RedSheetController;
+use App\Http\Controllers\RoleHasPermissionController;
+use App\Http\Controllers\AppointmentServiceController;
 use App\Http\Controllers\ReproductiveStatusController;
-use App\Http\Controllers\ScheduleController;
-use App\Http\Controllers\ServiceController;
-use App\Http\Controllers\ShiftController;
-use App\Http\Controllers\SurgeryController;
 use App\Http\Controllers\VaccineCertificateController;
-use App\Models\Appointment;
-use App\Models\Assignment;
-use App\Models\PetHistory;
-use App\Models\Prescription;
-use App\Models\Reception;
-use App\Models\ReceptionStatusHistory;
-use App\Models\VaccineCertificate;
-use FontLib\Table\Type\name;
+use App\Http\Controllers\ProductClassificationController;
+use App\Http\Controllers\ReceptionStatusHistoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,7 +72,7 @@ use FontLib\Table\Type\name;
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
+Route::get('/megamenu', [App\Http\Controllers\HomeController::class, 'megamenu'])->name('megamenu');
 
 
 Route::group(['middleware' => ['auth']], function () {
@@ -265,6 +269,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('appointment-services/imgs/{id}', [AppointmentServiceController::class, 'getImgs'])->name("appointment-services.imgs");
     Route::resource('appointment-services', AppointmentServiceController::class);
 
+
+    //RoleHasPermissions
+    Route::resource('role-has-permissions', RoleHasPermissionController::class);
     //HOSPITAL DISCHARGE
     Route::resource('hospital-discharges', HospitalDischargeController::class);
     

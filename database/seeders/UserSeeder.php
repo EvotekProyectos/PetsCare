@@ -21,24 +21,19 @@ class UserSeeder extends Seeder
             'email' => 'patricia.briones@evotek.com.mx',
             'password' => Hash::make('8442036052'),
             'remember_token' => 'sqd4HLT3nolNw9JUSz8Hh9P9hYZBLHG9xi3buifOPKUgPSJj3jDajoch9olN',
-        ])->assignRole('admin');
-
-        $user->givePermissionTo(Permission::all());
+        ])->assignRole('administrador');
 
         $user =  User::create([
             'name' => 'Ale Alamilla',
             'email' => 'alejandra.alamilla@evotek.com.mx',
             'password' => Hash::make('8442477138')
-        ])->assignRole('admin');
-
-        $user->givePermissionTo(Permission::all());
+        ])->assignRole('administrador');
 
         $user =  User::create([
             'name' => 'Estrella Lopez',
             'email' => 'estrella.armendariz@evotek.com.mx',
             'password' => Hash::make('8443922106')
-        ])->assignRole('admin');
+        ])->assignRole('administrador');
 
-        $user->givePermissionTo(Permission::all());
     }
 }
