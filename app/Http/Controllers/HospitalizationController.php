@@ -105,6 +105,10 @@ class HospitalizationController extends Controller
     {
         $reception = Reception::find($id);
         $pet = Pet::with('family', 'genre')->find($id);
+
+        $reception->exit_date = now();
+        $reception->save();
+
         
         $signatureDataUrl = $request->input('signature');
          $nameFamily = $request->input('name_family');
@@ -130,7 +134,11 @@ class HospitalizationController extends Controller
         $format->format_pdf = $pdfPath; 
         $format->save();
 
-      
+        $hospitalization = new Hospitalization();
+        $hospitalization->reception_id = $id;  
+        $hospitalization->exit_date = now();
+        $hospitalization->hospital_discharges_id = 2; 
+        $hospitalization->save();
 
         return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
     }

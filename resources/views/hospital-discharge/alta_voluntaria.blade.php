@@ -121,18 +121,27 @@
             <tr>
                 <td>
                     <ol>
-                        <li>  
-                            Yo:  
-                            <input type="text" id="name_family" value="{{ $nameFamily ?? '' }}" class="{{ isset($isPdf) && $isPdf ? 'input-hidden' : '' }}"> <br>
+                        <li>
+                            Yo: 
+                            @if (!isset($isPdf) || !$isPdf)
+                                <input type="text" id="name_family" value="{{ $nameFamily ?? '' }}" class="form-control">
+                            @else
+                                <span>{{ $nameFamily ?? '' }}</span>
+                            @endif
+                            <br>
                             declaro que por mi propia voluntad decido llevarme de ALTA VOLUNTARIA al paciente de Nombre: 
-                            <b>{{ $reception->pet->name }} </b> Especie: <b>{{ $reception->pet->specie}}</b>
-                            Edad: <b>{{ $reception->pet->id }}</b>, del cual no acepto el tratamiento médico indicado. Dejando exento de responsabilidades al Hospital Veterinario Pets Care 
-                            y a los médicos encargados del caso.
+                            <b>{{ $reception->pet->name }}</b>, Especie: <b>{{ $reception->pet->specie }}</b>, 
+                            Edad: <b>{{ $reception->pet->id }}</b>, del cual no acepto el tratamiento médico indicado. 
+                            Dejando exento de responsabilidades al Hospital Veterinario Pets Care y a los médicos encargados del caso.
                         </li>
                         
                         <li>
                             <h3> MOTIVO:</h3> 
-                            <input type="text" id="reason" value="{{ $reason ?? '' }}" class="{{ isset($isPdf) && $isPdf ? 'input-hidden' : '' }}">
+            @if (!isset($isPdf) || !$isPdf)
+                <input type="text" id="reason" value="{{ $reason ?? '' }}" class="form-control">
+            @else
+                <span>{{ $reason ?? '' }}</span>
+            @endif
                         </li>
                     </ol>
                 </td>
