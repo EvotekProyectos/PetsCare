@@ -23,36 +23,31 @@ $(document).ready(function () {
                     return ''; 
                 }
             },  
-            // {
-            //     data: null,
-            //     render: function (data) {
-            //         return data.reception ? data.reception.reception_type_id : '';
-            //     }
-            // },
             {
                 data: null,
                 render: function (data) {
                     return data.format_type ? data.format_type.name : '';
                 }
             },
+            {
+                data: null,
+                render: function (data) {
+                    return data.reception ? data.reception.reception_type.name : 'Sin recepción';
+                }
+           },
           
-            // {
-               
-            //     data: 'format_pdf',
-            //     render: function (data) {
-            //         const newPath = data.replace('/formats/created/public/', 'storage/');
-            //         return `
-            //              <a href="${newPath}" class="btn btn-primary" target="_blank">
-            //             Ver PDF
-            //             </a>
-            //         `;
-            //     }
-            // }
-
-              
-              
-            
-            
+           { 
+            data: 'format_pdf',
+            render: function (data) {
+                const newPath = data.replace('public/', 'storage/');
+                return `
+                     <a href="${newPath}" class="btn btn-primary" target="_blank">
+                    Ver PDF
+                    </a>
+                `;
+            }
+        }
+        
         ]
     });
 });

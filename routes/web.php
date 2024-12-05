@@ -40,12 +40,9 @@ use App\Http\Controllers\ReceptionTypeController;
 use App\Http\Controllers\AttentionStatusController;
 use App\Http\Controllers\HospitalizationController;
 use App\Http\Controllers\FamClassificationController;
-use App\Http\Controllers\FamilyController;
-use App\Http\Controllers\FollowUpController;
 use App\Http\Controllers\FormatController;
 use App\Http\Controllers\FormatTypeController;
-use App\Http\Controllers\HospitalDischargeController;
-use App\Http\Controllers\HospitalizationController;
+use App\Http\Controllers\HospitalDischargeController;;
 use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\RoleHasPermissionController;
 use App\Http\Controllers\AppointmentServiceController;
@@ -53,6 +50,7 @@ use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\VaccineCertificateController;
 use App\Http\Controllers\ProductClassificationController;
 use App\Http\Controllers\ReceptionStatusHistoryController;
+use App\Models\Surgery;
 
 /*
 |--------------------------------------------------------------------------
@@ -170,8 +168,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/receptions/list', [ReceptionController::class, 'list'])->name('reception.list');
 
     Route::get('/receptions/historial/{id}', [ReceptionController::class, 'historial'])->name('reception.historial');
+    
     Route::get('/receptions/hospital/{id}', [ReceptionController::class, 'hospital_authorization'])->name('hospital.list');
     Route::post('/receptions/hospital/pdf/{id}', [ReceptionController::class, 'hospital_authorizationpdf'])->name('hospital.pdf');
+    
     Route::resource('receptions', ReceptionController::class);
 
 
@@ -220,6 +220,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/hospitalizations/historic/{id}', [HospitalizationController::class, 'historic'])->name('hospitalization.historic');   
     
     Route::resource('hospitalizations', HospitalizationController::class);
+
+
     //PRODUCT CLASSIFICATIONS
     Route::resource('product-classifications', ProductClassificationController::class);
 
@@ -240,6 +242,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/surgeries/entries/{id}', [SurgeryController::class, 'entry'])->name("surgeries.entry");
     Route::get("/surgeries/create/{id}", [SurgeryController::class, 'create'])->name('surgeries.creater');
     Route::get('/check-surgeries-requirements/{id}', [SurgeryController::class, 'checkRequirements'])->name("surgery.checkRequirements");
+    
+    Route::get('/surgeries/authorization/{id}',[SurgeryController::class, 'surgery_authorization'])->name("surgery.auth");
+    Route::post('/surgeries/authorization/pdf/{id}',[SurgeryController::class, 'surgery_authorizationpdf'])->name("surgery_authorization.pdf");
 
     Route::resource('surgeries', SurgeryController::class);
    
@@ -256,7 +261,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get("/formats/list/{id}", [FormatController::class, 'listOne'])->name('formats.list');
 
     Route::get("/formats/created/{id}", [FormatController::class, 'format_list'])->name('formats.created');
-
 
 
     Route::get("/formats/create/{id}", [FormatController::class, 'add'])->name('formats.add');

@@ -90,24 +90,19 @@ class FormatController extends Controller
         return response()->json($format);
     }
 
-      public function list()
-      {  
-          $receptions = Reception::with('receptionType', 'pet')->get();        
-          $formats = Format::with('reception' , 'formatType', 'pet')->get();
-         //  //return DataTables::of($formats, $receptions)->make(true);  
-         $combinedData = $receptions->merge($formats);
-          // $data = $receptions->merge($formats);
-
-     // Devuelve los datos combinados a DataTables
-     return DataTables::of($combinedData)->make(true);
-     }
+    public function list()
+    {
+        $formats = Format::with(['reception.pet', 'formatType','reception.receptionType','pet'])->get();
+        return DataTables::of($formats)->make(true);
+    }
 
 
      public function listOne($id)
      {
          $pet = Pet::findOrFail($id); 
-        $receptions = $pet->receptions;
-         $formats = Format::with('reception' , 'formatType', 'pet')->whereIn('reception_id', $receptions->pluck('id')->toArray())->orWhere('pet_id', $id)->get();
+         $receptions = $pet->receptions;
+         $formats = Format::with(['reception.pet', 'formatType','reception.receptionType','pet'])
+         ->whereIn('reception_id', $receptions->pluck('id')->toArray())->orWhere('pet_id', $id)->get();
       
          return DataTables::of($formats)->make(true);  
       }
@@ -155,6 +150,10 @@ class FormatController extends Controller
         return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
     }
     
-   
+    public function surgery_authorization($id)
+    {
+        $pet = Pet::with('family', 'genre')->find($id);
+        return view('format.aut_quirurgica', compact( "pet"));
+    }
     
 }

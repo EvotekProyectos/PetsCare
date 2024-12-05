@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Assignment;
+use App\Models\Hospitalization;
 use App\Models\Reception;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -60,13 +61,25 @@ class AssignmentController extends Controller
         return view('hospitalization.table_recep');
     }
 
-     public function altas()
-     {
-        $receptions = Reception::with(['admissionType', 'family', 'pet', 'vet', 'area', 'hospitalizations'])
-        ->where('reception_type_id', 2) ->get();
+    //  public function altas()
+    //  {
+    //     $receptions = Reception::with(['admissionType', 'family', 'pet', 'vet', 'area', ])
+    //     ->where('reception_type_id', 2) ->get();
 
-         return DataTables::of($receptions) ->make(true);
-    }
+    //      return DataTables::of($receptions) ->make(true);
+    // }
+
+    public function altas()
+{
+    $hospitalizations = Hospitalization::with(['reception.admissionType', 'reception.family', 'reception.pet', 'reception.vet', 'reception.area', 'hospitalDischarges'])
+        ->whereHas('reception', function ($query) {
+            $query->where('reception_type_id', 2);
+        })
+        ->get();
+
+    return DataTables::of($hospitalizations)->make(true);
+}
+
 
 }
 

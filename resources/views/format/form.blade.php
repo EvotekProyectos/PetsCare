@@ -61,10 +61,38 @@
                 {!! $errors->first('format_type_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
             </div>
             
-            <div class="col-12 mt-2 d-flex justify-content-end">
+            {{-- <div class="col-12 mt-2 d-flex justify-content-end">
                    <a class="btn btn-sm btn-primary " href="{{ route('format.hospital',$pet->id) }}"><i class="fas fa-plus"></i> {{ __('GENERAR FORMATO') }}</a>
             </div>
+        </div> --}}
+        <div class="col-12 mt-2 d-flex justify-content-end">
+            <a id="generate-format-btn" class="btn btn-sm btn-primary" href="#"><i class="fas fa-plus"></i> {{ __('GENERAR FORMATO') }}</a>
         </div>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const selectElement = document.getElementById('format_type_id');
+                const generateButton = document.getElementById('generate-format-btn');
+                
+                // Define routes based on format_type_id
+                const routes = {
+                    1: '{{ route("format.hospital", $pet->id) }}',
+                    2: '{{ route("alta.voluntaria", $pet->id) }}',
+                   
+                   
+                };
+        
+                // Update button href on selection change
+                selectElement.addEventListener('change', function () {
+                    const selectedValue = selectElement.value;
+                    if (routes[selectedValue]) {
+                        generateButton.href = routes[selectedValue];
+                    } else {
+                        generateButton.href = '#'; // Default or empty value
+                    }
+                });
+            });
+        </script>
         {{-- <div class="form-group mb-2 mb20">
             <label for="reception_id" class="form-label">{{ __('Reception Id') }}</label>
             <input type="text" name="reception_id" class="form-control @error('reception_id') is-invalid @enderror" value="{{ old('reception_id', $format?->reception_id) }}" id="reception_id" placeholder="Reception Id">
@@ -93,5 +121,5 @@
     var Pet_Id = {{ $pet->id }};
 </script>
 
-<script src="{{ asset('js/formats/create.js') }}" defer></script>
+{{-- <script src="{{ asset('js/formats/create.js') }}" defer></script> --}}
 @endpush 

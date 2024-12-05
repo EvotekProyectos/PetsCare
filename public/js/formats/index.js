@@ -29,18 +29,23 @@ $(document).ready(function () {
                     return data.format_type ? data.format_type.name : '';
                 }
             },
-            // {
-            //     data: null,
-            //     render: function (data) {
-            //         return data.reception ? data.reception.reception_type_id : '';
-            //     }
-            // },
              {
                  data: null,
                  render: function (data) {
-                     return data.pet ? data.pet.name : ''  ;
+                     return data.reception ? data.reception.reception_type.name : 'Sin recepción';
                  }
-             },
+            },
+            {
+                data: null,
+                render: function (data) {
+                    if (data.pet) {
+                        return data.pet.name; 
+                    } else if (data.reception) {
+                        return data.reception.pet.name; 
+                    }
+                    return ''; 
+                }
+            },            
             { 
                 data: 'format_pdf',
                 render: function (data) {

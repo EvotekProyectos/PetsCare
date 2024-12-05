@@ -4,12 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Surgery;
 use App\Http\Requests\SurgeryRequest;
+use App\Models\Format;
+use App\Models\Hospitalization;
+use App\Models\Pet;
 use App\Models\ProductClassification;
 use App\Models\ProductType;
 use App\Models\Reception;
 use App\Models\RedSheet;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use Barryvdh\DomPDF\Facade\Pdf  as Pdf;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class SurgeryController
@@ -121,4 +127,47 @@ class SurgeryController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Se requiere al menos un registro de laboratorio y uno de imagenología.']);
         }
     }
+
+    public function surgery_authorization($id)
+    {
+        $reception = Reception::find($id);
+        $pet = Pet::with('family', 'genre')->find($id);
+        return view('format.aut_quirurgica', compact("reception", "pet"));
+    }
+
+    public function surgery_authorizationpdf(Request $request, $id)
+    {
+        $reception = Reception::with('pet')->find($id);
+        $pet = $reception->pet;
+        
+
+        $signatureDataUrl = $request->input('signature');
+         $procedure = $request->input('procedure');
+          $total= $request->input('total');
+          $include = $request->input('include');
+    
+        $pdf = PDF::loadView('format.aut_quirurgica', [
+            'reception' => $reception,
+            'pet' => $pet,
+            'signatureDataUrl' => $signatureDataUrl,
+          'procedure' => $procedure,
+          'total' => $total,
+          'include' => $include,
+            'isPdf' => true
+        ]);
+
+        $pdfPath = 'public/hospitalizations/auth_surgery_' . $id . '.pdf';
+        Storage::put($pdfPath, $pdf->output());
+
+        $pdfUrl = Storage::url($pdfPath);
+
+        $format = new Format();
+        $format->format_type_id = 2; 
+        $format->reception_id = $id;
+        $format->format_pdf = $pdfPath; 
+        $format->save();
+
+        return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
+    }
+
 }

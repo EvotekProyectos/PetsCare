@@ -119,7 +119,7 @@
                                 <div class="col-12 col-lg-3 d-flex justify-content-between align-items-center my-2">
                                     <div class="col">
                                         <a class="btn btn-costum-services btn-lg text-uppercase rounded-5 shadow w-100 fs-6 d-flex justify-content-around align-items-center "
-                                            href="{{ route('prescription.create', $pet->id) }}">
+                                            href='{{ route('formats.created', $pet->id) }}'">
                                             <span class="badge custom-badge-pill"><span
                                                     class="material-symbols--prescriptions-outline "></span> </span> <small>
                                                 FORMATOS </small></a>

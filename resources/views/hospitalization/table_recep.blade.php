@@ -38,6 +38,7 @@
                                                 <th>Mascota</th>
                                                 <th>Raza</th>
                                                 <th>Fecha de alta </th>
+                                                <th>Tipo de alta </th>
                                                 
                                                 {{-- <th>Acciones</th> --}}
                                                 

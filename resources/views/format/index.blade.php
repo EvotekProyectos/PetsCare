@@ -36,7 +36,7 @@
                                         {{-- <th>No</th> --}}
                                         <th>Fecha</th>
 										<th>Tipo de formato</th>
-										{{-- <th>Tipo de recepción</th> --}}
+										<th>Tipo de recepción</th>
                                         <th>Mascota</th>
 										<th>Acciones</th>
                                         

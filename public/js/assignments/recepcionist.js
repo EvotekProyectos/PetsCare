@@ -5,63 +5,69 @@ $(document).ready(function () {
         order: [0, 'desc'],
         columns: [
             {
-                data: 'entry_date',
+                data: null,
+                render: function (data) {
+                    return data.reception ? data.reception.entry_date : '';
+                }
             },
             {
                 data: null,
                 render: function (data) {
-                    return data.vet ? data.vet.name : '';
+                    return data.reception ? data.reception.vet.name : '';
                 }
             },
 
             {
                 data: null,
                 render: function (data) {
-                    return data.admission_type ? data.admission_type.name : '';
+                    return data.reception ? data.reception.admission_type.name : '';
                 }
             },
             {
                 data: null,
                 render: function (data) {
-                    return data.family ? data.family.name : '';
+                    return data.reception.family ? data.reception.family.name : '';
                 }
             },
             {
                 data: null,
                 render: function (data) {
-                    return data.family ? data.family.phone : '';
+                    return data.reception.family ? data.reception.family.phone : '';
                 }
             },
             {
                 data: null,
                 render: function (data) {
-                    return data.pet ? data.pet.name : '';
+                    return data.reception ? data.reception.pet.name : '';
                 }
             },
             {
                 data: null,
                 render: function (data) {
-                    return data.pet ? data.pet.raza : '';
+                    return data.reception ? data.reception.pet.raza : '';
                 }
             },
            
             {
                 data: 'exit_date',
             },
-        ],
-            rowCallback: function (row, data) {
-                const colors = {
-                    1: '#2BEA91', // Color para id=1
-                    2: '#2DAAF8', // Color para id=2
-                };
-
-                if (data.hospitalizations && data.hospitalizations.length > 0) {
-                    const dischargeId = data.hospitalizations[0].hospital_discharges_id;
-                    if (colors[dischargeId]) {
-                        $(row).css('background-color', colors[dischargeId]);
-                    }
+            {
+                data: null,
+                render: function (data) {
+               return data.hospital_discharges ? data.hospital_discharges.name : '';
                 }
             },
-        });
-    });
+    ],
+    createdRow: function (row, data, dataIndex) {
+        const colors = {
+            1: '#2BEA91',
+            2: '#2DAAF8'
+        };
 
+        const dischargeId = data.hospital_discharges ? data.hospital_discharges.id : null;
+        if (dischargeId && colors[dischargeId]) {
+            $(row).css('background-color', colors[dischargeId]);
+        }
+    }
+});
+});
