@@ -43,7 +43,6 @@
 
 
         <div class="form-group mb-2 mb20">
-            {{-- <label for="format_type_id" class="form-label">{{ __('Tipo de formato') }}</label> --}}
             <div class="form-group mb-2">
                 <label for="format_type_id" class="form-label">TIPO DE FORMATO</label>
                 <div class="input-group mb-3">
@@ -77,7 +76,8 @@
                 // Define routes based on format_type_id
                 const routes = {
                     1: '{{ route("format.hospital", $pet->id) }}',
-                    2: '{{ route("alta.voluntaria", $pet->id) }}',
+                    2: '{{ route("format.alta", $pet->id) }}',
+                    3: '{{ route("format.surgery", $pet->id) }}',
                    
                    
                 };

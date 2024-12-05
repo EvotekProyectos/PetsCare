@@ -123,7 +123,7 @@ class HospitalizationController extends Controller
             'isPdf' => true
         ]);
 
-        $pdfPath = 'public/receptions/voluntary_discharge_' . $id . '.pdf';
+        $pdfPath = 'public/hospitalizations/voluntary_discharge_' . $id . '.pdf';
         Storage::put($pdfPath, $pdf->output());
 
         $pdfUrl = Storage::url($pdfPath);
@@ -131,6 +131,7 @@ class HospitalizationController extends Controller
         $format = new Format();
         $format->format_type_id = 2; 
         $format->reception_id = $id;
+        $format->pet_id= $pet;
         $format->format_pdf = $pdfPath; 
         $format->save();
 

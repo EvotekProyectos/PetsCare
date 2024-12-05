@@ -187,10 +187,8 @@ class ReceptionController extends Controller
     {
         $reception = Reception::find($id);
         $pet = Pet::with('family', 'genre')->find($id);
-        
         $signatureDataUrl = $request->input('signature');
 
-        // Genearar `isPdf` para el id de los botones 
         $pdf = PDF::loadView('reception.pdf', [
             'reception' => $reception,
             'pet' => $pet,
@@ -211,8 +209,6 @@ class ReceptionController extends Controller
 
         return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
     }
-
-
 
 
      public function getFamilyByPet($pet_id)

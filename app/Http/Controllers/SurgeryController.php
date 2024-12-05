@@ -146,7 +146,7 @@ class SurgeryController extends Controller
           $total= $request->input('total');
           $include = $request->input('include');
     
-        $pdf = PDF::loadView('format.aut_quirurgica', [
+        $pdf = PDF::loadView('surgery.aut_quirurgica', [
             'reception' => $reception,
             'pet' => $pet,
             'signatureDataUrl' => $signatureDataUrl,
@@ -162,7 +162,7 @@ class SurgeryController extends Controller
         $pdfUrl = Storage::url($pdfPath);
 
         $format = new Format();
-        $format->format_type_id = 2; 
+        $format->format_type_id = 3; 
         $format->reception_id = $id;
         $format->format_pdf = $pdfPath; 
         $format->save();

@@ -216,9 +216,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Hospitalizations
     Route::get('/alta-voluntaria/{id}', [HospitalizationController::class, 'altaVoluntaria'])->name('alta.voluntaria');
     Route::post('/alta-voluntaria/pdf/{id}', [HospitalizationController::class, 'altaVoluntariapdf'])->name('altaVoluntaria.pdf');
-    
     Route::get('/hospitalizations/historic/{id}', [HospitalizationController::class, 'historic'])->name('hospitalization.historic');   
-    
     Route::resource('hospitalizations', HospitalizationController::class);
 
 
@@ -231,21 +229,16 @@ Route::group(['middleware' => ['auth']], function () {
     //RED SHEETS FOR HOSPITALIZATION DAYS
     Route::get('/hospitalizations/entries/{id}', [RedSheetController::class, 'entry'])->name("redsheet.entry");
     Route::get('/red-sheets/recap/{id}', [RedSheetController::class, 'recap'])->name("red-sheets.recap");
-    
     Route::post('/redSheet/discharge', [redSheetController::class, 'discharge']);
-
     Route::post('/hospitalizations/discharge', [RedSheetController::class, 'dischargePatient']);
-
     Route::resource('red-sheets', RedSheetController::class);
 
     //SURGERIES
     Route::get('/surgeries/entries/{id}', [SurgeryController::class, 'entry'])->name("surgeries.entry");
     Route::get("/surgeries/create/{id}", [SurgeryController::class, 'create'])->name('surgeries.creater');
     Route::get('/check-surgeries-requirements/{id}', [SurgeryController::class, 'checkRequirements'])->name("surgery.checkRequirements");
-    
     Route::get('/surgeries/authorization/{id}',[SurgeryController::class, 'surgery_authorization'])->name("surgery.auth");
     Route::post('/surgeries/authorization/pdf/{id}',[SurgeryController::class, 'surgery_authorizationpdf'])->name("surgery_authorization.pdf");
-
     Route::resource('surgeries', SurgeryController::class);
    
     //FOLLOW UPS 
@@ -257,15 +250,15 @@ Route::group(['middleware' => ['auth']], function () {
 
     //FORMATS
     Route::get("/formats/list", [FormatController::class, 'list'])->name('list.index');
-
     Route::get("/formats/list/{id}", [FormatController::class, 'listOne'])->name('formats.list');
-
     Route::get("/formats/created/{id}", [FormatController::class, 'format_list'])->name('formats.created');
-
-
     Route::get("/formats/create/{id}", [FormatController::class, 'add'])->name('formats.add');
     Route::get('/formats/hospital/{id}', [FormatController::class, 'hospital_authorization'])->name('format.hospital');
     Route::post('/formats/hospital/pdf/{id}', [FormatController::class, 'generateHospitalAuthorizationPdf'])->name('format-hospital.pdf'); 
+    Route::get('/formats/alta/{id}', [FormatController::class, 'altaVoluntaria'])->name('format.alta');
+    Route::post('/formats/alta/pdf/{id}', [FormatController::class, 'altaVoluntariapdf'])->name('format-alta.pdf'); 
+    Route::get('/formats/surgery/{id}', [FormatController::class, 'surgery_authorization'])->name('format.surgery');
+    Route::post('/formats/surgery/pdf/{id}', [FormatController::class, 'surgery_authorizationpdf'])->name('format-surgery.pdf'); 
     Route::resource('formats', FormatController::class);
 
     //Appointment Services
