@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('red_sheets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('reception_id')->nullable()->references('id')->on('receptions');
-            $table->foreignId('lab_type_id')->nullable()->references('id')->on('product_types');
-            $table->foreignId('imaging_type_id')->nullable()->references('id')->on('product_types');
-            $table->foreignId('service_type_id')->nullable()->references('id')->on('product_types');
+            $table->integer('lab_type_id')->nullable();
+            $table->integer('imaging_type_id')->nullable();
+            $table->integer('service_type_id')->nullable();
             $table->longText("observations")->nullable();
             $table->integer("day_count");
             $table->foreignId('vet_id')->nullable()->references('id')->on('users');

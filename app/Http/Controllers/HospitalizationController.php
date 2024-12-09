@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Hospitalization;
 use App\Http\Requests\HospitalizationRequest;
+use App\Models\FollowUp;
+use App\Models\Producto;
 use App\Models\Reception;
 
 /**
@@ -89,5 +91,16 @@ class HospitalizationController extends Controller
         $reception = Reception::find($id);
 
         return view('hospitalization.historic', compact('reception'));
+    }
+
+    public function followups(int $id){
+        $reception = Reception::find($id);
+        $followupsCritic = new FollowUp();
+
+        return view('follow-up.add', compact('reception', 'followupsCritic'));
+    }
+
+    public function test(){
+        dd(Producto::all()); 
     }
 }

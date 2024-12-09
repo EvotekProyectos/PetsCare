@@ -9,6 +9,7 @@ use App\Models\Area;
 use App\Models\Family;
 use App\Models\Pet;
 use App\Models\Prescription;
+use App\Models\Producto;
 use App\Models\Reason;
 use App\Models\ReceptionStatusHistory;
 use App\Models\RedSheet;
@@ -35,7 +36,7 @@ class ReceptionController extends Controller
     {
         $receptions = Reception::paginate();
         $this->authorize("viewAny", Reception::class);
-
+         
         return view('reception.index', compact('receptions'))
             ->with('i', (request()->input('page', 1) - 1) * $receptions->perPage());
     }

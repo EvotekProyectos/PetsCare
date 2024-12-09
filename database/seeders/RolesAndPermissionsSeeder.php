@@ -182,6 +182,24 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'editar servicios consultas', 'type' => 'sevicios consultas']);
         Permission::create(['name' => 'eliminar servicios consultas', 'type' => 'sevicios consultas']);
 
+        // surgery packs permissions
+        Permission::create(['name' => 'ver panel paquetes cirugias', 'type' => 'paquetes cirugias']);
+        Permission::create(['name' => 'crear paquetes cirugias', 'type' => 'paquetes cirugias']);
+        Permission::create(['name' => 'editar paquetes cirugias', 'type' => 'paquetes cirugias']);
+        Permission::create(['name' => 'eliminar paquetes cirugias', 'type' => 'paquetes cirugias']);
+
+         // surgery budgets permissions
+         Permission::create(['name' => 'ver panel presupuestos', 'type' => 'presupuestos']);
+         Permission::create(['name' => 'crear presupuestos', 'type' => 'presupuestos']);
+         Permission::create(['name' => 'editar presupuestos', 'type' => 'presupuestos']);
+         Permission::create(['name' => 'eliminar presupuestos', 'type' => 'presupuestos']);
+
+         //follow ups critics
+        Permission::create(['name' => 'ver panel seguimientos de criticos', 'type' => 'seguimientos de criticos']);
+        Permission::create(['name' => 'crear seguimientos de criticos', 'type' => 'seguimientos de criticos']);
+        Permission::create(['name' => 'editar seguimientos de criticos', 'type' => 'seguimientos de criticos']);
+        Permission::create(['name' => 'eliminar seguimientos de criticos', 'type' => 'seguimientos de criticos']);
+
         // roles
         $role = Role::create(['name' => 'administrador']);
         $role->givePermissionTo(Permission::all());

@@ -48,7 +48,12 @@ class RedSheet extends Model
      */
     public function imaging()
     {
-        return $this->belongsTo(\App\Models\ProductType::class, 'imaging_type_id', 'id');
+        return $this->belongsTo(\App\Models\Precios::class, 'imaging_type_id', 'ARTICULO_ID');
+    }
+
+    public function img()
+    {
+        return $this->belongsTo(\App\Models\Producto::class, 'imaging_type_id', 'ARTICULO_ID');
     }
 
     /**
@@ -56,7 +61,12 @@ class RedSheet extends Model
      */
     public function lab()
     {
-        return $this->belongsTo(\App\Models\ProductType::class, 'lab_type_id', 'id');
+        return $this->belongsTo(\App\Models\Precios::class, 'lab_type_id', 'ARTICULO_ID');
+    }
+
+    public function laboratory()
+    {
+        return $this->belongsTo(\App\Models\Producto::class, 'lab_type_id', 'ARTICULO_ID');
     }
 
     /**
@@ -72,7 +82,12 @@ class RedSheet extends Model
      */
     public function service()
     {
-        return $this->belongsTo(\App\Models\ProductType::class, 'service_type_id', 'id');
+        return $this->belongsTo(\App\Models\Precios::class, 'service_type_id', 'ARTICULO_ID');
+    }
+
+    public function serv()
+    {
+        return $this->belongsTo(\App\Models\Producto::class, 'service_type_id', 'ARTICULO_ID');
     }
 
     /**

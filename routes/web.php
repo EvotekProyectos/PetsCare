@@ -43,10 +43,14 @@ use App\Http\Controllers\FamClassificationController;
 use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\RoleHasPermissionController;
 use App\Http\Controllers\AppointmentServiceController;
+use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\FollowupsCriticController;
 use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\VaccineCertificateController;
 use App\Http\Controllers\ProductClassificationController;
 use App\Http\Controllers\ReceptionStatusHistoryController;
+use App\Http\Controllers\SurgeryPackController;
+use App\Models\FollowUp;
 
 /*
 |--------------------------------------------------------------------------
@@ -205,7 +209,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     //Hospitalizations
     Route::get('/hospitalizations/historic/{id}', [HospitalizationController::class, 'historic'])->name('hospitalization.historic');
+    Route::get('/hospitalizations/follow-ups/{id}', [HospitalizationController::class, 'followups'])->name('hospitalization.followups');
     Route::resource('hospitalizations', HospitalizationController::class);
+
     //PRODUCT CLASSIFICATIONS
     Route::resource('product-classifications', ProductClassificationController::class);
 
@@ -233,8 +239,21 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('appointment-services/imgs/{id}', [AppointmentServiceController::class, 'getImgs'])->name("appointment-services.imgs");
     Route::resource('appointment-services', AppointmentServiceController::class);
 
+    //Surgery Packs
+    Route::get('/surgery-packs/list', [SurgeryPackController::class, 'list'])->name('surgery-packs.list');
+    Route::resource('surgery-packs', SurgeryPackController::class);
 
+    //Budgets
+    Route::get('/budgets/list', [BudgetController::class, 'list'])->name('budgets.list');
+    Route::resource('budgets', BudgetController::class);
+
+    //Follow Ups Type Critics
+    Route::get('/followups-critics/list/{id}', [FollowupsCriticController::class, 'list'])->name('followups-critics.list');
+    Route::resource('followups-critics', FollowupsCriticController::class);
+    
     //RoleHasPermissions
     Route::resource('role-has-permissions', RoleHasPermissionController::class);
     
+    
 });
+

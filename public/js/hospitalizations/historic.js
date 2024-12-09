@@ -54,17 +54,17 @@ function renderData(data) {
 
         let total = 0;
         entries.forEach(entry => {
-            if (entry.lab && entry.lab.price) {
-                total += parseFloat(entry.lab.price);
+            if (entry.lab && entry.lab.PRECIO) {
+                total += parseFloat(entry.lab.PRECIO);
             }
-            if (entry.service && entry.service.price) {
-                total += parseFloat(entry.service.price);
+            if (entry.service && entry.service.PRECIO) {
+                total += parseFloat(entry.service.PRECIO);
             }
-            if (entry.imaging && entry.imaging.price) {
-                total += parseFloat(entry.imaging.price);
+            if (entry.imaging && entry.imaging.PRECIO) {
+                total += parseFloat(entry.imaging.PRECIO);
             }
-            if (entry.surgery && entry.surgery.price) {
-                total += parseFloat(entry.surgery.price);
+            if (entry.surgery && entry.surgery.PRECIO) {
+                total += parseFloat(entry.surgery.PRECIO);
             }
         });
         grandTotal += total;
@@ -109,10 +109,10 @@ function renderEntryRow(entry) {
         rows += `
             <tr>
                 <td>Laboratorio</td>
-                <td>${entry.lab.name}</td>
+                <td>${entry.laboratory.NOMBRE}</td>
                 <td>${entry.observations || ''}</td>
                 <td>${entry.vet ? entry.vet.name : ''}</td>
-                <td>$${entry.lab.price}</td>
+                <td>$${entry.lab.PRECIO}</td>
             </tr>
         `;
     }
@@ -121,10 +121,10 @@ function renderEntryRow(entry) {
         rows += `
             <tr>
                 <td>Imagenologia</td>
-                <td>${entry.imaging.name}</td>
+                <td>${entry.img.NOMBRE}</td>
                 <td>${entry.observations || ''}</td>
                 <td>${entry.vet ? entry.vet.name : ''}</td>
-                <td>$${entry.imaging.price}</td>
+                <td>$${entry.imaging.PRECIO}</td>
             </tr>
         `;
     }
@@ -133,10 +133,10 @@ function renderEntryRow(entry) {
         rows += `
             <tr>
                 <td>Servicio</td>
-                <td>${entry.service.name}</td>
+                <td>${entry.serv.NOMBRE}</td>
                 <td>${entry.observations || ''}</td>
                 <td>${entry.vet ? entry.vet.name : ''}</td>
-                <td>$${entry.service.price}</td>
+                <td>$${entry.service.PRECIO}</td>
             </tr>
         `;
     }
@@ -144,10 +144,10 @@ function renderEntryRow(entry) {
         rows += `
             <tr>
                 <td>Cirugia</td>
-                <td>${entry.surgery.name}</td>
+                <td>${entry.surg.NOMBRE}</td>
                 <td>${entry.observations || ''}</td>
                 <td>${entry.vet ? entry.vet.name : ''}</td>
-                <td>$${entry.surgery.price}</td>
+                <td>$${entry.surgery.PRECIO}</td>
             </tr>
         `;
     }

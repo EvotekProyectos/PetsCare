@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('surgeries', function (Blueprint $table) {
             $table->id();
             $table->foreignId('reception_id')->nullable()->references('id')->on('receptions');
-            $table->foreignId('product_type_id')->nullable()->references('id')->on('product_types');
+            $table->integer('product_type_id')->nullable();
             $table->dateTime("date")->nullable();
             $table->longText("observations")->nullable();
             $table->foreignId('vet_id')->nullable()->references('id')->on('users');

@@ -58,7 +58,12 @@ class Surgery extends Model
      */
     public function surgery()
     {
-        return $this->belongsTo(\App\Models\ProductType::class, 'product_type_id', 'id');
+        return $this->belongsTo(\App\Models\Precios::class, 'product_type_id', 'ARTICULO_ID');
+    }
+
+    public function surg()
+    {
+        return $this->belongsTo(\App\Models\Producto::class, 'product_type_id', 'ARTICULO_ID');
     }
 
     /**

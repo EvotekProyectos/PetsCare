@@ -27,6 +27,7 @@ use App\Models\Schedule;
 use App\Models\Service;
 use App\Models\Shift;
 use App\Models\Surgery;
+use App\Models\SurgeryPack;
 use App\Models\User;
 use App\Models\VaccineCertificate;
 use App\Observers\AdmissionTypeObserver;
@@ -50,6 +51,7 @@ use App\Observers\ScheduleObserver;
 use App\Observers\ServiceObserver;
 use App\Observers\ShiftObserver;
 use App\Observers\SurgeryObserver;
+use App\Observers\SurgeryPackObserver;
 use App\Observers\UserObserver;
 use App\Observers\VaccineCertificateObserver;
 use Illuminate\Support\Facades\Event;
@@ -100,6 +102,7 @@ class EventServiceProvider extends ServiceProvider
         VaccineCertificate::observe(VaccineCertificateObserver::class);
         Hospitalization::observe(HospitalizationObserver::class);
         Surgery::observe(SurgeryObserver::class);
+        SurgeryPack::observe(SurgeryPackObserver::class);
         
     }
 
