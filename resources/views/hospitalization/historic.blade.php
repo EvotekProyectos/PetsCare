@@ -134,6 +134,12 @@
                         </h5>
                         <div id="table-container"></div>
                     </div>
+
+                    <div class="col-12 mt-2 d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary btn-sm text-uppercase rounded-4">
+                           PAGAR</button>
+                    </div> 
+
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 id="card_title" class="text-primary text-uppercase">

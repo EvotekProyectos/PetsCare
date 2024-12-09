@@ -66,3 +66,5 @@ async function Details(Type, ID) {
 
     }
 };
+
+

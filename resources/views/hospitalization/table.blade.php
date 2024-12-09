@@ -37,6 +37,7 @@
                                                 <th>Area</th>
                                                 <th>M.V.Z</th>
                                                 <th>Acciones</th>
+                                                
                                             </tr>
                                         </thead>
                                         <tbody>

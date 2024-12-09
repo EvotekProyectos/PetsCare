@@ -14,8 +14,9 @@ class FormatTypeSeeder extends Seeder
     public function run(): void
     {
         $formatTypes = [
-            ['name' => 'Hospital_authorization'],
-
+            ['name' => 'Autorización para Hospitalización'],
+            ['name' => 'Alta Voluntaria'],
+            ['name' => 'Autorización de Procedimientos Anestésicos y Quirúrgicos'],
         ];
 
         foreach ($formatTypes as $formatType){

@@ -7,6 +7,7 @@ use App\Http\Requests\ReceptionRequest;
 use App\Models\AdmissionType;
 use App\Models\Area;
 use App\Models\Family;
+use App\Models\Format;
 use App\Models\Pet;
 use App\Models\Prescription;
 use App\Models\Producto;
@@ -186,10 +187,9 @@ class ReceptionController extends Controller
     public function hospital_authorizationpdf(Request $request, $id)
     {
         $reception = Reception::find($id);
-        $pet = Pet::with('family', 'genre')->find($id);
+        $pet = Pet::with('family', 'genre')->find($reception->pet_id);
         $signatureDataUrl = $request->input('signature');
 
-        // Genearar `isPdf` para el id de los botones 
         $pdf = PDF::loadView('reception.pdf', [
             'reception' => $reception,
             'pet' => $pet,
@@ -201,8 +201,17 @@ class ReceptionController extends Controller
         Storage::put($pdfPath, $pdf->output());
 
         $pdfUrl = Storage::url($pdfPath);
-        return response()->json(['url' => $pdfUrl]);
+
+        $format = new Format();
+        $format->format_type_id = 1; 
+        $format->reception_id = $id;
+        $format->pet_id= $pet->id;
+        $format->format_pdf = $pdfPath; 
+        $format->save();
+
+        return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
     }
+
 
      public function getFamilyByPet($pet_id)
  {
@@ -225,5 +234,21 @@ class ReceptionController extends Controller
 
     }
 
+    public function cuenta($id)
+    {
+        $reception = Reception::with('pet')->where('id', $id)->first();
+         $redSheets = RedSheet::where('reception_id', $id)->with('imaging','lab', 'service')->get();
+        $surgeries = Surgery::where('reception_id', $id)->with('service')->get();
+    
+        $data = [
+            'reception' => $reception,
+             'redSheets' => $redSheets,
+            'surgeries' => $surgeries,
+        ];
+        return DataTables::of($data)->make(true);
+    }
+
+
+    
 
 }

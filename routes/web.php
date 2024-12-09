@@ -24,7 +24,6 @@ use App\Http\Controllers\ReasonController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SurgeryController;
 use App\Http\Controllers\FollowUpController;
-use App\Http\Controllers\RedSheetController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\CoverAreaController;
 use App\Http\Controllers\ReceptionController;
@@ -40,17 +39,24 @@ use App\Http\Controllers\ReceptionTypeController;
 use App\Http\Controllers\AttentionStatusController;
 use App\Http\Controllers\HospitalizationController;
 use App\Http\Controllers\FamClassificationController;
+use App\Http\Controllers\FormatController;
+use App\Http\Controllers\FormatTypeController;
+use App\Http\Controllers\HospitalDischargeController;;
 use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\RoleHasPermissionController;
 use App\Http\Controllers\AppointmentServiceController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\FollowupsCriticController;
+use App\Http\Controllers\FollowupInternController;
+use App\Http\Controllers\FollowupSurgicalController;
 use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\VaccineCertificateController;
 use App\Http\Controllers\ProductClassificationController;
 use App\Http\Controllers\ReceptionStatusHistoryController;
 use App\Http\Controllers\SurgeryPackController;
+use App\Http\Controllers\RedSheetController;
 use App\Models\FollowUp;
+use App\Models\Surgery;
 
 /*
 |--------------------------------------------------------------------------
@@ -124,6 +130,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/fam-classifications/list', [FamClassificationController::class, 'list'])->name('fam-classifications.list');
     Route::resource('fam-classifications', FamClassificationController::class);
 
+    Route::get('/family-data/{id}', [FamilyController::class, 'getFamilyData'])->name('family.data');
+    Route::get('/phone-data/{phone}', [FamilyController::class, 'getPhoneData'])->name('phone.data');
+    Route::get('/pet-data/{id}', [FamilyController::class, 'getPetData'])->name('pet.data');
+
+
     //Pet Classifications
     Route::get('/pet-classifications/list', [PetClassificationController::class, 'list'])->name('pet-classifications.list');
     Route::resource('pet-classifications', PetClassificationController::class);
@@ -161,27 +172,29 @@ Route::group(['middleware' => ['auth']], function () {
     //RECEPTIONS
     Route::put('/receptions/update/{id}',[ReceptionController::class, 'transfer'])->name('reception.transfer');
     Route::get('/receptions/list', [ReceptionController::class, 'list'])->name('reception.list');
+
     Route::get('/receptions/historial/{id}', [ReceptionController::class, 'historial'])->name('reception.historial');
+    
     Route::get('/receptions/hospital/{id}', [ReceptionController::class, 'hospital_authorization'])->name('hospital.list');
     Route::post('/receptions/hospital/pdf/{id}', [ReceptionController::class, 'hospital_authorizationpdf'])->name('hospital.pdf');
-  
-
-    Route::get('/family-data/{id}', [FamilyController::class, 'getFamilyData'])->name('family.data');
-    Route::get('/phone-data/{phone}', [FamilyController::class, 'getPhoneData'])->name('phone.data');
-    Route::get('/pet-data/{id}', [FamilyController::class, 'getPetData'])->name('pet.data');
-
+    
     Route::resource('receptions', ReceptionController::class);
+
+
 
     //RECEPTIONS STATUS HISTORIES
     Route::get('/reception-status-histories', [ReceptionStatusHistoryController::class, 'list'])->name('reception-status.list');
     Route::resource('reception-status-histories', ReceptionStatusHistoryController::class);
 
 
-    //ASSIGNAMENT
+    //ASSIGNAMENT  
     Route::get('/assignment/appointments', [AssignmentController::class, 'index'])->name('assignment.index');
     Route::get('/assignment/appointments/list', [AssignmentController::class, 'appointments'])->name('assignment.appointments');
     Route::get('/assignment/hospitaizations', [AssignmentController::class, 'hospital'])->name('assignment.hospital');
     Route::get('/assignment/hospitaizations/list', [AssignmentController::class, 'hospitalizations'])->name('assignment.hospitalizations');
+    
+    Route::get('/assignment/hospitalizations/altas', [AssignmentController::class, 'hospital_altas'])->name('hospitalization.altas');
+    Route::get('/assignment/altas/list', [AssignmentController::class, 'altas'])->name('assignment.altas');
 
     //Appointments
     Route::get('/appointments/consultation/{id}', [AppointmentController::class, 'consultation'])->name('appointment.consultation');
@@ -212,6 +225,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/hospitalizations/follow-ups/{id}', [HospitalizationController::class, 'followups'])->name('hospitalization.followups');
     Route::resource('hospitalizations', HospitalizationController::class);
 
+    Route::get('/alta-voluntaria/{id}', [HospitalizationController::class, 'altaVoluntaria'])->name('alta.voluntaria');
+    Route::post('/alta-voluntaria/pdf/{id}', [HospitalizationController::class, 'altaVoluntariapdf'])->name('altaVoluntaria.pdf');
+    Route::get('/hospitalizations/historic/{id}', [HospitalizationController::class, 'historic'])->name('hospitalization.historic');   
+    Route::resource('hospitalizations', HospitalizationController::class);
+
+
     //PRODUCT CLASSIFICATIONS
     Route::resource('product-classifications', ProductClassificationController::class);
 
@@ -221,18 +240,37 @@ Route::group(['middleware' => ['auth']], function () {
     //RED SHEETS FOR HOSPITALIZATION DAYS
     Route::get('/hospitalizations/entries/{id}', [RedSheetController::class, 'entry'])->name("redsheet.entry");
     Route::get('/red-sheets/recap/{id}', [RedSheetController::class, 'recap'])->name("red-sheets.recap");
+    Route::post('/redSheet/discharge', [RedSheetController::class, 'discharge']);
+    Route::post('/hospitalizations/discharge', [RedSheetController::class, 'dischargePatient']);
     Route::resource('red-sheets', RedSheetController::class);
 
     //SURGERIES
     Route::get('/surgeries/entries/{id}', [SurgeryController::class, 'entry'])->name("surgeries.entry");
     Route::get("/surgeries/create/{id}", [SurgeryController::class, 'create'])->name('surgeries.creater');
     Route::get('/check-surgeries-requirements/{id}', [SurgeryController::class, 'checkRequirements'])->name("surgery.checkRequirements");
-
+    Route::get('/surgeries/authorization/{id}',[SurgeryController::class, 'surgery_authorization'])->name("surgery.auth");
+    Route::post('/surgeries/authorization/pdf/{id}',[SurgeryController::class, 'surgery_authorizationpdf'])->name("surgery_authorization.pdf");
     Route::resource('surgeries', SurgeryController::class);
    
     //FOLLOW UPS 
     Route::get('/follow-ups/entries/{id}', [FollowUpController::class, 'entry'])->name("followup.entry");
     Route::resource('follow-ups', FollowUpController::class);
+
+    //FORMAT TYPES
+    Route::resource('format-types', FormatTypeController::class);
+
+    //FORMATS
+    Route::get("/formats/list", [FormatController::class, 'list'])->name('list.index');
+    Route::get("/formats/list/{id}", [FormatController::class, 'listOne'])->name('formats.list');
+    Route::get("/formats/created/{id}", [FormatController::class, 'format_list'])->name('formats.created');
+    Route::get("/formats/create/{id}", [FormatController::class, 'add'])->name('formats.add');
+    Route::get('/formats/hospital/{id}', [FormatController::class, 'hospital_authorization'])->name('format.hospital');
+    Route::post('/formats/hospital/pdf/{id}', [FormatController::class, 'generateHospitalAuthorizationPdf'])->name('format-hospital.pdf'); 
+    Route::get('/formats/alta/{id}', [FormatController::class, 'altaVoluntaria'])->name('format.alta');
+    Route::post('/formats/alta/pdf/{id}', [FormatController::class, 'altaVoluntariapdf'])->name('format-alta.pdf'); 
+    Route::get('/formats/surgery/{id}', [FormatController::class, 'surgery_authorization'])->name('format.surgery');
+    Route::post('/formats/surgery/pdf/{id}', [FormatController::class, 'surgery_authorizationpdf'])->name('format-surgery.pdf'); 
+    Route::resource('formats', FormatController::class);
 
     //Appointment Services
     Route::get('appointment-services/labs/{id}', [AppointmentServiceController::class, 'getLabs'])->name("appointment-services.labs");
@@ -251,9 +289,19 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/followups-critics/list/{id}', [FollowupsCriticController::class, 'list'])->name('followups-critics.list');
     Route::resource('followups-critics', FollowupsCriticController::class);
     
+    //HOSPITAL DISCHARGE
+    Route::resource('hospital-discharges', HospitalDischargeController::class);
+
+    //FOLLOWUPS INTERNS
+    Route::resource('followup-interns', FollowupInternController::class);
+
+    //FOLLOWUPS SURGICALS
+    Route::resource('followup-surgicals', FollowupSurgicalController::class);
+
     //RoleHasPermissions
     Route::resource('role-has-permissions', RoleHasPermissionController::class);
     
     
 });
 
+ 

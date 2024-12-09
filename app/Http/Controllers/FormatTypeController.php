@@ -15,9 +15,9 @@ class FormatTypeController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $formatTypes = FormatType::paginate();
-
+    {    $formatTypes = FormatType::paginate(); 
+         $this->authorize("viewAny", FormatType::class);
+       
         return view('format-type.index', compact('formatTypes'))
             ->with('i', (request()->input('page', 1) - 1) * $formatTypes->perPage());
     }
@@ -26,8 +26,9 @@ class FormatTypeController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
+    { 
         $formatType = new FormatType();
+        $this->authorize("create", FormatType::class);
         return view('format-type.create', compact('formatType'));
     }
 
@@ -35,9 +36,10 @@ class FormatTypeController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(FormatTypeRequest $request)
-    {
+    {   
+        $this->authorize("create", FormatType::class);
         FormatType::create($request->validated());
-
+       
         return redirect()->route('format-types.index')
             ->with('success', 'FormatType created successfully.');
     }
@@ -48,7 +50,7 @@ class FormatTypeController extends Controller
     public function show($id)
     {
         $formatType = FormatType::find($id);
-
+        // $this->authorize("view", $formatType);
         return view('format-type.show', compact('formatType'));
     }
 
@@ -58,7 +60,7 @@ class FormatTypeController extends Controller
     public function edit($id)
     {
         $formatType = FormatType::find($id);
-
+        $this->authorize("update", $formatType);
         return view('format-type.edit', compact('formatType'));
     }
 
@@ -68,6 +70,7 @@ class FormatTypeController extends Controller
     public function update(FormatTypeRequest $request, FormatType $formatType)
     {
         $formatType->update($request->validated());
+        $this->authorize("update", $formatType);
 
         return redirect()->route('format-types.index')
             ->with('success', 'FormatType updated successfully');
@@ -75,9 +78,10 @@ class FormatTypeController extends Controller
 
     public function destroy($id)
     {
-        FormatType::find($id)->delete();
+        $formatType=FormatType::find($id);
+        $this->authorize("update", $formatType);
+        $formatType->delete();
 
-        return redirect()->route('format-types.index')
-            ->with('success', 'FormatType deleted successfully');
+        return response()->json($formatType);
     }
 }

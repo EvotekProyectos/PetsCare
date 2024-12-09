@@ -30,6 +30,7 @@ class FollowUpController extends Controller
     public function create()
     {
         $followUp = new FollowUp();
+        
         $this->authorize("create", FollowUp::class);
         return view('follow-up.create', compact('followUp'));
     }

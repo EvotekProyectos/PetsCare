@@ -45,7 +45,7 @@ class SurgeryPolicy
      */
     public function delete(User $user, Surgery $surgery): bool
     {
-        return false;
+        return $user ->can("eliminar cirugía");
     }
 
     /**

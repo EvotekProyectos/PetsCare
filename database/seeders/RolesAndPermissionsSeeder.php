@@ -176,6 +176,18 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'editar seguimientos', 'type' => 'seguimientos']);
         Permission::create(['name' => 'eliminar seguimientos', 'type' => 'seguimientos']);
 
+        //FORMAT TYPES
+        Permission::create(['name' => 'Ver panel Tipo de Formatos' ,'type' => 'formatos']);
+        Permission::create(['name' => 'Crear tipo de formato' ,'type' => 'formatos']);
+        Permission::create(['name' => 'Editar tipo de formato' ,'type' => 'formatos']);
+        Permission::create(['name' => 'Eliminar tipo de formato' ,'type' => 'formatos']);
+
+        //FORMATS
+        Permission::create(['name' => 'Ver panel de Formatos' ,'type' => 'formatos']);
+        Permission::create(['name' => 'Crear formato' ,'type' => 'formatos']);
+        Permission::create(['name' => 'Editar formato' ,'type' => 'formatos']);
+        Permission::create(['name' => 'Eliminar formato' ,'type' => 'formatos']);
+
         //red sheets
         Permission::create(['name' => 'ver panel servicios consultas', 'type' => 'sevicios consultas']);
         Permission::create(['name' => 'crear servicios consultas', 'type' => 'sevicios consultas']);
@@ -199,6 +211,17 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'crear seguimientos de criticos', 'type' => 'seguimientos de criticos']);
         Permission::create(['name' => 'editar seguimientos de criticos', 'type' => 'seguimientos de criticos']);
         Permission::create(['name' => 'eliminar seguimientos de criticos', 'type' => 'seguimientos de criticos']);
+        //FOLLOWUP INTERN
+        Permission::create(['name' => 'Ver panel pase de guardia internos', 'type' => 'pase de guardia']);
+        Permission::create(['name' => 'Crear pase de guardia interno', 'type' => 'pase de guardia']);
+        Permission::create(['name' => 'Editar pase de guardia interno', 'type' => 'pase de guardia']);
+        Permission::create(['name' => 'Eliminar pase de guardia interno', 'type' => 'pase de guardia']);
+
+        //FOLLOWUP SURGICAL
+        Permission::create(['name' => 'Ver panel pase de guardia quirúrgicos', 'type' => 'pase de guardia']);
+        Permission::create(['name' => 'Crear pase de guardia quirúrgico', 'type' => 'pase de guardia']);
+        Permission::create(['name' => 'Editar pase de guardia quirúrgico', 'type' => 'pase de guardia']);
+        Permission::create(['name' => 'Eliminar pase de guardia quirúrgico', 'type' => 'pase de guardia']);
 
         // roles
         $role = Role::create(['name' => 'administrador']);

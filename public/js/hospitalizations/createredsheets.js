@@ -231,40 +231,41 @@ async function AddFollowUp() {
     }
 }
 
+// async function OpenPrescription(petId, receptionId) {
+//     const result = await Swal.fire({
+//         title: '¿Dar de alta a este paciente?',
+//         text: "Confirma su atención",
+//         icon: 'question',
+//         showCancelButton: true,
+//         confirmButtonColor: '#3085d6',
+//         cancelButtonColor: '#d33',
+//         confirmButtonText: 'Sí, dar alta.',
+//         cancelButtonText: 'No, regresar.'
+//     });
 
-// async function OpenSurgeries() {
-//     // document.getElementById("reception_id_followup").value = Reception_Id;
-//     $('#ModalSurgeries').modal('show');
-// }
-
-
-//  async function OpenSurgeries() {
-//     document.getElementById("reception_id_followup").value = Reception_Id;
-//   window.open(route('surgery.checkRequirements', Reception_Id ))
-//  }
-
-
-// async function OpenSurgeries() {
-//     // Obtener el valor de `receptionId` desde el elemento `reception_id_followup`
-//     const receptionId = document.getElementById("reception_id_followup").value;
-
-//     try {
-//         // Hacemos la solicitud `fetch` con el valor correcto de `receptionId`
-//         const response = await fetch(`/check-surgeries-requirements/${receptionId}`);
-//         const data = await response.json();
-
-//         if (data.status === 'ok') {
-//             $('#ModalSurgeries').modal('show');
-//         } else {
-//             alert(data.message); 
-//         }
-//     } catch (error) {
-//         console.error("Error al verificar los requisitos:", error);
-//         alert("Hubo un error al verificar los requisitos.");
+//     if (result.isConfirmed) {
+//             const response = await fetch(`/redSheet/discharge`, {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+//                 },
+//                 body: JSON.stringify({ petId, receptionId })
+//             });
+//             const data = await response.json();
+//             if (response.ok) {
+//                 Swal.fire(
+//                     'Paciente dado de alta',
+//                     'Se ha registrado la salida.'
+//                 );
+//                 window.location.href = `/prescriptions/create/${petId}`;
+//             } else {
+//                 Swal.fire('Error', data.message || 'No se pudo dar de alta.', 'error');
+//             }
 //     }
 // }
 
-async function OpenPrescription(petId) {
+async function OpenPrescription(petId, receptionId) {
     const result = await Swal.fire({
         title: '¿Dar de alta a este paciente?',
         text: "Confirma su atención",
@@ -277,31 +278,97 @@ async function OpenPrescription(petId) {
     });
 
     if (result.isConfirmed) {
-        window.location.href = `/prescriptions/create/${petId}`;
-    }
+        const { value: selectedType } = await Swal.fire({
+            title: 'Selecciona el tipo de alta',
+            html: `
+                <select id="dischargeType" class="swal2-input">
+                    <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="Alta normal" style="color: #2BEA91;">Alta normal</option>
+                    <option value="Alta voluntaria" style="color: #2DAAF8;">Alta voluntaria</option>
+                    <option value="Alta por fallecimiento" style="color: #F862AA;">Alta por fallecimiento</option>
+                </select>
+            `,
+            focusConfirm: false,
+            preConfirm: () => {
+                return document.getElementById('dischargeType').value;
+            }
+        });
 
-}
+        if (!selectedType) {
+            Swal.fire('Error', 'Debes seleccionar un tipo de alta.', 'error');
+            return;
+        }
 
-
-
-async function OpenSurgeries() {
-    const receptionId = document.getElementById("reception_id_followup").value;
-
-        const url = route('surgery.checkRequirements', receptionId) ; 
-        const response = await fetch(url);
-        const data = await response.json();
-
-        if (data.status === 'ok') {
-            $('#ModalSurgeries').modal('show');
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: data.message || 'Ocurrió un error al verificar los requisitos.',
+        if (selectedType === "Alta normal") {
+            const response = await fetch(`/redSheet/discharge`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ petId, receptionId })
             });
+            const data = await response.json();
+            if (response.ok) {
+                Swal.fire(
+                    'Paciente dado de alta',
+                    'Se ha registrado la salida.'
+                );
+                window.location.href = `/prescriptions/create/${petId}`;
+            } else {
+                Swal.fire('Error', data.message || 'No se pudo dar de alta.', 'error');
+            }
+        } else if (selectedType === "Alta voluntaria") {
+            const nameFamily = $("#name_family").val();
+            const reason = $("#reason").val();
+             window.location.href = `/alta-voluntaria/${receptionId}`;
+            } else if (selectedType === "Alta por fallecimiento") {
+                Swal.fire('Alta por fallecimiento', 'El proceso de alta por fallecimiento se ha registrado.');
+            }
+        }
+        
 }
-}
+ async function OpenSurgeries() {
+     const receptionId = document.getElementById("reception_id_followup").value;
 
+         const url = route('surgery.checkRequirements', receptionId) ; 
+         const response = await fetch(url);
+         const data = await response.json();
+
+         if (data.status === 'ok') {
+             $('#ModalSurgeries').modal('show');
+         } else {
+             Swal.fire({
+                 icon: 'error',
+                 title: 'Error',
+                 text: data.message || 'Ocurrió un error al verificar los requisitos.',
+             });
+ }
+ }
+
+// async function OpenSurgeries() {
+//     const receptionId = document.getElementById("reception_id_followup").value;
+
+//     const url = route('surgery.checkRequirements', receptionId); 
+//     const response = await fetch(url);
+//     const data = await response.json();
+
+//     if (data.status === 'ok') {
+       
+//         const authorizationUrl = route('surgery.auth', receptionId);
+//         window.location.href = authorizationUrl;
+
+//         setTimeout(() => {
+//             $('#ModalSurgeries').modal('show');
+//         }, 1000); 
+//     } else {
+//         Swal.fire({
+//             icon: 'error',
+//             title: 'Error',
+//             text: data.message || 'Ocurrió un error al verificar los requisitos.',
+//         });
+//     }
+// }
 
 
 async function AddSurgery() {

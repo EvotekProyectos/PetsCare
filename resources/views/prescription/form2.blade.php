@@ -42,7 +42,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-6"  hidden>
                     <div class="form-group mb-2">
                         <label for="name" class="form-label">FECHA</label>
                         <div class="input-group mb-2">
@@ -60,9 +60,9 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="form-group mb-2">
-                        <label for="name" class="form-label">DIAGNOSTICO</label>
+                        <label for="name" class="form-label">DIAGNÓSTICO</label>
                         <div class="input-group mb-3">
                             <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                                 <img src="{{ asset('img/consulta.png') }}" alt="Foto Mascota" id="preview"
@@ -110,6 +110,7 @@
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="icon-park-twotone--medicine-bottle-one"></span>
                         </span>
+
                         <textarea name="observations" class="form-control @error('observations') is-invalid @enderror" id="observations"
                             placeholder="Observaciones del emisor" rows="4">{{ old('observations', $prescription?->observations) }}</textarea>
                         {!! $errors->first('observations', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
@@ -128,15 +129,16 @@
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <i class="fas fa-calendar text-primary"></i>
                         </span>
+
                         <input type="date" name="day_next_check"
                             class="form-control @error('day_next_check') is-invalid @enderror"
                             value="{{ old('day_next_check', $prescription?->day_next_check) }}" id="day_next_check"
                             placeholder="Day Next Check">
+                    </div>
                     {!! $errors->first(
                         'day_next_check',
                         '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>',
                     ) !!}
-                    </div>
                 </div>
             </div>
                               

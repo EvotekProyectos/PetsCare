@@ -6,6 +6,7 @@
 
 @section('content')
 <input type="hidden" id="reception_id_followup" value="{{ $reception->id }}">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
     <section class="container-fluid">
         <div class="row">
@@ -121,10 +122,10 @@
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
                                     <button class="btn btn-costum-services btn-sm text-uppercase rounded-4"
-                                        onclick="OpenPrescription({{ $reception->pet->id }})">
-                                        <span class="badge custom-badge-pill"><span class="mynaui--inbox-up"></span></span>
-                                        Dar Alta
-                                    </button>
+                                    onclick="OpenPrescription({{ $reception->pet->id }}, {{ $reception->id }})">
+                                    <span class="badge custom-badge-pill"><span class="mynaui--inbox-up"></span></span>
+                                    Dar Alta
+                                </button>
                                 </div>
                             </div>
                             <div class="col d-flex justify-content-between align-items-center my-2">
@@ -328,6 +329,7 @@
         </div>
     </div>
 @endsection
+
 
 @push('scripts')
     <script>
