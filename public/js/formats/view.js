@@ -35,19 +35,17 @@ $(document).ready(function () {
                     return data.reception ? data.reception.reception_type.name : 'Sin recepción';
                 }
            },
-          
-           { 
+           {
             data: 'format_pdf',
             render: function (data) {
-                const newPath = data.replace('public/', 'storage/');
+                const newPath = data.replace(/^.*(formats\/.*)/, '/storage/$1');
                 return `
-                     <a href="${newPath}" class="btn btn-primary" target="_blank">
-                    Ver PDF
+                    <a href="${newPath}" class="btn btn-primary" target="_blank">
+                        Ver PDF
                     </a>
                 `;
             }
         }
-        
         ]
     });
 });

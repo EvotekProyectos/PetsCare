@@ -186,7 +186,7 @@ class ReceptionController extends Controller
     public function hospital_authorizationpdf(Request $request, $id)
     {
         $reception = Reception::find($id);
-        $pet = Pet::with('family', 'genre')->find($id);
+        $pet = Pet::with('family', 'genre')->find($reception->pet_id);
         $signatureDataUrl = $request->input('signature');
 
         $pdf = PDF::loadView('reception.pdf', [
@@ -204,6 +204,7 @@ class ReceptionController extends Controller
         $format = new Format();
         $format->format_type_id = 1; 
         $format->reception_id = $id;
+        $format->pet_id= $pet->id;
         $format->format_pdf = $pdfPath; 
         $format->save();
 

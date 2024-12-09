@@ -1,0 +1,29 @@
+/* Hide the radio inputs */
+input[type="radio"] {
+    display: none;
+}
+
+.radio-label {
+    text-transform: uppercase;
+    width: 70%;
+    background-color: #fff;
+    border: 1px solid #979797c0;
+    color: #000000;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 1px 1px 2px  #424242ea;
+}
+
+/* Style for the selected label */
+input[type="radio"]:checked + .radio-label {
+    background-color: #0455a0;
+    color: #fff;
+}
+
+/* Hover effect */
+.radio-label:hover {
+    background-color: #0455a0;
+    color: #fff;
+}

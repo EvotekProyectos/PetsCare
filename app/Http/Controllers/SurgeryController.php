@@ -132,7 +132,7 @@ class SurgeryController extends Controller
     {
         $reception = Reception::find($id);
         $pet = Pet::with('family', 'genre')->find($id);
-        return view('format.aut_quirurgica', compact("reception", "pet"));
+        return view('surgery.aut_quirurgica', compact("reception", "pet"));
     }
 
     public function surgery_authorizationpdf(Request $request, $id)
@@ -164,6 +164,7 @@ class SurgeryController extends Controller
         $format = new Format();
         $format->format_type_id = 3; 
         $format->reception_id = $id;
+        $format->pet_id= $pet->id;
         $format->format_pdf = $pdfPath; 
         $format->save();
 

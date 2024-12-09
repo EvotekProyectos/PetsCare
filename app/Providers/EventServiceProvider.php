@@ -9,6 +9,8 @@ use App\Models\AttentionStatus;
 use App\Models\CoverArea;
 use App\Models\FamClassification;
 use App\Models\Family;
+use App\Models\FollowupIntern;
+use App\Models\FollowupSurgical;
 use App\Models\Format;
 use App\Models\FormatType;
 use App\Models\Genre;
@@ -37,6 +39,8 @@ use App\Observers\AttentionStatusObserver;
 use App\Observers\CoverAreaObserver;
 use App\Observers\FamClassificationObserver;
 use App\Observers\FamilyObserver;
+use App\Observers\FollowupInternObserver;
+use App\Observers\FollowupSurgicalObserver;
 use App\Observers\FormatTypesObserver;
 use App\Observers\FormatsObserver;
 use App\Observers\ReceptionTypeObserver;
@@ -106,6 +110,8 @@ class EventServiceProvider extends ServiceProvider
         Surgery::observe(SurgeryObserver::class);
         FormatType::observe(FormatTypesObserver::class);
         Format::observe(FormatsObserver::class);
+        FollowupIntern::observe(FollowupInternObserver::class);
+        FollowupSurgical::observe(FollowupSurgicalObserver::class);
         
     }
 

@@ -1,33 +1,6 @@
 <div class="row padding-1 p-1">
     <div class="col-md-12">
         <div class="row">
-
-        
-        {{-- <div class="col-md-6">
-            <div class="form-group mb-2">
-                <label for="name" class="form-label">Tipo de formato</label>
-                <div class="input-group mb-3">
-                    <span class="input-group-text bg-primary-subtle" id="basic-addon1">
-                        <img src="{{ asset('img/consulta.png') }}" alt="Foto Mascota" id="preview"
-                            class="img-fixed" style="width: 20px; height: 20px; object-fit: cover; ">
-                    </span>
-
-                    <select name="format_type_id"
-                        class="form-control @error('format_type_id') is-invalid @enderror"
-                        id="format_type_id" placeholder="Diagnóstico">
-                        <option value=""> Selecciona el tipo </option>
-
-                        @foreach ($format_types as $format_type)
-                                 <option value="{{ $format_type->id }}" name="format_type_id"
-                                     {{ old('format_type_id') == $format_type->id ? 'selected' : '' }}>
-                                     {{ $format_type->name }}</option>
-                             @endforeach
-                    {!! $errors->first('format_type_id', 
-                    '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-                </div>
-            </div>
-        </div> --}}
-
         
         <div class="col-md-6" hidden>
             <div class="form-group mb-2">
@@ -60,40 +33,8 @@
                 {!! $errors->first('format_type_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
             </div>
             
-            {{-- <div class="col-12 mt-2 d-flex justify-content-end">
-                   <a class="btn btn-sm btn-primary " href="{{ route('format.hospital',$pet->id) }}"><i class="fas fa-plus"></i> {{ __('GENERAR FORMATO') }}</a>
-            </div>
-        </div> --}}
-        <div class="col-12 mt-2 d-flex justify-content-end">
-            <a id="generate-format-btn" class="btn btn-sm btn-primary" href="#"><i class="fas fa-plus"></i> {{ __('GENERAR FORMATO') }}</a>
-        </div>
-        
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const selectElement = document.getElementById('format_type_id');
-                const generateButton = document.getElementById('generate-format-btn');
-                
-                // Define routes based on format_type_id
-                const routes = {
-                    1: '{{ route("format.hospital", $pet->id) }}',
-                    2: '{{ route("format.alta", $pet->id) }}',
-                    3: '{{ route("format.surgery", $pet->id) }}',
-                   
-                   
-                };
-        
-                // Update button href on selection change
-                selectElement.addEventListener('change', function () {
-                    const selectedValue = selectElement.value;
-                    if (routes[selectedValue]) {
-                        generateButton.href = routes[selectedValue];
-                    } else {
-                        generateButton.href = '#'; // Default or empty value
-                    }
-                });
-            });
-        </script>
-        {{-- <div class="form-group mb-2 mb20">
+            
+                    {{-- <div class="form-group mb-2 mb20">
             <label for="reception_id" class="form-label">{{ __('Reception Id') }}</label>
             <input type="text" name="reception_id" class="form-control @error('reception_id') is-invalid @enderror" value="{{ old('reception_id', $format?->reception_id) }}" id="reception_id" placeholder="Reception Id">
             {!! $errors->first('reception_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
@@ -107,12 +48,32 @@
             {!! $errors->first('format_pdf', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div> --}}
 
+
+        <div class="col-12 mt-2 d-flex justify-content-end">
+            <a id="generate-format-btn" class="btn btn-sm btn-primary" href="#"><i class="fas fa-plus"></i> {{ __('GENERAR FORMATO') }}</a>
+        </div>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const selectElement = document.getElementById('format_type_id');
+                const generateButton = document.getElementById('generate-format-btn');
+                const routes = {
+                    1: '{{ route("format.hospital", $pet->id) }}',
+                    2: '{{ route("format.alta", $pet->id) }}',
+                    3: '{{ route("format.surgery", $pet->id) }}',
+                };
+        
+                selectElement.addEventListener('change', function () {
+                    const selectedValue = selectElement.value;
+                    if (routes[selectedValue]) {
+                        generateButton.href = routes[selectedValue];
+                    } else {
+                        generateButton.href = '#'; 
+                    }
+                });
+            });
+        </script>
     </div>
-    {{-- <div class="col-12 mt-2 d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary btn-sm text-uppercase rounded-4">
-            <i class="fas fa-plus"></i>
-            Guardar Formato</button>
-    </div> --}}
 </div>
 
 @push('scripts')

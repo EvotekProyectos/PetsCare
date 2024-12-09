@@ -46,6 +46,8 @@ use App\Http\Controllers\HospitalDischargeController;;
 use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\RoleHasPermissionController;
 use App\Http\Controllers\AppointmentServiceController;
+use App\Http\Controllers\FollowupInternController;
+use App\Http\Controllers\FollowupSurgicalController;
 use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\VaccineCertificateController;
 use App\Http\Controllers\ProductClassificationController;
@@ -181,11 +183,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('reception-status-histories', ReceptionStatusHistoryController::class);
 
 
-    //ASSIGNAMENT
+    //ASSIGNAMENT  
     Route::get('/assignment/appointments', [AssignmentController::class, 'index'])->name('assignment.index');
     Route::get('/assignment/appointments/list', [AssignmentController::class, 'appointments'])->name('assignment.appointments');
     Route::get('/assignment/hospitaizations', [AssignmentController::class, 'hospital'])->name('assignment.hospital');
     Route::get('/assignment/hospitaizations/list', [AssignmentController::class, 'hospitalizations'])->name('assignment.hospitalizations');
+    
     Route::get('/assignment/hospitalizations/altas', [AssignmentController::class, 'hospital_altas'])->name('hospitalization.altas');
     Route::get('/assignment/altas/list', [AssignmentController::class, 'altas'])->name('assignment.altas');
 
@@ -271,6 +274,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('role-has-permissions', RoleHasPermissionController::class);
     //HOSPITAL DISCHARGE
     Route::resource('hospital-discharges', HospitalDischargeController::class);
+
+    //FOLLOWUPS INTERNS
+    Route::resource('followup-interns', FollowupInternController::class);
+
+    //FOLLOWUPS SURGICALS
+    Route::resource('followup-surgicals', FollowupSurgicalController::class);
     
 });
  

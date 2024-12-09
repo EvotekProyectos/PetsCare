@@ -57,17 +57,26 @@ $(document).ready(function () {
                return data.hospital_discharges ? data.hospital_discharges.name : '';
                 }
             },
-    ],
-    createdRow: function (row, data, dataIndex) {
-        const colors = {
-            1: '#2BEA91',
-            2: '#2DAAF8'
-        };
-
-        const dischargeId = data.hospital_discharges ? data.hospital_discharges.id : null;
-        if (dischargeId && colors[dischargeId]) {
-            $(row).css('background-color', colors[dischargeId]);
+],
+createdRow: function (row, data, dataIndex) {
+    if (data.hospital_discharges && data.hospital_discharges.id) {
+        var dischargeId = data.hospital_discharges.id;
+        var color = '';
+        switch (dischargeId) {
+            case 1:
+                color = '#2BEA91'; 
+                break;
+            case 2:
+                color = '#2DAAF8';
+                break;
+            default:
+                color = ''; 
+                break;
         }
+
+        $(row).css('background-color', color);
     }
+}
 });
 });
+  

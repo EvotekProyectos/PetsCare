@@ -328,47 +328,47 @@ async function OpenPrescription(petId, receptionId) {
         }
         
 }
+ async function OpenSurgeries() {
+     const receptionId = document.getElementById("reception_id_followup").value;
+
+         const url = route('surgery.checkRequirements', receptionId) ; 
+         const response = await fetch(url);
+         const data = await response.json();
+
+         if (data.status === 'ok') {
+             $('#ModalSurgeries').modal('show');
+         } else {
+             Swal.fire({
+                 icon: 'error',
+                 title: 'Error',
+                 text: data.message || 'Ocurrió un error al verificar los requisitos.',
+             });
+ }
+ }
+
 // async function OpenSurgeries() {
 //     const receptionId = document.getElementById("reception_id_followup").value;
 
-//         const url = route('surgery.checkRequirements', receptionId) ; 
-//         const response = await fetch(url);
-//         const data = await response.json();
+//     const url = route('surgery.checkRequirements', receptionId); 
+//     const response = await fetch(url);
+//     const data = await response.json();
 
-//         if (data.status === 'ok') {
-//             $('#ModalSurgeries').modal('show');
-//         } else {
-//             Swal.fire({
-//                 icon: 'error',
-//                 title: 'Error',
-//                 text: data.message || 'Ocurrió un error al verificar los requisitos.',
-//             });
-// }
-// }
-
-async function OpenSurgeries() {
-    const receptionId = document.getElementById("reception_id_followup").value;
-
-    const url = route('surgery.checkRequirements', receptionId); 
-    const response = await fetch(url);
-    const data = await response.json();
-
-    if (data.status === 'ok') {
+//     if (data.status === 'ok') {
        
-        const authorizationUrl = route('surgery.auth', receptionId);
-        window.location.href = authorizationUrl;
+//         const authorizationUrl = route('surgery.auth', receptionId);
+//         window.location.href = authorizationUrl;
 
-        setTimeout(() => {
-            $('#ModalSurgeries').modal('show');
-        }, 1000); 
-    } else {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: data.message || 'Ocurrió un error al verificar los requisitos.',
-        });
-    }
-}
+//         setTimeout(() => {
+//             $('#ModalSurgeries').modal('show');
+//         }, 1000); 
+//     } else {
+//         Swal.fire({
+//             icon: 'error',
+//             title: 'Error',
+//             text: data.message || 'Ocurrió un error al verificar los requisitos.',
+//         });
+//     }
+// }
 
 
 async function AddSurgery() {

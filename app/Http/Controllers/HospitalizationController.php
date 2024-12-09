@@ -104,7 +104,7 @@ class HospitalizationController extends Controller
     public function altaVoluntariapdf(Request $request, $id)
     {
         $reception = Reception::find($id);
-        $pet = Pet::with('family', 'genre')->find($id);
+        $pet = Pet::with('family', 'genre')->find($reception->pet_id);
 
         $reception->exit_date = now();
         $reception->save();
@@ -131,7 +131,7 @@ class HospitalizationController extends Controller
         $format = new Format();
         $format->format_type_id = 2; 
         $format->reception_id = $id;
-        $format->pet_id= $pet;
+        $format->pet_id= $pet->id;
         $format->format_pdf = $pdfPath; 
         $format->save();
 
