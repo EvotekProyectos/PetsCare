@@ -14,6 +14,33 @@ window.onload = function () {
 
 }
 
+$(document).ready(function () {
+    $('#service_type_id').select2({
+        placeholder: 'Añadir Servicio',
+        width: 'resolve'
+    });
+    $('#lab_type_id').select2({
+         placeholder: 'Añadir Laboratorio',
+          width: 'resolve'
+     });
+     $('#imaging_type_id').select2({
+        placeholder: 'Añadir Imagenologia',
+         width: 'resolve'
+    });
+    $('#imaging_type_id').select2({
+        placeholder: 'Añadir Imagenologia',
+         width: 'resolve'
+    });
+    // $('#product_type_id').select2({
+    //     placeholder: 'Añadir Cirugia',
+    //      width: 'resolve'
+    // });
+    $("#product_type_id").select2({
+        theme: "bootstrap-5",
+        dropdownParent: $('#ModalSurgeries')
+    });
+});
+
 function fetchAndRenderData() {
     $.ajax({
         url: route('red-sheets.recap', Reception_Id),
@@ -177,6 +204,10 @@ async function NewEntry() {
         })
         // table.ajax.reload();
         fetchAndRenderData()
+        $('#lab_type_id').val('').trigger('change')
+        $('#service_type_id').val('').trigger('change')
+        $('#imaging_type_id').val('').trigger('change')
+        $('#observations').val('')
     } else {
         let resp = await pet.json();
         Swal.fire({
@@ -337,6 +368,7 @@ async function OpenPrescription(petId, receptionId) {
 
          if (data.status === 'ok') {
              $('#ModalSurgeries').modal('show');
+             
          } else {
              Swal.fire({
                  icon: 'error',
@@ -345,6 +377,9 @@ async function OpenPrescription(petId, receptionId) {
              });
  }
  }
+ jQuery('#ModalSurgeries').on('shown.bs.modal', function() {
+    jQuery(document).off('focusin.modal');
+});
 
 // async function OpenSurgeries() {
 //     const receptionId = document.getElementById("reception_id_followup").value;
