@@ -24,7 +24,6 @@ use App\Http\Controllers\ReasonController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SurgeryController;
 use App\Http\Controllers\FollowUpController;
-use App\Http\Controllers\RedSheetController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\CoverAreaController;
 use App\Http\Controllers\ReceptionController;
@@ -46,12 +45,17 @@ use App\Http\Controllers\HospitalDischargeController;;
 use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\RoleHasPermissionController;
 use App\Http\Controllers\AppointmentServiceController;
+use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\FollowupsCriticController;
 use App\Http\Controllers\FollowupInternController;
 use App\Http\Controllers\FollowupSurgicalController;
 use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\VaccineCertificateController;
 use App\Http\Controllers\ProductClassificationController;
 use App\Http\Controllers\ReceptionStatusHistoryController;
+use App\Http\Controllers\SurgeryPackController;
+use App\Http\Controllers\RedSheetController;
+use App\Models\FollowUp;
 use App\Models\Surgery;
 
 /*
@@ -217,6 +221,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('vaccine-certificates', VaccineCertificateController::class);
 
     //Hospitalizations
+    Route::get('/hospitalizations/historic/{id}', [HospitalizationController::class, 'historic'])->name('hospitalization.historic');
+    Route::get('/hospitalizations/follow-ups/{id}', [HospitalizationController::class, 'followups'])->name('hospitalization.followups');
+    Route::resource('hospitalizations', HospitalizationController::class);
+
     Route::get('/alta-voluntaria/{id}', [HospitalizationController::class, 'altaVoluntaria'])->name('alta.voluntaria');
     Route::post('/alta-voluntaria/pdf/{id}', [HospitalizationController::class, 'altaVoluntariapdf'])->name('altaVoluntaria.pdf');
     Route::get('/hospitalizations/historic/{id}', [HospitalizationController::class, 'historic'])->name('hospitalization.historic');   
@@ -232,7 +240,7 @@ Route::group(['middleware' => ['auth']], function () {
     //RED SHEETS FOR HOSPITALIZATION DAYS
     Route::get('/hospitalizations/entries/{id}', [RedSheetController::class, 'entry'])->name("redsheet.entry");
     Route::get('/red-sheets/recap/{id}', [RedSheetController::class, 'recap'])->name("red-sheets.recap");
-    Route::post('/redSheet/discharge', [redSheetController::class, 'discharge']);
+    Route::post('/redSheet/discharge', [RedSheetController::class, 'discharge']);
     Route::post('/hospitalizations/discharge', [RedSheetController::class, 'dischargePatient']);
     Route::resource('red-sheets', RedSheetController::class);
 
@@ -269,17 +277,33 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('appointment-services/imgs/{id}', [AppointmentServiceController::class, 'getImgs'])->name("appointment-services.imgs");
     Route::resource('appointment-services', AppointmentServiceController::class);
 
+    //Surgery Packs
+    Route::get('/surgery-packs/list', [SurgeryPackController::class, 'list'])->name('surgery-packs.list');
+    Route::resource('surgery-packs', SurgeryPackController::class);
 
-    //RoleHasPermissions
-    Route::resource('role-has-permissions', RoleHasPermissionController::class);
+    //Budgets
+    Route::get('/budgets/list', [BudgetController::class, 'list'])->name('budgets.list');
+    Route::resource('budgets', BudgetController::class);
+
+    //Follow Ups Type Critics
+    Route::get('/followups-critics/list/{id}', [FollowupsCriticController::class, 'list'])->name('followups-critics.list');
+    Route::resource('followups-critics', FollowupsCriticController::class);
+    
     //HOSPITAL DISCHARGE
     Route::resource('hospital-discharges', HospitalDischargeController::class);
 
     //FOLLOWUPS INTERNS
+    Route::get('/followup-interns/list/{id}', [FollowupInternController::class, 'list'])->name('followup-interns.list');
     Route::resource('followup-interns', FollowupInternController::class);
 
     //FOLLOWUPS SURGICALS
+    Route::get('/followup-surgicals/list/{id}', [FollowupSurgicalController::class, 'list'])->name('followup-surgicals.list');
     Route::resource('followup-surgicals', FollowupSurgicalController::class);
+
+    //RoleHasPermissions
+    Route::resource('role-has-permissions', RoleHasPermissionController::class);
+    
     
 });
+
  

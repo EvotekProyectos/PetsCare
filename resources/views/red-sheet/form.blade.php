@@ -32,11 +32,11 @@
                     id="service_type_id">
                     <option value=""> Selecciona el servico a registrar</option>
                     @foreach ($products as $product)
-                        @if ($product->product_classification_id == 4)
-                            <option value="{{ $product->id }}" name="service_type_id"
-                                {{ old('service_type_id', $redSheet?->service_type_id) == $product->id ? 'selected' : '' }}>
-                                {{ $product->name }}</option>
-                        @endif
+                        {{-- @if ($product->product_classification_id == 4) --}}
+                            <option value="{{ $product->ARTICULO_ID}}" name="service_type_id"
+                                {{ old('service_type_id', $redSheet?->service_type_id) == $product->ARTICULO_ID ? 'selected' : '' }}>
+                                {{ $product->NOMBRE }}</option>
+                        {{-- @endif  --}}
                     @endforeach
                 </select>
             </div>
@@ -54,11 +54,11 @@
                     id="lab_type_id">
                     <option value=""> Selecciona el laboratorio a registrar</option>
                     @foreach ($products as $product)
-                        @if ($product->product_classification_id == 2)
-                            <option value="{{ $product->id }}" name="lab_type_id"
-                                {{ old('lab_type_id', $redSheet?->lab_type_id) == $product->id ? 'selected' : '' }}>
-                                {{ $product->name }}</option>
-                        @endif
+                        {{-- @if ($product->product_classification_id == 2) --}}
+                            <option value="{{ $product->ARTICULO_ID }}" name="lab_type_id"
+                                {{ old('lab_type_id', $redSheet?->lab_type_id) == $product->ARTICULO_ID ? 'selected' : '' }}>
+                                {{ $product->NOMBRE }}</option>
+                        {{-- @endif --}}
                     @endforeach
                 </select>
             </div>
@@ -73,11 +73,11 @@
                     id="imaging_type_id">
                     <option value=""> Selecciona la imagenologia a registrar</option>
                     @foreach ($products as $product)
-                        @if ($product->product_classification_id == 3)
-                            <option value="{{ $product->id }}" name="imaging_type_id"
-                                {{ old('imaging_type_id', $redSheet?->lab_type_id) == $product->id ? 'selected' : '' }}>
-                                {{ $product->name }}</option>
-                        @endif
+                        {{-- @if ($product->product_classification_id == 3) --}}
+                            <option value="{{ $product->ARTICULO_ID }}" name="imaging_type_id"
+                                {{ old('imaging_type_id', $redSheet?->lab_type_id) == $product->ARTICULO_ID ? 'selected' : '' }}>
+                                {{ $product->NOMBRE }}</option>
+                        {{-- @endif --}}
                     @endforeach
                 </select>
             </div>

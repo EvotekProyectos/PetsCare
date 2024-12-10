@@ -93,6 +93,18 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'firebird' => [
+            'driver'   => 'firebird',
+            'host'     =>  'b8ff0b49f137.sn.mynetname.net',
+            'port'     => '3050',
+            'database' => 'C:\\Microsip datos\\SERVICIOS_MEDICOS.FDB',
+            'username' => 'SYSDBA',
+            'password' =>  'masterkey',
+            'charset'  => 'UTF8',
+            'role'     => null,
+            // 'strict'   => false,
+        ],
+
     ],
 
     /*

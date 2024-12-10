@@ -150,6 +150,12 @@ class HomeController extends Controller
                 'description' => 'Administra información sobre estado de mascotas.',
                 'icon' => 'fas fa-list'
             ],
+            [
+                'route' => route('surgery-packs.index'),
+                'title' => 'Paquetes de Cirugias',
+                'description' => 'Administra información sobre los paquetes quirurgicos.',
+                'icon' => 'fas fa-list'
+            ],
 
            
         ];

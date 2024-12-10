@@ -6,6 +6,7 @@ use App\Models\RedSheet;
 use App\Http\Requests\RedSheetRequest;
 use App\Models\AdmissionType;
 use App\Models\FollowUp;
+use App\Models\Producto;
 use App\Models\HospitalDischarge;
 use App\Models\Hospitalization;
 use App\Models\Log;
@@ -105,7 +106,7 @@ class RedSheetController extends Controller
     {
         $redSheet = new RedSheet();
         $reception = Reception::with('pet', 'admissionType', 'area')->findorfail($id);
-        $products = ProductType::all();
+        $products = Producto::where("ESTATUS",  "A")->get();
         $followUp = new FollowUp();
         $surgery = new Surgery();
         $admissions = AdmissionType::all();
@@ -115,12 +116,12 @@ class RedSheetController extends Controller
 
     public function recap(int $id)
     {
-        $redsheets = RedSheet::with('vet', 'imaging', 'lab', 'service')->where('reception_id', $id)->get();
-        $surgeries = Surgery::with('surgery','vet')->where('reception_id', $id)->get();
+        $redsheets = RedSheet::with('vet', 'imaging', 'img', 'lab', 'laboratory', 'service', 'serv')->where('reception_id', $id)->get();
+        $surgeries = Surgery::with('surgery','vet', 'surg',)->where('reception_id', $id)->get();
 
         // return DataTables::of($surgeries) ->make(true);
         $combinedData = $surgeries->map(function ($surgery) use ($redsheets) {
-            $surgeryDate = \Carbon\Carbon::parse($surgery->date)->format('Y-m-d');
+            $surgeryDate = \Carbon\Carbon::parse($surgery->created_at)->format('Y-m-d');
 
             $date_count = 0;
         

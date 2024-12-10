@@ -10,6 +10,7 @@ use App\Models\CoverArea;
 use App\Models\FamClassification;
 use App\Models\Family;
 use App\Models\FollowupIntern;
+use App\Models\FollowupsCritic;
 use App\Models\FollowupSurgical;
 use App\Models\Format;
 use App\Models\FormatType;
@@ -31,6 +32,7 @@ use App\Models\Schedule;
 use App\Models\Service;
 use App\Models\Shift;
 use App\Models\Surgery;
+use App\Models\SurgeryPack;
 use App\Models\User;
 use App\Models\VaccineCertificate;
 use App\Observers\AdmissionTypeObserver;
@@ -40,6 +42,7 @@ use App\Observers\CoverAreaObserver;
 use App\Observers\FamClassificationObserver;
 use App\Observers\FamilyObserver;
 use App\Observers\FollowupInternObserver;
+use App\Observers\FollowupsCriticObserver;
 use App\Observers\FollowupSurgicalObserver;
 use App\Observers\FormatTypesObserver;
 use App\Observers\FormatsObserver;
@@ -58,6 +61,7 @@ use App\Observers\ScheduleObserver;
 use App\Observers\ServiceObserver;
 use App\Observers\ShiftObserver;
 use App\Observers\SurgeryObserver;
+use App\Observers\SurgeryPackObserver;
 use App\Observers\UserObserver;
 use App\Observers\VaccineCertificateObserver;
 use Illuminate\Support\Facades\Event;
@@ -108,10 +112,12 @@ class EventServiceProvider extends ServiceProvider
         VaccineCertificate::observe(VaccineCertificateObserver::class);
         Hospitalization::observe(HospitalizationObserver::class);
         Surgery::observe(SurgeryObserver::class);
+        SurgeryPack::observe(SurgeryPackObserver::class);
         FormatType::observe(FormatTypesObserver::class);
         Format::observe(FormatsObserver::class);
         FollowupIntern::observe(FollowupInternObserver::class);
         FollowupSurgical::observe(FollowupSurgicalObserver::class);
+        FollowupsCritic::observe(FollowupsCriticObserver::class);
         
     }
 

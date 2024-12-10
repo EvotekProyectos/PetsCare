@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FollowupIntern;
 use App\Http\Requests\FollowupInternRequest;
+use Yajra\DataTables\Facades\DataTables;
 
 /**
  * Class FollowupInternController
@@ -38,10 +39,12 @@ class FollowupInternController extends Controller
      */
     public function store(FollowupInternRequest $request)
     {
-        FollowupIntern::create($request->validated());
+        $new = FollowupIntern::create($request->validated());
         $this->authorize("create",FollowupIntern::class);
-        return redirect()->route('followup-interns.index')
-            ->with('success', 'FollowupIntern created successfully.');
+
+        return response()->json($new);
+        // return redirect()->route('followup-interns.index')
+        //     ->with('success', 'FollowupIntern created successfully.');
     }
 
     /**
@@ -71,15 +74,25 @@ class FollowupInternController extends Controller
     {
         $followupIntern->update($request->validated());
         $this->authorize("update", $followupIntern);
-        return redirect()->route('followup-interns.index')
-            ->with('success', 'FollowupIntern updated successfully');
+        $reception = $request->reception_id;
+        
+        return redirect()->route('hospitalization.followups', $reception)
+            ->with('success', 'Seguimiento Editado');
     }
 
     public function destroy($id)
     {
-        FollowupIntern::find($id)->delete();
-        //$this->authorize("delete",FollowupIntern::class);
-        return redirect()->route('followup-interns.index')
-            ->with('success', 'FollowupIntern deleted successfully');
+        $followupIntern = FollowupIntern::find($id);
+        $this->authorize("delete",$followupIntern);
+        $followupIntern->delete();
+
+        return response()->json($followupIntern);
+    }
+
+    public function list(int $id)
+    {
+        $critics = FollowupIntern::with('vet')->where('reception_id', $id)->get();
+
+        return DataTables::of($critics)->make(true);
     }
 }

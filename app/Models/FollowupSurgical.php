@@ -67,6 +67,11 @@ class FollowupSurgical extends Model
     {
         return $this->belongsTo(\App\Models\Reception::class, 'reception_id', 'id');
     }
+
+    public function vet()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'vet_id', 'id');
+    }
     
     public function vet()
     {

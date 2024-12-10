@@ -3,6 +3,11 @@
 @section('template_title')
     {{ __('Create') }} Red Sheet
 @endsection
+@push('styles')
+
+<link rel="stylesheet" href="{{ asset('css/redsheets/form.css') }}">
+@endpush
+
 
 @section('content')
 <input type="hidden" id="reception_id_followup" value="{{ $reception->id }}">
@@ -179,7 +184,7 @@
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
                                     <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
-                                        onclick="OpenFollowUps()">
+                                    onclick="window.open('{{ route('hospitalization.followups', $reception->id) }}', '_blank')">
                                         <span class="badge custom-badge-pill"><span
                                                 class="clarity--note-edit-line"></span></span> Seguimientos
                                     </button>
@@ -201,35 +206,7 @@
                         </h5>
                         <div id="table-container"></div>
                     </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 id="card_title" class="text-primary text-uppercase">
-                                <span class="ic--twotone-pets"></span> Seguimientos
-                            </h5>
-                        </div>
-                        <div class="col-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover responsive w-100" id="follow-ups">
-                                    <thead class="thead table-primary text-uppercase">
-                                        <tr>
-                                            <th>Fecha</th>
-                                            <th>Hora</th>
-                                            <th>Detalles</th>
-                                            <th>Temperatura</th>
-                                            <th>Sistolica</th>
-                                            <th>Diastolica</th>
-                                            <th>Media</th>
-                                            <th>Nivel de glycemia</th>
-                                            <th>M.V.Z.</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                    
                     {{-- <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 id="card_title" class="text-primary text-uppercase">
@@ -259,43 +236,10 @@
         </div>
     </section>
 
-    <div class="modal" id="ModalFollowUps" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content" style="background-color: #e9eced; border-radius: 20px;">
-                <div class="modal-header">
-                    <div class="col-11 d-flex justify-content-between align-items-center">
-                        <h5 id="card_title" class=" text-uppercase" style="color: #0455A0">
-                            <span class="clarity--note-edit-line"></span> SEGUIMIENTOS
-                        </h5>
-                    </div>
-                    <div class="col-1">
-                        <button type="button" class="btn-close" onclick="CloseFollowUp()" aria-label="Close"></button>
-                    </div>
 
-                </div>
-                <div class="modal-body" style="width: 100%;">
-                    <div class="row">
-                        <div class="col-12">
-                            <form method="POST" onsubmit="AddFollowUp()" id="NewFollowUp" role="form"
-                                enctype="multipart/form-data">
-                                @csrf
-                                @include('follow-up.form')
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                {{-- <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="CloseFollowUp()">
-                        Cerrar
-                    </button>
-
-                </div> --}}
-            </div>
-        </div>
-    </div>
 
     <div class="modal" id="ModalSurgeries" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content" style="background-color: #e9eced; border-radius: 20px;">
                 <div class="modal-header">
                     <div class="col-11 d-flex justify-content-between align-items-center">

@@ -14,6 +14,33 @@ window.onload = function () {
 
 }
 
+$(document).ready(function () {
+    $('#service_type_id').select2({
+        placeholder: 'Añadir Servicio',
+        width: 'resolve'
+    });
+    $('#lab_type_id').select2({
+         placeholder: 'Añadir Laboratorio',
+          width: 'resolve'
+     });
+     $('#imaging_type_id').select2({
+        placeholder: 'Añadir Imagenologia',
+         width: 'resolve'
+    });
+    $('#imaging_type_id').select2({
+        placeholder: 'Añadir Imagenologia',
+         width: 'resolve'
+    });
+    // $('#product_type_id').select2({
+    //     placeholder: 'Añadir Cirugia',
+    //      width: 'resolve'
+    // });
+    $("#product_type_id").select2({
+        theme: "bootstrap-5",
+        dropdownParent: $('#ModalSurgeries')
+    });
+});
+
 function fetchAndRenderData() {
     $.ajax({
         url: route('red-sheets.recap', Reception_Id),
@@ -58,17 +85,17 @@ function renderData(data) {
 
         let total = 0;
         entries.forEach(entry => {
-            if (entry.lab && entry.lab.price) {
-                total += parseFloat(entry.lab.price);
+            if (entry.lab && entry.lab.PRECIO) {
+                total += parseFloat(entry.lab.PRECIO);
             }
-            if (entry.service && entry.service.price) {
-                total += parseFloat(entry.service.price);
+            if (entry.service && entry.service.PRECIO) {
+                total += parseFloat(entry.service.PRECIO);
             }
-            if (entry.imaging && entry.imaging.price) {
-                total += parseFloat(entry.imaging.price);
+            if (entry.imaging && entry.imaging.PRECIO) {
+                total += parseFloat(entry.imaging.PRECIO);
             }
-            if (entry.surgery && entry.surgery.price) {
-                total += parseFloat(entry.surgery.price);
+            if (entry.surgery && entry.surgery.PRECIO) {
+                total += parseFloat(entry.surgery.PRECIO);
             }
         });
         grandTotal += total;
@@ -113,10 +140,10 @@ function renderEntryRow(entry) {
         rows += `
             <tr>
                 <td>Laboratorio</td>
-                <td>${entry.lab.name}</td>
+                <td>${entry.laboratory.NOMBRE}</td>
                 <td>${entry.observations || ''}</td>
                 <td>${entry.vet ? entry.vet.name : ''}</td>
-                <td>$${entry.lab.price}</td>
+                <td>$${entry.lab.PRECIO}</td>
             </tr>
         `;
     }
@@ -125,10 +152,10 @@ function renderEntryRow(entry) {
         rows += `
             <tr>
                 <td>Imagenologia</td>
-                <td>${entry.imaging.name}</td>
+                <td>${entry.img.NOMBRE}</td>
                 <td>${entry.observations || ''}</td>
                 <td>${entry.vet ? entry.vet.name : ''}</td>
-                <td>$${entry.imaging.price}</td>
+                <td>$${entry.imaging.PRECIO}</td>
             </tr>
         `;
     }
@@ -137,10 +164,10 @@ function renderEntryRow(entry) {
         rows += `
             <tr>
                 <td>Servicio</td>
-                <td>${entry.service.name}</td>
+                <td>${entry.serv.NOMBRE}</td>
                 <td>${entry.observations || ''}</td>
                 <td>${entry.vet ? entry.vet.name : ''}</td>
-                <td>$${entry.service.price}</td>
+                <td>$${entry.service.PRECIO}</td>
             </tr>
         `;
     }
@@ -148,10 +175,10 @@ function renderEntryRow(entry) {
         rows += `
             <tr>
                 <td>Cirugia</td>
-                <td>${entry.surgery.name}</td>
+                <td>${entry.surg.NOMBRE}</td>
                 <td>${entry.observations || ''}</td>
                 <td>${entry.vet ? entry.vet.name : ''}</td>
-                <td>$${entry.surgery.price}</td>
+                <td>$${entry.surgery.PRECIO}</td>
             </tr>
         `;
     }
@@ -177,6 +204,10 @@ async function NewEntry() {
         })
         // table.ajax.reload();
         fetchAndRenderData()
+        $('#lab_type_id').val('').trigger('change')
+        $('#service_type_id').val('').trigger('change')
+        $('#imaging_type_id').val('').trigger('change')
+        $('#observations').val('')
     } else {
         let resp = await pet.json();
         Swal.fire({
@@ -337,6 +368,7 @@ async function OpenPrescription(petId, receptionId) {
 
          if (data.status === 'ok') {
              $('#ModalSurgeries').modal('show');
+             
          } else {
              Swal.fire({
                  icon: 'error',
@@ -345,6 +377,9 @@ async function OpenPrescription(petId, receptionId) {
              });
  }
  }
+ jQuery('#ModalSurgeries').on('shown.bs.modal', function() {
+    jQuery(document).off('focusin.modal');
+});
 
 // async function OpenSurgeries() {
 //     const receptionId = document.getElementById("reception_id_followup").value;

@@ -23,9 +23,9 @@ class RedSheetRequest extends FormRequest
     {
         return [
             'reception_id' => 'nullable|integer|exists:receptions,id',
-            'lab_type_id' => 'nullable|integer|exists:product_types,id',
-            'imaging_type_id' => 'nullable|integer|exists:product_types,id',
-            'service_type_id' => 'nullable|integer|exists:product_types,id',
+            'lab_type_id' => 'nullable|integer',
+            'imaging_type_id' => 'nullable|integer',
+            'service_type_id' => 'nullable|integer',
             'observations' => 'nullable|string',
 			'day_count' => 'required',
             'vet_id' => 'nullable|integer|exists:users,id',

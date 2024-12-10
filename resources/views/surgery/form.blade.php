@@ -41,11 +41,11 @@
                             class="form-control @error('product_type_id') is-invalid @enderror" id="product_type_id">
                             <option value="">Selecciona el tipo de cirugía</option>
                             @foreach ($products as $product)
-                                @if ($product->product_classification_id == 1)
-                                    <option value="{{ $product->id }}" name="product_type_id"
-                                        {{ old('product_type_id', $surgery?->surgery_type_id) == $product->id ? 'selected' : '' }}>
-                                        {{ $product->name }}</option>
-                                @endif
+                                {{-- @if ($product->product_classification_id == 1) --}}
+                                    <option value="{{ $product->ARTICULO_ID}}" name="product_type_id"
+                                        {{ old('product_type_id', $surgery?->surgery_type_id) == $product->ARTICULO_ID ? 'selected' : '' }}>
+                                        {{ $product->NOMBRE }}</option>
+                                {{-- @endif --}}
                             @endforeach
                         </select>
                     </div>
