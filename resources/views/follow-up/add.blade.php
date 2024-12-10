@@ -5,12 +5,17 @@
 @endsection
 
 @section('content')
-<input type="hidden" id="reception_id_followup" value="{{ $reception->id }}">
+    <input type="hidden" id="reception_id_followup" value="{{ $reception->id }}">
 
     <section class="container-fluid">
         <div class="row">
             <div class="col-12">
-
+                @if ($message = Session::get('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <p>{{ $message }}</p>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
                 <div class="card bg-primary-soft border-0 p-3">
                     <div class="card-header bg-transparent border-0">
                         <div class="d-flex justify-content-between align-items-center">
@@ -121,8 +126,9 @@
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
                                     <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
-                                        onclick="#">
-                                        <span class="badge custom-badge-pill"><span class="solar--shield-check-linear"></span></span>
+                                        onclick="OpenInterns()">
+                                        <span class="badge custom-badge-pill"><span
+                                                class="solar--shield-check-linear"></span></span>
                                         Internos
                                     </button>
                                 </div>
@@ -130,8 +136,9 @@
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
                                     <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
-                                        onclick="#">
-                                        <span class="badge custom-badge-pill"><span class="healthicons--surgical-sterilization-outline"></span></span>
+                                        onclick="OpenSurgicals()">
+                                        <span class="badge custom-badge-pill"><span
+                                                class="healthicons--surgical-sterilization-outline"></span></span>
                                         Quirurgicos
                                     </button>
                                 </div>
@@ -140,38 +147,34 @@
                                 <div class="col">
                                     <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
                                         onclick="OpenCritics()">
-                                        <span class="badge custom-badge-pill"><span class="fluent--important-16-filled"></span></span>
+                                        <span class="badge custom-badge-pill"><span
+                                                class="fluent--important-16-filled"></span></span>
                                         Criticos
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                   
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 id="card_title" class="text-primary text-uppercase">
-                                <span class="ic--twotone-pets"></span> Criticos
+                                <span class="clarity--note-edit-line"></span> Internos
                             </h5>
                         </div>
                         <div class="col-12">
                             <div class="table-responsive">
-                                <table class="table table-striped table-hover responsive w-100" id="critics_table">
+                                <table class="table table-striped table-hover responsive w-100" id="interns_table">
                                     <thead class="thead table-primary text-uppercase">
                                         <tr>
                                             <th>Fecha</th>
-                                            <th>Estado</th>
-                                            <th>Presiones</th>
-                                            <th>Temperatura</th>
-                                            <th>Glicemias</th>
+                                            <th>Alteraciones</th>
+                                            <th>Terapeutica</th>
                                             <th>Vomitos</th>
                                             <th>Defeco</th>
-                                            <th>Orino</th>
-                                            <th>Comio</th>
-                                            <th>Infusiones</th>
-                                            <th>Terapeutica</th>
+                                            <th>Orina</th>
+                                            <th>Alimentación</th>
+                                            <th>Imageneologia</th>
                                             <th>Pendientes</th>
-                                            <th>Imagenes</th>
                                             <th>M.V.Z.</th>
                                             <th>Acciones</th>
                                     </thead>
@@ -182,13 +185,109 @@
                             </div>
                         </div>
                     </div>
-                    
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 id="card_title" class="text-primary text-uppercase">
+                                <span class="clarity--note-edit-line"></span> Quirurgicos
+                        </div>
+                        <div class="col-12">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover responsive w-100" id="surgicals_table">
+                                    <thead class="thead table-primary text-uppercase">
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Alteraciones</th>
+                                            <th>Terapeutica</th>
+                                            <th>Vomitos</th>
+                                            <th>Defeco</th>
+                                            <th>Orino</th>
+                                            <th>Alimentación</th>
+                                            <th>Pendientes</th>
+                                            <th>Limpieza Herida</th>
+                                            <th>Secreción Herida</th>
+                                            <th>Drenes Activos</th>
+                                            <th>Bloqueos</th>
+                                            <th>Infusiones</th>
+                                            <th>Alteraciones</th>
+                                            <th>M.V.Z.</th>
+                                            <th>Acciones</th>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 id="card_title" class="text-primary text-uppercase">
+                                <span class="clarity--note-edit-line"></span> Criticos
+                            </h5>
+                        </div>
+                        <div class="col-12">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover responsive w-100" id="critics_table">
+                                    <thead class="thead table-primary text-uppercase">
+                                        <tr>
+                                            <th>Fecha</th>
+                                            {{-- <th>Estado</th> --}}
+                                            <th>Presiones</th>
+                                            <th>Temperatura</th>
+                                            <th>Glicemias</th>
+                                            <th>Vomitos</th>
+                                            <th>Defeco</th>
+                                            <th>Orino</th>
+                                            <th>Comio</th>
+                                            <th>Infusiones</th>
+                                            <th>Terapeutica</th>
+                                            <th>Imageneologia</th>
+                                            <th>Pendientes</th>
+                                            <th>M.V.Z.</th>
+                                            <th>Acciones</th>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
         </div>
     </section>
 
-  
+    <div class="modal" id="ModalInterns" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content" style="background-color: #e9eced; border-radius: 20px;">
+                <div class="modal-header">
+                    <div class="col-11 d-flex justify-content-between align-items-center">
+                        <h5 id="card_title" class=" text-uppercase" style="color: #0455A0">
+                            <span class="clarity--note-edit-line"></span> Pase de Guardia de Internos
+                        </h5>
+                    </div>
+                    <div class="col-1">
+                        <button type="button" class="btn-close" onclick="CloseInterns()" aria-label="Close"></button>
+                    </div>
+
+                </div>
+                <div class="modal-body" style="width: 100%;">
+                    <div class="row">
+                        <div class="col-12">
+                            <form method="POST" onsubmit="AddInterns()" id="NewIntern" role="form"
+                                enctype="multipart/form-data">
+                                @csrf
+                                @include('followup-intern.form')
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal" id="ModalCritics" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content" style="background-color: #e9eced; border-radius: 20px;">
@@ -217,7 +316,35 @@
             </div>
         </div>
     </div>
-   
+
+    <div class="modal" id="ModalSurgicals" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content" style="background-color: #e9eced; border-radius: 20px;">
+                <div class="modal-header">
+                    <div class="col-11 d-flex justify-content-between align-items-center">
+                        <h5 id="card_title" class=" text-uppercase" style="color: #0455A0">
+                            <span class="clarity--note-edit-line"></span> Pase de Guardia de Quirurgicos
+                        </h5>
+                    </div>
+                    <div class="col-1">
+                        <button type="button" class="btn-close" onclick="CloseSurgicals()" aria-label="Close"></button>
+                    </div>
+
+                </div>
+                <div class="modal-body" style="width: 100%;">
+                    <div class="row">
+                        <div class="col-12">
+                            <form method="POST" onsubmit="AddSurgicals()" id="NewSurgical" role="form"
+                                enctype="multipart/form-data">
+                                @csrf
+                                @include('followup-surgical.form')
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
@@ -228,7 +355,6 @@
         var Pet_Id = {{ $reception->pet_id }};
         var Pic_id = {{ $reception->pet->picture_id ?? 'null' }};
         var Pic_route = "{{ $reception->pet->file->route ?? '' }}";
-
     </script>
     <script src="{{ asset('js/followups/add.js') }}" defer></script>
 @endpush

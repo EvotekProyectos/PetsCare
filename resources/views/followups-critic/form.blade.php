@@ -16,7 +16,7 @@
             </div>
             {!! $errors->first('reception_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-        <div class="form-group mb-2 mb20">
+        <div class="form-group mb-2 mb20" hidden>
             <label for="pet_status_critics" class="form-label">Estado de la Mascota</label>
             <div class="input-group mb-3">
                 <span class="input-group-text bg-primary-subtle" id="basic-addon2">
@@ -28,7 +28,9 @@
             </div>
             {!! $errors->first('pet_status', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-        <h5> MONITOREO DE CONSTANTES </h5>
+        <div class="text-center bg-primary text-white py-1 mb-4" style="padding: 10px;">
+            <h5 class="mb-0">MONITOREO CONSTANTES</h5>
+        </div>
         <div class="row mb-2 mb20">
             <div class="row form-group mb-2 mb20">
                 <div class="col-2">

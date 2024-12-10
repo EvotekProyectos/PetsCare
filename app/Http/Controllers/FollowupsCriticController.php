@@ -75,9 +75,10 @@ class FollowupsCriticController extends Controller
     {
         $followupsCritic->update($request->validated());
         $this->authorize("update", $followupsCritic);
-
-        return redirect()->route('followups-critics.index')
-            ->with('success', 'FollowupsCritic updated successfully');
+        $reception = $request->reception_id;
+        
+        return redirect()->route('hospitalization.followups', $reception)
+            ->with('success', 'Seguimiento Editado');
     }
 
     public function destroy($id)

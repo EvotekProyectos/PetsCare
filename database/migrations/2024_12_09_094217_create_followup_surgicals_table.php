@@ -42,6 +42,7 @@ return new class extends Migration
             $table->boolean("alterations_surgery")->nullable();
             $table->string("which_alterations_surgery")->nullable();
             $table->text("observations")->nullable();
+            $table->foreignId('vet_id')->nullable()->references('id')->on('users');
             $table->timestamps();
             $table->softDeletes();
         });

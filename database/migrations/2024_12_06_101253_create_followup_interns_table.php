@@ -31,6 +31,7 @@ return new class extends Migration
             $table->boolean("ultrasounds")->nullable();
             $table->string("observations_ultrasounds")->nullable();
             $table->text("observations")->nullable();
+            $table->foreignId('vet_id')->nullable()->references('id')->on('users');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FollowupSurgical;
 use App\Http\Requests\FollowupSurgicalRequest;
+use Yajra\DataTables\Facades\DataTables;
 
 /**
  * Class FollowupSurgicalController
@@ -37,10 +38,11 @@ class FollowupSurgicalController extends Controller
      */
     public function store(FollowupSurgicalRequest $request)
     {
-        FollowupSurgical::create($request->validated());
+        $new = FollowupSurgical::create($request->validated());
         $this->authorize("create",FollowupSurgical::class);
-        return redirect()->route('followup-surgicals.index')
-            ->with('success', 'FollowupSurgical created successfully.');
+        return response()->json($new);
+        // return redirect()->route('followup-surgicals.index')
+        //     ->with('success', 'FollowupSurgical created successfully.');
     }
 
     /**
@@ -70,15 +72,25 @@ class FollowupSurgicalController extends Controller
     {
         $followupSurgical->update($request->validated());
         $this->authorize("update", $followupSurgical);
-        return redirect()->route('followup-surgicals.index')
-            ->with('success', 'FollowupSurgical updated successfully');
+        $reception = $request->reception_id;
+        
+        return redirect()->route('hospitalization.followups', $reception)
+            ->with('success', 'Seguimiento Editado');
     }
 
     public function destroy($id)
     {
-        FollowupSurgical::find($id)->delete();
-        //$this->authorize("delete",FollowupSurgical::class);
-        return redirect()->route('followup-surgicals.index')
-            ->with('success', 'FollowupSurgical deleted successfully');
+        $followupSurgical = FollowupSurgical::find($id);
+        $this->authorize("delete",$followupSurgical);
+        $followupSurgical->delete();
+        
+        return response()->json($followupSurgical);
+    }
+
+    public function list(int $id)
+    {
+        $critics = FollowupSurgical::with('vet')->where('reception_id', $id)->get();
+
+        return DataTables::of($critics)->make(true);
     }
 }

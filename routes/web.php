@@ -293,9 +293,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('hospital-discharges', HospitalDischargeController::class);
 
     //FOLLOWUPS INTERNS
+    Route::get('/followup-interns/list/{id}', [FollowupInternController::class, 'list'])->name('followup-interns.list');
     Route::resource('followup-interns', FollowupInternController::class);
 
     //FOLLOWUPS SURGICALS
+    Route::get('/followup-surgicals/list/{id}', [FollowupSurgicalController::class, 'list'])->name('followup-surgicals.list');
     Route::resource('followup-surgicals', FollowupSurgicalController::class);
 
     //RoleHasPermissions

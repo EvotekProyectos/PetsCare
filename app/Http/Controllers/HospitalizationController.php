@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Hospitalization;
 use App\Http\Requests\HospitalizationRequest;
 use App\Models\FollowUp;
+use App\Models\FollowupIntern;
+use App\Models\FollowupSurgical;
 use App\Models\Producto;
 use App\Models\Format;
 use App\Models\Pet;
@@ -100,8 +102,10 @@ class HospitalizationController extends Controller
     public function followups(int $id){
         $reception = Reception::find($id);
         $followupsCritic = new FollowUp();
+        $followupIntern = new FollowupIntern();
+        $followupSurgical = new FollowupSurgical();
 
-        return view('follow-up.add', compact('reception', 'followupsCritic'));
+        return view('follow-up.add', compact('reception', 'followupsCritic', 'followupIntern', 'followupSurgical'));
     }
 
     public function test(){

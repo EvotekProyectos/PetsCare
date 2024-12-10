@@ -50,6 +50,7 @@ class FollowupSurgicalRequest extends FormRequest
             'alterations_surgery'=>'boolean',
 			'which_alterations_surgery' => 'nullable|string',
 			'observations' => 'nullable|string',
+            'vet_id' => 'nullable|integer|exists:users,id',
         ];
     }
 }

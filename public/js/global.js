@@ -152,3 +152,11 @@ const deleteFollowUpCritic = (id, table) => {
     const url = route("followups-critics.destroy", id);
     deleteResource(url, table);
 }
+const deleteFollowUpIntern = (id, table) => {
+    const url = route("followup-interns.destroy", id);
+    deleteResource(url, table);
+}
+const deleteFollowUpSurgical = (id, table) => {
+    const url = route("followup-surgicals.destroy", id);
+    deleteResource(url, table);
+}
