@@ -61,7 +61,8 @@ $("form").on("submit", function (e) {
     formData.append("signature", canvas.toDataURL("image/png"));
 
     $.ajax({
-        url: "/receptions/hospital/pdf/" + RECEPTION_ID, 
+        // url: "/receptions/hospital/pdf/" + RECEPTION_ID, 
+        url: route('hospital.pdf', RECEPTION_ID),
         type: "post",
         headers: {
             "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content'),
