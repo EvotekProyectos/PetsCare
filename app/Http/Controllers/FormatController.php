@@ -125,15 +125,13 @@ class FormatController extends Controller
 
     public function generateHospitalAuthorizationPdf(Request $request, $id)
     {
-        $reception = Reception::find($id);
         $pet = Pet::with('family', 'genre')->find($id);
         $signatureDataUrl = $request->input('signature');
     
         $uniqueId = uniqid(); 
         $pdfPath = 'public/formats/auth_hospital' . $id . '_' . $uniqueId . '.pdf';
     
-        $pdf = PDF::loadView('reception.pdf', [
-            'reception' => $reception,
+        $pdf = PDF::loadView('format.aut_hospital', [
             'pet' => $pet,
             'signatureDataUrl' => $signatureDataUrl,
             'isPdf' => true
@@ -158,11 +156,7 @@ class FormatController extends Controller
 
     public function altaVoluntariapdf(Request $request, $id)
     {
-        $reception = Reception::find($id);
         $pet = Pet::with('family', 'genre')->find($id);
-
-        $reception->exit_date = now();
-        $reception->save();
 
         $signatureDataUrl = $request->input('signature');
          $nameFamily = $request->input('name_family');
@@ -172,7 +166,6 @@ class FormatController extends Controller
          $pdfPath = 'public/formats/voluntary_discharge_' . $id .' _'. $uniqueId.'.pdf';
     
         $pdf = PDF::loadView('format.alta', [
-            'reception' => $reception,
             'pet' => $pet,
             'signatureDataUrl' => $signatureDataUrl,
              'nameFamily' => $nameFamily,
@@ -190,7 +183,6 @@ class FormatController extends Controller
         $format->save();
 
         $hospitalization = new Hospitalization();
-        $hospitalization->reception_id = $id;  
         $hospitalization->exit_date = now();
         $hospitalization->hospital_discharges_id = 2; 
         $hospitalization->save();
@@ -206,8 +198,7 @@ class FormatController extends Controller
     
     public function surgery_authorizationpdf(Request $request, $id)
     {
-        $reception = Reception::with('pet')->find($id);
-        $pet = $reception->pet;
+        $pet = Pet::with('family', 'genre')->find($id);
         $signatureDataUrl = $request->input('signature');
          $procedure = $request->input('procedure');
           $total= $request->input('total');
@@ -217,7 +208,6 @@ class FormatController extends Controller
          $pdfPath = 'public/formats/auth_surgery_' . $id .'_'.$uniqueId. '.pdf';
 
         $pdf = PDF::loadView('format.aut_surgery', [
-            'reception' => $reception,
             'pet' => $pet,
             'signatureDataUrl' => $signatureDataUrl,
           'procedure' => $procedure,

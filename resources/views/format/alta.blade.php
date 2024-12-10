@@ -113,7 +113,7 @@
     </div>
 
     <div>
-        <p>Saltillo, Coahuila a <span id="current-date"></span></p>
+        <p>Saltillo, Coahuila a  {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</p>
     </div>
     
     <div>
@@ -177,10 +177,7 @@
     <script>
         const PET_ID = "{{ $pet->id }}";
     </script> 
-    
-    <script>
-        document.getElementById("current-date").innerText = new Date().toLocaleDateString();
-    </script>
+
 </body>
 
 </html>

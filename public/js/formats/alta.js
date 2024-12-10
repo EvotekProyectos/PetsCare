@@ -60,6 +60,11 @@ $("form").on("submit", function (e) {
     const nameFamily = $("#name_family").val();
     const reason = $("#reason").val();
 
+    if (!nameFamily || !reason || !canvas || !canvas.toDataURL) {
+        alert("Por favor, completa todos los campos requeridos.");
+        return;
+    }
+    
     const formData = new FormData(this);
     formData.append("signature", canvas.toDataURL("image/png"));
      formData.append("name_family", nameFamily);
