@@ -40,6 +40,7 @@ class FollowupInternRequest extends FormRequest
             'ultrasounds'=>'boolean',
 			'observations_ultrasounds' => 'nullable|string',
 			'observations' => 'string',
+            'vet_id' => 'nullable|integer|exists:users,id',
         ];
     }
 }

@@ -22,6 +22,7 @@ class HospitalizationRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'pet_id' => 'nullable|integer|exists:pets,id',
             'reception_id' => 'nullable|integer|exists:receptions,id',
 			'reason' => 'nullable|string',
             'total_days' => 'nullable',

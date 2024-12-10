@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('followup_surgicals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('reception_id')->nullable()->references('id')->on('receptions');
+
             $table->datetime("date");
             $table->String("surgery")->nullable();
             $table->boolean("alterations")->nullable();
@@ -42,6 +43,7 @@ return new class extends Migration
             $table->boolean("alterations_surgery")->nullable();
             $table->string("which_alterations_surgery")->nullable();
             $table->text("observations")->nullable();
+            $table->foreignId('vet_id')->nullable()->references('id')->on('users');
             $table->timestamps();
             $table->softDeletes();
         });

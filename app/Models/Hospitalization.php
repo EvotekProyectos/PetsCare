@@ -34,7 +34,7 @@ class Hospitalization extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_id', 'reason', 'total_days', 'total_payment', 'already_paid', 'hospital_discharges_id'];
+    protected $fillable = ['reception_id','pet_id', 'reason', 'total_days', 'total_payment', 'already_paid', 'hospital_discharges_id'];
 
 
     /**
@@ -50,5 +50,9 @@ class Hospitalization extends Model
         return $this->belongsTo(\App\Models\HospitalDischarge::class, 'hospital_discharges_id', 'id');
     }
     
+    public function pet()
+    {
+        return $this->belongsTo(\App\Models\Pet::class, 'pet_id', 'id');
+    }
 
 }

@@ -57,7 +57,7 @@ class FollowupSurgical extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_id', 'date', 'alterations', 'which_alterations', 'therapeutic', 'which_therapeutic', 'vomiting', 'quantity_vomiting', 'defecation', 'quantity_defecation', 'urine', 'quantity_urine', 'feeding', 'type_feeding', 'pendings', 'cleaning', 'clean_observations', 'secretion', 'secretion_observations', 'drainage', 'quantity_drainage', 'blockedages', 'type_blocked', 'infusions', 'type_time_infusions', 'alterations_surgery', 'which_alterations_surgery', 'observations'];
+    protected $fillable = ['reception_id', 'date', 'alterations', 'which_alterations', 'therapeutic', 'which_therapeutic', 'vomiting', 'quantity_vomiting', 'defecation', 'quantity_defecation', 'urine', 'quantity_urine', 'feeding', 'type_feeding', 'pendings', 'cleaning', 'clean_observations', 'secretion', 'secretion_observations', 'drainage', 'quantity_drainage', 'blockedages', 'type_blocked', 'infusions', 'type_time_infusions', 'alterations_surgery', 'which_alterations_surgery', 'observations', 'vet_id'];
 
 
     /**
@@ -68,5 +68,9 @@ class FollowupSurgical extends Model
         return $this->belongsTo(\App\Models\Reception::class, 'reception_id', 'id');
     }
     
+    public function vet()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'vet_id', 'id');
+    }
 
 }

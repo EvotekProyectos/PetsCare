@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('hospitalizations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('reception_id')->nullable()->references('id')->on('receptions');
+            $table->foreignId('pet_id')->nullable()->references('id')->on('pets');
             $table->foreignId('hospital_discharges_id')->nullable()->references('id')->on('hospital_discharges');
             $table->string("reason")->nullable();
             $table->integer("total_days")->nullable();

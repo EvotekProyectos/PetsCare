@@ -47,7 +47,7 @@ class FollowupIntern extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_id', 'date', 'alterations', 'which_alterations', 'therapeutic', 'which_therapeutic', 'vomiting', 'quantity_vomiting', 'defecation', 'quantity_defecation', 'urine', 'quantity_urine', 'feeding', 'type_feeding', 'pendings', 'ultrasounds', 'observations_ultrasounds', 'observations'];
+    protected $fillable = ['reception_id', 'date', 'alterations', 'which_alterations', 'therapeutic', 'which_therapeutic', 'vomiting', 'quantity_vomiting', 'defecation', 'quantity_defecation', 'urine', 'quantity_urine', 'feeding', 'type_feeding', 'pendings', 'ultrasounds', 'observations_ultrasounds', 'observations', 'vet_id'];
 
 
     /**
@@ -58,5 +58,8 @@ class FollowupIntern extends Model
         return $this->belongsTo(\App\Models\Reception::class, 'reception_id', 'id');
     }
     
-
+    public function vet()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'vet_id', 'id');
+    }
 }

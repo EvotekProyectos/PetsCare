@@ -1,39 +1,57 @@
-$(document).ready(function () {
+(document).ready(function () {
     $('#family_id').select2({
         placeholder: 'Buscar Familia',
         width: 'resolve'
     });
+
     $('#pet_id').select2({
-         placeholder: 'Buscar Mascota',
-          width: 'resolve'
-     });
+        placeholder: 'Buscar Mascota',
+        width: 'resolve',
+        multiple: true  
+    });
+
+    $('#family_id').on('change', function () {
+        let familyId = $(this).val();
+        if (familyId) {
+            getPets(familyId);  
+        }
+    });
+
+    $('#pet_id').on('change', function () {
+        let selectedPets = $(this).val();  
+        if (selectedPets && selectedPets.length > 0) {
+        }
+    });
 });
 
-async function getpets(family_id) {
-    let url = route("pets.preview", family_id)
-    let peticion = await fetch(url)
+async function getPets(family_id) {
+    let url = route("pets.preview", family_id);
+    let peticion = await fetch(url);
     if (peticion.ok) {
-        let respuesta = await peticion.json()
-        let html = ""
+        let respuesta = await peticion.json();
+        let html = "";
         respuesta.forEach(pet => {
             html += `<option value="${pet.id}">${pet.name}</option>`;
         });
-        document.getElementById("pet_id").innerHTML = html
 
+        let selectedPets = $('#pet_id').val();
+        document.getElementById("pet_id").innerHTML = html;
+        $('#pet_id').val(selectedPets).trigger('change');  
     }
 }
 
- async function getFamily(pet_id) {
-     let url = route("families.getFamilyByPet", pet_id); 
-     let peticion = await fetch(url);
-     if (peticion.ok) {
-         let family = await peticion.json();
-         if (family) {
-             $('#family_id').val(family.id).trigger('change');
-             getPets(family.id); 
-         }
-     }
- }
+async function getFamily(pet_id) {
+    let url = route("families.getFamilyByPet", pet_id); 
+    let peticion = await fetch(url);
+    if (peticion.ok) {
+        let family = await peticion.json();
+        if (family) {
+            $('#family_id').val(family.id).trigger('change');
+            getPets(family.id); 
+        }
+    }
+}
+
 
 
 function togglee(radio) {

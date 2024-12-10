@@ -145,6 +145,12 @@ class FormatController extends Controller
         $format->pet_id = $id;
         $format->format_pdf = $pdfPath;
         $format->save();
+
+        $hospitalization = new Hospitalization();
+        $hospitalization->pet_id = $id;
+        $hospitalization->save();
+
+
     
         return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
     }
@@ -183,6 +189,7 @@ class FormatController extends Controller
         $format->save();
 
         $hospitalization = new Hospitalization();
+        $hospitalization->pet_id = $id;
         $hospitalization->exit_date = now();
         $hospitalization->hospital_discharges_id = 2; 
         $hospitalization->save();
