@@ -1,23 +1,81 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const selectElement = document.getElementById('format_type_id');
-    const generateButton = document.getElementById('generate-format-btn');
+const colorFondo = "white";
+let dibujando;
+
+$("canvas").each(function(index) {
+    let m;
+    const ctx = this.getContext("2d");
+    const canvas = this;
+
+    const oMousePos = (elmnt, e) => {
+        let Client = elmnt.getBoundingClientRect();
+        e = e.touches ? e.touches[0] : e;
     
-    // Define routes based on format_type_id
-    const routes = {
-        1: '{{ route("format.hospital", $pet->id) }}',
-        2: '{{ route("format.alta", $pet->id) }}',
-        3: '{{ route("format.surgery", $pet->id) }}',
-       
-       
+        return {
+            x: Math.round(e.clientX - Client.left),
+            y: Math.round(e.clientY - Client.top),
+        };
+    };
+    
+    const onStart = function(e) {
+        m = oMousePos(this, e);
+        ctx.beginPath();
+    
+        dibujando = true;
+    };
+    
+    const onMove = function(e) {
+        if (dibujando) {
+            ctx.moveTo(m.x, m.y);
+            m = oMousePos(this, e);
+            ctx.lineTo(m.x, m.y);
+            ctx.stroke();
+        }
+    };
+    
+    const onEnd = function(e) {
+        dibujando = false;
     };
 
-    // Update button href on selection change
-    selectElement.addEventListener('change', function () {
-        const selectedValue = selectElement.value;
-        if (routes[selectedValue]) {
-            generateButton.href = routes[selectedValue];
-        } else {
-            generateButton.href = '#'; // Default or empty value
-        }
+    const clear = () => {
+        ctx.fillStyle = colorFondo;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    };
+
+    this.onmousedown = onStart;
+    this.ontouchstart = onStart;
+    this.onmousemove = onMove;
+    this.ontouchmove = onMove;
+    this.onmouseup = onEnd;
+    this.onmouseout = onEnd;
+    this.ontouchend = onEnd;
+
+    $(".btnLimpiar[data-target=" + this.id + "]").on("click", clear);
+
+    clear();
+});
+
+$("form").on("submit", function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+    formData.append("signature", canvas.toDataURL("image/png"));
+
+    $.ajax({
+        url: "/formats/hospital/pdf/" + PET_ID, 
+        type: "post",
+        headers: {
+            "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content'),
+        },
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (response) {
+            window.open(response.url, '_blank');
+            window.location.href = "/receptions";
+        },
+        error: function (error) {
+            console.error("Error:", error);
+            alert("Ocurrió un error al procesar la solicitud. Inténtalo de nuevo.");
+        },
     });
 });

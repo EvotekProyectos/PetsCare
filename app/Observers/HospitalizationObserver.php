@@ -13,7 +13,9 @@ class HospitalizationObserver
      */
     public function created(Hospitalization $hospitalization): void
     {
-        $pets= $hospitalization->reception->pet;
+        //$pets= $hospitalization->reception->pet;
+        if ($hospitalization->reception && $hospitalization->reception->pet) {
+            $pets = $hospitalization->reception->pet;
 
         Log::create([
             "action" => "REGISTRO DE HOSPITALIZACIÓN",
@@ -21,7 +23,7 @@ class HospitalizationObserver
             'user_id' => (Auth::user()->id) ?? null
         ]);
     }
-
+    }
     /**
      * Handle the Hospitalization "updated" event.
      */
