@@ -3,24 +3,10 @@
         placeholder: 'Buscar Familia',
         width: 'resolve'
     });
-
     $('#pet_id').select2({
         placeholder: 'Buscar Mascota',
         width: 'resolve',
         multiple: true  
-    });
-
-    $('#family_id').on('change', function () {
-        let familyId = $(this).val();
-        if (familyId) {
-            getPets(familyId);  
-        }
-    });
-
-    $('#pet_id').on('change', function () {
-        let selectedPets = $(this).val();  
-        if (selectedPets && selectedPets.length > 0) {
-        }
     });
 });
 
@@ -33,10 +19,6 @@ async function getPets(family_id) {
         respuesta.forEach(pet => {
             html += `<option value="${pet.id}">${pet.name}</option>`;
         });
-
-        let selectedPets = $('#pet_id').val();
-        document.getElementById("pet_id").innerHTML = html;
-        $('#pet_id').val(selectedPets).trigger('change');  
     }
 }
 
