@@ -66,7 +66,7 @@ $("form").on("submit", function (e) {
      formData.append("reason", reason);
 
     $.ajax({
-        url: "/alta-voluntaria/pdf/" + RECEPTION_ID, 
+        url: route('altaVoluntaria.pdf' + RECEPTION_ID), 
         type: "post",
         headers: {
             "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content'),
@@ -76,7 +76,7 @@ $("form").on("submit", function (e) {
         data: formData,
         success: function (response) {
             window.open(response.url, '_blank');
-            window.location.href = "/hospitalizations/historic/" + RECEPTION_ID;
+            window.location.href = route('hospitalization.historic' + RECEPTION_ID);
         },
         error: function (error) {
             console.error("Error:", error);
