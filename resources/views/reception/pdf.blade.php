@@ -116,7 +116,7 @@
             </tr>
             <tr>
                 <td>
-                    <p>Domiclio: {{ $reception->pet->family->address }}</p>
+                    <p>Domicilio: {{ $reception->pet->family->address }}</p>
                 </td>
             </tr>
             <tr>

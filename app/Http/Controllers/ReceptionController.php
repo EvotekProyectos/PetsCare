@@ -197,8 +197,8 @@ class ReceptionController extends Controller
             'isPdf' => true
         ]);
 
-        $pdfPath = 'public/receptions/reception_' . $id . '.pdf';
-        Storage::put($pdfPath, $pdf->output());
+        $pdfPath = '/receptions/reception_' . $id . '.pdf';
+        Storage::put('public'.$pdfPath, $pdf->output());
 
         $pdfUrl = Storage::url($pdfPath);
 
@@ -209,7 +209,7 @@ class ReceptionController extends Controller
         $format->format_pdf = $pdfPath; 
         $format->save();
 
-        return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
+        return response()->json(['url' => asset('storage'.$pdfPath), 'format_id' => $format->id]);
     }
 
 
