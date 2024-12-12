@@ -61,7 +61,8 @@ $("form").on("submit", function (e) {
     formData.append("signature", canvas.toDataURL("image/png"));
 
     $.ajax({
-        url: "/formats/hospital/pdf/" + PET_ID, 
+        //url:route('format-hospital.pdf', {id:PET_ID} ), 
+        url: route('format-hospital.pdf', PET_ID),
         type: "post",
         headers: {
             "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content'),
@@ -71,7 +72,7 @@ $("form").on("submit", function (e) {
         data: formData,
         success: function (response) {
             window.open(response.url, '_blank');
-            window.location.href = "/receptions";
+            window.location.href = route ('formats.created', {id:PET_ID});
         },
         error: function (error) {
             console.error("Error:", error);

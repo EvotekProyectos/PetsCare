@@ -72,7 +72,7 @@ $("form").on("submit", function (e) {
         data: formData,
         success: function (response) {
             window.open(response.url, '_blank');
-            window.location.href = "/receptions";
+            window.location.href = route('receptions.index');
         },
         error: function (error) {
             console.error("Error:", error);

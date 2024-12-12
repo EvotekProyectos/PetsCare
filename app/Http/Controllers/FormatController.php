@@ -150,9 +150,11 @@ class FormatController extends Controller
         $hospitalization->pet_id = $id;
         $hospitalization->save();
 
-
+        //return response()->json(['url' => asset('storage'.$pdfPath), 'format_id' => $format->id]);
     
-        return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
+        return response()->json([ 'url' => asset($pdfUrl), 'format_id' => $format->id]);
+        
+       // return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
     }
 
     public function altaVoluntaria($id){
@@ -193,8 +195,9 @@ class FormatController extends Controller
         $hospitalization->exit_date = now();
         $hospitalization->hospital_discharges_id = 2; 
         $hospitalization->save();
-
-        return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
+        
+        return response()->json([ 'url' => asset($pdfUrl), 'format_id' => $format->id]);
+        //return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
     }
 
     public function surgery_authorization($id)
@@ -232,6 +235,12 @@ class FormatController extends Controller
         $format->format_pdf = $pdfPath; 
         $format->save();
 
-        return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
+        return response()->json([ 'url' => asset($pdfUrl), 'format_id' => $format->id]);
+        //return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
+    }
+
+    public function reporte()
+    {
+        return view('format.reporte_ultrasono');
     }
 }

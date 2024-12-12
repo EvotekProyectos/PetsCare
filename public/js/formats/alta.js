@@ -71,7 +71,7 @@ $("form").on("submit", function (e) {
      formData.append("reason", reason);
 
     $.ajax({
-        url: "/formats/alta/pdf/" + PET_ID, 
+        url: route('format-alta.pdf',  PET_ID), 
         type: "post",
         headers: {
             "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content'),
@@ -81,7 +81,7 @@ $("form").on("submit", function (e) {
         data: formData,
         success: function (response) {
             window.open(response.url, '_blank');
-            window.location.href = "/formats/created/" + PET_ID;
+            window.location.href = route ('formats.created', {id:PET_ID});
         },
         error: function (error) {
             console.error("Error:", error);
