@@ -69,7 +69,7 @@ $("form").on("submit", function (e) {
 
 
     $.ajax({
-        url: "/surgeries/authorization/pdf/" + RECEPTION_ID, 
+        url: route('surgery_authorization.pdf',  RECEPTION_ID), 
         type: "post",
         headers: {
             "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content'),
@@ -79,7 +79,7 @@ $("form").on("submit", function (e) {
         data: formData,
         success: function (response) {
             window.open(response.url, '_blank');
-            window.location.href = "/hospitalizations/historic/" + RECEPTION_ID;
+            window.location.href = route('hospitalization.historic' , { id: RECEPTION_ID });
         },
         error: function (error) {
             console.error("Error:", error);

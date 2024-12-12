@@ -36,6 +36,7 @@ async function getpets(family_id) {
  }
 
 
+
 function togglee(radio) {
     document.getElementById("adm").style.display = "none";
     document.getElementById("area").style.display = "none";

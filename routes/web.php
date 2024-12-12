@@ -240,7 +240,7 @@ Route::group(['middleware' => ['auth']], function () {
     //RED SHEETS FOR HOSPITALIZATION DAYS
     Route::get('/hospitalizations/entries/{id}', [RedSheetController::class, 'entry'])->name("redsheet.entry");
     Route::get('/red-sheets/recap/{id}', [RedSheetController::class, 'recap'])->name("red-sheets.recap");
-    Route::post('/redSheet/discharge', [RedSheetController::class, 'discharge']);
+    Route::post('/redSheet/discharge', [RedSheetController::class, 'discharge'])->name("redsheet-discharge");
     Route::post('/hospitalizations/discharge', [RedSheetController::class, 'dischargePatient']);
     Route::resource('red-sheets', RedSheetController::class);
 
@@ -269,7 +269,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/formats/alta/{id}', [FormatController::class, 'altaVoluntaria'])->name('format.alta');
     Route::post('/formats/alta/pdf/{id}', [FormatController::class, 'altaVoluntariapdf'])->name('format-alta.pdf'); 
     Route::get('/formats/surgery/{id}', [FormatController::class, 'surgery_authorization'])->name('format.surgery');
-    Route::post('/formats/surgery/pdf/{id}', [FormatController::class, 'surgery_authorizationpdf'])->name('format-surgery.pdf'); 
+    Route::post('/formats/surgery/pdf/{id}', [FormatController::class, 'surgery_authorizationpdf'])->name('format-surgery.pdf');
+    Route::get('/reporte', [FormatController::class, 'reporte']);
     Route::resource('formats', FormatController::class);
 
     //Appointment Services

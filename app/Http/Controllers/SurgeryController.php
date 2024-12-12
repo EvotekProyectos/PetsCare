@@ -8,6 +8,7 @@ use App\Models\Format;
 use App\Models\Hospitalization;
 use App\Models\Pet;
 use App\Models\ProductClassification;
+use App\Models\Producto;
 use App\Models\ProductType;
 use App\Models\Reception;
 use App\Models\RedSheet;
@@ -131,8 +132,9 @@ class SurgeryController extends Controller
     public function surgery_authorization($id)
     {
         $reception = Reception::find($id);
+        $products = Producto::where("ESTATUS",  "A")->get();
         $pet = Pet::with('family', 'genre')->find($id);
-        return view('surgery.aut_quirurgica', compact("reception", "pet"));
+        return view('surgery.aut_quirurgica', compact("reception", "pet", "products"));
     }
 
     public function surgery_authorizationpdf(Request $request, $id)
@@ -168,7 +170,9 @@ class SurgeryController extends Controller
         $format->format_pdf = $pdfPath; 
         $format->save();
 
-        return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
+        return response()->json([ 'url' => asset($pdfUrl), 'format_id' => $format->id]);
+        //return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
+        //return response()->json(['url' => asset('storage'.$pdfPath), 'format_id' => $format->id]);
     }
 
 }

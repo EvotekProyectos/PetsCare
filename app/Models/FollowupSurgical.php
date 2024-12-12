@@ -74,4 +74,5 @@ class FollowupSurgical extends Model
     }
     
 
+
 }

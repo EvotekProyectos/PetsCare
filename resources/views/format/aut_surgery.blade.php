@@ -2,6 +2,8 @@
 <html lang="en">
 
 <head>
+    @routes
+    
     <style type="text/css">
         @import url(https://themes.googleusercontent.com/fonts/css?kit=fOEonugfEEW2k3BWBOC73CXHfZMcH88HuPcErL5npACHpuVWaP-GHFPZzt35558q);
 

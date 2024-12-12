@@ -331,7 +331,7 @@ async function OpenPrescription(petId, receptionId) {
         }
 
         if (selectedType === "Alta normal") {
-            const response = await fetch(`/redSheet/discharge`, {
+            const response = await fetch(route('redsheet-discharge'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -341,18 +341,18 @@ async function OpenPrescription(petId, receptionId) {
             });
             const data = await response.json();
             if (response.ok) {
-                Swal.fire(
-                    'Paciente dado de alta',
-                    'Se ha registrado la salida.'
-                );
-                window.location.href = `/prescriptions/create/${petId}`;
-            } else {
-                Swal.fire('Error', data.message || 'No se pudo dar de alta.', 'error');
+                // Swal.fire(
+                //     'Paciente dado de alta',
+                //     'Se ha registrado la salida.'
+                // );
+                window.location.href = route('prescription.create', { id: petId });
+
+                //Swal.fire('Error', data.message || 'No se pudo dar de alta.', 'error');
             }
         } else if (selectedType === "Alta voluntaria") {
             const nameFamily = $("#name_family").val();
             const reason = $("#reason").val();
-             window.location.href = `/alta-voluntaria/${receptionId}`;
+            window.location.href = route ('alta.voluntaria', {id: receptionId }); 
             } else if (selectedType === "Alta por fallecimiento") {
                 Swal.fire('Alta por fallecimiento', 'El proceso de alta por fallecimiento se ha registrado.');
             }

@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    @routes
     <style type="text/css">
         @import url(https://themes.googleusercontent.com/fonts/css?kit=fOEonugfEEW2k3BWBOC73CXHfZMcH88HuPcErL5npACHpuVWaP-GHFPZzt35558q);
 
@@ -198,12 +199,20 @@
             <tr>
                 <td>
                     <ol>
-                        <li> Por medio de la presente autorizo la realización del procedimiento quirúrgico y/o anestésico
+                        <li> Por medio de la presente autorizo la realización del procedimiento quirúrgico y/o anestésico:
                             @if (!isset($isPdf) || !$isPdf)
-                             <input type="text" id="procedure" value="{{ $procedure ?? '' }}" class="form-control">
-                             @else
-                                 <span>{{ $procedure ?? '' }}</span>
-                             @endif
+                                <select id="procedure" class="form-control" name="procedure">
+                                    <option value="">Selecciona el procedimiento a realizar</option>
+                                    @foreach ($products as $product)
+                                       <option value="{{ $product->NOMBRE }}" 
+                                                {{ old('procedure', $procedure ?? '') == $product->ARTICULO_ID ? 'selected' : '' }}>
+                                            {{ $product->NOMBRE }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            @else
+                            <span><strong>{{ $procedure ?? '' }}</strong></span>
+                            @endif
                             mismo que ha sido explicado por el médico, por lo que estoy consciente de los beneficios y riesgos 
                             que indica el mismo. El presupuesto de dicha intervención es de TOTAL $ 
                             @if (!isset($isPdf) || !$isPdf)

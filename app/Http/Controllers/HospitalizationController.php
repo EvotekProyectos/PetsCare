@@ -157,7 +157,10 @@ class HospitalizationController extends Controller
         $hospitalization->hospital_discharges_id = 2; 
         $hospitalization->save();
 
-        return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
+        
+        return response()->json([ 'url' => asset($pdfUrl), 'format_id' => $format->id]);
+        //return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
+        //return response()->json(['url' => asset('storage/'.$pdfPath), 'format_id' => $format->id]);
     }
 
 

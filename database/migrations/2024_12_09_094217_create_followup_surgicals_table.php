@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('followup_surgicals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('reception_id')->nullable()->references('id')->on('receptions');
+
             $table->datetime("date");
             $table->String("surgery")->nullable();
             $table->boolean("alterations")->nullable();
