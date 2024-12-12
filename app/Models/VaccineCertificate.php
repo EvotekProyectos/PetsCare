@@ -71,6 +71,11 @@ class VaccineCertificate extends Model
      {
          return $this->belongsTo(\App\Models\User::class, 'vet_id', 'id');
      }
+
+     public function microsip()
+    {
+        return $this->belongsTo(\App\Models\Producto::class, 'product', 'ARTICULO_ID');
+    }
     
 
 }

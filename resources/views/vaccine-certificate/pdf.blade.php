@@ -231,7 +231,7 @@
                          <p class="body" style="text-align: center;">{{ $cert->application_date }}</p>
                         </td>
                         <td>
-                            <p class="body" style="text-align: center;">{{ $cert->product }}</p>
+                            <p class="body" style="text-align: center;">{{ $cert->microsip->NOMBRE }}</p>
                         </td>
                         <td>
                             <p class="body" style="text-align: center;">{{ $cert->next_application_date }}</p>

@@ -6,6 +6,7 @@ use App\Models\Appointment;
 use App\Http\Requests\AppointmentRequest;
 use App\Models\AppointmentService;
 use App\Models\Prescription;
+use App\Models\Producto;
 use App\Models\ProductType;
 use App\Models\Reason;
 use App\Models\Reception;
@@ -124,7 +125,7 @@ class AppointmentController extends Controller
         $prescription = new Prescription();
         $vaccineCertificate = new VaccineCertificate();
         $appointmentService = new AppointmentService();
-        $products = ProductType::all();
+        $products = Producto::where("ESTATUS",  "A")->get();
         $this->authorize("create", Appointment::class);
         // ReceptionStatusHistory::create([
         //     'reception_id' => $id,

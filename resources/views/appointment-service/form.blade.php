@@ -13,7 +13,7 @@
             </div>
             {!! $errors->first('reception_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-        <div class="form-group mb-2 mb20" hidden>
+        {{-- <div class="form-group mb-2 mb20" hidden>
             <label for="lab_type_id" class="form-label">Laboratorio</label>
             <div class="input-group mb-3">
                 <span class="input-group-text bg-primary-subtle" id="basic-addon1">
@@ -23,15 +23,15 @@
                     <option value=""> Selecciona el laboratorio a registrar</option>
                     @foreach ($products as $product)
                         @if ($product->product_classification_id == 2)
-                            <option value="{{ $product->id }}" name="lab_type_id"
-                                {{ old('lab_type_id', $appointmentService?->lab_type_id) == $product->id ? 'selected' : '' }}>
-                                {{ $product->name }}</option>
+                            <option value="{{ $product->ARTICULO_ID }}" name="lab_type_id"
+                                {{ old('lab_type_id', $appointmentService?->lab_type_id) == $product->ARTICULO_ID  ? 'selected' : '' }}>
+                                {{ $product->NOMBRE }}</option>
                         @endif
                     @endforeach
                 </select>
             </div>
             {!! $errors->first('lab_type_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-        </div>
+        </div> --}}
         <div class="form-group mb-2 mb20">
             <label for="imaging_type_id" class="form-label">Imagenologia</label>
             <div class="input-group mb-3">
@@ -41,11 +41,11 @@
                     id="imaging_type_id">
                     <option value=""> Selecciona la imagenologia a registrar</option>
                     @foreach ($products as $product)
-                        @if ($product->product_classification_id == 3)
-                            <option value="{{ $product->id }}" name="imaging_type_id"
-                                {{ old('imaging_type_id', $appointmentService?->lab_type_id) == $product->id ? 'selected' : '' }}>
-                                {{ $product->name }}</option>
-                        @endif
+                        {{-- @if ($product->product_classification_id == 3) --}}
+                            <option value="{{ $product->ARTICULO_ID }}" name="imaging_type_id"
+                                {{ old('imaging_type_id', $appointmentService?->lab_type_id) == $product->ARTICULO_ID ? 'selected' : '' }}>
+                                {{ $product->NOMBRE }}</option>
+                        {{-- @endif --}}
                     @endforeach
                 </select>
             </div>

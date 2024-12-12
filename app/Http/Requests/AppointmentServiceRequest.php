@@ -23,8 +23,8 @@ class AppointmentServiceRequest extends FormRequest
     {
         return [
             'reception_id' => 'nullable|integer|exists:receptions,id',
-            'lab_type_id' => 'nullable|integer|exists:product_types,id',
-            'imaging_type_id' => 'nullable|integer|exists:product_types,id',
+            'lab_type_id' => 'nullable|integer',
+            'imaging_type_id' => 'nullable|integer',
             'observations' => 'nullable|string',
             'vet_id' => 'nullable|integer|exists:users,id',
         ];

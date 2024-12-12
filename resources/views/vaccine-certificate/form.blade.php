@@ -49,19 +49,32 @@
 
                 <div class="col-md-6">
                     <div class="form-group mb-2">
-                        <label for="product" class="form-label">NOMBRE</label>
+                        <label for="product1" class="form-label">NOMBRE</label>
 
                         <div class="input-group mb-3">
                             <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                                 <span class="fluent-mdl2--vaccination"></span>
                             </span>
 
-                            <input type="text" name="product"
+                            {{-- <input type="text" name="product"
                                 class="form-control @error('product') is-invalid @enderror"
                                 value="{{ old('product', $vaccineCertificate?->vaccine) }}" id="product1"
                                 placeholder="Nombre de la vacuna">
-                            {!! $errors->first('product', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+                            {!! $errors->first('product', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!} --}}
+
+                            <select name="product" class="form-control @error('product') is-invalid @enderror"
+                                id="product1">
+                                <option value=""> Selecciona la vacuna a aplicar</option>
+                                @foreach ($products as $product)
+                                    {{-- @if ($product->product_classification_id == 2) --}}
+                                    <option value="{{ $product->ARTICULO_ID }}" name="product"
+                                        {{ old('product', $vaccineCertificate?->vaccine) == $product->ARTICULO_ID ? 'selected' : '' }}>
+                                        {{ $product->NOMBRE }}</option>
+                                    {{-- @endif --}}
+                                @endforeach
+                            </select>
                         </div>
+                        {!! $errors->first('product', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                     </div>
                 </div>
 
@@ -190,17 +203,28 @@
 
                     <div class="col-md-6">
                         <div class="form-group mb-2">
-                            <label for="product" class="form-label">PRODUCTO</label>
+                            <label for="product2" class="form-label">PRODUCTO</label>
 
                             <div class="input-group mb-3">
                                 <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                                     <span class="fluent-mdl2--bug-block"></span>
                                 </span>
 
-                                <input type="text" name="product"
+                                {{-- <input type="text" name="product"
                                     class="form-control @error('product') is-invalid @enderror"
                                     value="{{ old('product', $vaccineCertificate?->product) }}" id="product2"
-                                    placeholder="Nombre del producto">
+                                    placeholder="Nombre del producto"> --}}
+                                <select name="product" class="form-control @error('product') is-invalid @enderror"
+                                    id="product2">
+                                    <option value=""> Selecciona la desparacitación a aplicar</option>
+                                    @foreach ($products as $product)
+                                        {{-- @if ($product->product_classification_id == 2) --}}
+                                        <option value="{{ $product->ARTICULO_ID }}" name="product"
+                                            {{ old('product', $vaccineCertificate?->product) == $product->ARTICULO_ID ? 'selected' : '' }}>
+                                            {{ $product->NOMBRE }}</option>
+                                        {{-- @endif --}}
+                                    @endforeach
+                                </select>
                                 {!! $errors->first('product', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                             </div>
                         </div>
@@ -342,17 +366,28 @@
 
                 <div class="col-md-6">
                     <div class="form-group mb-2 mb20">
-                        <label for="product" class="form-label">PRODUCTO</label>
+                        <label for="product3" class="form-label">PRODUCTO</label>
 
                         <div class="input-group mb-3">
                             <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                                 <span class="fluent-mdl2--bug-block"></span>
                             </span>
 
-                            <input type="text" name="product"
+                            {{-- <input type="text" name="product"
                                 class="form-control @error('product') is-invalid @enderror"
                                 value="{{ old('product', $vaccineCertificate?->product) }}" id="product3"
-                                placeholder="Nombre del producto">
+                                placeholder="Nombre del producto"> --}}
+                            <select name="product" class="form-control @error('product') is-invalid @enderror"
+                                id="product3">
+                                <option value=""> Selecciona la desparacitación a aplicar</option>
+                                @foreach ($products as $product)
+                                    {{-- @if ($product->product_classification_id == 2) --}}
+                                    <option value="{{ $product->ARTICULO_ID }}" name="product"
+                                        {{ old('product', $vaccineCertificate?->product) == $product->ARTICULO_ID ? 'selected' : '' }}>
+                                        {{ $product->NOMBRE }}</option>
+                                    {{-- @endif --}}
+                                @endforeach
+                            </select>
                             {!! $errors->first('product', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                         </div>
                     </div>

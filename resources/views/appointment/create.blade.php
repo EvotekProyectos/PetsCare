@@ -305,7 +305,7 @@
     </div>
 
     <div class="modal" id="ModalCertificate" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content" style="background-color: #e9eced; border-radius: 20px;">
                 <div class="modal-header">
                     <div class="col-11 d-flex justify-content-between align-items-center">

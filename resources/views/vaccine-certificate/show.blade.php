@@ -142,7 +142,7 @@
                                     @if ($register->service_id == 1)
                                         <tr>
                                             <td>{{ $register->application_date }}</td>
-                                            <td>{{ $register->product }} {{ $register->lab }} {{ $register->lote }}</td>
+                                            <td>{{ $register->microsip->NOMBRE }} {{ $register->lab }} {{ $register->lote }}</td>
                                             <td>{{ $register->next_application_date }}</td>
                                             <td>{{ $register->vet->name }}</td>
                                             <td>{{ $register->observations }}</td>
@@ -172,7 +172,7 @@
                                     @if ($register->service_id == 3)
                                         <tr>
                                             <td>{{ $register->application_date }}</td>
-                                            <td>{{ $register->product }} {{ $register->dose }}</td>
+                                            <td>{{ $register->microsip->NOMBRE }} {{ $register->dose }}</td>
                                             <td>{{ $register->next_application_date }}</td>
                                             <td>{{ $register->vet->name }}</td>
                                             <td>{{ $register->observations }}</td>
@@ -202,7 +202,7 @@
                                     @if ($register->service_id == 2)
                                         <tr>
                                             <td>{{ $register->application_date }}</td>
-                                            <td>{{ $register->product }} {{ $register->dose }}</td>
+                                            <td>{{ $register->microsip->NOMBRE }} {{ $register->dose }}</td>
                                             <td>{{ $register->next_application_date }}</td>
                                             <td>{{ $register->vet->name }}</td>
                                             <td>{{ $register->observations }}</td>

@@ -11,6 +11,29 @@ window.onload = function () {
 
 }
 
+$(document).ready(function () {
+    $("#lab_type_id").select2({
+        theme: "bootstrap-5",
+        dropdownParent: $('#ModalLab')
+    });
+    $("#imaging_type_id").select2({
+        theme: "bootstrap-5",
+        dropdownParent: $('#ModalImg')
+    });
+    // $("#product1").select2({
+    //     theme: "bootstrap-5",
+    //     dropdownParent: $('#ModalCertificate')
+    // });
+    // $("#product2").select2({
+    //     theme: "bootstrap-5",
+    //     dropdownParent: $('#ModalCertificate')
+    // });
+    // $("#product3").select2({
+    //     theme: "bootstrap-5",
+    //     dropdownParent: $('#ModalCertificate')
+    // });
+});
+
 async function AddPrescription() {
     event.preventDefault();
     let url = route('prescriptions.store');
@@ -62,33 +85,35 @@ async function EndAppointment() {
         cancelButtonText: 'No, continuar consulta.'
     });
 
-    
+
     if (result.isConfirmed) {
         try {
-            // Enviar el formulario de la cita
+
             let url = route('appointments.store');
             let form = new FormData(document.getElementById("NewAppointment"));
 
             let pet = await fetch(url, { method: "POST", body: form });
 
             if (!pet.ok) {
-                throw new Error('Error al guardar la cita');  // Si hay error, lanzamos una excepción
+                throw new Error('Error al guardar la cita');
             }
 
-            // Enviar el formulario de la prescripción
+
             let url2 = route('prescriptions.store');
             let form2 = new FormData(document.getElementById("NewPrescription"));
+            const dateInput = document.getElementById('day_next_check');
+            form2.append('day_next_check', dateInput.value);
 
             let pet2 = await fetch(url2, { method: "POST", body: form2 });
             let resp2 = await pet2.json();
 
             if (!pet2.ok) throw new Error('Error al guardar la prescripción');
 
-            // Abrir la nueva ventana para imprimir la prescripción
+
             let prescription = resp2.id;
             window.open(route('prescription.imprimir', prescription), '_blank');
 
-            // Redirigir a la lista de asignaciones después de que todo se haya completado
+
             Swal.fire({
                 icon: 'success',
                 title: 'Consulta finalizada con éxito',
@@ -171,14 +196,14 @@ async function Details(Type, ID) {
     }
 };
 
-async function Register(){
+async function Register() {
     event.preventDefault();
     let url = route('vaccine-certificates.store');
-            let form = new FormData(document.getElementById("NewInterDeworming"));
+    let form = new FormData(document.getElementById("NewInterDeworming"));
 
-            let pet = await fetch(url, { method: "POST", body: form });
+    let pet = await fetch(url, { method: "POST", body: form });
 
-            
+
 }
 
 async function OpenCarnet() {
@@ -337,8 +362,8 @@ async function AddLabs() {
 }
 
 function closeModalLabs() {
-    document.getElementById("lab_type_id").value = "";
-    document.getElementById("observations_labs").value = "";
+    $('#lab_type_id').val('').trigger('change')
+    $('#observations_labs').val('')
     $('#ModalLab').modal('hide');
 }
 
@@ -368,8 +393,8 @@ async function AddImgs() {
 }
 
 function closeModalImgs() {
-    document.getElementById("imaging_type_id").value = "";
-    document.getElementById("observations_img").value = "";
+    $('#imaging_type_id').val('').trigger('change')
+    $('#observations_img').val('')
     $('#ModalImg').modal('hide');
 }
 
@@ -383,13 +408,13 @@ $(document).ready(function () {
             {
                 data: null,
                 render: function (data) {
-                    return data.lab ? data.lab.name : '';
+                    return data.lab ? data.lab.NOMBRE : '';
                 }
             },
 
             {
                 data: 'observations',
-                
+
             },
 
             {
@@ -412,13 +437,13 @@ $(document).ready(function () {
             {
                 data: null,
                 render: function (data) {
-                    return data.imaging ? data.imaging.name : '';
+                    return data.imaging ? data.imaging.NOMBRE : '';
                 }
             },
 
             {
                 data: 'observations',
-                
+
             },
 
             {

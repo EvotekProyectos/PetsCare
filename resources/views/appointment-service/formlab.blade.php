@@ -22,11 +22,11 @@
                     id="lab_type_id">
                     <option value=""> Selecciona el laboratorio a registrar</option>
                     @foreach ($products as $product)
-                        @if ($product->product_classification_id == 2)
-                            <option value="{{ $product->id }}" name="lab_type_id"
-                                {{ old('lab_type_id', $appointmentService?->lab_type_id) == $product->id ? 'selected' : '' }}>
-                                {{ $product->name }}</option>
-                        @endif
+                        {{-- @if ($product->product_classification_id == 2) --}}
+                            <option value="{{ $product->ARTICULO_ID }}" name="lab_type_id"
+                                {{ old('lab_type_id', $appointmentService?->lab_type_id) == $product->ARTICULO_ID ? 'selected' : '' }}>
+                                {{ $product->NOMBRE }}</option>
+                        {{-- @endif --}}
                     @endforeach
                 </select>
             </div>
