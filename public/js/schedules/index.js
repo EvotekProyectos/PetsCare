@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
       initialView: 'timeGridWeek',
       timeZone: 'GMT',
-      events: '/schedules/get-events',
+      events: route('schedules.getEvents'),
       locale: 'es',
     });
     calendar.render()
