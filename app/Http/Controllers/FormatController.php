@@ -183,8 +183,10 @@ class FormatController extends Controller
         ]);
     
         Storage::put($pdfPath, $pdf->output());
-        $pdfUrl = Storage::url($pdfPath);
+        //$pdfUrl = Storage::url($pdfPath);
         //$pdfUrl = asset('storage/' . str_replace('public/', '', $pdfPath));
+        $pdfUrl = asset(str_replace('public/', 'storage/', $pdfPath));
+
 
     
         $format = new Format();
@@ -199,9 +201,15 @@ class FormatController extends Controller
 
         //return response()->json(['url' => asset('storage'.$pdfPath), 'format_id' => $format->id]);
     
-        return response()->json([ 'url' => asset($pdfUrl), 'format_id' => $format->id]);
+        //return response()->json([ 'url' => asset($pdfUrl), 'format_id' => $format->id]);
         
        // return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
+       return response()->json([
+        'url' => $pdfUrl,
+        'format_id' => $format->id,
+        'format_pdf' => str_replace('public/', '/storage/', $pdfPath), // Asegurar formato estándar
+    ]);
+    
     }
 
 
