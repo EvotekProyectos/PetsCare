@@ -36,7 +36,23 @@ $(document).ready(function () {
                 }
            },
            
-           {
+        // //    {
+        // //     data: 'format_pdf',
+        // //     render: function (data) {
+        // //         const baseUrl = '/storage/';
+        // //         const relativePath = data.replace(/^.*formats\//, 'formats/'); 
+        // //         const fullPath = baseUrl + relativePath;
+            
+        // //         return `
+        // //             <a href="${fullPath}" class="btn btn-primary" target="_blank">
+        // //                 Ver PDF
+        // //             </a>
+        // //         `;
+        // //     }
+            
+        // // }
+
+        {
             data: 'format_pdf',
             render: function (data) {
                 const baseUrl = '/storage/';
