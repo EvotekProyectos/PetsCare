@@ -35,20 +35,37 @@ $(document).ready(function () {
                     return data.reception ? data.reception.reception_type.name : 'Sin recepción';
                 }
            },
-           {
-            data: 'format_pdf',
-            render: function (data) {
-                const newPath = data.replace(/^.*(formats\/.*)/, '/storage/$1');
-                return `
-                    <a href="${newPath}" class="btn btn-primary" target="_blank">
-                        Ver PDF
-                    </a>
-                `;
-            }
-        }
-        
-        
-        
+           
+        // //    {
+        // //     data: 'format_pdf',
+        // //     render: function (data) {
+        // //         const baseUrl = '/storage/';
+        // //         const relativePath = data.replace(/^.*formats\//, 'formats/'); 
+        // //         const fullPath = baseUrl + relativePath;
+            
+        // //         return `
+        // //             <a href="${fullPath}" class="btn btn-primary" target="_blank">
+        // //                 Ver PDF
+        // //             </a>
+        // //         `;
+        // //     }
+            
+        // // }
+
+         {
+             data: 'format_pdf',
+             render: function (data) {
+                 const baseUrl = '/pets-care/public/storage/';
+                 const relativePath = data.replace(/^.*formats\//, 'formats/'); 
+                 const fullPath = baseUrl + relativePath;
+            
+                 return `
+                     <a href="${fullPath}" class="btn btn-primary" target="_blank">
+                         Ver PDF
+                     </a>
+                 `;
+             }
+         }
         
         ]
     });
