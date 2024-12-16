@@ -134,83 +134,41 @@ class FormatController extends Controller
 
 
 
-    // public function generateHospitalAuthorizationPdf(Request $request, $id)
-    // {
-    //     $pet = Pet::with('family', 'genre')->find($id);
-    //     $signatureDataUrl = $request->input('signature');
-    
-    //     $uniqueId = uniqid(); 
-    //     $pdfPath = 'public/formats/auth_hospital' . $id . '_' . $uniqueId . '.pdf';
-    
-    //     $pdf = PDF::loadView('format.aut_hospital', [
-    //         'pet' => $pet,
-    //         'signatureDataUrl' => $signatureDataUrl,
-    //         'isPdf' => true
-    //     ]);
-    
-    //     Storage::put($pdfPath, $pdf->output());
-    //     $pdfUrl = Storage::url($pdfPath);
-    
-    //     $format = new Format();
-    //     $format->format_type_id = 1;
-    //     $format->pet_id = $id;
-    //     $format->format_pdf = $pdfPath;
-    //     $format->save();
-
-    //     $hospitalization = new Hospitalization();
-    //     $hospitalization->pet_id = $id;
-    //     $hospitalization->save();
-
-    //     //return response()->json(['url' => asset('storage'.$pdfPath), 'format_id' => $format->id]);
-    
-    //     return response()->json([ 'url' => asset($pdfUrl), 'format_id' => $format->id]);
+     public function generateHospitalAuthorizationPdf(Request $request, $id)
+     {
+         $pet = Pet::with('family', 'genre')->find($id);
+         $signatureDataUrl = $request->input('signature');
+         $uniqueId = uniqid(); 
         
-    //    // return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
-    // }
+    
+         $pdf = PDF::loadView('format.aut_hospital', [
+             'pet' => $pet,
+             'signatureDataUrl' => $signatureDataUrl,
+             'isPdf' => true
+         ]);
+         
+         $pdfPath = '/formats/auth_hospital' . $id . '_' . $uniqueId . '.pdf';
+         Storage::put('public'.$pdfPath, $pdf->output());
 
-    public function generateHospitalAuthorizationPdf(Request $request, $id)
-    {
-        $pet = Pet::with('family', 'genre')->find($id);
-        $signatureDataUrl = $request->input('signature');
-    
-        $uniqueId = uniqid(); 
-        $pdfPath = 'public/formats/auth_hospital' . $id . '_' . $uniqueId . '.pdf';
-    
-        $pdf = PDF::loadView('format.aut_hospital', [
-            'pet' => $pet,
-            'signatureDataUrl' => $signatureDataUrl,
-            'isPdf' => true
-        ]);
-    
-        Storage::put($pdfPath, $pdf->output());
-        //$pdfUrl = Storage::url($pdfPath);
+        $pdfUrl = Storage::url($pdfPath);
         //$pdfUrl = asset('storage/' . str_replace('public/', '', $pdfPath));
-        $pdfUrl = asset(str_replace('public/', 'storage/', $pdfPath));
-
 
     
-        $format = new Format();
-        $format->format_type_id = 1;
-        $format->pet_id = $id;
-        $format->format_pdf = $pdfPath;
-        $format->save();
+         $format = new Format();
+         $format->format_type_id = 1;
+         $format->pet_id = $id;
+         $format->format_pdf = $pdfPath;
+         $format->save();
 
-        $hospitalization = new Hospitalization();
-        $hospitalization->pet_id = $id;
-        $hospitalization->save();
+         $hospitalization = new Hospitalization();
+         $hospitalization->pet_id = $id;
+         $hospitalization->save();
 
-        //return response()->json(['url' => asset('storage'.$pdfPath), 'format_id' => $format->id]);
     
         //return response()->json([ 'url' => asset($pdfUrl), 'format_id' => $format->id]);
-        
-       // return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
-       return response()->json([
-        'url' => $pdfUrl,
-        'format_id' => $format->id,
-        'format_pdf' => str_replace('public/', '/storage/', $pdfPath), // Asegurar formato estándar
-    ]);
-    
-    }
+        return response()->json(['url' => asset('storage'.$pdfPath), 'format_id' => $format->id]);
+     }
+
 
 
     public function altaVoluntaria($id){
