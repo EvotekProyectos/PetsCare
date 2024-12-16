@@ -150,7 +150,7 @@
                             @foreach ($pets as $pet)
                                 <option value="{{ $pet->id }}"
                                     {{ old('pet_id', $reception?->pet_id) == $pet->id ? 'selected' : '' }}>
-                                    {{ $pet->name }} {{ $pet->number_chip }}
+                                    {{ $pet->name }} #{{ $pet->number_chip }}
                                 </option>
                             @endforeach
                         </select>
