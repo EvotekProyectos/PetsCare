@@ -117,17 +117,21 @@ class SurgeryController extends Controller
 
     public function checkRequirements($id)
     {
-        $hasLabAndImaging = RedSheet::where('reception_id', $id)
+        $hasLab = RedSheet::where('reception_id', $id)
             ->whereNotNull('lab_type_id')
+            ->exists();
+    
+        $hasImaging = RedSheet::where('reception_id', $id)
             ->whereNotNull('imaging_type_id')
             ->exists();
     
-        if ($hasLabAndImaging) {
+        if ($hasLab && $hasImaging) {
             return response()->json(['status' => 'ok']);
         } else {
             return response()->json(['status' => 'error', 'message' => 'Se requiere al menos un registro de laboratorio y uno de imagenología.']);
         }
     }
+    
 
     public function surgery_authorization($id)
     {

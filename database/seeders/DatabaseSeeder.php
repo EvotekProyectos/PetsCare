@@ -41,5 +41,7 @@ class DatabaseSeeder extends Seeder
         $this->call(FormatTypeSeeder::class);
         $this->call(SurgeryPackSeeder::class);
         $this->call(HospitalDischargeSeeder::class);
+        $this->call(TagTypeSeeder::class);
+        $this->call(CmTypeSeeder::class);
     }
 }

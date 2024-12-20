@@ -223,6 +223,24 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'Editar pase de guardia quirúrgico', 'type' => 'pase de guardia']);
         Permission::create(['name' => 'Eliminar pase de guardia quirúrgico', 'type' => 'pase de guardia']);
 
+        //TAG TYPES
+        Permission::create(['name' => 'ver panel tipo de placas para cremación', 'type' => 'cremaciones']);
+        Permission::create(['name' => 'crear tipo de placas para cremación', 'type' => 'cremaciones']);
+        Permission::create(['name' => 'editar tipo de placas para cremación', 'type' => 'cremaciones']);
+        Permission::create(['name' => 'eliminar tipo de placas para cremación', 'type' => 'cremaciones']);
+
+        //CM TYPES
+        Permission::create(['name' => 'ver panel C.M', 'type' => 'cremaciones']);
+        Permission::create(['name' => 'crear C.M', 'type' => 'cremaciones']);
+        Permission::create(['name' => 'editar C.M', 'type' => 'cremaciones']);
+        Permission::create(['name' => 'eliminar C.M', 'type' => 'cremaciones']);
+
+        //CREMATIONS
+        Permission::create(['name' => 'ver panel cremaciones', 'type' => 'cremaciones']);
+        Permission::create(['name' => 'crear cremaciones', 'type' => 'cremaciones']);
+        Permission::create(['name' => 'editar cremaciones', 'type' => 'cremaciones']);
+        Permission::create(['name' => 'eliminar cremaciones', 'type' => 'cremaciones']);
+
         // roles
         $role = Role::create(['name' => 'administrador']);
         $role->givePermissionTo(Permission::all());

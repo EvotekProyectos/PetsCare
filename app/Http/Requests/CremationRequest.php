@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class CremationRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'reception_id' => 'nullable|integer|exists:receptions,id',
+            'pet_id' => 'nullable|integer|exists:pets,id',
+            'date_death'=> 'nullable',
+            'date_finish'=> 'nullable',
+			'servicie' => 'string',
+			'CM_id' => 'string',
+			'type_urn' => 'string',
+			'urn_model' => 'string',
+			'observations' => 'string',
+			'placa_type_id' => 'string',
+			'price' => 'nullable',
+        ];
+    }
+}

@@ -97,6 +97,12 @@
                            Hospitalizaciones
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('cremations.index') }}" class=" ms-2">
+                            <span class="emojione-monotone--funeral-urn1"></span>
+                           Cremaciones
+                        </a>
+                    </li>
                     <li class="@yield('families')">
                         <a href="{{ route('families.index') }}" class=" ms-2">
                             <span class="fluent-mdl2--family"></span>
