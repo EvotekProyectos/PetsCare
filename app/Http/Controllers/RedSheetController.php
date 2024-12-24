@@ -192,4 +192,17 @@ class RedSheetController extends Controller
     }
     
     
+    public function ButtonDeath(Request $request)
+    {
+            $reception = Reception::findOrFail($request->receptionId);
+           $pet=$reception->pet;
+            $pet->deceased = 1;
+            $pet->save();
+
+
+            return response()->json([
+                'message' => 'Paciente fallecido.',
+            ], 200);
+    }
+
 }

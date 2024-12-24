@@ -163,5 +163,21 @@ class HospitalizationController extends Controller
         //return response()->json(['url' => asset('storage/'.$pdfPath), 'format_id' => $format->id]);
     }
 
+    public function dischargeDeath(Request $request)
+    {
+            $reception = Reception::findOrFail($request->receptionId);
+            $reception->exit_date = now();
+            $reception->save();
+
+            $hospitalization = new Hospitalization();
+            $hospitalization->reception_id = $request->receptionId;
+            $hospitalization->exit_date = now();  
+            $hospitalization->hospital_discharges_id=3;
+            $hospitalization->save();
+
+            return response()->json([
+                'message' => 'Paciente dado de alta por fallecimiento.',
+            ], 200);
+    }
 
 }

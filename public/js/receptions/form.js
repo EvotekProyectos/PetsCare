@@ -72,13 +72,14 @@ function togglee(radio) {
             break;
         case 3:
             document.getElementById("mvz").style.display = "block";
+            document.getElementById("salida").style.display = "block";
             break;
         case 4:
             document.getElementById("mvz").style.display = "block";
             break;
         case 5:
             document.getElementById("mvz").style.display = "block";
-            document.getElementById("salida").style.display = "block";
+            //document.getElementById("salida").style.display = "block";
             break;
         default:
             break;

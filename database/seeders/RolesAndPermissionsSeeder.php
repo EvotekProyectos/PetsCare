@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Facades\DB;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
@@ -54,6 +55,12 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'crear estados de atención', 'type' => 'estados de atención']);
         Permission::create(['name' => 'editar estados de atención', 'type' => 'estados de atención']);
         Permission::create(['name' => 'eliminar estados de atención', 'type' => 'estados de atención']);
+
+        // create grooming statuses permissions
+        Permission::create(['name' => 'ver panel estados de grooming', 'type' => 'estados de grooming']);
+        Permission::create(['name' => 'crear estados de grooming', 'type' => 'estados de grooming']);
+        Permission::create(['name' => 'editar estados de grooming', 'type' => 'estados de grooming']);
+        Permission::create(['name' => 'eliminar estados de grooming', 'type' => 'estados de grooming']);
 
         // create reception types permissions
         Permission::create(['name' => 'ver panel tipos de recepción', 'type' => 'tipos de recepción']);
@@ -177,16 +184,16 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'eliminar seguimientos', 'type' => 'seguimientos']);
 
         //FORMAT TYPES
-        Permission::create(['name' => 'Ver panel Tipo de Formatos' ,'type' => 'formatos']);
-        Permission::create(['name' => 'Crear tipo de formato' ,'type' => 'formatos']);
-        Permission::create(['name' => 'Editar tipo de formato' ,'type' => 'formatos']);
-        Permission::create(['name' => 'Eliminar tipo de formato' ,'type' => 'formatos']);
+        Permission::create(['name' => 'Ver panel Tipo de Formatos', 'type' => 'formatos']);
+        Permission::create(['name' => 'Crear tipo de formato', 'type' => 'formatos']);
+        Permission::create(['name' => 'Editar tipo de formato', 'type' => 'formatos']);
+        Permission::create(['name' => 'Eliminar tipo de formato', 'type' => 'formatos']);
 
         //FORMATS
-        Permission::create(['name' => 'Ver panel de Formatos' ,'type' => 'formatos']);
-        Permission::create(['name' => 'Crear formato' ,'type' => 'formatos']);
-        Permission::create(['name' => 'Editar formato' ,'type' => 'formatos']);
-        Permission::create(['name' => 'Eliminar formato' ,'type' => 'formatos']);
+        Permission::create(['name' => 'Ver panel de Formatos', 'type' => 'formatos']);
+        Permission::create(['name' => 'Crear formato', 'type' => 'formatos']);
+        Permission::create(['name' => 'Editar formato', 'type' => 'formatos']);
+        Permission::create(['name' => 'Eliminar formato', 'type' => 'formatos']);
 
         //red sheets
         Permission::create(['name' => 'ver panel servicios consultas', 'type' => 'sevicios consultas']);
@@ -200,13 +207,13 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'editar paquetes cirugias', 'type' => 'paquetes cirugias']);
         Permission::create(['name' => 'eliminar paquetes cirugias', 'type' => 'paquetes cirugias']);
 
-         // surgery budgets permissions
-         Permission::create(['name' => 'ver panel presupuestos', 'type' => 'presupuestos']);
-         Permission::create(['name' => 'crear presupuestos', 'type' => 'presupuestos']);
-         Permission::create(['name' => 'editar presupuestos', 'type' => 'presupuestos']);
-         Permission::create(['name' => 'eliminar presupuestos', 'type' => 'presupuestos']);
+        // surgery budgets permissions
+        Permission::create(['name' => 'ver panel presupuestos', 'type' => 'presupuestos']);
+        Permission::create(['name' => 'crear presupuestos', 'type' => 'presupuestos']);
+        Permission::create(['name' => 'editar presupuestos', 'type' => 'presupuestos']);
+        Permission::create(['name' => 'eliminar presupuestos', 'type' => 'presupuestos']);
 
-         //follow ups critics
+        //follow ups critics
         Permission::create(['name' => 'ver panel seguimientos de criticos', 'type' => 'seguimientos de criticos']);
         Permission::create(['name' => 'crear seguimientos de criticos', 'type' => 'seguimientos de criticos']);
         Permission::create(['name' => 'editar seguimientos de criticos', 'type' => 'seguimientos de criticos']);
@@ -222,6 +229,31 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'Crear pase de guardia quirúrgico', 'type' => 'pase de guardia']);
         Permission::create(['name' => 'Editar pase de guardia quirúrgico', 'type' => 'pase de guardia']);
         Permission::create(['name' => 'Eliminar pase de guardia quirúrgico', 'type' => 'pase de guardia']);
+
+        //Grooming Services Permissions
+        Permission::create(['name' => 'ver panel grooming', 'type' => 'Grooming']);
+        Permission::create(['name' => 'crear grooming', 'type' => 'Grooming']);
+        Permission::create(['name' => 'editar grooming', 'type' => 'Grooming']);
+        Permission::create(['name' => 'eliminar grooming', 'type' => 'Grooming']);
+
+
+        //TAG TYPES
+        Permission::create(['name' => 'ver panel tipo de placas para cremación', 'type' => 'cremaciones']);
+        Permission::create(['name' => 'crear tipo de placas para cremación', 'type' => 'cremaciones']);
+        Permission::create(['name' => 'editar tipo de placas para cremación', 'type' => 'cremaciones']);
+        Permission::create(['name' => 'eliminar tipo de placas para cremación', 'type' => 'cremaciones']);
+
+        //CM TYPES
+        Permission::create(['name' => 'ver panel C.M', 'type' => 'cremaciones']);
+        Permission::create(['name' => 'crear C.M', 'type' => 'cremaciones']);
+        Permission::create(['name' => 'editar C.M', 'type' => 'cremaciones']);
+        Permission::create(['name' => 'eliminar C.M', 'type' => 'cremaciones']);
+
+        //CREMATIONS
+        Permission::create(['name' => 'ver panel cremaciones', 'type' => 'cremaciones']);
+        Permission::create(['name' => 'crear cremaciones', 'type' => 'cremaciones']);
+        Permission::create(['name' => 'editar cremaciones', 'type' => 'cremaciones']);
+        Permission::create(['name' => 'eliminar cremaciones', 'type' => 'cremaciones']);
 
         // roles
         $role = Role::create(['name' => 'administrador']);

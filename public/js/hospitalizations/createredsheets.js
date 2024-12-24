@@ -353,10 +353,35 @@ async function OpenPrescription(petId, receptionId) {
             const nameFamily = $("#name_family").val();
             const reason = $("#reason").val();
             window.location.href = route ('alta.voluntaria', {id: receptionId }); 
-            } else if (selectedType === "Alta por fallecimiento") {
-                Swal.fire('Alta por fallecimiento', 'El proceso de alta por fallecimiento se ha registrado.');
-            }
+            
+        } else if (selectedType === "Alta por fallecimiento") {
+            $.post(route('discharge-death'), { 
+                receptionId: receptionId, // Incluye el parámetro necesario
+                _token: $('meta[name="csrf-token"]').attr('content') // Token CSRF
+            })
+                .done(() => {
+                    Swal.fire({
+                        title: 'Alta por fallecimiento',
+                        text: '¿Desea iniciar el proceso de cremación?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí, iniciar proceso',
+                        cancelButtonText: 'No, solo registrar',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = route('new.cremation', { id: receptionId });
+                        } else if (result.dismiss === Swal.DismissReason.cancel) {
+                            window.location.href = route('hospitalization.historic', { id: receptionId });
+                        }
+                    });
+                })
+                .fail((error) => {
+                    console.error('Error al ejecutar la ruta de alta por fallecimiento:', error);
+                    Swal.fire('Error', 'No se pudo registrar el alta por fallecimiento.', 'error');
+                });
         }
+        
+    }
         
 }
  async function OpenSurgeries() {
@@ -381,29 +406,7 @@ async function OpenPrescription(petId, receptionId) {
     jQuery(document).off('focusin.modal');
 });
 
-// async function OpenSurgeries() {
-//     const receptionId = document.getElementById("reception_id_followup").value;
 
-//     const url = route('surgery.checkRequirements', receptionId); 
-//     const response = await fetch(url);
-//     const data = await response.json();
-
-//     if (data.status === 'ok') {
-       
-//         const authorizationUrl = route('surgery.auth', receptionId);
-//         window.location.href = authorizationUrl;
-
-//         setTimeout(() => {
-//             $('#ModalSurgeries').modal('show');
-//         }, 1000); 
-//     } else {
-//         Swal.fire({
-//             icon: 'error',
-//             title: 'Error',
-//             text: data.message || 'Ocurrió un error al verificar los requisitos.',
-//         });
-//     }
-// }
 
 
 async function AddSurgery() {
@@ -593,3 +596,29 @@ function getAdm(AdminssionData) {
         return options;
     }, {});
 }
+
+async function ButtonDeath(receptionId) {
+        const response = await fetch(route('button-death'), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            },
+            body: JSON.stringify({ receptionId: receptionId }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Error en la solicitud.');
+        }
+
+        const data = await response.json();
+        Swal.fire({
+            icon: 'info', 
+            title: 'Paciente Fallecido',
+            text: 'El estado del paciente ha sido actualizado.',
+            confirmButtonText: 'Aceptar'
+        }).then(() => {
+            location.reload();
+        });
+}
+

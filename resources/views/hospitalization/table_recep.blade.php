@@ -4,6 +4,8 @@
     Hospitalizations
 @endsection
 
+@section('hospitalization.recap', 'active border-start border-3 border-primary') 
+
 @section('content')
     <div class="container-fluid">
         <div class="row">

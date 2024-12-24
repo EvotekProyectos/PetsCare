@@ -46,15 +46,21 @@ use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\RoleHasPermissionController;
 use App\Http\Controllers\AppointmentServiceController;
 use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\CmTypeController;
+use App\Http\Controllers\CremationController;
 use App\Http\Controllers\FollowupsCriticController;
 use App\Http\Controllers\FollowupInternController;
 use App\Http\Controllers\FollowupSurgicalController;
+use App\Http\Controllers\GroomingController;
+use App\Http\Controllers\GroomingStatusController;
+use App\Http\Controllers\GroomingStatusHistoryController;
 use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\VaccineCertificateController;
 use App\Http\Controllers\ProductClassificationController;
 use App\Http\Controllers\ReceptionStatusHistoryController;
 use App\Http\Controllers\SurgeryPackController;
 use App\Http\Controllers\RedSheetController;
+use App\Http\Controllers\TagTypeController;
 use App\Models\FollowUp;
 use App\Models\Surgery;
 
@@ -98,6 +104,10 @@ Route::group(['middleware' => ['auth']], function () {
     // ATTENTION STATUSES
     Route::get('/attention-statuses/list', [AttentionStatusController::class, 'list'])->name('attention-statuses.list');
     Route::resource('attention-statuses', AttentionStatusController::class);
+
+    //GROOMING STATUSES
+    Route::get('/grooming-statuses/list', [GroomingStatusController::class, 'list'])->name('grooming-statuses.list');
+    Route::resource('grooming-statuses', GroomingStatusController::class);
 
     // RECEPTION TYPES
     Route::get('/reception-types/list', [ReceptionTypeController::class, 'list'])->name('reception-types.list');
@@ -177,15 +187,19 @@ Route::group(['middleware' => ['auth']], function () {
     
     Route::get('/receptions/hospital/{id}', [ReceptionController::class, 'hospital_authorization'])->name('hospital.list');
     Route::post('/receptions/hospital/pdf/{id}', [ReceptionController::class, 'hospital_authorizationpdf'])->name('hospital.pdf');
+    Route::get('/receptions/grooming/{id}', [ReceptionController::class, 'groomingservice'])->name('receptions.grooming');
     
     Route::resource('receptions', ReceptionController::class);
 
 
 
     //RECEPTIONS STATUS HISTORIES
-    Route::get('/reception-status-histories', [ReceptionStatusHistoryController::class, 'list'])->name('reception-status.list');
+    Route::get('/reception-status-histories/list', [ReceptionStatusHistoryController::class, 'list'])->name('reception-status.list');
     Route::resource('reception-status-histories', ReceptionStatusHistoryController::class);
 
+    //GROOMING STATUS HISTORIES
+    Route::get('/grooming-status-histories/list', [GroomingStatusHistoryController::class, 'list'])->name('grooming-status-histories.list');
+    Route::resource('grooming-status-histories', GroomingStatusHistoryController::class);
 
     //ASSIGNAMENT  
     Route::get('/assignment/appointments', [AssignmentController::class, 'index'])->name('assignment.index');
@@ -195,6 +209,7 @@ Route::group(['middleware' => ['auth']], function () {
     
     Route::get('/assignment/hospitalizations/altas', [AssignmentController::class, 'hospital_altas'])->name('hospitalization.altas');
     Route::get('/assignment/altas/list', [AssignmentController::class, 'altas'])->name('assignment.altas');
+    Route::get('/assignment/groomings', [AssignmentController::class, 'groomings'])->name('assignment.groomings');
 
     //Appointments
     Route::get('/appointments/consultation/{id}', [AppointmentController::class, 'consultation'])->name('appointment.consultation');
@@ -223,8 +238,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Hospitalizations
     Route::get('/hospitalizations/historic/{id}', [HospitalizationController::class, 'historic'])->name('hospitalization.historic');
     Route::get('/hospitalizations/follow-ups/{id}', [HospitalizationController::class, 'followups'])->name('hospitalization.followups');
-    Route::resource('hospitalizations', HospitalizationController::class);
-
+    Route::post('/discharge-death', [HospitalizationController::class, 'dischargeDeath'])->name('discharge-death');
     Route::get('/alta-voluntaria/{id}', [HospitalizationController::class, 'altaVoluntaria'])->name('alta.voluntaria');
     Route::post('/alta-voluntaria/pdf/{id}', [HospitalizationController::class, 'altaVoluntariapdf'])->name('altaVoluntaria.pdf');
     Route::get('/hospitalizations/historic/{id}', [HospitalizationController::class, 'historic'])->name('hospitalization.historic');   
@@ -242,6 +256,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/red-sheets/recap/{id}', [RedSheetController::class, 'recap'])->name("red-sheets.recap");
     Route::post('/redSheet/discharge', [RedSheetController::class, 'discharge'])->name("redsheet-discharge");
     Route::post('/hospitalizations/discharge', [RedSheetController::class, 'dischargePatient']);
+    Route::post('/red-sheets/death', [RedSheetController::class, 'ButtonDeath'])->name("button-death");
     Route::resource('red-sheets', RedSheetController::class);
 
     //SURGERIES
@@ -301,8 +316,31 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/followup-surgicals/list/{id}', [FollowupSurgicalController::class, 'list'])->name('followup-surgicals.list');
     Route::resource('followup-surgicals', FollowupSurgicalController::class);
 
+    //Groomings
+    Route::get('/groomings/sign/pdf/{id}', [GroomingController::class, 'groomingsign'])->name('grooming.sign');
+    Route::post('/groomings/authorization/pdf/{id}', [GroomingController::class, 'groomingpdf'])->name('grooming.pdf');
+    Route::get('test/pdf/{id}', [GroomingController::class, 'generatePdf'])->name('test.pdf');
+    Route::get('/groomings/list/{id}', [GroomingController::class, 'list'])->name('groomings.list');
+    Route::post('/grooming/update/status', [GroomingController::class, 'status'])->name('grooming.status');
+    Route::resource('groomings', GroomingController::class);
+
     //RoleHasPermissions
     Route::resource('role-has-permissions', RoleHasPermissionController::class);
+
+    //TAG TYPES
+    Route::get('/tags/list', [TagTypeController::class, 'list'])->name('tag.list');
+    Route::resource('tag-types', TagTypeController::class);
+
+    //CM TYPES
+    Route::get('/cm/list', [CmTypeController::class, 'list'])->name('cm.list');
+    Route::resource('cm-types', CmTypeController::class);
+
+    //CREMATIONS
+    Route::get('/cremations/list', [CremationController::class, 'list'])->name('cremation.list');
+    Route::get('/cremations/new/{id}', [CremationController::class, 'new'])->name('new.cremation');
+    Route::get("/cremations/pdf/{id}", [CremationController::class, "comprobante"])->name("cremation.comprobante");
+    Route::post('/cremations/{id}/updateStatus', [CremationController::class, 'updateStatus'])->name("cremation.updateStatus");
+    Route::resource('cremations', CremationController::class);
     
     
 });

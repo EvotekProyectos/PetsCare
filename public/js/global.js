@@ -160,3 +160,28 @@ const deleteFollowUpSurgical = (id, table) => {
     const url = route("followup-surgicals.destroy", id);
     deleteResource(url, table);
 }
+
+const deleteGroomingStatus = (id, table) => {
+    const url = route("grooming-statuses.destroy", id);
+    deleteResource(url, table);
+}
+
+const deleteGrooming = (id, table) => {
+    const url = route("groomings.destroy", id);
+    deleteResource(url, table);
+}
+
+const deleteCremation = (id, table) => {
+    const url = route("cremations.destroy", id);
+    deleteResource(url, table);
+}
+
+const deleteCmType = (id, table) => {
+    const url = route("cm-types.destroy", id);
+    deleteResource(url, table);
+}
+
+const deleteTagType = (id, table) => {
+    const url = route("tag-types.destroy", id);
+    deleteResource(url, table);
+}

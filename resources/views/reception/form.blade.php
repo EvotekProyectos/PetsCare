@@ -309,7 +309,7 @@
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="lucide--calendar-check"></span>
                         </span>
-                        <input type="date" name="exit_date"
+                        <input type="datetime-local" name="exit_date"
                             class="form-control @error('exit_date') is-invalid @enderror"
                             value="{{ old('exit_date', $reception?->exit_date) }}" id="exit_date"
                             placeholder="Exit Date">

@@ -4,22 +4,43 @@ window.onload=function(){
     first(type)
 }
 
+let isUpdating = false;
+
 async function getpets(family_id) {
+    if (isUpdating) return;
+    isUpdating = true;
+
     let url = route("pets.preview", family_id)
     let peticion = await fetch(url)
     if (peticion.ok) {
+        document.getElementById("pet_id").value
         let respuesta = await peticion.json()
         let html = ""
         respuesta.forEach(pet => {
-            let selected = pet.id == selectedPetId ? "selected" : "";
-            html += `<option value="${pet.id}" ${selected}>${pet.name}</option>`;
+            html += `<option value="${pet.id}">${pet.name} #${pet.number_chip}</option>`;
         });
         document.getElementById("pet_id").innerHTML = html
 
-
     }
-
+    isUpdating = false;
 }
+
+async function getFamily(pet_id) {
+    if (isUpdating) return;
+    isUpdating = true;
+    let url = route("families.getFamilyByPet", pet_id);
+    let peticion = await fetch(url);
+    if (peticion.ok) {
+        let family = await peticion.json();
+        if (family) {
+            $('#family_id').val(family.id).trigger('change');
+            //  getPets(family.id); 
+            isUpdating = false;
+        }
+    }
+    isUpdating = false;
+}
+
 
 function togglee(radio) {
     document.getElementById("adm").style.display = "none";
@@ -45,6 +66,7 @@ function togglee(radio) {
             break;
         case 3:
             document.getElementById("mvz").style.display = "block";
+            document.getElementById("salida").style.display = "block";
             break;
         case 4:
             document.getElementById("mvz").style.display = "block";
@@ -82,6 +104,7 @@ function first(value) {
             break;
         case 3:
             document.getElementById("mvz").style.display = "block";
+            document.getElementById("salida").style.display = "block";
             break;
         case 4:
             document.getElementById("mvz").style.display = "block";

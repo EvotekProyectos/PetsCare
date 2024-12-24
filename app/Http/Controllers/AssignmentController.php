@@ -48,7 +48,7 @@ class AssignmentController extends Controller
         $user = auth()->user();
         $receptions = Reception::with(['admissionType', 'family', 'pet', 'vet', 'area'])
             ->where('reception_type_id', 2)
-           ->whereNull('exit_date')
+            ->whereNull('exit_date')
             ->get();
 
         return DataTables::of($receptions)
@@ -63,17 +63,41 @@ class AssignmentController extends Controller
 
 
     public function altas()
-{
-    $hospitalizations = Hospitalization::with(['reception.admissionType', 'reception.family', 'reception.pet', 'reception.vet', 'reception.area', 'hospitalDischarges'])
-        ->whereHas('reception', function ($query) {
-            $query->where('reception_type_id', 2);
-        })
-        ->get();
+    {
+        $hospitalizations = Hospitalization::with(['reception.admissionType', 'reception.family', 'reception.pet', 'reception.vet', 'reception.area', 'hospitalDischarges'])
+            ->whereHas('reception', function ($query) {
+                $query->where('reception_type_id', 2);
+            })
+            ->get();
 
-    return DataTables::of($hospitalizations)->make(true);
+        return DataTables::of($hospitalizations)->make(true);
+    }
+
+    public function groomings()
+    {
+        if (request()->ajax()) {
+            $datas = Reception::with('pet','vet','statusGrooming.groomingStatus')
+            
+            ->where('reception_type_id', 3)
+            ->get();
+
+            return DataTables::of($datas)
+            ->addColumn('status', function ($data) {
+                $status = $data->statusGrooming->last();
+                if ($status && $status->groomingStatus) {
+                    return [
+                        'name' => $status->groomingStatus->name,
+                        'color' => $status->groomingStatus->color,
+                    ];
+                }
+                return [
+                    'name' => 'Sin Estado',
+                    'color' => '#cccccc', 
+                ];
+            })
+            ->make(true);
+        }
+
+        return view('assignment.grooming');
+    }
 }
-
-
-}
-
-

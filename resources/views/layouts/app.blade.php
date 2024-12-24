@@ -91,10 +91,23 @@
                             Asignaciones de Hospital
                         </a>
                     </li>
-                    <li>
+                    <li class="@yield('assignmentsgrooming')">
+                        <a href="{{ route('assignment.groomings') }}" class=" ms-2">
+                            <i class="fas fa-hand-holding-heart"></i>
+                            Asignaciones de Grooming
+                        </a>
+                    </li>
+                    <li class="@yield('hospitalization.recap')">
                         <a href="{{ route('hospitalization.altas') }}" class=" ms-2">
                             <span class="ri--hospital-line"></span>
                            Hospitalizaciones
+                        </a>
+                    </li>
+                    
+                    <li class="@yield('cremations')">
+                        <a href="{{ route('cremations.index') }}" class=" ms-2">
+                            <span class="emojione-monotone--funeral-urn1"></span>
+                           Cremaciones
                         </a>
                     </li>
                     <li class="@yield('families')">
