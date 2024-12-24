@@ -143,11 +143,17 @@
                             </div>
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
-                                    <button class="btn btn-costum-services btn-sm text-uppercase rounded-4" onclick="">
-                                        <span class="badge custom-badge-pill"><span class="ph--cross-duotone"></span></span>
-                                        Falleció </button>
+                                    <button 
+                                        class="btn btn-costum-services btn-sm text-uppercase rounded-4" 
+                                        onclick="ButtonDeath({{ $reception->id }})">
+                                        <span class="badge custom-badge-pill">
+                                            <span class="ph--cross-duotone"></span>
+                                        </span>
+                                        Falleció
+                                    </button>
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
                     @php

@@ -120,7 +120,9 @@
                             </div>
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Alta: <span style="font-weight: normal">
-                                        {{ $reception->exit_date }} </span></p>
+                                         {{ $reception->exit_date }} </span></p> 
+                                        {{-- {{ $reception->hospitalizations->id }} </span></p> --}}
+                                      
                             </div>
                             <div class="col-md-3">
                             </div>

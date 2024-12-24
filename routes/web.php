@@ -46,6 +46,8 @@ use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\RoleHasPermissionController;
 use App\Http\Controllers\AppointmentServiceController;
 use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\CmTypeController;
+use App\Http\Controllers\CremationController;
 use App\Http\Controllers\FollowupsCriticController;
 use App\Http\Controllers\FollowupInternController;
 use App\Http\Controllers\FollowupSurgicalController;
@@ -58,6 +60,7 @@ use App\Http\Controllers\ProductClassificationController;
 use App\Http\Controllers\ReceptionStatusHistoryController;
 use App\Http\Controllers\SurgeryPackController;
 use App\Http\Controllers\RedSheetController;
+use App\Http\Controllers\TagTypeController;
 use App\Models\FollowUp;
 use App\Models\Surgery;
 
@@ -235,8 +238,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Hospitalizations
     Route::get('/hospitalizations/historic/{id}', [HospitalizationController::class, 'historic'])->name('hospitalization.historic');
     Route::get('/hospitalizations/follow-ups/{id}', [HospitalizationController::class, 'followups'])->name('hospitalization.followups');
-    Route::resource('hospitalizations', HospitalizationController::class);
-
+    Route::post('/discharge-death', [HospitalizationController::class, 'dischargeDeath'])->name('discharge-death');
     Route::get('/alta-voluntaria/{id}', [HospitalizationController::class, 'altaVoluntaria'])->name('alta.voluntaria');
     Route::post('/alta-voluntaria/pdf/{id}', [HospitalizationController::class, 'altaVoluntariapdf'])->name('altaVoluntaria.pdf');
     Route::get('/hospitalizations/historic/{id}', [HospitalizationController::class, 'historic'])->name('hospitalization.historic');   
@@ -254,6 +256,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/red-sheets/recap/{id}', [RedSheetController::class, 'recap'])->name("red-sheets.recap");
     Route::post('/redSheet/discharge', [RedSheetController::class, 'discharge'])->name("redsheet-discharge");
     Route::post('/hospitalizations/discharge', [RedSheetController::class, 'dischargePatient']);
+    Route::post('/red-sheets/death', [RedSheetController::class, 'ButtonDeath'])->name("button-death");
     Route::resource('red-sheets', RedSheetController::class);
 
     //SURGERIES
@@ -323,6 +326,21 @@ Route::group(['middleware' => ['auth']], function () {
 
     //RoleHasPermissions
     Route::resource('role-has-permissions', RoleHasPermissionController::class);
+
+    //TAG TYPES
+    Route::get('/tags/list', [TagTypeController::class, 'list'])->name('tag.list');
+    Route::resource('tag-types', TagTypeController::class);
+
+    //CM TYPES
+    Route::get('/cm/list', [CmTypeController::class, 'list'])->name('cm.list');
+    Route::resource('cm-types', CmTypeController::class);
+
+    //CREMATIONS
+    Route::get('/cremations/list', [CremationController::class, 'list'])->name('cremation.list');
+    Route::get('/cremations/new/{id}', [CremationController::class, 'new'])->name('new.cremation');
+    Route::get("/cremations/pdf/{id}", [CremationController::class, "comprobante"])->name("cremation.comprobante");
+    Route::post('/cremations/{id}/updateStatus', [CremationController::class, 'updateStatus'])->name("cremation.updateStatus");
+    Route::resource('cremations', CremationController::class);
     
     
 });

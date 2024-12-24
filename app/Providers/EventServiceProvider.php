@@ -6,7 +6,9 @@ use App\Models\AdmissionType;
 use App\Models\Appointment;
 use App\Models\Area;
 use App\Models\AttentionStatus;
+use App\Models\CmType;
 use App\Models\CoverArea;
+use App\Models\Cremation;
 use App\Models\FamClassification;
 use App\Models\Family;
 use App\Models\FollowupIntern;
@@ -36,12 +38,15 @@ use App\Models\Service;
 use App\Models\Shift;
 use App\Models\Surgery;
 use App\Models\SurgeryPack;
+use App\Models\TagType;
 use App\Models\User;
 use App\Models\VaccineCertificate;
 use App\Observers\AdmissionTypeObserver;
 use App\Observers\AppointmentObserver;
 use App\Observers\AttentionStatusObserver;
+use App\Observers\CmTypeObserver;
 use App\Observers\CoverAreaObserver;
+use App\Observers\CremationObserver;
 use App\Observers\FamClassificationObserver;
 use App\Observers\FamilyObserver;
 use App\Observers\FollowupInternObserver;
@@ -68,6 +73,7 @@ use App\Observers\ServiceObserver;
 use App\Observers\ShiftObserver;
 use App\Observers\SurgeryObserver;
 use App\Observers\SurgeryPackObserver;
+use App\Observers\TagTypeObserver;
 use App\Observers\UserObserver;
 use App\Observers\VaccineCertificateObserver;
 use Illuminate\Support\Facades\Event;
@@ -127,6 +133,9 @@ class EventServiceProvider extends ServiceProvider
         GroomingStatus::observe(GroomingStatusObserver::class);
         GroomingStatusHistory::observe(GroomingStatusHistoryObserver::class);
         Grooming::observe(GroomingObserver::class);
+        CmType::observe(CmTypeObserver::class);
+        TagType::observe(TagTypeObserver::class);
+        Cremation::observe(CremationObserver::class);
         
     }
 

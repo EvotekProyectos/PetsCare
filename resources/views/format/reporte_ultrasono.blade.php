@@ -106,17 +106,25 @@
     <div>
         <table style="width: 100%; border-collapse: collapse;">
 
-            <p>Fecha: {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</p>
+           
             <tr>
                 <td>
-                    <p> Nombre:</p>
+                    <p> Patient Name:</p>
                 </td>
                 <td style="padding: 0.5px 10px;">
                     <p>
                         {{-- {{ $pet->name }} --}}
                     </p>
                 <td>
-                    <p> Especie</p>
+                    <p> Patient ID:</p>
+                </td>
+                <td style="padding: 0.5px 10px;">
+                    <p>
+                        {{-- {{ $pet->specie }} --}}
+                    </p>
+                </td>
+                <td>
+                    <p> Exam Date:</p>
                 </td>
                 <td style="padding: 0.5px 10px;">
                     <p>
@@ -125,35 +133,16 @@
                 </td>
             </tr>
             <tr>
+             
+                
                 <td>
-                    <p> Raza:</p>
+                    <p> </p>
                 </td>
                 <td style="padding: 0.5px 10px;">
                     <p>
-                        {{-- {{ $pet->raza }} --}}
+                        {{-- {{ $pet->genre->name }} --}}
                     </p>
                 </td>
-                <td>
-                    <p> Edad:</p>
-                </td>
-
-                {{-- @php
-                    $birthday = \Carbon\Carbon::parse($pet->pet->birthday);
-                    $now = \Carbon\Carbon::now();
-
-                    $years = $birthday->diffInYears($now);
-                    $months = $birthday->copy()->addYears($years)->diffInMonths($now);
-                    $days = $birthday->copy()->addYears($years)->addMonths($months)->diffInDays($now);
-                @endphp
-
-                <td style="padding:  0.5px 10px;">
-                    <p><span style="font-weight: normal">
-                            {{ $years }} años, {{ $months }} meses
-                        </span>
-                    </p>
-                </td> --}}
-
-            <tr>
                 <td>
                     <p> Sexo:</p>
                 </td>
@@ -163,12 +152,11 @@
                     </p>
                 </td>
                 <td>
-                    <p> Peso:</p>
+                    <p>Accesión#:</p>
                 </td>
-
                 <td style="padding: 0.5px 10px;">
                     <p>
-                        {{-- {{ $pet->weight }} --}}
+                        {{-- {{ $pet->genre->name }} --}}
                     </p>
                 </td>
             </tr>
@@ -187,6 +175,56 @@
             </table>
         </div>
     </div>
+    <div>
+        <table style="width: 100%; border-collapse: collapse;">
+
+           
+            <tr>
+                <td>
+                    <p> Exam Type:</p>
+                </td>
+                <td style="padding: 0.5px 10px;">
+                    <p>
+                        {{-- {{ $pet->name }} --}}
+                    </p>
+                <td>
+                    <p> Referring.M.D:</p>
+                </td>
+                <td style="padding: 0.5px 10px;">
+                    <p>
+                        {{-- {{ $pet->specie }} --}}
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p> Performing MD:</p>
+                </td>
+                <td style="padding: 0.5px 10px;">
+                    <p>
+                        {{-- {{ $pet->name }} --}}
+                    </p>
+                <td>
+                    <p> Sonographer:</p>
+                </td>
+                <td style="padding: 0.5px 10px;">
+                    <p>
+                        {{-- {{ $pet->specie }} --}}
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Past History:</p>
+                </td>
+                <td style="padding: 0.5px 10px;">
+                    <p>
+                        {{-- {{ $pet->name }} --}}
+                    </p>
+            </tr>
+       
+        </table>
+    </div>
 
     <div style="border:1px solid #3459A4; margin-top:1%; border-left:none; border-right:none;">
         <div>
@@ -200,9 +238,9 @@
         </div>
     </div>
 
-    <p style="font-size: 15pt; font-weight: bold;font-family:sans-serif;">Diagnósticos presuntivos con</p>
+    <p style="font-size: 12pt; font-weight: bold;font-family:sans-serif;">Diagnósticos presuntivos con</p>
 
-    <p style="font-size: 15pt; font-weight: bold;font-family:sans-serif;">Recomendaciones</p>
+    <p style="font-size: 12pt; font-weight: bold;font-family:sans-serif; text-decoration:underline;">Recomendaciones</p>
 
 
     {{-- <div>
@@ -217,9 +255,9 @@
 
     @if (!isset($isPdf) || !$isPdf)
         <div class="row mx-0">
-            <div class="col-6">
+            {{-- <div class="col-6">
                 <button class="btnLimpiar btn btn-lmx" data-target="canvas">Limpiar</button>
-            </div>
+            </div> --}}
             <div class="col-6">
                 <form>
                     <button class="btnEnviar btn btn-lmx">Aceptar</button>

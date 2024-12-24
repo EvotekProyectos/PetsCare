@@ -78,6 +78,9 @@ class ReceptionController extends Controller
         if ($request->reception_type_id == 2) {
             return redirect()->route('hospital.list', ['id' => $reception->id])
                 ->with('success', 'Recepción de hospitalización guardada exitosamente.');
+        } elseif ($request->reception_type_id == 5) {
+            return redirect()->route('new.cremation', ['id' => $reception->id])
+                ->with('success', 'Recepción de cremación guardada exitosamente.');
         }
 
         if ($request->reception_type_id == 3) {

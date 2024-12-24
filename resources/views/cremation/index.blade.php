@@ -1,27 +1,34 @@
 @extends('layouts.app')
 
 @section('template_title')
-    Hospitalizations
+    Cremation
 @endsection
 
-@section('hospitalization.recap', 'active border-start border-3 border-primary') 
+@section('cremations', 'active border-start border-3 border-primary') 
 
 @section('content')
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
-                <div class="card bg-primary-soft border-0 p-3">
-                    <div class="card-header bg-transparent border-0"">
+
+               <div class="card bg-primary-soft border-0 p-3">
+                    <div class="card-header bg-transparent border-0">
                         <div class="d-flex justify-content-between align-items-center">
                             <h4 id="card_title" class="text-primary text-uppercase">
-                                <span class="ic--twotone-pets"></span> HOSPITALIZACIONES
+                                <span class="emojione-monotone--funeral-urn" style="font-size: 20px;"></span>
+                                     CREMACIONES
                             </h4>
+
+                             {{-- <div class="float-right">
+                                <a href="{{ route('cremations.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
+                                  {{ __('Create New') }}
+                                </a>
+                              </div> --}}
                         </div>
                     </div>
                     @if ($message = Session::get('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <div class="alert alert-success m-4">
                             <p>{{ $message }}</p>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     @endif
 
@@ -32,34 +39,36 @@
                                     <table class="table table-striped table-hover responsive w-100" id="table">
                                         <thead class="thead table-primary text-uppercase">
                                             <tr>
-                                                <th>Ingreso </th>
+                                                <th>Fecha de registro</th>
                                                 <th>M.V.Z</th>
-                                                <th>Recepcionista</th>
-                                                <th>Familia</th>
-                                                <th>Número </th>
+                                                <th>Propietario</th>
                                                 <th>Mascota</th>
-                                                <th>Raza</th>
-                                                <th>Fecha de alta </th>
-                                                <th>Tipo de alta </th>
-                                                
-                                                {{-- <th>Acciones</th> --}}
-                                                
+                                                <th>Servicio</th>
+                                                <th>Tipo de urna</th>
+                                                {{-- <th>Observaciones</th> --}}
+                                                <th>C.M.</th>
+                                                <th>Estado</th>
+                                                 <th>Acciones</th>
+                                               {{-- <th>Acciones</th> --}}
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @csrf
+
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
+                   
                     </div>
-                </div>
+                
+
+                    
             </div>
         </div>
     </div>
 @endsection
 
 @push('scripts')
-    <script src="{{asset('js/assignments/recepcionist.js')}}" defer></script>
+    <script src="{{asset('js/cremations/index.js')}}" defer></script>
 @endpush
