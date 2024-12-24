@@ -49,6 +49,9 @@ use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\FollowupsCriticController;
 use App\Http\Controllers\FollowupInternController;
 use App\Http\Controllers\FollowupSurgicalController;
+use App\Http\Controllers\GroomingController;
+use App\Http\Controllers\GroomingStatusController;
+use App\Http\Controllers\GroomingStatusHistoryController;
 use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\VaccineCertificateController;
 use App\Http\Controllers\ProductClassificationController;
@@ -98,6 +101,10 @@ Route::group(['middleware' => ['auth']], function () {
     // ATTENTION STATUSES
     Route::get('/attention-statuses/list', [AttentionStatusController::class, 'list'])->name('attention-statuses.list');
     Route::resource('attention-statuses', AttentionStatusController::class);
+
+    //GROOMING STATUSES
+    Route::get('/grooming-statuses/list', [GroomingStatusController::class, 'list'])->name('grooming-statuses.list');
+    Route::resource('grooming-statuses', GroomingStatusController::class);
 
     // RECEPTION TYPES
     Route::get('/reception-types/list', [ReceptionTypeController::class, 'list'])->name('reception-types.list');
@@ -177,15 +184,19 @@ Route::group(['middleware' => ['auth']], function () {
     
     Route::get('/receptions/hospital/{id}', [ReceptionController::class, 'hospital_authorization'])->name('hospital.list');
     Route::post('/receptions/hospital/pdf/{id}', [ReceptionController::class, 'hospital_authorizationpdf'])->name('hospital.pdf');
+    Route::get('/receptions/grooming/{id}', [ReceptionController::class, 'groomingservice'])->name('receptions.grooming');
     
     Route::resource('receptions', ReceptionController::class);
 
 
 
     //RECEPTIONS STATUS HISTORIES
-    Route::get('/reception-status-histories', [ReceptionStatusHistoryController::class, 'list'])->name('reception-status.list');
+    Route::get('/reception-status-histories/list', [ReceptionStatusHistoryController::class, 'list'])->name('reception-status.list');
     Route::resource('reception-status-histories', ReceptionStatusHistoryController::class);
 
+    //GROOMING STATUS HISTORIES
+    Route::get('/grooming-status-histories/list', [GroomingStatusHistoryController::class, 'list'])->name('grooming-status-histories.list');
+    Route::resource('grooming-status-histories', GroomingStatusHistoryController::class);
 
     //ASSIGNAMENT  
     Route::get('/assignment/appointments', [AssignmentController::class, 'index'])->name('assignment.index');
@@ -195,6 +206,7 @@ Route::group(['middleware' => ['auth']], function () {
     
     Route::get('/assignment/hospitalizations/altas', [AssignmentController::class, 'hospital_altas'])->name('hospitalization.altas');
     Route::get('/assignment/altas/list', [AssignmentController::class, 'altas'])->name('assignment.altas');
+    Route::get('/assignment/groomings', [AssignmentController::class, 'groomings'])->name('assignment.groomings');
 
     //Appointments
     Route::get('/appointments/consultation/{id}', [AppointmentController::class, 'consultation'])->name('appointment.consultation');
@@ -300,6 +312,14 @@ Route::group(['middleware' => ['auth']], function () {
     //FOLLOWUPS SURGICALS
     Route::get('/followup-surgicals/list/{id}', [FollowupSurgicalController::class, 'list'])->name('followup-surgicals.list');
     Route::resource('followup-surgicals', FollowupSurgicalController::class);
+
+    //Groomings
+    Route::get('/groomings/sign/pdf/{id}', [GroomingController::class, 'groomingsign'])->name('grooming.sign');
+    Route::post('/groomings/authorization/pdf/{id}', [GroomingController::class, 'groomingpdf'])->name('grooming.pdf');
+    Route::get('test/pdf/{id}', [GroomingController::class, 'generatePdf'])->name('test.pdf');
+    Route::get('/groomings/list/{id}', [GroomingController::class, 'list'])->name('groomings.list');
+    Route::post('/grooming/update/status', [GroomingController::class, 'status'])->name('grooming.status');
+    Route::resource('groomings', GroomingController::class);
 
     //RoleHasPermissions
     Route::resource('role-has-permissions', RoleHasPermissionController::class);

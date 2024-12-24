@@ -287,5 +287,6 @@
 
         document.getElementById("reception_id_followup").value = Reception_Id;
     </script>
+    
     <script src="{{ asset('js/hospitalizations/createredsheets.js') }}" defer></script>
 @endpush

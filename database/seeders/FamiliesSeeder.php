@@ -14,7 +14,7 @@ class FamiliesSeeder extends Seeder
     public function run(): void
     {
         $families = [
-            ["name" => 'Alamilla Valdes', "phone" => "8442477138", "email" => "alejandra.alamilla@evotek.com.mx",
+            ["name" => 'Alamilla Valdes', "phone" => "8442477138", "email" => "alealamilla27@gmail.com",
         "address" => "Saltillo, La Aurora", "contact_name" => "Lily", "contact_number" => "8442477148"],
         ];
 

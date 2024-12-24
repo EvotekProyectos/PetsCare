@@ -15,6 +15,9 @@ use App\Models\FollowupSurgical;
 use App\Models\Format;
 use App\Models\FormatType;
 use App\Models\Genre;
+use App\Models\Grooming;
+use App\Models\GroomingStatus;
+use App\Models\GroomingStatusHistory;
 use App\Models\Hospitalization;
 use App\Models\Pet;
 use App\Models\PetClassification;
@@ -48,6 +51,9 @@ use App\Observers\FormatTypesObserver;
 use App\Observers\FormatsObserver;
 use App\Observers\ReceptionTypeObserver;
 use App\Observers\GenreObserver;
+use App\Observers\GroomingObserver;
+use App\Observers\GroomingStatusHistoryObserver;
+use App\Observers\GroomingStatusObserver;
 use App\Observers\HospitalizationObserver;
 use App\Observers\PetClassificationObserver;
 use App\Observers\PetObserver;
@@ -118,6 +124,9 @@ class EventServiceProvider extends ServiceProvider
         FollowupIntern::observe(FollowupInternObserver::class);
         FollowupSurgical::observe(FollowupSurgicalObserver::class);
         FollowupsCritic::observe(FollowupsCriticObserver::class);
+        GroomingStatus::observe(GroomingStatusObserver::class);
+        GroomingStatusHistory::observe(GroomingStatusHistoryObserver::class);
+        Grooming::observe(GroomingObserver::class);
         
     }
 

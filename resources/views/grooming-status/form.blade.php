@@ -7,7 +7,7 @@
                 <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                     <i class="fas fa-list text-primary"></i>
                 </span>
-            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $attentionStatus?->name) }}" id="name" placeholder="Nombre">
+            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $groomingStatus?->name) }}" id="name" placeholder="Nombre">
             </div>
             {!! $errors->first('name', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
@@ -17,8 +17,9 @@
                 <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                     <i class="fas fa-tint text-primary"></i>
                 </span>
-            <input type="color" name="color" class="form-control @error('color') is-invalid @enderror" value="{{ old('color', $attentionStatus?->color) }}" id="color" placeholder="Color">
+            <input type="color" name="color" class="form-control @error('color') is-invalid @enderror" value="{{ old('color', $groomingStatus?->color) }}" id="color" placeholder="Color">
             </div>
+
             {!! $errors->first('color', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
 

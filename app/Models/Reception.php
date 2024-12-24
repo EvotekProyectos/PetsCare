@@ -58,7 +58,7 @@ class Reception extends Model
     {
         return $this->belongsTo(\App\Models\AdmissionType::class, 'admission_type_id', 'id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -66,7 +66,7 @@ class Reception extends Model
     {
         return $this->belongsTo(\App\Models\Area::class, 'area_id', 'id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -74,7 +74,7 @@ class Reception extends Model
     {
         return $this->belongsTo(\App\Models\Family::class, 'family_id', 'id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -82,7 +82,7 @@ class Reception extends Model
     {
         return $this->belongsTo(\App\Models\Pet::class, 'pet_id', 'id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -90,7 +90,7 @@ class Reception extends Model
     {
         return $this->belongsTo(\App\Models\Reason::class, 'reason_id', 'id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -98,7 +98,7 @@ class Reception extends Model
     {
         return $this->belongsTo(\App\Models\User::class, 'recepcionist_id', 'id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -106,7 +106,7 @@ class Reception extends Model
     {
         return $this->belongsTo(\App\Models\ReceptionType::class, 'reception_type_id', 'id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -114,7 +114,7 @@ class Reception extends Model
     {
         return $this->belongsTo(\App\Models\Room::class, 'room_id', 'id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -123,9 +123,10 @@ class Reception extends Model
     {
         return $this->belongsTo(\App\Models\User::class, 'veterinarian_id', 'id');
     }
-    
-     public function statusHistory() {
-         return $this->hasMany(ReceptionStatusHistory::class, 'reception_id', 'id');
+
+    public function statusHistory()
+    {
+        return $this->hasMany(ReceptionStatusHistory::class, 'reception_id', 'id');
     }
 
     public function redSheet()
@@ -137,10 +138,13 @@ class Reception extends Model
     {
         return $this->belongsTo(\App\Models\Surgery::class, 'surgery_id', 'id');
     }
-    
+
     public function hospitalizations()
-{
-    return $this->hasMany(Hospitalization::class, 'reception_id');
-}
-    
+    {
+        return $this->hasMany(Hospitalization::class, 'reception_id');
+    }
+
+    public function statusGrooming() {
+        return $this->hasMany(GroomingStatusHistory::class, 'reception_id', 'id');
+   }
 }

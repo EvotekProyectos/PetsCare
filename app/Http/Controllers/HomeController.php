@@ -109,6 +109,12 @@ class HomeController extends Controller
                 'icon' => 'fas fa-list'
             ],
             [
+                'route' => route('grooming-statuses.index'),
+                'title' => 'Estados de grooming',
+                'description' => 'Administra información sobre estados de grooming.',
+                'icon' => 'fas fa-list'
+            ],
+            [
                 'route' => route('reception-types.index'),
                 'title' => 'Tipos de recepción',
                 'description' => 'Administra información sobre tipos de recepción.',

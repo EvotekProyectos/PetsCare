@@ -8,6 +8,8 @@ use App\Models\AdmissionType;
 use App\Models\Area;
 use App\Models\Family;
 use App\Models\Format;
+use App\Models\Grooming;
+use App\Models\GroomingStatusHistory;
 use App\Models\Pet;
 use App\Models\Prescription;
 use App\Models\Producto;
@@ -37,7 +39,7 @@ class ReceptionController extends Controller
     {
         $receptions = Reception::paginate();
         $this->authorize("viewAny", Reception::class);
-         
+
         return view('reception.index', compact('receptions'))
             ->with('i', (request()->input('page', 1) - 1) * $receptions->perPage());
     }
@@ -65,6 +67,7 @@ class ReceptionController extends Controller
      */
     public function store(ReceptionRequest $request)
     {
+        $this->authorize("create", Reception::class);
         $reception = Reception::create($request->validated());
 
         ReceptionStatusHistory::create([
@@ -72,10 +75,17 @@ class ReceptionController extends Controller
             'attention_status_id' => 2,
         ]);
 
-        $this->authorize("create", Reception::class);
         if ($request->reception_type_id == 2) {
             return redirect()->route('hospital.list', ['id' => $reception->id])
                 ->with('success', 'Recepción de hospitalización guardada exitosamente.');
+        }
+
+        if ($request->reception_type_id == 3) {
+            GroomingStatusHistory::create([
+                'reception_id' => $reception->id,
+                'grooming_status_id' => 1,
+            ]);
+            return redirect()->route('receptions.grooming',  $reception->id);
         }
 
         return redirect()->route('receptions.index')
@@ -147,16 +157,18 @@ class ReceptionController extends Controller
 
     public function historial($id)
     {
-        $receptions = Reception::with('receptionType', 'reason', 'vet') ->where('pet_id', $id)->get();
-    
-        $redSheets = RedSheet::whereHas('reception', function ($query) use ($id) 
-        {$query->where('pet_id', $id); })->with('reception')->get();
-    
+        $receptions = Reception::with('receptionType', 'reason', 'vet')->where('pet_id', $id)->get();
+
+        $redSheets = RedSheet::whereHas('reception', function ($query) use ($id) {
+            $query->where('pet_id', $id);
+        })->with('reception')->get();
+
         $surgeries = Surgery::whereHas('reception', function ($query) use ($id) {
-                        $query->where('pet_id', $id);})->with('reception')->get();
-    
+            $query->where('pet_id', $id);
+        })->with('reception')->get();
+
         $prescriptions = Prescription::where('pet_id', $id)->get();
-    
+
         $data = [];
         foreach ($receptions as $reception) {
             $data[] = [
@@ -171,10 +183,10 @@ class ReceptionController extends Controller
                 'prescriptions' => $prescriptions->pluck('medicine')->toArray(),
             ];
         }
-    
+
         return DataTables::of($receptions, $redSheets, $surgeries, $prescriptions)->make(true);
     }
-    
+
 
 
     public function hospital_authorization($id)
@@ -198,31 +210,32 @@ class ReceptionController extends Controller
         ]);
 
         $pdfPath = '/receptions/reception_' . $id . '.pdf';
-        Storage::put('public'.$pdfPath, $pdf->output());
+        Storage::put('public' . $pdfPath, $pdf->output());
 
         $pdfUrl = Storage::url($pdfPath);
 
         $format = new Format();
-        $format->format_type_id = 1; 
+        $format->format_type_id = 1;
         $format->reception_id = $id;
-        $format->pet_id= $pet->id;
-        $format->format_pdf = $pdfPath; 
+        $format->pet_id = $pet->id;
+        $format->format_pdf = $pdfPath;
         $format->save();
 
-        return response()->json(['url' => asset('storage'.$pdfPath), 'format_id' => $format->id]);
+        return response()->json(['url' => asset('storage' . $pdfPath), 'format_id' => $format->id]);
     }
 
 
-     public function getFamilyByPet($pet_id)
- {
-     $pet = Pet::find($pet_id);
-     if ($pet && $pet->family) {
-         return response()->json($pet->family); 
-     }
-     return response()->json(null, 404);
-}
+    public function getFamilyByPet($pet_id)
+    {
+        $pet = Pet::find($pet_id);
+        if ($pet && $pet->family) {
+            return response()->json($pet->family);
+        }
+        return response()->json(null, 404);
+    }
 
-    public function transfer(Request $request, $id){
+    public function transfer(Request $request, $id)
+    {
         $reception = Reception::findOrFail($id);
 
         $reception->update($request->validate([
@@ -231,24 +244,37 @@ class ReceptionController extends Controller
         $this->authorize("update", $reception);
 
         return response()->json($reception);
-
     }
 
     public function cuenta($id)
     {
         $reception = Reception::with('pet')->where('id', $id)->first();
-         $redSheets = RedSheet::where('reception_id', $id)->with('imaging','lab', 'service')->get();
+        $redSheets = RedSheet::where('reception_id', $id)->with('imaging', 'lab', 'service')->get();
         $surgeries = Surgery::where('reception_id', $id)->with('service')->get();
-    
+
         $data = [
             'reception' => $reception,
-             'redSheets' => $redSheets,
+            'redSheets' => $redSheets,
             'surgeries' => $surgeries,
         ];
         return DataTables::of($data)->make(true);
     }
 
 
-    
+    public function groomingservice(int $id)
+    {
+        $grooming = new Grooming();
+        $products = Producto::where("ESTATUS",  "A")->get();
+        $reception = Reception::find($id);
+        $admissions = AdmissionType::all();
+        $areas = Area::all();
+        $families = Family::all();
+        $reasons = Reason::all();
+        $users = User::all();
+        $rooms = Room::all();
+        $pets = Pet::all();
 
+        $this->authorize("create", Grooming::class);
+        return view('grooming.create', compact('grooming', 'products', 'reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms', 'pets'));
+    }
 }

@@ -38,7 +38,7 @@
 @push('scripts')
     <script>
         const selectedPetId = {{ old('pet_id', $reception?->pet_id) ?? 'null' }};
-        var type = {{$reception-> reception_type_id}}
+        var type = {{$reception-> reception_type_id}};
     </script>
 
     <script src="{{asset('js/receptions/edit.js')}}" defer></script>

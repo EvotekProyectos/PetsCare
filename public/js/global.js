@@ -160,3 +160,13 @@ const deleteFollowUpSurgical = (id, table) => {
     const url = route("followup-surgicals.destroy", id);
     deleteResource(url, table);
 }
+
+const deleteGroomingStatus = (id, table) => {
+    const url = route("grooming-statuses.destroy", id);
+    deleteResource(url, table);
+}
+
+const deleteGrooming = (id, table) => {
+    const url = route("groomings.destroy", id);
+    deleteResource(url, table);
+}

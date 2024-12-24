@@ -1,5 +1,5 @@
-window.onload=function(){
-    let familia= document.getElementById("family_id").value
+window.onload = function () {
+    let familia = document.getElementById("family_id").value
     getpets(familia)
     first(type)
 }
@@ -39,46 +39,6 @@ async function getFamily(pet_id) {
         }
     }
     isUpdating = false;
-}
-
-
-function togglee(radio) {
-    document.getElementById("adm").style.display = "none";
-    document.getElementById("area").style.display = "none";
-    document.getElementById("motivo").style.display = "none";
-    document.getElementById("mvz").style.display = "none";
-    document.getElementById("consultorio").style.display = "none";
-    document.getElementById("salida").style.display = "none";
-
-
-    var type = parseInt(radio.value);
-
-    switch (type) {
-        case 1:
-            document.getElementById("motivo").style.display = "block";
-            document.getElementById("mvz").style.display = "block";
-            document.getElementById("consultorio").style.display = "block";
-            break;
-        case 2:
-            document.getElementById("adm").style.display = "block";
-            document.getElementById("area").style.display = "block";
-            document.getElementById("mvz").style.display = "block";
-            break;
-        case 3:
-            document.getElementById("mvz").style.display = "block";
-            document.getElementById("salida").style.display = "block";
-            break;
-        case 4:
-            document.getElementById("mvz").style.display = "block";
-            break;
-        case 5:
-            document.getElementById("mvz").style.display = "block";
-            document.getElementById("salida").style.display = "block";
-            break;
-        default:
-            break;
-    }
-
 }
 
 function first(value) {
@@ -125,7 +85,87 @@ $(document).ready(function () {
         width: 'resolve'
     });
     $('#pet_id').select2({
-         placeholder: 'Buscar Mascota',
-          width: 'resolve'
-     });
+        placeholder: 'Buscar Mascota',
+        width: 'resolve'
+    });
+    $('#service_id').select2({
+        placeholder: 'Buscar Servicio',
+        width: 'resolve'
+    });
 });
+
+async function NewEntry() {
+    event.preventDefault();
+    let url = route('groomings.store');
+    let form = new FormData(document.getElementById("NewService"));
+    let pet = await fetch(url, { method: "POST", body: form });
+    let resp = await pet.json();
+
+    if (pet.ok) {
+        Swal.fire({
+            icon: "success",
+            title: "Se registraron los servicios con exito",
+            timer: 7000,
+            showConfirmButton: true
+        })
+        table.ajax.reload();
+        $('#service_id').val('').trigger('change')
+        $('#notes').val('')
+    } else {
+        let resp = await pet.json();
+        Swal.fire({
+            icon: "error",
+            body: resp
+        })
+    }
+}
+
+var table = undefined;
+$(document).ready(function () {
+    table = $('#table').DataTable({
+        ajax: route('groomings.list', Reception_Id),
+        responsive: true,
+        order: [0, 'desc'],
+        columns: [
+            {
+                data: 'serv.NOMBRE',
+            },
+            {
+                data: 'notes',
+            },
+            {
+                data: null,
+                render: function (data) {
+                    const precio = parseFloat(data.service.PRECIO) || 0;
+                    return `$${precio.toFixed(2)}`;
+                }
+            },
+            {
+                data: null,
+                render: function (data) {
+                    return `
+                        <button type="button" class="btn btn-sm text-primary" onclick="showAlertWithCallback(() => deleteGrooming(${data.id}, table));">
+                            <i class="fas fa-trash"></i>
+                        </button>`;
+                }
+            },
+
+        ],
+    });
+    table.on('draw', function () {
+        calculateTotal(table);
+    });
+});
+
+function calculateTotal(table) {
+    let total = 0;
+
+    table.rows({ page: 'all' }).every(function () {
+        const data = this.data();
+        if (data.service && data.service.PRECIO) {
+            total += parseFloat(data.service.PRECIO);
+        }
+    });
+
+    $('#total-price').text(`Total Final: $${total.toFixed(2)}`);
+}

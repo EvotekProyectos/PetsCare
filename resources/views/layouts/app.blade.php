@@ -91,12 +91,19 @@
                             Asignaciones de Hospital
                         </a>
                     </li>
+                    <li class="@yield('hospitalizations')">
+                        <a href="{{ route('assignment.groomings') }}" class=" ms-2">
+                            <i class="fas fa-hand-holding-heart"></i>
+                            Asignaciones de Grooming
+                        </a>
+                    </li>
                     <li>
                         <a href="{{ route('hospitalization.altas') }}" class=" ms-2">
                             <span class="ri--hospital-line"></span>
                            Hospitalizaciones
                         </a>
                     </li>
+                    
                     <li class="@yield('families')">
                         <a href="{{ route('families.index') }}" class=" ms-2">
                             <span class="fluent-mdl2--family"></span>
