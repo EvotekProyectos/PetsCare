@@ -32,6 +32,7 @@ class VaccineCertificateRequest extends FormRequest
             'last_deworming_date' => 'nullable|date',
             'next_application_date' => 'required|date',
             'observations' => 'nullable|string',
+            'reception_id' => 'nullable|integer|exists:receptions,id',
             'vet_id' => 'nullable|integer|exists:users,id',
             
         ];

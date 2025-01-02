@@ -173,6 +173,7 @@
         </div>
     @endif
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="{{ asset('js/sweetalert2.all.min.js') }}" defer></script>
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/hospitalizations/alta_voluntaria.js') }}" defer></script>
     <script>

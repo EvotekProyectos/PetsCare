@@ -72,7 +72,8 @@ class GenericModel extends FDBModel
         ("' . implode('", "', array_keys($data)) . '") VALUES
         (' . implode(', ', array_values($data)) . ')';
 
-        DB::insert($query);
+       
+        DB::connection('firebird')->insert($query);
 
         return $data[$pk];
     }

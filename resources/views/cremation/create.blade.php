@@ -149,5 +149,13 @@
 @endsection
 
 @push('scripts')
+<script>
+    var ruta = "{{ asset('') }}";
+    var imgDefault = "{{ asset('img/pet_pic.png') }}";
+    var Reception_Id = {{ $reception->id }};
+    var Pet_Id = {{ $reception->pet_id }};
+    var Pic_id = {{ $reception->pet->picture_id ?? 'null' }};
+    var Pic_route = "{{ $reception->pet->file->route ?? '' }}";
+</script>
 <script src="{{ asset('js/cremations/create.js') }}" defer></script>
 @endpush

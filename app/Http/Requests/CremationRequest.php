@@ -30,7 +30,7 @@ class CremationRequest extends FormRequest
 			'CM_id' => 'string',
 			'type_urn' => 'string',
 			'urn_model' => 'string',
-			'observations' => 'string',
+			'observations' => 'nullable|string',
 			'placa_type_id' => 'string',
 			'price' => 'nullable',
         ];

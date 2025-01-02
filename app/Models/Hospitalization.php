@@ -34,7 +34,7 @@ class Hospitalization extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_id','pet_id', 'reason', 'total_days', 'total_payment', 'already_paid', 'hospital_discharges_id'];
+    protected $fillable = ['reception_id','pet_id', 'reason', 'total_days', 'total_payment', 'already_paid', 'hospital_discharges_id', 'exit_date'];
 
 
     /**

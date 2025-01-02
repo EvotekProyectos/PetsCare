@@ -241,6 +241,14 @@
                     <p class="fillable"> {{ (new DateTime($reception->exit_date))->format('d-m-Y h:i') }} </p>
                 </th>
             </tr>
+            <tr>
+                <th style="width: 15%; text-align: left;">
+                    <p class="data">Folio de Pago:</p>
+                </th>
+                <th style="width: 35%; text-align: left;">
+                    <p class="fillable"> {{ $reception->payment->folio_odv }} </p>
+                </th>
+            </tr>
         </table>
     </div>
 
@@ -290,7 +298,7 @@
     <div>
         <table style="width: 100%; border-collapse: collapse; ">
             <tr>
-                <td style="width: 10%;"><button class="btnEnviar btn btn-lmx">Aceptar</button></td>
+                <td style="width: 10%;"><form> <button class="btnEnviar btn btn-lmx">Aceptar</button> </form></td>
                 <td style="width: 10%; text-align:left"> <button class="btnLimpiar btn btn-lmx" data-target="canvas">Limpiar</button></td>
             </tr>
         </table>

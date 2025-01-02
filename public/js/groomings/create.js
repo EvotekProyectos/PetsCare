@@ -169,3 +169,47 @@ function calculateTotal(table) {
 
     $('#total-price').text(`Total Final: $${total.toFixed(2)}`);
 }
+
+async function generate(event) {
+    event.preventDefault();
+    Swal.fire({
+        title: 'Procesando...',
+        text: 'Por favor espera mientras procesamos la solicitud.',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    try {
+        let url3 = route('grooming.pay', Reception_Id);
+        let pet3 = await fetch(url3, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        let resp3 = await pet3.json();
+
+        Swal.close();
+
+        Swal.fire({
+            icon: "success",
+            title: "El folio para pagar el servicio es " + resp3,
+            timer: 27000,
+            showConfirmButton: true
+        }).then(() => {
+            window.location.href = route('grooming.sign', Reception_Id);
+        });
+
+    } catch (error) {
+        console.error("Error:", error);
+        Swal.fire({
+            icon: "error",
+            title: "Error inesperado",
+            text: "Por favor, intenta nuevamente."
+        });
+    } finally {
+        Swal.close();
+    }
+}

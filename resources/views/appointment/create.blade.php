@@ -348,6 +348,7 @@
         var Pet_Id = {{ $reception->pet_id }};
         var Pic_id = {{ $reception->pet->picture_id ?? 'null' }};
         var Pic_route = "{{ $reception->pet->file->route ?? '' }}";
+        var services = @json($products);
     </script>
     <script src="{{ asset('js/appointments/create.js') }}" defer></script>
 @endpush

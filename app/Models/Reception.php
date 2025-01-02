@@ -147,4 +147,8 @@ class Reception extends Model
     public function statusGrooming() {
         return $this->hasMany(GroomingStatusHistory::class, 'reception_id', 'id');
    }
+
+   public function payment() {
+        return $this->belongsTo(\App\Models\PaymentOrder::class, 'id', 'reception_id');
+   }
 }

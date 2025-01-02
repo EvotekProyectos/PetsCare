@@ -48,7 +48,7 @@ class VaccineCertificate extends Model
      *
      * @var array
      */
-    protected $fillable = ['pet_id', 'service_id', 'product', 'lab', 'lote', 'dose', 'application_date', 'last_deworming_date', 'next_application_date', 'observations', 'vet_id'];
+    protected $fillable = ['pet_id', 'service_id', 'product', 'lab', 'lote', 'dose', 'application_date', 'last_deworming_date', 'next_application_date', 'observations', 'reception_id', 'vet_id'];
 
 
     /**
