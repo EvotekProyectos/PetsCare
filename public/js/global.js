@@ -185,3 +185,19 @@ const deleteTagType = (id, table) => {
     const url = route("tag-types.destroy", id);
     deleteResource(url, table);
 }
+
+const deletesurgerySchedule = (id, table) => {
+    const url = route("surgery-schedules.destroy", id);
+    deleteResource(url, table);
+}
+
+const deleteCubicle= (id, table) => {
+    const url = route("cubicles.destroy", id);
+    deleteResource(url, table);
+}
+
+const deleteCubicleTypes= (id, table) => {
+    const url = route("cubicle-types.destroy", id);
+    deleteResource(url, table);
+}
+

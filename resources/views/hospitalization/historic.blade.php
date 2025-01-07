@@ -129,6 +129,15 @@
                         </div>
                         
                     </div>
+            
+                    <div class="col d-flex justify-content-between align-items-center my-2">
+                        <div class="col">
+                            <button class="btn btn-costum-services btn-sm text-uppercase rounded-4" onclick="window.location.href='{{ route('surgery-schedule.new', $reception->id) }}'">
+                                <span class="badge custom-badge-pill"><span
+                                        class="healthicons--surgical-sterilization-outline"></span></span> AGENDAR CIRUGÍA
+                            </button>
+                        </div>
+                    </div>
                  
                     <div class="card-body" id="DisplayRedSheet">
                         <h5 id="card_title" class="text-primary text-uppercase">

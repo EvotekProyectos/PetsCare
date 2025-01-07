@@ -257,4 +257,57 @@ class FormatController extends Controller
     {
         return view('format.reporte_ultrasono');
     }
+
+    public function pensionFormat(int $id)
+    {
+        $reception = Reception::find($id);
+        return view('format.pensionPdf', compact('reception'));
+    }
+
+
+    // public function pensionPdf(Request $request ,int $id){
+    //     $reception = Reception::find($id);
+    //     $signatureDataUrl = $request->input('signature');
+
+    //     $pdf = PDF::loadView('format.pensionPdf', [
+    //         'reception' => $reception,
+    //         'signatureDataUrl' => $signatureDataUrl,
+    //         'isPdf' => true
+    //     ]);
+
+    //     $pdfPath = '/formats/pension_'  .$id. '.pdf';
+    //     Storage::put('public' . $pdfPath, $pdf->output());
+
+    //     return response()->json(['url' => asset('storage' . $pdfPath)]);
+    // }
+
+    public function pensionPdf(Request $request, int $id)
+{
+    $reception = Reception::find($id);
+
+    $signatureDataUrl = $request->input('signature');
+    if (empty($signatureDataUrl)) {
+        return response()->json(['error' => 'Signature data is required'], 422);
+    }
+
+    try {
+        $pdf = PDF::loadView('format.pensionPdf', [
+            'reception' => $reception,
+            'signatureDataUrl' => $signatureDataUrl,
+            'isPdf' => true
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error generating PDF: ' . $e->getMessage()], 500);
+    }
+
+    $pdfPath = '/formats/pension_' . $id . '_' . time() . '.pdf';
+
+    if (!Storage::put('public' . $pdfPath, $pdf->output())) {
+        return response()->json(['error' => 'Error saving PDF to storage'], 500);
+    }
+
+    return response()->json(['url' => asset('storage' . $pdfPath)]);
+}
+
+    
 }

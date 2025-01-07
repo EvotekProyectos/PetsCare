@@ -48,6 +48,8 @@ use App\Http\Controllers\AppointmentServiceController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CmTypeController;
 use App\Http\Controllers\CremationController;
+use App\Http\Controllers\CubicleController;
+use App\Http\Controllers\CubicleTypeController;
 use App\Http\Controllers\FollowupsCriticController;
 use App\Http\Controllers\FollowupInternController;
 use App\Http\Controllers\FollowupSurgicalController;
@@ -60,6 +62,8 @@ use App\Http\Controllers\ProductClassificationController;
 use App\Http\Controllers\ReceptionStatusHistoryController;
 use App\Http\Controllers\SurgeryPackController;
 use App\Http\Controllers\RedSheetController;
+use App\Http\Controllers\StatusSurgeryController;
+use App\Http\Controllers\SurgeryScheduleController;
 use App\Http\Controllers\TagTypeController;
 use App\Models\FollowUp;
 use App\Models\Surgery;
@@ -286,6 +290,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/formats/surgery/{id}', [FormatController::class, 'surgery_authorization'])->name('format.surgery');
     Route::post('/formats/surgery/pdf/{id}', [FormatController::class, 'surgery_authorizationpdf'])->name('format-surgery.pdf');
     Route::get('/reporte', [FormatController::class, 'reporte']);
+    Route::get('/pension/{id}', [FormatController::class, 'pensionFormat'])->name('pension.format');
+    Route::post('/pension/pdf/{id}', [FormatController::class, 'pensionPdf'])->name('pension.pdf');
     Route::resource('formats', FormatController::class);
 
     //Appointment Services
@@ -342,7 +348,25 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/cremations/{id}/updateStatus', [CremationController::class, 'updateStatus'])->name("cremation.updateStatus");
     Route::resource('cremations', CremationController::class);
     
-    
+    //Status surgery
+    Route::resource('status-surgeries', StatusSurgeryController::class);
+
+    //SURGERY SCHEDULES
+    Route::get('/surgery-schedules/list', [SurgeryScheduleController::class, 'list'])->name('schedules-surgery.list');
+    Route::get('/surgery-schedules/get-events', [ SurgeryScheduleController::class, 'getEvents'])->name('surgery-schedules.getEvents');
+    Route::get('assignment/surgeries', [ SurgeryScheduleController::class, 'assignament'])->name('assignament.surgery');
+    Route::post('/surgery/{id}/update/', [SurgeryScheduleController::class, 'updateStatus'])->name("surgery.status");
+    Route::get('surgery-schedules/add/{id}', [SurgeryScheduleController::class, 'add'])->name("surgery-schedule.new");
+    Route::resource('surgery-schedules', SurgeryScheduleController::class);
+
+    //TYPES CUBICLES
+    Route::get('/cubicle-types/list', [CubicleTypeController::class, 'list'])->name('cubicle-types.list');
+    Route::resource('cubicle-types', CubicleTypeController::class);
+
+    //CUBICLES
+    Route::get('/cubicles/view', [CubicleController::class, 'view'])->name('cubicle.view');
+    Route::get('/cubicles/list', [CubicleController::class, 'list'])->name('cubicles.list');
+    Route::resource('cubicles', CubicleController::class);
 });
 
  

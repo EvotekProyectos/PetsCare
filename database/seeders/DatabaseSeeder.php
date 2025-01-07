@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Cubicle;
+use App\Models\CubicleType;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -44,5 +47,8 @@ class DatabaseSeeder extends Seeder
         $this->call(GroomingStatusSeeder::class);
         $this->call(TagTypeSeeder::class);
         $this->call(CmTypeSeeder::class);
+        $this->call(StatusSurgeriesSeeder::class);
+        $this->call(CubicleTypesSeeder::class);
+        $this->call(CubiclesSeeder::class);
     }
 }
