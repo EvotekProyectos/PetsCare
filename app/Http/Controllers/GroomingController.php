@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Grooming;
 use App\Http\Requests\GroomingRequest;
+use App\Models\Folio;
+use App\Models\GenericModel;
 use App\Models\GroomingStatusHistory;
+use App\Models\PaymentOrder;
 use App\Models\Producto;
 use App\Models\Reception;
 use Barryvdh\DomPDF\Facade\Pdf  as Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 /**
@@ -163,12 +168,130 @@ class GroomingController extends Controller
 
     public function generatePdf(int $id)
     {
-        $reception = Reception::find($id);
+        $reception = Reception::with('payment')->find($id);
 
         $groomings = Grooming::with('service', 'serv')->where('reception_id', $id)->get();
 
         $pdf = Pdf::loadView("grooming.pdf", compact("reception", "groomings"));
 
         return $pdf->stream("PDF.pdf");
+    }
+
+    public function ordenventa(int $reception)
+    {
+        // Foleador para las Ordenes del Punto de Venta
+        $folio = Folio::select([
+            'CONSECUTIVO',
+        ])
+            ->where('CAJA_ID', 170159)
+            ->firstOrFail()->CONSECUTIVO;
+        $newFolio = 'N' . str_pad($folio + 1, 8, '0', STR_PAD_LEFT);
+        Folio::where('CAJA_ID', 170159)->increment('CONSECUTIVO', 1);
+
+        //Variables para guardar los detalles y totales para el insert
+        $articulosDetalles = [];
+        $listadoPartidas = [];
+        $importeNeto = 0;
+        $now = Carbon::now();
+
+        //Buscar Los servicios registrados a la recepción , son los id de productos en microsip
+        $Ids = Grooming::where('reception_id', $reception)
+            ->where(function ($query) {
+                $query->whereNotNull('service_id');
+            })
+            ->pluck('service_id');
+
+        //Recorrer Cada Servicio para sacar los detalleS que guardamos de la ODV y calculamos total
+        foreach ($Ids as $articuloId) {
+            //Query para Mircrosip
+            $articuloDetalle = DB::connection('firebird')
+                ->table('ARTICULOS AS a')
+                ->leftJoin('PRECIOS_ARTICULOS AS pa', 'a.ARTICULO_ID', '=', 'pa.ARTICULO_ID')
+                ->leftJoin('CLAVES_ARTICULOS AS ca', 'a.ARTICULO_ID', '=', 'ca.ARTICULO_ID')
+                ->where('a.ARTICULO_ID', $articuloId)
+                ->select('a.NOMBRE', 'a.ARTICULO_ID', 'pa.PRECIO', 'ca.CLAVE_ARTICULO')
+                ->first();
+
+            //Guardamos detalles de cada servico
+            if ($articuloDetalle) {
+                $articulosDetalles[] = $articuloDetalle;
+            }
+
+            //Calculo de total unitario 
+            foreach ($articulosDetalles as $key => $producto) {
+                $totalNetoProducto =  floatval($producto->PRECIO);
+            }
+
+            //Guardamos partidas para los futuros inserts de DOCTOS_PV_DET
+            $listadoPartidas[] = [
+                'CLAVE_ARTICULO' => $producto->CLAVE_ARTICULO,
+                'ARTICULO_ID' => $producto->ARTICULO_ID,
+                'UNIDADES' => 1,
+                'UNIDADES_DEV' => 0,
+                'TIPO_CONTAB_UNID' => 0,
+                'PRECIO_UNITARIO' => $producto->PRECIO,
+                'PRECIO_UNITARIO_IMPTO' => $producto->PRECIO,
+                'IMPUESTO_POR_UNIDAD' => 0,
+                'PCTJE_DSCTO' => 0,
+                'PRECIO_TOTAL_NETO' => $totalNetoProducto,
+                'PRECIO_MODIFICADO' => 'N',
+                'PCTJE_COMIS' => 0,
+                'ROL' => 'N',
+                'POSICION' => $key + 1,
+                'DSCTO_ART' => 0,
+                'DSCTO_EXTRA' => 0,
+            ];
+
+            //Calculo total
+            $importeNeto += $totalNetoProducto;
+        }
+
+         //Campos para el insert de DOCTOS_PV
+        $ordenFields['CAJA_ID'] = 170159;
+        $ordenFields['TIPO_DOCTO'] = 'O';
+        $ordenFields['SUCURSAL_ID'] = 54057;
+        $ordenFields['FOLIO'] = $newFolio;
+        $ordenFields['FECHA'] = $now->format('Y-m-d');
+        $ordenFields['HORA'] = $now->format('H:i:s');
+        $ordenFields['CAJERO_ID'] = 170160;
+        $ordenFields['CLIENTE_ID'] = 860;
+        $ordenFields['ALMACEN_ID'] = 953;
+        $ordenFields['MONEDA_ID'] = 1;
+        $ordenFields['IMPUESTO_INCLUIDO'] = 'S';
+        $ordenFields['TIPO_CAMBIO'] = 1;
+        $ordenFields['TIPO_DSCTO'] = 'P';
+        $ordenFields['DSCTO_PCTJE'] = 0;
+        $ordenFields['DSCTO_IMPORTE'] = 0;
+        $ordenFields['ESTATUS'] = 'N';
+        $ordenFields['APLICADO'] = 'S';
+        $ordenFields['SISTEMA_ORIGEN'] = 'PV';
+
+        //Inicilaizar los modelos para las tablas a las cuales les haremos insert en base al generico
+        $basePVModel = new GenericModel('DOCTOS_PV', 'DOCTO_PV_ID');
+        $detPVModel = new GenericModel('DOCTOS_PV_DET', 'DOCTO_PV_DET_ID');
+
+        //Desactivamos las timestamps
+        $basePVModel->timestamps = false;
+        $detPVModel->timestamps = false;
+
+        //Insert para la cabecera de DOCTOS_PV y guardamos el ID generado
+        $ordenId = $basePVModel->createGeneric($ordenFields);
+
+        //Inserts de cada partida para la tabla DOCTOS_PV_DET
+        foreach ($listadoPartidas as $partida) {
+            $partida['DOCTO_PV_ID'] = $ordenId;
+
+            $detPVModel->createGeneric($partida);
+        }
+
+        //Guardamos en nuestra BD el Folio Generado para control de los pagos
+        $data = [
+            'reception_id' => $reception,
+            'folio_odv' => $newFolio
+        ];
+        PaymentOrder::create($data);
+
+        //Regresamos el Folio de la ODV con el que pueden pasar a pagar a caja
+        return response()->json($newFolio);
     }
 }

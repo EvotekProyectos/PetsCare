@@ -28,6 +28,7 @@ class HospitalizationRequest extends FormRequest
             'total_days' => 'nullable',
             'total_payment' => 'nullable',
             'already_paid' => 'nullable',
+            'exit_date' => 'nulable',
             
         ];
     }

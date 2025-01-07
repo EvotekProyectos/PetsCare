@@ -39,7 +39,10 @@ $(document).ready(function () {
             },
            
             {
-                data: 'servicie',
+                data: null,
+                render: function (data) {
+                    return data.serv ? data.serv.NOMBRE : '';
+                }
             },
             {
                 data: 'type_urn',

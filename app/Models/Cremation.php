@@ -77,6 +77,15 @@ class Cremation extends Model
         return $this->belongsTo(\App\Models\TagType::class, 'placa_type_id', 'id');
     }
     
+    public function service()
+    {
+        return $this->belongsTo(\App\Models\Precios::class, 'servicie', 'ARTICULO_ID');
+    }
+
+    public function serv()
+    {
+        return $this->belongsTo(\App\Models\Producto::class, 'servicie', 'ARTICULO_ID');
+    }
     
 
 }

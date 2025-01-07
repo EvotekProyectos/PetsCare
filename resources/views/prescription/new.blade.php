@@ -18,7 +18,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form method="POST" onsubmit="AddPrescription()" role="form"  id="NewPrescription"
+                        <form method="POST" onsubmit="DischargePrescription()" role="form"  id="NewPrescription"
                             enctype="multipart/form-data">
                             @csrf
 
@@ -26,6 +26,7 @@
 
                         </form>
                     </div>
+                    {{-- <input type="text" value="{{$reception->id}}"> --}}
                 </div>
             </div>
         </div>

@@ -71,7 +71,7 @@
                     </div>
                     
                     <div class="col-12 mt-2 d-flex justify-content-end">
-                        <button type="button" onclick="window.location.href='{{ route('grooming.sign', $reception->id) }}'" 
+                        <button type="button" onclick="generate(event)" 
                             class="btn btn-primary">
                             Siguiente <i class="fas fa-arrow-right"></i></button>
                     </div>

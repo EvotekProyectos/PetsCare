@@ -14,6 +14,7 @@ use App\Models\Reception;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf  as Pdf;
 use Illuminate\Support\Facades\Storage;
+
 /**
  * Class HospitalizationController
  * @package App\Http\Controllers
@@ -93,13 +94,15 @@ class HospitalizationController extends Controller
             ->with('success', 'Hospitalization deleted successfully');
     }
 
-    public function historic(int $id){
+    public function historic(int $id)
+    {
         $reception = Reception::find($id);
 
         return view('hospitalization.historic', compact('reception'));
     }
 
-    public function followups(int $id){
+    public function followups(int $id)
+    {
         $reception = Reception::find($id);
         $followupsCritic = new FollowUp();
         $followupIntern = new FollowupIntern();
@@ -108,13 +111,11 @@ class HospitalizationController extends Controller
         return view('follow-up.add', compact('reception', 'followupsCritic', 'followupIntern', 'followupSurgical'));
     }
 
-    public function test(){
-        dd(Producto::all()); 
-    }
-    public function altaVoluntaria($id){
+
+    public function altaVoluntaria($id)
+    {
         $reception = Reception::find($id);
-        $pet = Pet::with('family', 'genre')->find($id);
-        return view('hospital-discharge.alta_voluntaria', compact("reception", "pet"));
+        return view('hospital-discharge.alta_voluntaria', compact("reception"));
     }
 
     public function altaVoluntariapdf(Request $request, $id)
@@ -122,20 +123,17 @@ class HospitalizationController extends Controller
         $reception = Reception::find($id);
         $pet = Pet::with('family', 'genre')->find($reception->pet_id);
 
-        $reception->exit_date = now();
-        $reception->save();
 
-        
         $signatureDataUrl = $request->input('signature');
-         $nameFamily = $request->input('name_family');
-         $reason = $request->input('reason');
-    
+        $nameFamily = $request->input('name_family');
+        $reason = $request->input('reason');
+
         $pdf = PDF::loadView('hospital-discharge.alta_voluntaria', [
             'reception' => $reception,
             'pet' => $pet,
             'signatureDataUrl' => $signatureDataUrl,
-             'nameFamily' => $nameFamily,
-             'reason' => $reason,
+            'nameFamily' => $nameFamily,
+            'reason' => $reason,
             'isPdf' => true
         ]);
 
@@ -145,39 +143,45 @@ class HospitalizationController extends Controller
         $pdfUrl = Storage::url($pdfPath);
 
         $format = new Format();
-        $format->format_type_id = 2; 
+        $format->format_type_id = 2;
         $format->reception_id = $id;
-        $format->pet_id= $pet->id;
-        $format->format_pdf = $pdfPath; 
+        $format->pet_id = $pet->id;
+        $format->format_pdf = $pdfPath;
         $format->save();
 
-        $hospitalization = new Hospitalization();
-        $hospitalization->reception_id = $id;  
-        $hospitalization->exit_date = now();
-        $hospitalization->hospital_discharges_id = 2; 
-        $hospitalization->save();
 
-        
-        return response()->json([ 'url' => asset($pdfUrl), 'format_id' => $format->id]);
+        return response()->json(['url' => asset($pdfUrl), 'format_id' => $format->id]);
         //return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
         //return response()->json(['url' => asset('storage/'.$pdfPath), 'format_id' => $format->id]);
     }
 
     public function dischargeDeath(Request $request)
     {
-            $reception = Reception::findOrFail($request->receptionId);
-            $reception->exit_date = now();
-            $reception->save();
+        $reception = Reception::findOrFail($request->receptionId);
+        $reception->exit_date = now();
+        $reception->save();
 
-            $hospitalization = new Hospitalization();
-            $hospitalization->reception_id = $request->receptionId;
-            $hospitalization->exit_date = now();  
-            $hospitalization->hospital_discharges_id=3;
-            $hospitalization->save();
+        $hospitalization = new Hospitalization();
+        $hospitalization->reception_id = $request->receptionId;
+        $hospitalization->exit_date = now();
+        $hospitalization->hospital_discharges_id = 3;
+        $hospitalization->save();
 
-            return response()->json([
-                'message' => 'Paciente dado de alta por fallecimiento.',
-            ], 200);
+        return response()->json([
+            'message' => 'Paciente dado de alta por fallecimiento.',
+        ], 200);
     }
 
+    public function discharge(Request $request)
+    {
+        $reception = Reception::findOrFail($request->reception_id);
+        $reception->exit_date = now();
+        $reception->save();
+
+        $data = $request->all();
+        $data['exit_date'] = now();
+        $new = Hospitalization::create($data);
+
+        return response()->json($new);
+    }
 }

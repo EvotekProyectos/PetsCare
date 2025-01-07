@@ -236,7 +236,7 @@
                         </td>
                         <td style="padding: 5px 10px;">
                             <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{ $cremation->servicie }}
+                                {{ $cremation->serv->NOMBRE }}
                             </p>
                             <td>
                                 <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Modelo de Urna:</p>
@@ -271,10 +271,19 @@
                             </td>
                             <td style="padding: 5px 10px;">
                                 <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                    {{ $cremation->price ?? 'Sin especificar'}}
+                                    ${{ $cremation->service?->PRECIO ?? 'Sin especificar'}}
+                                </p>
+                            </td>
+                            <td>
+                                <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Folio para Pagar:</p>
+                            </td>
+                            <td style="padding: 5px 10px;">
+                                <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
+                                    {{ $reception->payment->folio_odv ?? 'Pendiente'}}
                                 </p>
                             </td>
                     </tr>
+                    
                 </div>
 
                 {{-- <div

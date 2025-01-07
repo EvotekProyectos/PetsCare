@@ -66,6 +66,7 @@ use App\Http\Controllers\StatusSurgeryController;
 use App\Http\Controllers\SurgeryScheduleController;
 use App\Http\Controllers\TagTypeController;
 use App\Models\FollowUp;
+use App\Models\Hospitalization;
 use App\Models\Surgery;
 
 /*
@@ -217,12 +218,14 @@ Route::group(['middleware' => ['auth']], function () {
 
     //Appointments
     Route::get('/appointments/consultation/{id}', [AppointmentController::class, 'consultation'])->name('appointment.consultation');
+    Route::get('/appointments/pv/{id}/{concepto}', [AppointmentController::class, 'ordenventa'])->name('appointment.pay');
     Route::get('/appointments/{id}', [AppointmentController::class, 'list'])->name('appointment.list');
     Route::get('/appointments/historic/{id}', [AppointmentController::class, 'historic'])->name('appointment.historic');
     Route::resource('appointments', AppointmentController::class);
 
     //PRESCRIPTIONS
     Route::get('/prescriptions/list', [PrescriptionController::class, 'list'])->name('prescription.list');
+    Route::get('/prescriptions/discharge/{id}',  [PrescriptionController::class, 'new'])->name('prescriptions.new');
     Route::get("/prescriptions/create/{id}", [PrescriptionController::class, 'create'])->name('prescription.create');
     Route::get("/prescriptions/pdf/{id}", [PrescriptionController::class, "imprimir"])->name("prescription.imprimir");
     Route::resource('prescriptions', PrescriptionController::class);
@@ -242,6 +245,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Hospitalizations
     Route::get('/hospitalizations/historic/{id}', [HospitalizationController::class, 'historic'])->name('hospitalization.historic');
     Route::get('/hospitalizations/follow-ups/{id}', [HospitalizationController::class, 'followups'])->name('hospitalization.followups');
+    Route::post('/hospitalization/discharge', [HospitalizationController::class, 'discharge'])->name('hospitalization.discharge');
     Route::post('/discharge-death', [HospitalizationController::class, 'dischargeDeath'])->name('discharge-death');
     Route::get('/alta-voluntaria/{id}', [HospitalizationController::class, 'altaVoluntaria'])->name('alta.voluntaria');
     Route::post('/alta-voluntaria/pdf/{id}', [HospitalizationController::class, 'altaVoluntariapdf'])->name('altaVoluntaria.pdf');
@@ -256,6 +260,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('product-types', ProductTypeController::class);
 
     //RED SHEETS FOR HOSPITALIZATION DAYS
+    Route::get('/red-sheets/pv/{id}', [RedSheetController::class, 'ordenventa'])->name("redsheet.pay");
     Route::get('/hospitalizations/entries/{id}', [RedSheetController::class, 'entry'])->name("redsheet.entry");
     Route::get('/red-sheets/recap/{id}', [RedSheetController::class, 'recap'])->name("red-sheets.recap");
     Route::post('/redSheet/discharge', [RedSheetController::class, 'discharge'])->name("redsheet-discharge");
@@ -326,6 +331,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/groomings/sign/pdf/{id}', [GroomingController::class, 'groomingsign'])->name('grooming.sign');
     Route::post('/groomings/authorization/pdf/{id}', [GroomingController::class, 'groomingpdf'])->name('grooming.pdf');
     Route::get('test/pdf/{id}', [GroomingController::class, 'generatePdf'])->name('test.pdf');
+    Route::get('/groomings/pv/{id}', [GroomingController::class, 'ordenventa'])->name("grooming.pay");
     Route::get('/groomings/list/{id}', [GroomingController::class, 'list'])->name('groomings.list');
     Route::post('/grooming/update/status', [GroomingController::class, 'status'])->name('grooming.status');
     Route::resource('groomings', GroomingController::class);
@@ -342,6 +348,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('cm-types', CmTypeController::class);
 
     //CREMATIONS
+    Route::get('/cremations/pv/{id}', [CremationController::class, 'ordenventa'])->name("cremation.pay");
     Route::get('/cremations/list', [CremationController::class, 'list'])->name('cremation.list');
     Route::get('/cremations/new/{id}', [CremationController::class, 'new'])->name('new.cremation');
     Route::get("/cremations/pdf/{id}", [CremationController::class, "comprobante"])->name("cremation.comprobante");
