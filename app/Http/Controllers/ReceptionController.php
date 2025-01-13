@@ -280,4 +280,35 @@ class ReceptionController extends Controller
         $this->authorize("create", Grooming::class);
         return view('grooming.create', compact('grooming', 'products', 'reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms', 'pets'));
     }
+
+    public function listAppointments()
+    {
+        $receptions = Reception::with('receptionType', 'family', 'pet', 'reason', 'room', 'area', 'vet')
+        ->where('reception_type_id', 1)
+        ->get();
+        return DataTables::of($receptions)->make(true);
+    }
+    public function listHospitalizations()
+    {
+        $receptions = Reception::with('receptionType', 'family', 'pet',  'area', 'vet', 'admissionType')
+        ->where('reception_type_id', 2)
+        ->get();
+        return DataTables::of($receptions)->make(true);
+    }
+
+    public function listGroomings()
+    {
+        $receptions = Reception::with('receptionType', 'family', 'pet',  'vet')
+        ->where('reception_type_id', 3)
+        ->get();
+        return DataTables::of($receptions)->make(true);
+    }
+
+    public function listCremations()
+    {
+        $receptions = Reception::with('receptionType', 'family', 'pet',  'vet','receptionist')
+        ->where('reception_type_id', 5)
+        ->get();
+        return DataTables::of($receptions)->make(true);
+    }
 }

@@ -3,6 +3,7 @@
 
 <head>
     @routes
+    
     <style type="text/css">
         @import url(https://themes.googleusercontent.com/fonts/css?kit=fOEonugfEEW2k3BWBOC73CXHfZMcH88HuPcErL5npACHpuVWaP-GHFPZzt35558q);
 
@@ -18,6 +19,7 @@
             font-size: 10pt;
             font-family: "sans-serif;";
             margin: 0;
+
         }
 
         .footer {
@@ -49,6 +51,7 @@
             font-size: 12pt;
             margin-top: 1%;
             font-family: sans-serif;
+            ;
         }
 
         p {
@@ -56,24 +59,6 @@
             font-family: sans-serif;
             margin: 0;
         }
-
-        /* Hide input fields for PDF generation */
-        @media print {
-            input[type="text"] {
-                border: none;
-                background: transparent;
-                outline: none;
-                color: inherit;
-                font-family: inherit;
-                font-size: inherit;
-                padding: 0;
-            }
-
-            .input-hidden {
-                display: none;
-            }
-        }
-
         .button {
         background-color: #3459A4; 
         color: #fff; 
@@ -91,19 +76,19 @@
         box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3); 
     }
     </style>
-
 </head>
 
 <body>
-    <input type="hidden" value="{{ route('format-alta.pdf', $pet->id) }}" id="pet">
+    <input type="hidden" value="{{ route('format-responsiva.pdf', $pet->id) }}" id="pet">
     <div>
         <table style="width: 100%; text-align: center;">
             <tr>
-               <td style="align-items: center;">
+                <td style="align-items: center;">
                     @if($isPdf ?? false)
                         <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px">
                     @endif
                 </td>
+                
                 <td>
                     <p class="head">Hospital Veterinario Pets Care</p>
                     <p style="font-family: sans-serif; font-size: 10pt;">
@@ -114,7 +99,9 @@
                     </p>
                 </td>
                 <td>
-                    <p style="font-family: sans-serif; font-size: 10pt; text-transform: uppercase;"></p>
+
+                    <p style="font-family: sans-serif; font-size: 10pt; text-transform: uppercase;">
+                    </p>
                     <p class="head"></p>
                 </td>
             </tr>
@@ -126,7 +113,9 @@
             <table style="width: 100%;">
                 <tr>
                     <th style="text-align: center; width: 20%">
-                        <p style="font-size: 15pt; font-weight: bold;font-family:sans-serif;">ALTA VOLUNTARIA</p>
+                        <p style="font-size: 15pt; font-weight: bold;font-family:sans-serif;">RESPONSIVA DE ESTUDIOS DE GABINETE
+
+                        </p>
                     </th>
                 </tr>
             </table>
@@ -134,47 +123,70 @@
     </div>
 
     <div>
-        <p style="text-align:right;  margin-top:10px;">
-            <b>Saltillo, Coahuila a {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</b></p>
+        <p style="text-align:right;  margin-top:10px;"><b>Saltillo, Coahuila a {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</b></p>
     </div>
     
-    
     <div>
-        <table style="width: 100%; border-collapse: collapse; margin-top:2%;">
+        <table style="width: 100%; border-collapse: collapse; margin-top:5px;">
             <tr>
-                <td style="text-align: justify;" >
+                <td style="text-align: justify;">
+                    Yo
+                    @if (!isset($isPdf) || !$isPdf)
+                        <input type="text" id="name" value="{{ $name ?? '' }}" class="form-control" style="width: 900px;">
+                    @else
+                        <span>{{ $name ?? '' }}</span>
+                    @endif
+                    declaro por mi propia voluntad que <b>NO</b> autorizo que se realice las pruebas que el médico me acaba 
+                    de solicitar para mi mascota <b>{{ $pet->name }}</b>, de edad 
                     
-                            Yo: 
-                            @if (!isset($isPdf) || !$isPdf)
-                                <input type="text" id="name_family" value="{{ $nameFamily ?? '' }}" class="form-control"  style="width: 600px;">
-                            @else
-                                <span>{{ $nameFamily ?? '' }}</span>
-                            @endif
-                            , declaro que por mi propia voluntad decido llevarme de ALTA VOLUNTARIA al paciente de Nombre: 
-                            <b>{{ $pet->name }}</b>, Especie: <b>{{ $pet->specie }}</b>, 
-                            Edad: 
-                            @php
-                            $birthday = \Carbon\Carbon::parse($pet->birthday);
-                            $now = \Carbon\Carbon::now();
-                            $years = $birthday->diffInYears($now);
-                            $months = $birthday->copy()->addYears($years)->diffInMonths($now);
-                            $days = $birthday->copy()->addYears($years)->addMonths($months)->diffInDays($now);
-                        @endphp
-                        {{ $years }} años, {{ $months }} meses,
-                         del cual no acepto el tratamiento médico indicado. 
-                        Dejando exento de responsabilidades al Hospital Veterinario Pets Care y a los médicos encargados del caso.
-                        
-                            <h3 style="margin-top: 5%"> MOTIVO:</h3> 
+                    @php
+                        $birthday = \Carbon\Carbon::parse($pet->birthday);
+                        $now = \Carbon\Carbon::now();
+                        $years = $birthday->diffInYears($now);
+                        $months = $birthday->copy()->addYears($years)->diffInMonths($now);
+                        $days = $birthday->copy()->addYears($years)->addMonths($months)->diffInDays($now);
+                    @endphp
+                    {{ $years }} años, {{ $months }} meses, raza {{ $pet->raza }},
+                    entendiendo que, si no se realiza, no se podrá llegar a un diagnóstico definitivo y con el tratamiento más adecuado para mi mascota, 
+                    dejando exento de responsabilidades al <b> HOSPITAL VETERINARIO PETS CARE, y a los médicos encargados del caso.</b>
+                </td>
+            </tr>
+        </table>
+    
+        <div style="margin-top: 30px;">
+            <p><b>MOTIVO</b></p> <p>
             @if (!isset($isPdf) || !$isPdf)
                 <input type="text" id="reason" value="{{ $reason ?? '' }}" class="form-control" style="width: 900px; height: 80px;">
             @else
                 <span>{{ $reason ?? '' }}</span>
             @endif
+        </p>
+        </div>
+    </div>
                        
-                </td>
+
+    {{-- <div  style="text-align: center;">
+        <p style="margin-top: 80px;"><b>Firma y nombre:</b></p>
+
+        @if (isset($signatureDataUrl))
+            <img src="{{ $signatureDataUrl }}" alt="Firma del propietario" style="width: 200px; height: 100px;">
+        @else
+            <canvas id="canvas" class="border border-dark p-0" width="200" height="100" style="border-bottom: 2px solid #000000; "></canvas>
+
+        @endif
+    
+
+
+    @if (!isset($isPdf) || !$isPdf)
+        <table style="width: 100%; border-collapse: collapse; ">
+            <tr>
+                <td style="width: 10%;"><form> <button class="btnEnviar btn btn-lmx button">Aceptar</button> </form></td>
+                <td style="width: 10%; text-align:left"> <button class="btnLimpiar btn btn-lmx button" data-target="canvas">Limpiar</button></td>
             </tr>
         </table>
     </div>
+    @endif --}}
+
     <div style="text-align: center;">
         <p style="margin-top: 80px;"><b>NOMBRE Y FIRMA:</b></p>
     
@@ -201,14 +213,15 @@
         </div>
     </div>
     
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="{{ asset('js/jquery.min.js') }}"></script>
-    <script src="{{ asset('js/formats/alta.js') }}" defer></script>
+    <script src="{{ asset('js/formats/responsiva.js') }}" defer></script>
     <script>
         const PET_ID = "{{ $pet->id }}";
     </script> 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
 

@@ -17,6 +17,7 @@ class FormatTypeSeeder extends Seeder
             ['name' => 'Autorización para Hospitalización'],
             ['name' => 'Alta Voluntaria'],
             ['name' => 'Autorización de Procedimientos Anestésicos y Quirúrgicos'],
+            ['name' => 'Responsiva de Estudios de Gabinete'],
         ];
 
         foreach ($formatTypes as $formatType){

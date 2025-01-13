@@ -20,8 +20,10 @@ return new class extends Migration
             $table->string("servicie")->nullable();
             $table->foreignId("CM_id")->nullable()->references('id')->on('cm_types');
             $table->string("type_urn")->nullable();
+            $table->foreignId('vet_id')->nullable()->references('id')->on('users');
             $table->string("urn_model")->nullable();
             $table->text("observations")->nullable();
+            $table->text("text_placa")->nullable();
             $table->foreignId("placa_type_id")->nullable()->references('id')->on('tag_types');
             $table->string('status')->default('En espera de realizar');
             $table->string("price")->nullable();  

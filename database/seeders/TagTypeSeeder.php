@@ -14,8 +14,8 @@ class TagTypeSeeder extends Seeder
     public function run(): void
     {
         $tags = [
-            ['name' => 'bone'],
-            ['name' => 'circle'],
+            ['name' => 'Bone'],
+            ['name' => 'Círculo'],
         ];
 
         foreach ($tags as $tag){

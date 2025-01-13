@@ -7,6 +7,7 @@ use App\Http\Requests\FormatRequest;
 use App\Models\FormatType;
 use App\Models\Hospitalization;
 use App\Models\Pet;
+use App\Models\Producto;
 use App\Models\Reception;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf  as Pdf;
@@ -29,23 +30,23 @@ class FormatController extends Controller
         return view('format.index', compact('formats'))
             ->with('i', (request()->input('page', 1) - 1) * $formats->perPage());
     }
-    
+
     public function create()
     {
         $format = new Format();
-        $format_types= FormatType::all();
+        $format_types = FormatType::all();
         $this->authorize("create", Format::class);
         return view('format.create', compact('format', 'format_types'));
     }
 
 
     public function add($id)
-    {   
+    {
         $pet = Pet::find($id);
         $format = new Format();
-        $format_types= FormatType::all();
+        $format_types = FormatType::all();
         $this->authorize("create", Format::class);
-        return view('format.create', compact('format','pet', 'format_types'));
+        return view('format.create', compact('format', 'pet', 'format_types'));
     }
 
     public function store(FormatRequest $request)
@@ -61,11 +62,11 @@ class FormatController extends Controller
     public function show($id)
     {
         $format = Format::find($id);
-         $this->authorize("viewAny", $format);
+        $this->authorize("viewAny", $format);
         return view('format.show', compact('format'));
     }
 
-   
+
     public function edit($id)
     {
         $format = Format::find($id);
@@ -73,7 +74,7 @@ class FormatController extends Controller
         return view('format.edit', compact('format'));
     }
 
-   
+
     public function update(FormatRequest $request, Format $format)
     {
         $format->update($request->validated());
@@ -84,7 +85,7 @@ class FormatController extends Controller
 
     public function destroy($id)
     {
-        $format=Format::find($id);
+        $format = Format::find($id);
         $this->authorize("update", $format);
         $format->delete();
 
@@ -93,20 +94,20 @@ class FormatController extends Controller
 
     public function list()
     {
-        $formats = Format::with(['reception.pet', 'formatType','reception.receptionType','pet'])->get();
+        $formats = Format::with(['reception.pet', 'formatType', 'reception.receptionType', 'pet'])->get();
         return DataTables::of($formats)->make(true);
     }
 
 
-     public function listOne($id)
-     {
-         $pet = Pet::findOrFail($id); 
-         $receptions = $pet->receptions;
-         $formats = Format::with(['reception.pet', 'formatType','reception.receptionType','pet'])
-         ->whereIn('reception_id', $receptions->pluck('id')->toArray())->orWhere('pet_id', $id)->get();
-      
-         return DataTables::of($formats)->make(true);  
-      }
+    public function listOne($id)
+    {
+        $pet = Pet::findOrFail($id);
+        $receptions = $pet->receptions;
+        $formats = Format::with(['reception.pet', 'formatType', 'reception.receptionType', 'pet'])
+            ->whereIn('reception_id', $receptions->pluck('id')->toArray())->orWhere('pet_id', $id)->get();
+
+        return DataTables::of($formats)->make(true);
+    }
 
 
     //   public function format_list($id)
@@ -120,58 +121,59 @@ class FormatController extends Controller
         $this->authorize("viewAny", Format::class);
         $pet = Pet::findOrFail($id);
         $formats = Format::where('pet_id', $id)->paginate();
-    
+
         return view('format.view', compact('formats', 'pet'))
             ->with('i', (request()->input('page', 1) - 1) * $formats->perPage());
     }
-    
+
 
     public function hospital_authorization($id)
     {
         $pet = Pet::with('family', 'genre')->find($id);
-        return view('format.aut_hospital', compact( "pet"));
+        return view('format.aut_hospital', compact("pet"));
     }
 
 
 
-     public function generateHospitalAuthorizationPdf(Request $request, $id)
-     {
-         $pet = Pet::with('family', 'genre')->find($id);
-         $signatureDataUrl = $request->input('signature');
-         $uniqueId = uniqid(); 
-        
-    
-         $pdf = PDF::loadView('format.aut_hospital', [
-             'pet' => $pet,
-             'signatureDataUrl' => $signatureDataUrl,
-             'isPdf' => true
-         ]);
-         
-         $pdfPath = '/formats/auth_hospital' . $id . '_' . $uniqueId . '.pdf';
-         Storage::put('public'.$pdfPath, $pdf->output());
+    public function generateHospitalAuthorizationPdf(Request $request, $id)
+    {
+        $pet = Pet::with('family', 'genre')->find($id);
+        $signatureDataUrl = $request->input('signature');
+        $uniqueId = uniqid();
+
+
+        $pdf = PDF::loadView('format.aut_hospital', [
+            'pet' => $pet,
+            'signatureDataUrl' => $signatureDataUrl,
+            'isPdf' => true
+        ]);
+
+        $pdfPath = '/formats/auth_hospital' . $id . '_' . $uniqueId . '.pdf';
+        Storage::put('public' . $pdfPath, $pdf->output());
 
         $pdfUrl = Storage::url($pdfPath);
         //$pdfUrl = asset('storage/' . str_replace('public/', '', $pdfPath));
 
-    
-         $format = new Format();
-         $format->format_type_id = 1;
-         $format->pet_id = $id;
-         $format->format_pdf = $pdfPath;
-         $format->save();
 
-         $hospitalization = new Hospitalization();
-         $hospitalization->pet_id = $id;
-         $hospitalization->save();
+        $format = new Format();
+        $format->format_type_id = 1;
+        $format->pet_id = $id;
+        $format->format_pdf = $pdfPath;
+        $format->save();
 
-    
+        $hospitalization = new Hospitalization();
+        $hospitalization->pet_id = $id;
+        $hospitalization->save();
+
+
         //return response()->json([ 'url' => asset($pdfUrl), 'format_id' => $format->id]);
-        return response()->json(['url' => asset('storage'.$pdfPath), 'format_id' => $format->id]);
-     }
+        return response()->json(['url' => asset('storage' . $pdfPath), 'format_id' => $format->id]);
+    }
 
 
 
-    public function altaVoluntaria($id){
+    public function altaVoluntaria($id)
+    {
         $pet = Pet::with('family', 'genre')->find($id);
         return view('format.alta', compact("pet"));
     }
@@ -181,17 +183,17 @@ class FormatController extends Controller
         $pet = Pet::with('family', 'genre')->find($id);
 
         $signatureDataUrl = $request->input('signature');
-         $nameFamily = $request->input('name_family');
-         $reason = $request->input('reason');
+        $nameFamily = $request->input('name_family');
+        $reason = $request->input('reason');
 
-         $uniqueId = uniqid(); 
-         $pdfPath = 'public/formats/voluntary_discharge_' . $id .' _'. $uniqueId.'.pdf';
-    
+        $uniqueId = uniqid();
+        $pdfPath = 'public/formats/voluntary_discharge_' . $id . ' _' . $uniqueId . '.pdf';
+
         $pdf = PDF::loadView('format.alta', [
             'pet' => $pet,
             'signatureDataUrl' => $signatureDataUrl,
-             'nameFamily' => $nameFamily,
-             'reason' => $reason,
+            'nameFamily' => $nameFamily,
+            'reason' => $reason,
             'isPdf' => true
         ]);
 
@@ -199,44 +201,45 @@ class FormatController extends Controller
         $pdfUrl = Storage::url($pdfPath);
 
         $format = new Format();
-        $format->format_type_id = 2; 
+        $format->format_type_id = 2;
         $format->pet_id = $id;
-        $format->format_pdf = $pdfPath; 
+        $format->format_pdf = $pdfPath;
         $format->save();
 
         $hospitalization = new Hospitalization();
         $hospitalization->pet_id = $id;
         $hospitalization->exit_date = now();
-        $hospitalization->hospital_discharges_id = 2; 
+        $hospitalization->hospital_discharges_id = 2;
         $hospitalization->save();
-        
-        return response()->json([ 'url' => asset($pdfUrl), 'format_id' => $format->id]);
+
+        return response()->json(['url' => asset($pdfUrl), 'format_id' => $format->id]);
         //return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
     }
 
     public function surgery_authorization($id)
     {
         $pet = Pet::with('family', 'genre')->find($id);
-        return view('format.aut_surgery', compact( "pet"));
+        $products = Producto::where("ESTATUS",  "A")->get();
+        return view('format.aut_surgery', compact("pet", "products"));
     }
-    
+
     public function surgery_authorizationpdf(Request $request, $id)
     {
         $pet = Pet::with('family', 'genre')->find($id);
         $signatureDataUrl = $request->input('signature');
-         $procedure = $request->input('procedure');
-          $total= $request->input('total');
-          $include = $request->input('include');
-    
-         $uniqueId = uniqid(); 
-         $pdfPath = 'public/formats/auth_surgery_' . $id .'_'.$uniqueId. '.pdf';
+        $procedure = $request->input('procedure');
+        $total = $request->input('total');
+        $include = $request->input('include');
+
+        $uniqueId = uniqid();
+        $pdfPath = 'public/formats/auth_surgery_' . $id . '_' . $uniqueId . '.pdf';
 
         $pdf = PDF::loadView('format.aut_surgery', [
             'pet' => $pet,
             'signatureDataUrl' => $signatureDataUrl,
-          'procedure' => $procedure,
-          'total' => $total,
-          'include' => $include,
+            'procedure' => $procedure,
+            'total' => $total,
+            'include' => $include,
             'isPdf' => true
         ]);
 
@@ -244,12 +247,12 @@ class FormatController extends Controller
         $pdfUrl = Storage::url($pdfPath);
 
         $format = new Format();
-        $format->format_type_id = 3; 
-        $format->pet_id= $id;
-        $format->format_pdf = $pdfPath; 
+        $format->format_type_id = 3;
+        $format->pet_id = $id;
+        $format->format_pdf = $pdfPath;
         $format->save();
 
-        return response()->json([ 'url' => asset($pdfUrl), 'format_id' => $format->id]);
+        return response()->json(['url' => asset($pdfUrl), 'format_id' => $format->id]);
         //return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
     }
 
@@ -262,8 +265,17 @@ class FormatController extends Controller
     {
         $reception = Reception::find($id);
         return view('format.pensionPdf', compact('reception'));
+
     }
 
+    public function pensionDatos(int $id)
+    {
+        $reception = Reception::find($id);
+        $pdf = Pdf::loadView("format.pension_datos", compact( "reception"));
+        return $pdf->stream('pension.inf');
+
+        //return view('format.pension_datos', compact('reception'));
+    }
 
     // public function pensionPdf(Request $request ,int $id){
     //     $reception = Reception::find($id);
@@ -282,32 +294,58 @@ class FormatController extends Controller
     // }
 
     public function pensionPdf(Request $request, int $id)
-{
-    $reception = Reception::find($id);
+    {
+        $reception = Reception::find($id);
+        $signatureDataUrl = $request->input('signature');
 
-    $signatureDataUrl = $request->input('signature');
-    if (empty($signatureDataUrl)) {
-        return response()->json(['error' => 'Signature data is required'], 422);
-    }
-
-    try {
         $pdf = PDF::loadView('format.pensionPdf', [
             'reception' => $reception,
             'signatureDataUrl' => $signatureDataUrl,
             'isPdf' => true
         ]);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Error generating PDF: ' . $e->getMessage()], 500);
+
+        $pdfPath = '/formats/pension_' . $id . '.pdf';
+        Storage::put('public' . $pdfPath, $pdf->output());
+
+        $pdfUrl = Storage::url($pdfPath);
+
+        return response()->json(['url' => asset('storage' . $pdfPath)]);
     }
 
-    $pdfPath = '/formats/pension_' . $id . '_' . time() . '.pdf';
-
-    if (!Storage::put('public' . $pdfPath, $pdf->output())) {
-        return response()->json(['error' => 'Error saving PDF to storage'], 500);
+    public function responsiva($id)
+    {
+        $pet = Pet::with('family', 'genre')->find($id);
+        return view('format.responsiva', compact("pet"));
     }
 
-    return response()->json(['url' => asset('storage' . $pdfPath)]);
-}
+    public function responsivaPdf(Request $request, $id)
+    {
+        $pet = Pet::with('family', 'genre')->find($id);
+        $signatureDataUrl = $request->input('signature');
+        $name = $request->input('name');
+        $reason = $request->input('reason');
 
-    
+        $uniqueId = uniqid();
+        $pdfPath = 'public/formats/responsiva_EG' . $id . '_' . $uniqueId . '.pdf';
+
+        $pdf = PDF::loadView('format.responsiva', [
+            'pet' => $pet,
+            'signatureDataUrl' => $signatureDataUrl,
+            'name' => $name,
+            'reason' => $reason,
+            'isPdf' => true
+        ]);
+
+        Storage::put($pdfPath, $pdf->output());
+        $pdfUrl = Storage::url($pdfPath);
+
+        $format = new Format();
+        $format->format_type_id = 4;
+        $format->pet_id = $id;
+        $format->format_pdf = $pdfPath;
+        $format->save();
+
+        return response()->json(['url' => asset($pdfUrl), 'format_id' => $format->id]);
+        //return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
+    }
 }

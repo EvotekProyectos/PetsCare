@@ -57,23 +57,22 @@ $("canvas").each(function(index) {
 $("form").on("submit", function (e) {
     e.preventDefault();
 
-    const procedure = $("#procedure").val();
-     const total = $("#total").val();
-     const include = $("#include").val();
-     const canvas = document.getElementById("canvas");
-     const ctx = canvas.getContext("2d");
-     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-     const pixels = imageData.data;
-     let isSignatureEmpty = true;
+    const name = $("#name").val();
+    const reason = $("#reason").val();
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = imageData.data;
+    let isSignatureEmpty = true;
 
-      // Comprobar si todos los píxeles son blancos 
+    // Comprobar si todos los píxeles son blancos 
     for (let i = 0; i < pixels.length; i += 4) {
         if (pixels[i] !== 255 || pixels[i + 1] !== 255 || pixels[i + 2] !== 255 || pixels[i + 3] !== 255) {
             isSignatureEmpty = false; 
             break;
         }
     }
-    if (!procedure || !total || !include || isSignatureEmpty) {
+    if (!name || !reason || isSignatureEmpty) {
         Swal.fire({
             icon: 'error',
             title: '¡Error!',
@@ -81,16 +80,13 @@ $("form").on("submit", function (e) {
         });
         return; 
     }
-
     const formData = new FormData(this);
     formData.append("signature", canvas.toDataURL("image/png"));
-     formData.append("procedure", procedure);
-     formData.append("total", total);
-     formData.append("include", include);
-
-
+    formData.append("name", name);
+    formData.append("reason", reason);
+    
     $.ajax({
-        url: route('format-surgery.pdf' , PET_ID) , 
+        url: route('format-responsiva.pdf', PET_ID),
         type: "post",
         headers: {
             "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content'),
@@ -100,7 +96,7 @@ $("form").on("submit", function (e) {
         data: formData,
         success: function (response) {
             window.open(response.url, '_blank');
-            window.location.href = route ('formats.created' ,  PET_ID);
+            window.location.href = route('formats.created', PET_ID);
         },
         error: function (error) {
             console.error("Error:", error);

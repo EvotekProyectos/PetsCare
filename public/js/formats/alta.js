@@ -59,11 +59,29 @@ $("form").on("submit", function (e) {
 
     const nameFamily = $("#name_family").val();
     const reason = $("#reason").val();
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = imageData.data;
+    let isSignatureEmpty = true;
 
-    if (!nameFamily || !reason || !canvas || !canvas.toDataURL) {
-        alert("Por favor, completa todos los campos requeridos.");
+    for (let i = 0; i < pixels.length; i += 4) {
+        if (pixels[i] !== 255 || pixels[i + 1] !== 255 || pixels[i + 2] !== 255 || pixels[i + 3] !== 255) {
+            isSignatureEmpty = false; 
+            break;
+        }
+    }
+
+    if (!nameFamily || !reason || isSignatureEmpty) {
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Completa todos los campos requeridos.',
+            //confirmButtonText: 'Entendido',
+        });
         return;
     }
+    
     
     const formData = new FormData(this);
     formData.append("signature", canvas.toDataURL("image/png"));

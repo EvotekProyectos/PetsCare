@@ -21,7 +21,7 @@
                     <div class="card-header bg-transparent border-0">
                         <div class="d-flex justify-content-between align-items-center">
                             <h4 id="card_title" class="text-primary text-uppercase">
-                                <span class="ic--twotone-pets"></span> HOSPITALIZACIÓN
+                                <span class="ri--hospital-lineB"></span> HOSPITALIZACIÓN
                             </h4>
                         </div>
                     </div>
@@ -64,7 +64,8 @@
                             </div>
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Clasificación: <span style="font-weight: normal">
-                                        {{ $reception->pet->petClassification->name }} </span></p>
+                                        {{-- {{ $reception->pet->petClassification->name }} </span> --}}
+                                    </p>
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center">

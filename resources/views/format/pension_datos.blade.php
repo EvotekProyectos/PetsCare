@@ -63,7 +63,7 @@
                         </p>
                     </td>
                     <td>
-                        <img src="{{ public_path('img/cremation_draw.jpg') }}" alt="Logo" style="height: 90px">
+                        {{-- <img src="{{ public_path('img/cremation_draw.jpg') }}" alt="Logo" style="height: 90px"> --}}
                     </td>
                 </tr>
             </table>
@@ -74,7 +74,7 @@
                 <table style="width: 100%;">
                     <tr>
                         <th style="text-align: center; width: 20%">
-                            <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;"> DATOS DE CREMACIÓN</p>
+                            <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;"> DATOS DE PENSIÓN</p>
                         </th>
                     </tr>
                 </table>
@@ -85,18 +85,18 @@
             <table style="width: 100%;">
                 <tr>
                     <td>
-                        <p style="font-size: 10pt; font-family:sans-serif;">Fecha: {{ $cremation->reception->entry_date}}
+                        {{-- <p style="font-size: 10pt; font-family:sans-serif;">Fecha entrada: {{ $cremation->reception->entry_date}} --}}
                         </p>
                     </td>
                 
                     <td>
-                        <p style="font-size: 10pt; font-family:sans-serif;">Recepcionista: {{ $cremation->reception->receptionist->name}}
+                        {{-- <p style="font-size: 10pt; font-family:sans-serif;">Recepcionista: {{ $cremation->reception->receptionist->name}} --}}
                         </p>
                     </td>
                    
                     <td>
                         <p style="font-size: 10pt; font-family:sans-serif;">
-                            Médico responsable: {{ $cremation->vet->name ?? 'Sin especificar'}}
+                            {{-- Médico responsable: {{ $cremation->vet->name ?? 'Sin especificar'}} --}}
                         </p>
                     </td>
                     
@@ -128,7 +128,7 @@
                     </td>
                     <td style="text-align: left; padding: 5px 10px;">
                         <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">
-                            {{ $cremation->pet->family->name }}
+                            {{-- {{ $cremation->pet->family->name }} --}}
                         </p>
                     </td>
                     <td>
@@ -136,7 +136,26 @@
                     </td>
                     <td style="padding: 5px 10px;">
                         <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">
-                            {{ $cremation->pet->family->phone }}
+                            {{-- {{ $cremation->pet->family->phone }} --}}
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Contacto emergencia:</p>
+
+                    </td>
+                    <td style="text-align: left; padding: 5px 10px;">
+                        <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">
+                            {{-- {{ $cremation->pet->family->name }} --}}
+                        </p>
+                    </td>
+                    <td>
+                        <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Teléfono emergencia:</p>
+                    </td>
+                    <td style="padding: 5px 10px;">
+                        <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">
+                            {{-- {{ $cremation->pet->family->phone }} --}}
                         </p>
                     </td>
                 </tr>
@@ -163,14 +182,14 @@
                         </td>
                         <td style="padding: 5px 10px;">
                             <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{ $cremation->pet->name }}
+                                {{-- {{ $cremation->pet->name }} --}}
                             </p>
                             <td>
                                 <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Raza:</p>
                             </td>
                             <td style="padding: 5px 10px;">
                                 <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                    {{ $cremation->pet->raza }}
+                                    {{-- {{ $cremation->pet->raza }} --}}
                                 </p>
                             </td>
                     </tr>
@@ -180,7 +199,7 @@
                         </td>
                         <td style="padding: 5px 10px;">
                             <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{ $cremation->pet->weight }}
+                                {{-- {{ $cremation->pet->weight }} --}}
                             </p>
                         </td>
                         <td>
@@ -188,7 +207,7 @@
                         </td>
                         <td style="padding: 5px 10px;">
                             <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{ $cremation->pet->genre->name }}
+                                {{-- {{ $cremation->pet->genre->name }} --}}
                             </p>
                         </td>
                     </tr>
@@ -199,15 +218,15 @@
                         </td>
                         <td style="padding: 5px 10px;">
                             <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{ $cremation->pet->birthday}}
+                                {{-- {{ $cremation->pet->birthday}} --}}
                             </p>
                         </td>
                         <td>
-                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">Fecha de defunción:</p>
+                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">No. de Carnet:</p>
                         </td>
                         <td style="padding: 5px 10px;">
                             <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{ $cremation->date_death ?? 'Sin especificar' }}
+                                {{-- {{ $cremation->date_death ?? 'Sin especificar' }} --}}
                             </p>
                         </td>
                     </tr>
@@ -226,11 +245,11 @@
                             </td>
                             <td></td>
                          
-                            <td style="padding: 5px 10px;">
+                            {{-- <td style="padding: 5px 10px;">
                                  <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Folio para Pagar:
                                     {{ $reception->payment->folio_odv ?? 'Pendiente'}}
                                 </p>
-                            </td>
+                            </td> --}}
 
                         </tr>
                     </table>
@@ -240,52 +259,47 @@
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
                         <td>
+                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Alimentación:</p>
+                        </td>
+                        <td style="padding: 5px 10px;">
+                            <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
+                                {{-- {{ $cremation->serv->NOMBRE }} --}}
+                            </p>
+                          
+                    </tr>
+                    <tr>
+                        <td>
+                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Objetos:</p>
+                        </td>
+                        <td style="padding: 5px 10px;">
+                            <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
+                                {{-- {{ $cremation->type_urn ?? 'Sin especificar'}} --}}
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Observaciones:</p>
+                        </td>
+                        <td style="padding: 5px 10px;">
+                            <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
+                                {{-- {{ $cremation->cm->name ?? 'Sin especificar'}} --}}
+                            </p>
+                    </tr>
+                    <tr>
+                        <td>
                             <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Tipo de servicio:</p>
                         </td>
                         <td style="padding: 5px 10px;">
                             <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{ $cremation->serv->NOMBRE }}
+                                {{-- {{ $cremation->text_placa ?? 'Sin especificar'}} --}}
                             </p>
                             <td>
-                                <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Tipo de Urna:</p>
-                            </td>
-                            <td style="padding: 5px 10px;">
-                                <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                    {{ $cremation->type_urn ?? 'Sin especificar'}}
-                                </p>
-                            </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> C.M:</p>
-                        </td>
-                        <td style="padding: 5px 10px;">
-                            <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{ $cremation->cm->name ?? 'Sin especificar'}}
-                            </p>
-                            <td>
-                                <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">Tipo de placa:</p>
-                            </td>
-                            <td style="padding: 5px 10px;">
-                                <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                    {{ $cremation->tag->name ?? 'Sin especificar'}}
-                                </p>
-                            </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Mensaje placa:</p>
-                        </td>
-                        <td style="padding: 5px 10px;">
-                            <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{ $cremation->text_placa ?? 'Sin especificar'}}
-                            </p>
-                            <td>
-                                <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">Observaciones:</p>
+                                <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">Días:</p>
                             </td>
                             <td style="padding: 5px 10px; word-wrap: break-word; word-break: break-word; white-space: normal;">
                                 <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                    {{ $cremation->observations ?? 'Sin especificar'}}
+                                    {{-- {{ $cremation->observations ?? 'Sin especificar'}} --}}
                                 </p>
                             </td>
                             
@@ -293,19 +307,19 @@
                     <tr>
                        
                             <td>
-                                <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Precio:</p>
+                                <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> No. cubículo:</p>
                             </td>
                             <td style="padding: 5px 10px;">
                                 <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                    ${{ $cremation->service?->PRECIO ?? 'Sin especificar'}}
+                                    {{-- ${{ $cremation->service?->PRECIO ?? 'Sin especificar'}} --}}
                                 </p>
                             </td>
                             <td>
-                                <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Fecha de entrega:</p>
+                                <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Fecha de salida:</p>
                             </td>
                             <td style="padding: 5px 10px;">
                                 <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                    {{$cremation->date_finish ?? 'Sin especificar'}}
+                                    {{-- {{$cremation->date_finish ?? 'Sin especificar'}} --}}
                                 </p>
                             </td>
                             

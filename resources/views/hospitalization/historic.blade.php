@@ -58,7 +58,8 @@
                             </div>
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Clasificación: <span style="font-weight: normal">
-                                        {{ $reception->pet->petClassification->name }} </span></p>
+                                        {{-- {{ $reception->pet->petClassification->name }} </span> --}}
+                                    </p>
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center">

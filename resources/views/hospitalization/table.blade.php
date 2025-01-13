@@ -12,7 +12,7 @@
                     <div class="card-header bg-transparent border-0"">
                         <div class="d-flex justify-content-between align-items-center">
                             <h4 id="card_title" class="text-primary text-uppercase">
-                                <span class="ic--twotone-pets"></span> HOSPITALIZACIONES
+                                <span class="ri--hospital-lineB"></span> HOSPITALIZACIONES
                             </h4>
                         </div>
                     </div>

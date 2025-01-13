@@ -162,8 +162,9 @@
             </tr>
             <tr>
                 <th style="width: 15%; text-align: left;">
-                    <p class="data">No. de Cubículo:</p>
+                    <p class="data">Fecha de entrada:</p>
                 </th>
+
                 <th style="width: 35%; text-align: left;">
                     <p class="fillable">               </th>
                 <th style="width: 20%; text-align: left;">
@@ -174,8 +175,9 @@
                 </th>
             </tr>
             <tr>
+               
                 <th style="width: 15%; text-align: left;">
-                    <p class="data">Fecha de entrada:</p>
+                    <p class="data">Fecha a recoger :</p>
                 </th>
                 <th style="width: 35%; text-align: left;">
                     <p class="fillable">{{ $reception->entry_date }} </th>
@@ -188,8 +190,9 @@
             </tr>
 
             <tr>
+              
                 <th style="width: 15%; text-align: left;">
-                    <p class="data">Fecha a recoger :</p>
+                    <p class="data">No. de Cubículo:</p>
                 </th>
                 <th style="width: 35%; text-align: left;">
                     <p class="fillable">               </th>
@@ -228,79 +231,9 @@
                             <p class="fillable"></p>
                         </th>
                     </tr>
-                    <tr>
-                        <th style="width: 20%; text-align: left;">
-                            <p class="data">Parvo 1:</p>
-                        </th>
-                        <th style="width: 30%; text-align: left;">
-                            <p class="fillable"></p>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th style="width: 15%; text-align: left;">
-                            <p class="data">Parvo 2:</p>
-                        </th>
-                        <th style="width: 35%; text-align: left;">
-                            <p class="fillable"></p>
-                        </th>
-                        <th style="width: 20%; text-align: left;">
-                            <p class="data">Corona:</p>
-                        </th>
-                        <th style="width: 30%; text-align: left;">
-                            <p class="fillable"></p>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th style="width: 15%; text-align: left;">
-                            <p class="data">M.H.L:</p>
-                        </th>
-                        <th style="width: 35%; text-align: left;">
-                            <p class="fillable"></p>
-                        </th>
-                        <th style="width: 20%; text-align: left;">
-                            <p class="data">Antirrábica:</p>
-                        </th>
-                        <th style="width: 30%; text-align: left;">
-                            <p class="fillable"></p>
-                        </th>
-                    </tr>
                 </table>
             </div>
 
-            <div style="width: 48%; border: 2px solid #bb4415; padding: 0.5%; box-sizing: border-box;">
-                <table style="width: 100%; border-collapse: collapse;">
-                    <tr>
-                        <th style="width: 20%; text-align: left;">
-                            <p class="data">Observaciones:</p>
-                        </th>
-                        <th style="width: 30%; text-align: left;">
-                            <p class="fillable"></p>
-                        </th>
-                    </tr>
-                   
-                    <tr>
-                        <th style="width: 20%; text-align: left;">
-                            <p class="data">Temperatura:</p>
-                        </th>
-                        <th style="width: 30%; text-align: left;">
-                            <p class="fillable"></p>
-                        </th>
-                    </tr>
-                    <br>
-                    <tr>
-                        <th style="width: 15%; text-align: left;">
-                            <p class="data">M.V.Z:</p>
-                        </th>
-                        <th style="width: 35%; text-align: left;">
-                            <p class="fillable"></p>
-                        </th>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <br>
-        
-        <div style="display: flex; justify-content: space-between; border: 2px solid #bb4415; padding: 0.5%; width: 100%; box-sizing: border-box;">
             <div style="width: 48%; border: 2px solid #bb4415; padding: 0.5%; box-sizing: border-box;">
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
@@ -311,18 +244,35 @@
                     </tr>
                     <tr>
                         <th style="width: 15%; text-align: left;">
-                            <p class="data">Tipo de alimento:</p>
+                            <p class="data">Tipo de alimentación:</p>
                         </th>
                         <th style="width: 30%; text-align: left;">
                             <p class="fillable"></p>
                         </th>
-                        <th style="width: 15%; text-align: left;">
-                            <p class="data">Indicaciones:</p>
+                      
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <br>
+        
+        <div style="display: flex; justify-content: space-between; border: 2px solid #bb4415; padding: 0.5%; width: 100%; box-sizing: border-box;">
+            <div style="width: 48%; border: 2px solid #bb4415; padding: 0.5%; box-sizing: border-box;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <th style="width: 20%; text-align: left;">
+                            <p class="data">PERTENENCIAS</p>
                         </th>
-                        <th style="width: 35%; text-align: left;">
+                       
+
+                        </tr>
+                        <tr>
+                        <th style="width: 20%; text-align: left;">
+                            <p class="data">Tipo de objetos:</p>
+                        </th>
+                        <th style="width: 30%; text-align: left;">
                             <p class="fillable"></p>
                         </th>
-                        
                     </tr>
                 </table>
             </div>
@@ -330,37 +280,12 @@
             <div style="width: 48%; border: 2px solid #bb4415; padding: 0.5%; box-sizing: border-box;">
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
+                      
+
                         <th style="width: 20%; text-align: left;">
-                            <p class="data">PERTENENCIAS</p>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th style="width: 20%; text-align: left;">
-                            <p class="data">Collar:</p>
+                            <p class="data">OBSERVACIONES</p>
                         </th>
                         <th style="width: 30%; text-align: left;">
-                            <p class="fillable"></p>
-                        </th>
-                        <th style="width: 20%; text-align: left;">
-                            <p class="data">Otros:</p>
-                        </th>
-                        <th style="width: 30%; text-align: left;">
-                            <p class="fillable"></p>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th style="width: 20%; text-align: left;">
-                            <p class="data">Comedero:</p>
-                        </th>
-                        <th style="width: 30%; text-align: left;">
-                            <p class="fillable"></p>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th style="width: 15%; text-align: left;">
-                            <p class="data">Cadena:</p>
-                        </th>
-                        <th style="width: 35%; text-align: left;">
                             <p class="fillable"></p>
                         </th>
                     </tr>

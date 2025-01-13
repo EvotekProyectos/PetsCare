@@ -7,7 +7,7 @@
         @import url(https://themes.googleusercontent.com/fonts/css?kit=fOEonugfEEW2k3BWBOC73CXHfZMcH88HuPcErL5npACHpuVWaP-GHFPZzt35558q);
 
         .head {
-            color: #646c9a;
+            color: #3459A4;
             font-weight: 700;
             font-size: 12pt;
             font-weight: bold;
@@ -58,6 +58,22 @@
             font-family: sans-serif;
             margin: 0;
         }
+        .button {
+        background-color: #3459A4; 
+        color: #fff; 
+        border: none;  
+        border-radius: 5px; 
+        padding: 10px 20px; 
+        font-size: 16px; 
+        cursor: pointer; 
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); 
+        transition: all 0.3s ease; 
+    }
+
+    .button:hover {
+        background-color: #0056b3; 
+        box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3); 
+    }
     </style>
 </head>
 
@@ -67,9 +83,11 @@
         <table style="width: 100%; text-align: center;">
             <tr>
                 <td style="align-items: center;">
-                    {{-- <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px"> --}}
-
+                    @if($isPdf ?? false)
+                        <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px">
+                    @endif
                 </td>
+
                 <td>
                     <p class="head">Hospital Veterinario Pets Care</p>
                     <p style="font-family: sans-serif; font-size: 10pt;">
@@ -104,7 +122,7 @@
 
     <div>
         <table style="width: 100%; border-collapse: collapse;">
-            <p>Fecha: {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</p>
+            <p style="text-align:right;  margin-top:10px;"> Fecha: {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</p>
 
             <tr>
                 <td>
@@ -164,8 +182,8 @@
                     <p> Edad:</p>
                 </td>
 
-                {{-- @php
-                    $birthday = \Carbon\Carbon::parse($pet->pet->birthday);
+                 @php 
+                    $birthday = \Carbon\Carbon::parse($pet->birthday);
                     $now = \Carbon\Carbon::now();
 
                     $years = $birthday->diffInYears($now);
@@ -178,7 +196,7 @@
                             {{ $years }} años, {{ $months }} meses
                         </span>
                     </p>
-                </td> --}}
+                </td> 
 
             <tr>
                 <td>
@@ -292,7 +310,7 @@
                 <li>
                     <b>Al momento de ingresar al paciente, se deberá de cubrir con un 50% del pago total de la
                         cuenta y
-                        en caso de Ser URGENCIA o que sea horario de urgencias (8:00pm - 8:00am) se deberá cubrir el
+                        en caso de ser URGENCIA o que sea horario de urgencias (8:00pm - 8:00am) se deberá cubrir el
                         costo TOTAL de la cuenta.</b>
                 </li>
 
@@ -316,28 +334,32 @@
 
 
 
-    <div>
-        <p style="margin-top: 2%;"><b>Firma y nombre:</b></p>
-
+    <div style="text-align: center;">
+        <p style="margin-top: 80px;"><b>NOMBRE Y FIRMA:</b></p>
+    
         @if (isset($signatureDataUrl))
             <img src="{{ $signatureDataUrl }}" alt="Firma del propietario" style="width: 200px; height: 100px;">
         @else
-            <canvas id="canvas" class="border border-dark p-0" width="200" height="100"></canvas>
+            <canvas id="canvas" class="border border-dark p-0" width="500" height="100" style="border-bottom: 2px solid #2b2b2b;"></canvas>
         @endif
+    
+        <div style="margin-top: 20px; text-align: center;">
+            @if (!isset($isPdf) || !$isPdf)
+                <div style="display: flex; justify-content: center; gap: 20px;">
+
+                    <div style="align-self: flex-start;">
+                        <button class="btnLimpiar btn btn-lmx button" data-target="canvas" style="width: 100px;">Limpiar</button>
+                    </div>
+                    <div>
+                        <form>
+                            <button class="btnEnviar btn btn-lmx button" style="width: 100px;">Aceptar</button>
+                        </form>
+                    </div>
+                </div>
+            @endif
+        </div>
     </div>
 
-    @if (!isset($isPdf) || !$isPdf)
-        <div class="row mx-0">
-            <div class="col-6">
-                <button class="btnLimpiar btn btn-lmx" data-target="canvas">Limpiar</button>
-            </div>
-            <div class="col-6">
-                <form>
-                    <button class="btnEnviar btn btn-lmx">Aceptar</button>
-                </form>
-            </div>
-        </div>
-    @endif
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/formats/create.js') }}" defer></script>

@@ -30,19 +30,55 @@
                         </div>
                     @endif
 
+                   
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12">
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 id="card_title" class="text-uppercase d-flex align-items-center" style="color: #BEBEBE; font-size: 20px;">
+                                        CONSULTAS
+                                        <span class="maki--doctorGray" style="font-size: 20px; margin-left: 8px;"></span>
+                                    </h5>
+                                </div>
+                                
+                                
                                 <div class="table-responsive">
                                     <table class="table table-striped table-hover responsive w-100" id="table">
                                         <thead class="thead table-primary text-uppercase">
                                             <tr>
                                                 <th>Fecha</th>
-                                                <th>Tipo</th>
+                                                <th>M.V.Z</th>
                                                 <th>Familia</th>
                                                 <th>Mascota</th>
                                                 <th>Motivo</th>
                                                 <th>Consultorio</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 id="card_title" class="text-uppercase d-flex align-items-center" style="color: #BEBEBE; font-size: 20px;">
+                                        HOSPITALIZACIONES
+                                        <span class="mdi--hospital" style="font-size: 28px; margin-left: 8px;"></span>
+                                    </h5>
+                                </div>
+                                
+
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover responsive w-100" id="table2">
+                                        <thead class="thead table-primary text-uppercase">
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>M.V.Z</th>
+                                                <th>Familia</th>
+                                                <th>Mascota</th>
+                                                <th>Admisión</th>
                                                 <th>Area</th>
                                                 <th>Acciones</th>
                                             </tr>
@@ -52,6 +88,81 @@
                                         </tbody>
                                     </table>
                                 </div>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
+                                        GROOMING
+                                        <span class="humbleicons--scissors"></span>
+                                    </h5>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover responsive w-100" id="table3">
+                                        <thead class="thead table-primary text-uppercase">
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>M.V.Z</th>
+                                                <th>Familia</th>
+                                                <th>Mascota</th>
+                                                <th>FECHA DE SALIDA</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                {{-- <div class="d-flex justify-content-between align-items-center">
+                                    <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
+                                        HOTEL/PENSIÓN
+                                    </h5>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover responsive w-100" id="table2">
+                                        <thead class="thead table-primary text-uppercase">
+                                            <tr>
+                                                <th>Fecha ingreso</th>
+                                                <th>M.V.Z</th>
+                                                <th>Familia</th>
+                                                <th>Mascota</th>
+                                                <th>Fecha de salida</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div> --}}
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
+                                        CREMACIONES
+                                        <span class="emojione-monotone--funeral-urnGray"></span>
+                                    </h5>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover responsive w-100" id="table5">
+                                        <thead class="thead table-primary text-uppercase">
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Recepcionista</th>
+                                                <th>Familia</th>
+                                                <th>Mascota</th>
+                                                {{-- <th>Fecha de entrega</th> --}}
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
                             </div>
                         </div>
                     </div>

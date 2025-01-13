@@ -93,7 +93,7 @@ $("form").on("submit", function (e) {
 
     $.ajax({
 
-        url: route('pension.pdf', RECEPTION_ID),
+        url: route('grooming.pdf', RECEPTION_ID),
         type: "post",
         headers: {
             "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content'),

@@ -1,11 +1,4 @@
 $(document).ready(function () {
-    $('#surgical_procedures_type_id').select2({
-        placeholder: 'Buscar procedimiento quirúrgico',
-        width: 'resolve'
-    });
-});
-
-$(document).ready(function () {
     $('#family_id').select2({
         placeholder: 'Buscar Familia',
         width: 'resolve'
@@ -52,6 +45,7 @@ async function getFamily(pet_id) {
     }
     isUpdating = false;
 }
+
 
 
 var table = undefined;

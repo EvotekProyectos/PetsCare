@@ -188,6 +188,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put('/receptions/update/{id}',[ReceptionController::class, 'transfer'])->name('reception.transfer');
     Route::get('/receptions/list', [ReceptionController::class, 'list'])->name('reception.list');
 
+    Route::get('/receptions/list/appointments', [ReceptionController::class, 'listAppointments'])->name('reception.appointments');
+    Route::get('/receptions/list/hospitalizations', [ReceptionController::class, 'listHospitalizations'])->name('reception.hospitalizations');
+    Route::get('/receptions/list/groomings', [ReceptionController::class, 'listGroomings'])->name('reception.groomings');
+    Route::get('/receptions/list/cremations', [ReceptionController::class, 'listCremations'])->name('reception.cremations');
+
     Route::get('/receptions/historial/{id}', [ReceptionController::class, 'historial'])->name('reception.historial');
     
     Route::get('/receptions/hospital/{id}', [ReceptionController::class, 'hospital_authorization'])->name('hospital.list');
@@ -296,7 +301,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/formats/surgery/pdf/{id}', [FormatController::class, 'surgery_authorizationpdf'])->name('format-surgery.pdf');
     Route::get('/reporte', [FormatController::class, 'reporte']);
     Route::get('/pension/{id}', [FormatController::class, 'pensionFormat'])->name('pension.format');
-    Route::post('/pension/pdf/{id}', [FormatController::class, 'pensionPdf'])->name('pension.pdf');
+    Route::get('/pension/pdf/{id}', [FormatController::class, 'pensionPdf'])->name('pension.pdf');
+    Route::get('/pension/inf/{id}', [FormatController::class, 'pensionDatos'])->name('pension.inf');
+    Route::get('/formats/responsiva/{id}', [FormatController::class, 'responsiva'])->name('format.responsiva');
+    Route::post('/formats/responsiva/pdf/{id}', [FormatController::class, 'responsivaPdf'])->name('format-responsiva.pdf');
     Route::resource('formats', FormatController::class);
 
     //Appointment Services
