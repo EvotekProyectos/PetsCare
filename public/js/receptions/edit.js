@@ -49,6 +49,7 @@ function togglee(radio) {
     document.getElementById("mvz").style.display = "none";
     document.getElementById("consultorio").style.display = "none";
     document.getElementById("salida").style.display = "none";
+    document.getElementById("num").style.display = "none";
 
 
     var type = parseInt(radio.value);
@@ -67,6 +68,7 @@ function togglee(radio) {
         case 3:
             document.getElementById("mvz").style.display = "block";
             document.getElementById("salida").style.display = "block";
+            document.getElementById("num").style.display = "block";
             break;
         case 4:
             document.getElementById("mvz").style.display = "block";
@@ -88,11 +90,13 @@ function first(value) {
     document.getElementById("mvz").style.display = "none";
     document.getElementById("consultorio").style.display = "none";
     document.getElementById("salida").style.display = "none";
+    document.getElementById("num").style.display = "none";
 
     switch (value) {
         case 1:
             document.getElementById("motivo").style.display = "block";
             document.getElementById("mvz").style.display = "block";
+            document.getElementById('person').innerText = 'M.V.Z.';
             document.getElementById("consultorio").style.display = "block";
             break;
         case 2:
@@ -100,17 +104,22 @@ function first(value) {
             document.getElementById("area").style.display = "block";
             document.getElementById("motivo").style.display = "block";
             document.getElementById("mvz").style.display = "block";
+            document.getElementById('person').innerText = 'M.V.Z.';
             document.getElementById("salida").style.display = "block";
             break;
         case 3:
             document.getElementById("mvz").style.display = "block";
+            document.getElementById('person').innerText = 'Colaborador';
             document.getElementById("salida").style.display = "block";
+            document.getElementById("num").style.display = "block";
             break;
         case 4:
             document.getElementById("mvz").style.display = "block";
+            document.getElementById('person').innerText = 'M.V.Z.';
             break;
         case 5:
             document.getElementById("mvz").style.display = "block";
+            document.getElementById('person').innerText = 'M.V.Z.';
             document.getElementById("salida").style.display = "block";
             break;
         default:

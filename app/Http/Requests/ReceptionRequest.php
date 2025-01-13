@@ -34,6 +34,7 @@ class ReceptionRequest extends FormRequest
             'room_id' => 'nullable|integer|exists:rooms,id',
             'entry_date' => 'required|date|',
             'exit_date'=>'nullable|date|',
+            'num'=>'nullable|integer',
             
         ];
     }

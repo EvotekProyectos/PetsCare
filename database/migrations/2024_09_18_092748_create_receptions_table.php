@@ -26,6 +26,7 @@ return new class extends Migration
             $table->foreignId('room_id')->nullable()->references('id')->on('rooms');
             $table->dateTime('entry_date');
             $table->dateTime('exit_date')->nullable();
+            $table->string("num")->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
