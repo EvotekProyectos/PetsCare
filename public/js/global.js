@@ -138,13 +138,15 @@ const deleteVaccinationCertificate = (id, table) => {
     deleteResource(url, table);
 }
 
-const deleteSurgeryPacks = (id, table) => {
-    const url = route("surgery-packs.destroy", id);
-    deleteResource(url, table);
-}
+
 
 const deleteBudget = (id, table) => {
     const url = route("budgets.destroy", id);
+    deleteResource(url, table);
+}
+
+const deleteBudgetDetail = (id, table) => {
+    const url = route("budget-details.destroy", id);
     deleteResource(url, table);
 }
 

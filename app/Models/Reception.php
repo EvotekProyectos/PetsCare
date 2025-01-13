@@ -48,7 +48,7 @@ class Reception extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_type_id', 'admission_type_id', 'area_id', 'family_id', 'pet_id', 'reason_id', 'veterinarian_id', 'recepcionist_id', 'room_id', 'entry_date', 'exit_date'];
+    protected $fillable = ['reception_type_id', 'admission_type_id', 'area_id', 'family_id', 'pet_id', 'reason_id', 'veterinarian_id', 'recepcionist_id', 'room_id', 'entry_date', 'exit_date', 'num'];
 
 
     /**

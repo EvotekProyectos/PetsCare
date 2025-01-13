@@ -102,12 +102,22 @@
                             <div class="col-md-3">
                             </div>
                         </div>
-                        <div class="row d-flex justify-content-center ">
+                        <div class="row d-flex justify-content-center " style="margin-bottom: -11px;">
                             <div class="col-md-3">
                             </div>
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Entrega para: <span style="font-weight: normal">
-                                        {{ $reception->exit_date }} </span></p>
+                                    {{ $reception->exit_date }} </span></p>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-center ">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-3">
+                                <p style="font-weight: bold">Num Collar/Arete: <span style="font-weight: normal">
+                                        {{ $reception->num }} </span></p>
                             </div>
                             <div class="col-md-3">
                             </div>

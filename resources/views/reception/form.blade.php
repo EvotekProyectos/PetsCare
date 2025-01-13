@@ -237,7 +237,7 @@
 
             <div class="col-md-4" id="mvz" style="display: none">
                 <div class="form-group mb-2">
-                    <label for="name" class="form-label">M.V.Z</label>
+                    <label for="name" class="form-label" id="person" >M.V.Z</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="maki--doctor"></span>
@@ -314,6 +314,22 @@
                             value="{{ old('exit_date', $reception?->exit_date) }}" id="exit_date"
                             placeholder="Exit Date">
                         {!! $errors->first('exit_date', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4" id="num" style="display: none">
+                <div class="form-group mb-2">
+                    <label for="name" class="form-label">Número de Collar/Arete</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-primary-subtle" id="basic-addon1">
+                            <span class="f7--number"></span>
+                        </span>
+                        <input type="text" name="num"
+                            class="form-control @error('num') is-invalid @enderror"
+                            value="{{ old('num', $reception?->num) }}" id="num"
+                            placeholder="Número de Collar/Arete">
+                        {!! $errors->first('num', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                     </div>
                 </div>
             </div>

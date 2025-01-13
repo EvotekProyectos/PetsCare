@@ -208,12 +208,6 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'editar servicios consultas', 'type' => 'sevicios consultas']);
         Permission::create(['name' => 'eliminar servicios consultas', 'type' => 'sevicios consultas']);
 
-        // surgery packs permissions
-        Permission::create(['name' => 'ver panel paquetes cirugias', 'type' => 'paquetes cirugias']);
-        Permission::create(['name' => 'crear paquetes cirugias', 'type' => 'paquetes cirugias']);
-        Permission::create(['name' => 'editar paquetes cirugias', 'type' => 'paquetes cirugias']);
-        Permission::create(['name' => 'eliminar paquetes cirugias', 'type' => 'paquetes cirugias']);
-
         // surgery budgets permissions
         Permission::create(['name' => 'ver panel presupuestos', 'type' => 'presupuestos']);
         Permission::create(['name' => 'crear presupuestos', 'type' => 'presupuestos']);

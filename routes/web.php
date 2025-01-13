@@ -46,6 +46,7 @@ use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\RoleHasPermissionController;
 use App\Http\Controllers\AppointmentServiceController;
 use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\BudgetDetailController;
 use App\Http\Controllers\CmTypeController;
 use App\Http\Controllers\CremationController;
 use App\Http\Controllers\CubicleController;
@@ -60,7 +61,6 @@ use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\VaccineCertificateController;
 use App\Http\Controllers\ProductClassificationController;
 use App\Http\Controllers\ReceptionStatusHistoryController;
-use App\Http\Controllers\SurgeryPackController;
 use App\Http\Controllers\RedSheetController;
 use App\Http\Controllers\StatusSurgeryController;
 use App\Http\Controllers\SurgeryScheduleController;
@@ -312,13 +312,20 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('appointment-services/imgs/{id}', [AppointmentServiceController::class, 'getImgs'])->name("appointment-services.imgs");
     Route::resource('appointment-services', AppointmentServiceController::class);
 
-    //Surgery Packs
-    Route::get('/surgery-packs/list', [SurgeryPackController::class, 'list'])->name('surgery-packs.list');
-    Route::resource('surgery-packs', SurgeryPackController::class);
+    
 
     //Budgets
     Route::get('/budgets/list', [BudgetController::class, 'list'])->name('budgets.list');
+    Route::get('budgets/test/pdf/{id}', [BudgetController::class, 'generatePdf'])->name('budgets.test.pdf');
+    Route::get('/budgets/sign/pdf/{id}', [BudgetController::class, 'budgetsign'])->name('budget.sign');
+    Route::post('/budgets/authorization/pdf/{id}', [BudgetController::class, 'budgetpdf'])->name('budget.pdf');
+    Route::post('/budgets/new/total/{id}', [BudgetController::class, 'newtotal'])->name('budget.new.total');
     Route::resource('budgets', BudgetController::class);
+
+    //Budget Details
+    Route::get('/budget-details/list/{id}', [BudgetDetailController::class, 'list'])->name('budget-details.list');
+    Route::get('/budget-details/price/{id}', [BudgetDetailController::class, 'price'])->name('budget-details.price');
+    Route::resource('budget-details', BudgetDetailController::class);
 
     //Follow Ups Type Critics
     Route::get('/followups-critics/list/{id}', [FollowupsCriticController::class, 'list'])->name('followups-critics.list');

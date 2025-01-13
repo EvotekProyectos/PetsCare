@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SurgeryPackRequest extends FormRequest
+class BudgetDetailRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,14 +22,13 @@ class SurgeryPackRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'name' => 'required|string',
-			'total' => 'required|string',
-			'catheterization_price' => 'required|string',
-			'preanesthetic_price' => 'required|string',
-			'monitoring_price' => 'required|string',
-			'surgical_clothing_price' => 'required|string',
-			'preparations_price' => 'required|string',
-			'observation_price' => 'required|string',
+            'budget_id' => 'nullable|integer|exists:budgets,id',
+			'service_id' => 'nullable|string',
+            'img_id' => 'nullable|string',
+            'lab_id' => 'nullable|string',
+			'price' => 'required|string',
+			'notes' => 'nullable|string',
+            'type' => 'nullable|string',
         ];
     }
 }
