@@ -41,17 +41,38 @@
         </div>
 
         <div class="row mb-2 mb20">
-            
+
             <div class="col-6">
                 <div class="form-group mb-2 mb20">
-                    <label for="others" class="form-label">Otros</label>
+                    <label for="others" class="form-label">Notas Extra</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon2">
                             <span class="vaadin--lines-list"></span>
                         </span>
                         <input type="text" name="others" class="form-control @error('others') is-invalid @enderror"
-                            value="{{ old('others', $budget?->others) }}" id="others" placeholder="Ottos">
+                            value="{{ old('others', $budget?->others) }}" id="others" placeholder="Notas Extra">
                         {!! $errors->first('others', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group mb-2 mb20">
+                    <label for="vet_id" class="form-label">Médico Responsable</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-primary-subtle" id="basic-addon1">
+                            <span class="maki--doctor"></span>
+                        </span>
+                        <select name="vet_id" class="form-control @error('vet_id') is-invalid @enderror"
+                            id="vet_id">
+                            <option value=""> Selecciona M.V.Z</option>
+
+                            @foreach ($vets as $vet)
+                                <option value="{{ $vet->id }}" name="vet_id"
+                                    {{ old('vet_id', $budget?->vet_id) == $vet->id ? 'selected' : '' }}>
+                                    {{ $vet->name }}</option>
+                            @endforeach
+                        </select>
+                        {!! $errors->first('vet_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                     </div>
                 </div>
             </div>
@@ -59,7 +80,7 @@
 
         </div>
     </div>
-    <div class="row mb-2 mb20">
+    <div class="row mb-2 mb20" hidden>
         <div class="col-6">
             <div class="form-group mb-2 mb20">
                 <label for="total" class="form-label">{{ __('Total') }}</label>
@@ -68,28 +89,8 @@
                         <span class="f7--money-dollar"></span>
                     </span>
                     <input type="text" name="total" class="form-control @error('total') is-invalid @enderror"
-                        value="{{ old('total', $budget?->total) }}" id="total" placeholder="Total">
+                        value="0.00" id="total" placeholder="Total">
                     {!! $errors->first('total', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-                </div>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="form-group mb-2 mb20">
-                <label for="vet_id" class="form-label">Médico Responsable</label>
-                <div class="input-group mb-3">
-                    <span class="input-group-text bg-primary-subtle" id="basic-addon1">
-                        <span class="maki--doctor"></span>
-                    </span>
-                    <select name="vet_id" class="form-control @error('vet_id') is-invalid @enderror" id="vet_id">
-                        <option value=""> Selecciona M.V.Z</option>
-
-                        @foreach ($vets as $vet)
-                            <option value="{{ $vet->id }}" name="vet_id"
-                                {{ old('vet_id', $budget?->vet_id) == $vet->id ? 'selected' : '' }}>
-                                {{ $vet->name }}</option>
-                        @endforeach
-                    </select>
-                    {!! $errors->first('vet_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                 </div>
             </div>
         </div>
@@ -99,9 +100,11 @@
 
 
 </div>
-<div class="col-12 mt-2 d-flex justify-content-end">
-    <button type="submit" class="btn btn-primary btn-sm text-uppercase rounded-4">
-        <i class="fas fa-plus"></i>
-        Registrar</button>
-</div>
+@if (!isset($products) || !$products)
+    <div class="col-12 mt-2 d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary btn-sm text-uppercase rounded-4">
+            <i class="fas fa-plus"></i>
+            Registrar</button>
+    </div>
+@endif
 </div>

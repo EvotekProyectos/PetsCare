@@ -66,12 +66,12 @@ class BudgetDetail extends Model
 
     public function lab()
     {
-        return $this->belongsTo(\App\Models\Precios::class, 'lab_id', 'ARTICULO_ID');
+        return $this->belongsTo(\App\Models\Producto::class, 'lab_id', 'ARTICULO_ID');
     }
 
     public function laboratory()
     {
-        return $this->belongsTo(\App\Models\Producto::class, 'lab_id', 'ARTICULO_ID');
+        return $this->belongsTo(\App\Models\Precios::class, 'lab_id', 'ARTICULO_ID');
     }
     
 

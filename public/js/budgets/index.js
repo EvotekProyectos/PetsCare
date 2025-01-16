@@ -5,6 +5,9 @@ $(document).ready(function () {
         columns: [
             {
                 data: 'id',
+                render: function (data) {
+                    return data.toString().padStart(4, '0');
+                }
             },
             {
                 data: 'date',
@@ -12,44 +15,18 @@ $(document).ready(function () {
             {
                 data: null,
                 render: function (data) {
-                    return data.pet ? data.pet.name: '';
+                    return data.pet ? data.pet.name : '';
                 }
-            },
-            {
-                data: null,
-                render: function (data) {
-                    return data.surgery_pack ? data.surgery_pack.name + " $" +data.surgery_pack.total: '';
-                }
-            },
-            {
-                data: 'procedure',
-            },
-            {
-                data: 'biometric',
-            },
-            {
-                data: 'chemistry',
-            },
-            {
-                data: 'nodulectomy',
-            },
-            {
-                data: 'histopathology',
-            },
-            {
-                data: 'xrays',
-            },
-            {
-                data: 'collar',
-            },
-            {
-                data: 'body',
             },
             {
                 data: 'others',
             },
             {
-                data: 'total',
+                data: null,
+                render: function (data) {
+                    const precio = parseFloat(data.total) || 0;
+                    return `$${precio.toFixed(2)}`;
+                }
             },
             {
                 data: null,
@@ -63,6 +40,10 @@ $(document).ready(function () {
                     return `
                         <a type="button" href="${route('budgets.edit', data.id)}" class="btn btn-sm text-primary">
                             <i class="fas fa-edit"></i>
+                        </a>
+
+                        <a type="button" href="${route('budgets.show', data.id)}" class="btn btn-sm text-primary">
+                            <i class="fas fa-eye"></i>
                         </a>
                        
                         <button type="button" class="btn btn-sm text-primary" onclick="showAlertWithCallback(() => deleteBudget(${data.id}, table));">

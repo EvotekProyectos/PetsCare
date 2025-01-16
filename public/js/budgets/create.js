@@ -57,7 +57,16 @@ $(document).ready(function () {
         order: [0, 'desc'],
         columns: [
             {
-                data: 'serv.NOMBRE',
+                data: null,
+                render: function (data) {
+                    return data.serv ? 'Médico': data.img ? 'Imageneologia': data.lab ? 'Laboratorio': '';
+                }
+            },
+            {
+                data: null,
+                render: function (data) {
+                    return data.serv ? data.serv.NOMBRE: data.img ? data.img.NOMBRE: data.lab ? data.lab.NOMBRE: '';
+                }
             },
             {
                 data: 'notes',
@@ -98,6 +107,7 @@ function calculateTotal(table) {
     total += parseFloat(Base_Price);
     
     document.getElementById("total").value = total
+    $('#total-price').text(`Gran Total: $${total.toFixed(2)}`);
 }
 
 async function NewEntry() {

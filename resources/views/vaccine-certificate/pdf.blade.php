@@ -15,7 +15,7 @@
 
         .body {
             font-size: 10pt;
-            font-family: "sans-serif;";
+            font-family: sans-serif;
             margin: 0;
 
         }
@@ -184,8 +184,8 @@
                                 {{ $pet->genre->name }}
                             </p>
                         </td>
-                        
-                        
+
+
                     </tr>
                 </table>
             </div>
@@ -222,27 +222,33 @@
 
             <div>
                 <table style="width: 100%; border:1px solid #c5e8f7;">
-                    @foreach($certificate as $cert)
-                    <tr>
-                         <td>
-                            <p class="body" style="text-align: center;">{{ $cert->service->name }}</p> 
-                        </td>
-                        <td>
-                         <p class="body" style="text-align: center;">{{ $cert->application_date }}</p>
-                        </td>
-                        <td>
-                            <p class="body" style="text-align: center;">{{ $cert->microsip->NOMBRE }}</p>
-                        </td>
-                        <td>
-                            <p class="body" style="text-align: center;">{{ $cert->next_application_date }}</p>
-                        </td> 
-                    </tr>
+                    @foreach ($certificate as $cert)
+                        <tr>
+                            <td>
+                                <p class="body" style="text-align: center;">{{ $cert->service->name }}</p>
+                            </td>
+                            <td>
+                                <p class="body" style="text-align: center;">{{ $cert->application_date }}</p>
+                            </td>
+                            <td>
+                                <p class="body" style="text-align: center;">
+                                    @if (is_numeric($cert->product) && $cert->microsip)
+                                        {{ $cert->microsip->NOMBRE }}
+                                    @else
+                                        {{ $cert->product }}
+                                    @endif
+                                </p>
+                            </td>
+                            <td>
+                                <p class="body" style="text-align: center;">{{ $cert->next_application_date }}</p>
+                            </td>
+                        </tr>
                     @endforeach
 
                 </table>
             </div>
 
-            <div>
+            {{-- <div>
                 <div>
                     <table style="width: 100%; margin-top:20%;">
                         <tr>
@@ -260,7 +266,7 @@
                         </tr>
                     </table>
                 </div>
-            </div>
+            </div> --}}
 
 
 

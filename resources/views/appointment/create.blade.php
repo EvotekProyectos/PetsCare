@@ -170,6 +170,14 @@
                                                 class="hugeicons--x-ray"></span></span> IMÁGENES DIAGNÓSTICAS </button>
                                 </div>
                             </div>
+                            <div class="col d-flex justify-content-between align-items-center my-2">
+                                <div class="col">
+                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
+                                        onclick="window.open('{{ route('budgets.create') }}', '_blank')">
+                                        <span class="badge custom-badge-pill"><span
+                                                class="ic--baseline-price-change"></span></span> PRESUPUESTOS </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-12 mt-2 d-flex justify-content-end">
@@ -183,39 +191,39 @@
                             </h5>
                         </div>
                         <div class="row">
-                        <div class="col-6">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover responsive w-100" id="DataLabs">
-                                    <thead class="thead table-primary text-uppercase">
-                                        <tr>
-                                            <th>Nombre</th>
-                                            <th>Observaciones</th>
-                                            <th>M.V.Z.</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                            <div class="col-6">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover responsive w-100" id="DataLabs">
+                                        <thead class="thead table-primary text-uppercase">
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Observaciones</th>
+                                                <th>M.V.Z.</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover responsive w-100" id="DataImgs">
+                                        <thead class="thead table-primary text-uppercase">
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Observaciones</th>
+                                                <th>M.V.Z.</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover responsive w-100" id="DataImgs">
-                                    <thead class="thead table-primary text-uppercase">
-                                        <tr>
-                                            <th>Nombre</th>
-                                            <th>Observaciones</th>
-                                            <th>M.V.Z.</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">

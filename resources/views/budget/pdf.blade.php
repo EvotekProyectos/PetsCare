@@ -192,75 +192,67 @@
 
     </div>
 
-    {{-- <div>
-        <p class="titles">{{ $budget->surgeryPack->name }}: ${{ $budget->surgeryPack->total }}</p>
-        <table style="width: 100%; border-collapse: collapse; ">
-            <tr>
-                <th style="width: 35%; text-align: left;">
-                    <p class="data">CATERIZACIÓN Y FLUIDOS I.V.</p>
-                </th>
-                <th style="width: 15%; text-align: left;">
-                    <p class="fillable">${{ $budget->surgeryPack->catheterization_price }} </p>
-                </th>
-                <th style="width: 35%; text-align: left;">
-                    <p class="data">ROPA QUIRURGICA</p>
-                </th>
-                <th style="width: 15%; text-align: left;">
-                    <p class="fillable">${{ $budget->surgeryPack->surgical_clothing_price }}</p>
-                </th>
-            </tr>
-            <tr>
-                <th style="width: 35%; text-align: left;">
-                    <p class="data">MANEJO PREANESTESICO</p>
-                </th>
-                <th style="width: 15%; text-align: left;">
-                    <p class="fillable">${{ $budget->surgeryPack->surgical_clothing_price }} </p>
-                </th>
-                <th style="width: 35%; text-align: left;">
-                    <p class="data">PREPARACION PREQUIRURGICA</p>
-                </th>
-                <th style="width: 15%; text-align: left;">
-                    <p class="fillable">${{ $budget->surgeryPack->preparations_price }}</p>
-                </th>
-            </tr>
-            <tr>
-                <th style="width: 35%; text-align: left;">
-                    <p class="data">MONITORIZACION TRANSQUIRURGICA</p>
-                </th>
-                <th style="width: 15%; text-align: left;">
-                    <p class="fillable">${{ $budget->surgeryPack->monitoring_price }} </p>
-                </th>
-                <th style="width: 35%; text-align: left;">
-                    <p class="data">OBSERVACION POSTQUIRURGICA</p>
-                </th>
-                <th style="width: 15%; text-align: left;">
-                    <p class="fillable">${{ $budget->surgeryPack->observation_price }}</p>
-                </th>
-            </tr>
-        </table>
-    </div> --}}
-
     <div>
-        <p class="titles">Procedimientos/Servicios Presupuestados:</p>
+        <p class="titles">Servicios Presupuestados en la fecha {{ $budget->date }}</p>
         <table class="table-bordered">
-            <thead>
-                <tr>
-                    <th class="tableup" style="text-align: center">Servicio</th>
-                    <th class="tableup" style="text-align: center">Notas</th>
-                    <th class="tableup" style="text-align: center">Precio</th>
-                </tr>
-            </thead>
-            <tbody>
-
-                @foreach ($details as $detail)
+            @foreach ($details->whereNotNull('service_id') as $detail)
+                <thead>
                     <tr>
-                        <td class="fillable">{{ $detail->serv->NOMBRE ?? 'N/A' }}</td>
+                        <th class="tableup" style="text-align: center">Servicio Médico</th>
+                        <th class="tableup" style="text-align: center">Notas</th>
+                        <th class="tableup" style="text-align: center">Precio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="fillable">
+                            {{ $detail->serv->NOMBRE ?? 'N/A' }}
+                        </td>
                         <td class="fillable">{{ $detail->notes ?? 'Sin notas' }}</td>
                         <td class="fillable" style="text-align: right">
                             ${{ number_format($detail->price ?? 0, 2) }}</td>
                     </tr>
-                @endforeach
-            </tbody>
+                </tbody>
+            @endforeach
+            @foreach ($details->whereNotNull('lab_id') as $detail)
+                <thead>
+                    <tr>
+                        <th class="tableup" style="text-align: center">Laboratorio</th>
+                        <th class="tableup" style="text-align: center">Notas</th>
+                        <th class="tableup" style="text-align: center">Precio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="fillable">
+                            {{ $detail->lab->NOMBRE ?? 'N/A' }}
+                        </td>
+                        <td class="fillable">{{ $detail->notes ?? 'Sin notas' }}</td>
+                        <td class="fillable" style="text-align: right">
+                            ${{ number_format($detail->price ?? 0, 2) }}</td>
+                    </tr>
+
+                </tbody>
+            @endforeach
+            @foreach ($details->whereNotNull('img_id') as $detail)
+                <thead>
+                    <tr>
+                        <th class="tableup" style="text-align: center">Imageneología</th>
+                        <th class="tableup" style="text-align: center">Notas</th>
+                        <th class="tableup" style="text-align: center">Precio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="fillable">
+                            {{ $detail->img->NOMBRE ?? 'N/A' }}
+                        </td>
+                        <td class="fillable">{{ $detail->notes ?? 'Sin notas' }}</td>
+                        <td class="fillable" style="text-align: right">
+                            ${{ number_format($detail->price ?? 0, 2) }}</td>
+                    </tr>
+                </tbody>
+            @endforeach
             <tfoot>
                 <tr>
                     <td style="text-align: right" colspan="2">

@@ -110,6 +110,12 @@
                            Cremaciones
                         </a>
                     </li>
+                    <li class="@yield('budgets')">
+                        <a href="{{ route('budgets.index') }}" class=" ms-2">
+                            <span class="fluent--receipt-money-16-regular"></span>
+                           Presupuestos
+                        </a>
+                    </li>
                     <li class="@yield('families')">
                         <a href="{{ route('families.index') }}" class=" ms-2">
                             <span class="fluent-mdl2--family"></span>

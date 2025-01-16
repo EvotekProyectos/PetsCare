@@ -86,7 +86,7 @@ class BudgetDetailController extends Controller
 
     public function list(int $id)
     {
-        $groomings = BudgetDetail::with('service', 'serv')->where('budget_id', $id)->get();
+        $groomings = BudgetDetail::with( 'serv', 'img', 'lab')->where('budget_id', $id)->get();
 
         return DataTables::of($groomings)->make(true);
     }

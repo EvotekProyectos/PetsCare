@@ -71,7 +71,8 @@
                                     <table class="table table-striped table-hover responsive w-100" id="table">
                                         <thead class="thead table-primary text-uppercase">
                                             <tr>
-                                                <th>Servicio</th>
+                                                <th>Tipo Servicio</th>
+                                                <th>Nombre</th>
                                                 <th>Notas</th>
                                                 <th>Precio</th>
                                                 <th>Acciones</th>
@@ -83,6 +84,9 @@
                                     </table>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-12 mt-2 d-flex justify-content-end">
+                            <h5 id="total-price">Gran Total: $0.00</h5>
                         </div>
 
                         <div class="col-12 mt-2 d-flex justify-content-end">
@@ -100,7 +104,7 @@
 @push('scripts')
     <script>
         const Budget_Id = {{ $budget->id }};
-        const Base_Price = {{ $budget->total }};
+        const Base_Price = 0.00;
     </script>
     <script src="{{ asset('js/budgets/create.js') }}" defer></script>
 @endpush

@@ -55,8 +55,9 @@ class VaccineCertificateController extends Controller
     {
         $pet=Pet::with('family')->find($id);
         $vaccineCertificates = VaccineCertificate::with("pet", 'microsip')->where("pet_id", $id)->get();
+        $vaccineCertificate = new VaccineCertificate();
         // $this->authorize("viewAny", VaccineCertificate::class);
-        return view('vaccine-certificate.show', compact('vaccineCertificates', 'pet'));
+        return view('vaccine-certificate.show', compact('vaccineCertificates', 'pet', 'vaccineCertificate'));
     }
 
     /**

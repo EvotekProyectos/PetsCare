@@ -53,7 +53,7 @@ class Budget extends Model
      *
      * @var array
      */
-    protected $fillable = ['pet_id', 'date',  'total', 'vet_id', 'notes', 'reception_id'];
+    protected $fillable = ['pet_id', 'date',  'total', 'vet_id', 'others', 'reception_id'];
 
 
     /**

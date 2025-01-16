@@ -62,9 +62,10 @@ class BudgetController extends Controller
     public function show($id)
     {
 
-        $budget = Budget::find($id);
-        $this->authorize("view", $budget);
-        return view('budget.show', compact('budget'));
+        $budget = Budget::with('pet', 'vet')->find($id);
+        $details = BudgetDetail::with('service', 'serv')->where('budget_id', $id)->get();
+        $this->authorize("viewAny", Budget::class);
+        return view('budget.show', compact('budget', 'details'));
     }
 
     /**
@@ -127,7 +128,7 @@ class BudgetController extends Controller
     public function budgetsign(int $id)
     {
         $budget = Budget::with('pet', 'vet')->find($id);
-        $details = BudgetDetail::with('service', 'serv')->where('budget_id', $id)->get();
+        $details = BudgetDetail::with( 'serv', 'img',  'lab', )->where('budget_id', $id)->get();
 
         return view('budget.pdf', compact("budget", "details"));
     }
