@@ -114,14 +114,14 @@
                                     </table>
                                 </div>
 
-                                {{-- <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex justify-content-between align-items-center">
                                     <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
                                         HOTEL/PENSIÓN
                                     </h5>
                                 </div>
 
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-hover responsive w-100" id="table2">
+                                    <table class="table table-striped table-hover responsive w-100" id="table4">
                                         <thead class="thead table-primary text-uppercase">
                                             <tr>
                                                 <th>Fecha ingreso</th>
@@ -136,7 +136,7 @@
 
                                         </tbody>
                                     </table>
-                                </div> --}}
+                                </div>
 
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">

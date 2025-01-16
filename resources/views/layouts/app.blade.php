@@ -116,6 +116,13 @@
                            Cirugías
                         </a>
                     </li>
+
+                    <li class="@yield('hotel')">
+                        <a href="{{ route('hotels.index') }}" class=" ms-2">
+                            <span class="icon-park-solid--hotelBlack "></span>
+                          Hotel
+                        </a>
+                    </li>
                     
                     <li class="@yield('cremations')">
                         <a href="{{ route('cremations.index') }}" class=" ms-2">

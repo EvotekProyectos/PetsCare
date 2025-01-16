@@ -16,11 +16,11 @@ class CubiclesSeeder extends Seeder
     {
        $cubicles=[
         ['name' => '01', 'cubicle_type_id'=>'1', 'state'=>'0'],
-        ['name' => '04', 'cubicle_type_id'=>'1', 'state'=>'1'],
+        ['name' => '04', 'cubicle_type_id'=>'1', 'state'=>'0'],
         ['name' => '02', 'cubicle_type_id'=>'2', 'state'=>'0'],
         ['name' => '05', 'cubicle_type_id'=>'2', 'state'=>'0'],
         ['name' => '03', 'cubicle_type_id'=>'3', 'state'=>'0'],
-        ['name' => '06', 'cubicle_type_id'=>'3', 'state'=>'1'],
+        ['name' => '06', 'cubicle_type_id'=>'3', 'state'=>'0'],
        ];
 
        foreach($cubicles as $cubicle){

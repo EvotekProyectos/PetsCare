@@ -91,6 +91,12 @@ class ReceptionController extends Controller
             return redirect()->route('receptions.grooming',  $reception->id);
         }
 
+        
+        if ($request->reception_type_id == 4) {
+            return redirect()->route('hotel.create', ['id' => $reception->id]);
+                //->with('success', 'Recepción de hotel guardada exitosamente.');
+        }
+
         return redirect()->route('receptions.index')
             ->with('success', 'Recepción guardada exitosamente.');
     }
@@ -308,6 +314,14 @@ class ReceptionController extends Controller
     {
         $receptions = Reception::with('receptionType', 'family', 'pet',  'vet','receptionist')
         ->where('reception_type_id', 5)
+        ->get();
+        return DataTables::of($receptions)->make(true);
+    }
+
+    public function listHotels()
+    {
+        $receptions = Reception::with('receptionType', 'family', 'pet',  'vet')
+        ->where('reception_type_id', 4)
         ->get();
         return DataTables::of($receptions)->make(true);
     }

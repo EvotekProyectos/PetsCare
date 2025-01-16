@@ -57,6 +57,7 @@ use App\Http\Controllers\FollowupSurgicalController;
 use App\Http\Controllers\GroomingController;
 use App\Http\Controllers\GroomingStatusController;
 use App\Http\Controllers\GroomingStatusHistoryController;
+use App\Http\Controllers\HotelController;
 use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\VaccineCertificateController;
 use App\Http\Controllers\ProductClassificationController;
@@ -67,6 +68,7 @@ use App\Http\Controllers\SurgeryScheduleController;
 use App\Http\Controllers\TagTypeController;
 use App\Models\FollowUp;
 use App\Models\Hospitalization;
+use App\Models\Hotel;
 use App\Models\Surgery;
 
 /*
@@ -191,6 +193,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/receptions/list/appointments', [ReceptionController::class, 'listAppointments'])->name('reception.appointments');
     Route::get('/receptions/list/hospitalizations', [ReceptionController::class, 'listHospitalizations'])->name('reception.hospitalizations');
     Route::get('/receptions/list/groomings', [ReceptionController::class, 'listGroomings'])->name('reception.groomings');
+    Route::get('/receptions/list/hotels', [ReceptionController::class, 'listHotels'])->name('reception.hotels');
     Route::get('/receptions/list/cremations', [ReceptionController::class, 'listCremations'])->name('reception.cremations');
 
     Route::get('/receptions/historial/{id}', [ReceptionController::class, 'historial'])->name('reception.historial');
@@ -302,7 +305,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/reporte', [FormatController::class, 'reporte']);
     Route::get('/pension/{id}', [FormatController::class, 'pensionFormat'])->name('pension.format');
     Route::get('/pension/pdf/{id}', [FormatController::class, 'pensionPdf'])->name('pension.pdf');
-    Route::get('/pension/inf/{id}', [FormatController::class, 'pensionDatos'])->name('pension.inf');
+    // Route::get('/pension/inf/{id}', [FormatController::class, 'pensionDatos'])->name('pension.inf');
     Route::get('/formats/responsiva/{id}', [FormatController::class, 'responsiva'])->name('format.responsiva');
     Route::post('/formats/responsiva/pdf/{id}', [FormatController::class, 'responsivaPdf'])->name('format-responsiva.pdf');
     Route::resource('formats', FormatController::class);
@@ -389,6 +392,18 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/cubicles/view', [CubicleController::class, 'view'])->name('cubicle.view');
     Route::get('/cubicles/list', [CubicleController::class, 'list'])->name('cubicles.list');
     Route::resource('cubicles', CubicleController::class);
+
+    //HOTEL
+    Route::get("/hotel/create/{id}", [HotelController::class, 'create'])->name('hotel.create');
+    Route::get("/hotel/format/{id}", [HotelController::class, 'hotelFormat'])->name('hotel.format');
+    Route::post('/hotel/pdf/{id}', [HotelController::class, 'FormatPdf'])->name('hotel.pdf');
+    Route::get("/hotel/list/{id}", [HotelController::class, 'list'])->name('hotel.list');
+    Route::get("/hotel/all", [HotelController::class, 'all'])->name('hotel.all');
+    Route::get("/hotel/cubicles/view", [HotelController::class, 'view'])->name('hotel.view');
+    Route::get('/hotel/pv/{id}', [HotelController::class, 'ordenventa'])->name("hotel.pay");
+    Route::get('/pension/inf/{id}', [HotelController::class, 'pensionInf'])->name('pension.inf');
+
+    Route::resource('hotels', HotelController::class);
 });
 
  

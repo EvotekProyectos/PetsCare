@@ -1,4 +1,4 @@
- @extends('layouts.app')
+@extends('layouts.app')
 
 {{-- @section('template_title')
     {{ __('Create') }} Cremation
@@ -86,6 +86,8 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 1000;
 }
+
+
 </style>
 
     <section class="container-fluid">
@@ -102,7 +104,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <h4 id="card_title" class="text-primary text-uppercase">
                                 <span class="icon-park-outline--hotel" style="font-size: 20px;"></span>
-                                DISPONIBILIDAD CUBÍCULOS
+                                DISPONIBILIDAD PENSIÓN
                             </h4>
                         </div>
                     </div>
@@ -119,7 +121,7 @@
                     </div> --}}
 
                     <div class="row card-body" >
-                        <div class="d-flex justify-content-between align-items-center" style="border-top: 30px">
+                        <div class="d-flex justify-content-between align-items-center">
                             <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
                                 PENSIÓN CHICA
                             </h5>
@@ -130,7 +132,7 @@
                                 @foreach($cubicles as $cubicle)
                                     @if($cubicle->cubicle_type_id == 1)
                                         <div class="dog-house {{ $cubicle->state ? 'occupied' : 'available' }}" onclick="showCubicleInfo( '{{ $cubicle->name }}', '{{ $cubicle->state ? 'Ocupado' : 'Disponible' }}')"
-                                            onmouseover="showInfo(event, '{{ $cubicle->name }}', '{{ $cubicle->state ? 'Ocupado' : 'Disponible' }}')" 
+                                            onmouseover="showInfo(event, '{{ $cubicle->name }}', '{{ $cubicle->state ? 'Ocupado' : 'Disponible' }}','{{ $hotel->reception->exit_date }}')" 
                                             onmouseout="hideInfo()">
                                             <i style="font-size: 30px; color: #0455A0;" class="game-icons--dog-house{{ $cubicle->state ? 'G' : '' }}"></i>
                                             <p style="font-size: 15px; margin-top: 10px;">{{ $cubicle->name }}</p>
@@ -171,7 +173,7 @@
 
                         <div>
                            
-                                <div style="display: grid; grid-template-columns: repeat(9, 1fr); gap: 5px; margin: 0 auto; max-width: 90%; padding: 10px;">
+                                {{-- <div style="display: grid; grid-template-columns: repeat(9, 1fr); gap: 5px; margin: 0 auto; max-width: 90%; padding: 10px;">
                                     @foreach($cubicles as $cubicle)
                                 @if($cubicle->cubicle_type_id == 3)
                                 <div class="dog-house {{ $cubicle->state ? 'occupied' : 'available' }}"
@@ -186,11 +188,32 @@
                         </div>
                         
                         <div id="info-box" style="display:none; position: absolute; background-color: white; border: 1px solid #ccc; padding: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-                            <p><strong>Nombre:</strong> <span id="info-name"></span></p>
+                            {{-- <p><strong>Nombre:</strong> <span id="info-name"></span></p> 
                             <p><strong>Estado:</strong> <span id="info-status" style="color:"></span></p>
-                        </div>
+                            <p><strong>Fecha de salida:</strong> <span id="info-exit"></span></p>
+                           
+                        </div> --}}
 
-                        
+                        <div style="display: grid; grid-template-columns: repeat(9, 1fr); gap: 5px; margin: 0 auto; max-width: 90%; padding: 10px;">
+                            @foreach($cubicles as $cubicle)
+                                @if($cubicle->cubicle_type_id == 3)
+                                    <div class="dog-house {{ $cubicle->state ? 'occupied' : 'available' }}"
+                                        onmouseover="showInfo(event, '{{ $cubicle->name }}', '{{ $cubicle->state ? 'Ocupado' : 'Disponible' }}', '{{ $cubicle->state ? $hotel->reception->exit_date : '' }}')" 
+                                        onmouseout="hideInfo()">
+                                        <i style="font-size: 30px; color=0455A0;" class="game-icons--dog-house{{ $cubicle->state ? 'G' : '' }}"></i>
+                                        <p style="font-size: 15px"> {{ $cubicle->name }}</p>
+                                    </div>
+                                @endif                
+                            @endforeach
+                        </div>
+    
+                        <div id="info-box" style="display:none; position: absolute; background-color: white; border: 1px solid #ccc; padding: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                            <p><strong>Estado:</strong> <span id="info-status" style="color:"></span></p>
+                            <p><strong>Fecha de salida:</strong> <span id="info-exit"></span></p>
+                        </div>
+    
+                    </div>
+                </div>
                    
 
                          {{-- <div class="grid-container">

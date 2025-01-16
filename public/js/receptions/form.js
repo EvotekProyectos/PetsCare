@@ -84,6 +84,7 @@ function togglee(radio) {
             document.getElementById("mvz").style.display = "block";
             document.getElementById('person').innerText = 'M.V.Z.';
             document.getElementById("salida").style.display = "block";
+            document.getElementById("num").style.display = "block";
             break;
         case 5:
             document.getElementById("mvz").style.display = "block";

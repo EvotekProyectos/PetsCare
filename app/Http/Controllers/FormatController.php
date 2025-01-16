@@ -6,6 +6,7 @@ use App\Models\Format;
 use App\Http\Requests\FormatRequest;
 use App\Models\FormatType;
 use App\Models\Hospitalization;
+use App\Models\Hotel;
 use App\Models\Pet;
 use App\Models\Producto;
 use App\Models\Reception;
@@ -263,6 +264,7 @@ class FormatController extends Controller
 
     public function pensionFormat(int $id)
     {
+        
         $reception = Reception::find($id);
         return view('format.pensionPdf', compact('reception'));
 

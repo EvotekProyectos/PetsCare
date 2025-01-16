@@ -203,3 +203,7 @@ const deleteCubicleTypes= (id, table) => {
     deleteResource(url, table);
 }
 
+const deleteServicieHotel = (id, table) => {
+    const url = route("hotels.destroy", id);
+    deleteResource(url, table);
+}

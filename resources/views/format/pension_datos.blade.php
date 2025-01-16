@@ -85,18 +85,18 @@
             <table style="width: 100%;">
                 <tr>
                     <td>
-                        {{-- <p style="font-size: 10pt; font-family:sans-serif;">Fecha entrada: {{ $cremation->reception->entry_date}} --}}
+                        <p style="font-size: 10pt; font-family:sans-serif;">Fecha entrada: {{ $reception->entry_date}}
                         </p>
                     </td>
                 
                     <td>
-                        {{-- <p style="font-size: 10pt; font-family:sans-serif;">Recepcionista: {{ $cremation->reception->receptionist->name}} --}}
+                        <p style="font-size: 10pt; font-family:sans-serif;">Recepcionista: {{ $reception->receptionist->name}}
                         </p>
                     </td>
                    
                     <td>
                         <p style="font-size: 10pt; font-family:sans-serif;">
-                            {{-- Médico responsable: {{ $cremation->vet->name ?? 'Sin especificar'}} --}}
+                            Médico responsable: {{ $reception->vet->name ?? 'Sin especificar'}}
                         </p>
                     </td>
                     
@@ -128,7 +128,7 @@
                     </td>
                     <td style="text-align: left; padding: 5px 10px;">
                         <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">
-                            {{-- {{ $cremation->pet->family->name }} --}}
+                            {{ $reception->pet->family->name }}
                         </p>
                     </td>
                     <td>
@@ -136,7 +136,7 @@
                     </td>
                     <td style="padding: 5px 10px;">
                         <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">
-                            {{-- {{ $cremation->pet->family->phone }} --}}
+                            {{ $reception->pet->family->phone }}
                         </p>
                     </td>
                 </tr>
@@ -147,7 +147,7 @@
                     </td>
                     <td style="text-align: left; padding: 5px 10px;">
                         <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">
-                            {{-- {{ $cremation->pet->family->name }} --}}
+                            {{ $reception->pet->family->contact_name }}
                         </p>
                     </td>
                     <td>
@@ -155,7 +155,7 @@
                     </td>
                     <td style="padding: 5px 10px;">
                         <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">
-                            {{-- {{ $cremation->pet->family->phone }} --}}
+                            {{ $reception->pet->family->contact_number }}
                         </p>
                     </td>
                 </tr>
@@ -182,14 +182,14 @@
                         </td>
                         <td style="padding: 5px 10px;">
                             <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{-- {{ $cremation->pet->name }} --}}
+                                {{ $reception->pet->name }}
                             </p>
                             <td>
                                 <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Raza:</p>
                             </td>
                             <td style="padding: 5px 10px;">
                                 <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                    {{-- {{ $cremation->pet->raza }} --}}
+                                    {{ $reception->pet->raza }}
                                 </p>
                             </td>
                     </tr>
@@ -199,7 +199,7 @@
                         </td>
                         <td style="padding: 5px 10px;">
                             <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{-- {{ $cremation->pet->weight }} --}}
+                                {{ $reception->pet->weight }}
                             </p>
                         </td>
                         <td>
@@ -207,7 +207,7 @@
                         </td>
                         <td style="padding: 5px 10px;">
                             <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{-- {{ $cremation->pet->genre->name }} --}}
+                                {{ $reception->pet->genre->name }}
                             </p>
                         </td>
                     </tr>
@@ -218,16 +218,17 @@
                         </td>
                         <td style="padding: 5px 10px;">
                             <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{-- {{ $cremation->pet->birthday}} --}}
+                                {{ $reception->pet->birthday}}
                             </p>
                         </td>
                         <td>
-                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">No. de Carnet:</p>
+                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">Cartilla virtual:</p>
                         </td>
                         <td style="padding: 5px 10px;">
                             <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{-- {{ $cremation->date_death ?? 'Sin especificar' }} --}}
+                                <a href="{{ route('certificate.imprimir', $reception->pet->id) }}">SI</a>
                             </p>
+                            
                         </td>
                     </tr>
 
@@ -257,49 +258,27 @@
             </div>
             <div>
                 <table style="width: 100%; border-collapse: collapse;">
-                    <tr>
-                        <td>
-                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Alimentación:</p>
-                        </td>
-                        <td style="padding: 5px 10px;">
-                            <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{-- {{ $cremation->serv->NOMBRE }} --}}
-                            </p>
-                          
-                    </tr>
-                    <tr>
-                        <td>
-                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Objetos:</p>
-                        </td>
-                        <td style="padding: 5px 10px;">
-                            <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{-- {{ $cremation->type_urn ?? 'Sin especificar'}} --}}
-                            </p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Observaciones:</p>
-                        </td>
-                        <td style="padding: 5px 10px;">
-                            <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{-- {{ $cremation->cm->name ?? 'Sin especificar'}} --}}
-                            </p>
-                    </tr>
+                    
+                   
+                   
                     <tr>
                         <td>
                             <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Tipo de servicio:</p>
                         </td>
                         <td style="padding: 5px 10px;">
                             <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{-- {{ $cremation->text_placa ?? 'Sin especificar'}} --}}
+                                @foreach ($hotels as $hotel)
+                                {{ $hotel->serv->NOMBRE ?? 0}}
+                                @endforeach
                             </p>
                             <td>
                                 <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">Días:</p>
                             </td>
                             <td style="padding: 5px 10px; word-wrap: break-word; word-break: break-word; white-space: normal;">
                                 <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                    {{-- {{ $cremation->observations ?? 'Sin especificar'}} --}}
+                                    @foreach ($hotels as $hotel)
+                                {{ $hotel->number_days ?? 'N/A' }} 
+                            @endforeach
                                 </p>
                             </td>
                             
@@ -311,20 +290,71 @@
                             </td>
                             <td style="padding: 5px 10px;">
                                 <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                    {{-- ${{ $cremation->service?->PRECIO ?? 'Sin especificar'}} --}}
+                                    @foreach ($hotels as $hotel)
+                                {{ $hotel->cubicle->name ?? 'N/A' }} 
+                            @endforeach
                                 </p>
                             </td>
                             <td>
-                                <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Fecha de salida:</p>
+                                <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> No. Collar:</p>
                             </td>
                             <td style="padding: 5px 10px;">
                                 <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                    {{-- {{$cremation->date_finish ?? 'Sin especificar'}} --}}
+                                    {{$reception->num ?? 'Sin especificar'}}
                                 </p>
                             </td>
                             
                     </tr>
+                    <tr>
+                        <td>
+                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Alimentación:</p>
+                        </td>
+                        <td style="padding: 5px 10px;">
+                            <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
+                                @foreach ($hotels as $hotel)
+                                {{ $hotel->food ?? 'N/A' }} 
+                            @endforeach
+                            </p>
+                          
+                    </tr>
 
+                    <tr>
+                        <td>
+                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Objetos:</p>
+                        </td>
+                        <td style="padding: 5px 10px;">
+                            <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
+                                @foreach ($hotels as $hotel)
+                                {{ $hotel->objects ?? 'N/A' }} 
+                            @endforeach
+                            </p>
+                        </td>
+                    </tr>
+                    
+                     <tr>
+                        <td>
+                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Observaciones:</p>
+                        </td>
+                        <td style="padding: 5px 10px;">
+                            <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
+                                @foreach ($hotels as $hotel)
+                                {{ $hotel->observations ?? 'N/A' }} 
+                            @endforeach
+                            </p>
+                    </tr>
+
+                    <tr>
+                       
+                        <td>
+                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Fecha de salida:</p>
+                        </td>
+                        <td style="padding: 5px 10px;">
+                            <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
+                                {{$reception->exit_date ?? 'Sin especificar'}}
+                            </p>
+                        </td>
+                        
+                </tr>
                    
 
                     {{-- <tr>

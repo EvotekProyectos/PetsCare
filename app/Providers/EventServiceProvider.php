@@ -73,6 +73,7 @@ use App\Observers\ServiceObserver;
 use App\Observers\ShiftObserver;
 use App\Observers\SurgeryObserver;
 use App\Observers\SurgeryPackObserver;
+use App\Observers\SurgeryScheduleObserver;
 use App\Observers\TagTypeObserver;
 use App\Observers\UserObserver;
 use App\Observers\VaccineCertificateObserver;

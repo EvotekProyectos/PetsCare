@@ -7,7 +7,7 @@
         .data {
             font-family: sans-serif;
             font-size: 11pt;
-            color: #bb4415;
+            color: #00065f;
             font-weight: normal;
             margin: 0;
         }
@@ -15,7 +15,7 @@
         .fillable {
             font-family: sans-serif;
             font-size: 11pt;
-            color: #b3aeae;
+            color: #585858;
             font-weight: normal;
             margin: 0;
         }
@@ -30,14 +30,14 @@
         .tableup {
             font-family: sans-serif;
             font-size: 12pt;
-            color: #bb4415;
+            color: #00065f;
             font-weight: semibold;
         }
 
         .titles {
             font-family: sans-serif;
             font-size: 15pt;
-            color: #bb4415;
+            color: #00065f;
             font-weight: bold;
         }
 
@@ -45,7 +45,7 @@
             font-family: sans-serif;
             font-style: italic;
             font-size: 10pt;
-            color: #bb4415;
+            color: #00065f;
             font-weight: semibold;
         }
 
@@ -62,19 +62,19 @@
             border-collapse: collapse;
             width: 100%;
             margin-top: 1%;
-            border: 1px solid #bb4415;
+            border: 1px solid #00065f;
         }
 
         .table-bordered th,
         .table-bordered td {
-            border: 1px solid #bb4415;
+            border: 1px solid #00065f;
             padding: 5px;
         }
     </style>
 </head>
 
 <body>
-    <input type="hidden" value="{{ route('pension.pdf', $reception->id) }}" id="reception">
+    <input type="hidden" value="{{ route('hotel.pdf', $reception->id) }}" id="reception">
     <div>
         <table style="width: 100%; ">
             <tr>
@@ -83,19 +83,20 @@
                 <th style="width: 20%"></th>
             </tr>
             <tr>
-                <td style="align-items: center">
-                    {{-- <img src="{{ public_path('img/logo-petscare.png') }}" style=" height: 87px;"> --}}
-                </td>
                 <td style="text-align: center;">
-                    <p style="font-family: sans-serif; font-weight: bold; font-size: 10pt; color: #bb4415;">
+                    <img src="{{ asset('img/logo-petscare.png') }}" style="height: 87px;">
+                </td>
+                
+                <td style="text-align: center;">
+                    <p style="font-family: sans-serif; font-weight: bold; font-size: 10pt; color: #00065f;">
                         Blvd. Luis Donaldo Colosio #764 <br>
                         Tels. 844 485 1999, 844 485 1979, 844 412 9444 y 844 431 3838 <br>
                         equipomedicopetscare@gmail.com
                     </p>
                 </td>
-                <td style="text-align: center; border: 1px solid #bb4415;">
-                    <p style="color: #bb4415; font-family: sans-serif;">FOLIO</p>
-                    <hr style="color: #bb4415; width: 100%; margin-bottom: -7%; margin-top: -7%;">
+                <td style="text-align: center; border: 1px solid #00065f;">
+                    <p style="color: #00065f; font-family: sans-serif;">FOLIO</p>
+                    <hr style="color: #00065f; width: 100%; margin-bottom: -7%; margin-top: -7%;">
                     <p
                         style="font-family: 'Times New Roman', Times, serif; font-weight: lighter; font-size: 12pt; color: #776d6d;">
                         {{-- {{ str_pad($reception->id, 4, '0', STR_PAD_LEFT) }} --}}
@@ -108,8 +109,8 @@
         <div>
             <table style="width: 100%;">
                 <tr>
-                    <th style="text-align: center; width: 100%; color: #bb4415;">
-                        <p class="titles">PENSIÓN</p>
+                    <th style="text-align: center; width: 100%;">
+                        <p class="titles" style="color: #00065f;">RESPONSIVA PENSIÓN</p>
                     </th>
                 </tr>
             </table>
@@ -117,8 +118,8 @@
     </div>
 
     
-    <div style="border: 2px solid #bb4415; padding: 5px; width: 100%; box-sizing: border-box;">
-        <div style="border: 2px solid #bb4415; padding: 10px; width: 100%; box-sizing: border-box;">
+    <div style="border: 2px solid #00065f; padding: 5px; width: 100%; box-sizing: border-box;">
+        <div style="border: 2px solid #00065f; padding: 10px; width: 100%; box-sizing: border-box;">
             <table style="width: 100%; border-collapse: collapse;">
             <tr>
                 <th style="width: 15%; text-align: left;">
@@ -166,7 +167,8 @@
                 </th>
 
                 <th style="width: 35%; text-align: left;">
-                    <p class="fillable">               </th>
+                    <p class="fillable">{{ $reception->entry_date }}
+                    </th>
                 <th style="width: 20%; text-align: left;">
                     <p class="data">Raza:</p>
                 </th>
@@ -180,7 +182,7 @@
                     <p class="data">Fecha a recoger :</p>
                 </th>
                 <th style="width: 35%; text-align: left;">
-                    <p class="fillable">{{ $reception->entry_date }} </th>
+                    <p class="fillable">{{ $reception->exit_date }} </th>
                 <th style="width: 20%; text-align: left;">
                     <p class="data">Peso:</p>
                 </th>
@@ -195,7 +197,12 @@
                     <p class="data">No. de Cubículo:</p>
                 </th>
                 <th style="width: 35%; text-align: left;">
-                    <p class="fillable">               </th>
+                    <p class="fillable">
+                        @foreach ($hotels as $hotel)
+                            {{ $hotel->cubicle->name ?? 'N/A' }} 
+                        @endforeach
+                    </p>
+                </th>
                 <th style="width: 20%; text-align: left;">
                     <p class="data">Sexo:</p>
                 </th>
@@ -209,8 +216,8 @@
 </div>
 <br>
 
-        <div style="display: flex; justify-content: space-between; border: 2px solid #bb4415; padding: 0.5%; width: 100%; box-sizing: border-box;">
-            <div style="width: 48%; border: 2px solid #bb4415; padding: 0.5%; box-sizing: border-box;">
+        <div style="display: flex; justify-content: space-between; border: 2px solid #00065f; padding: 0.5%; width: 100%; box-sizing: border-box;">
+            <div style="width: 48%; border: 2px solid #00065f; padding: 0.5%; box-sizing: border-box;">
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
                         <th style="width: 50%; text-align: left;">
@@ -221,20 +228,34 @@
                         <th style="width: 20%; text-align: left;">
                             <p class="data">Edad:</p>
                         </th>
+                        @php
+                        $birthday = \Carbon\Carbon::parse($reception->pet->birthday);
+                        $now = \Carbon\Carbon::now();
+    
+                        $years = $birthday->diffInYears($now);
+                        $months = $birthday->copy()->addYears($years)->diffInMonths($now);
+                        $days = $birthday->copy()->addYears($years)->addMonths($months)->diffInDays($now);
+                    @endphp 
+    
                         <th style="width: 30%; text-align: left;">
-                            <p class="fillable"></p>
+                            <p class="fillable">
+                                {{ $years }} años, {{ $months }} meses
+                           
+                        </p>
                         </th>
                         <th style="width: 15%; text-align: left;">
-                            <p class="data">No de Carnet:</p>
+                            <p class="data">Carnet:</p>
                         </th>
                         <th style="width: 35%; text-align: left;">
-                            <p class="fillable"></p>
+                            <p class="data">
+                            <a href="{{ route('certificate.imprimir', $reception->pet->id) }}">SI</a>
+                        </p>
                         </th>
                     </tr>
                 </table>
             </div>
 
-            <div style="width: 48%; border: 2px solid #bb4415; padding: 0.5%; box-sizing: border-box;">
+            <div style="width: 48%; border: 2px solid #00065f; padding: 0.5%; box-sizing: border-box;">
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
                         <th style="width: 15%; text-align: left;">
@@ -247,7 +268,11 @@
                             <p class="data">Tipo de alimentación:</p>
                         </th>
                         <th style="width: 30%; text-align: left;">
-                            <p class="fillable"></p>
+                            <p class="fillable">
+                                @foreach ($hotels as $hotel)
+                                    {{ $hotel->food ?? 'N/A' }} 
+                                @endforeach
+                            </p>
                         </th>
                       
                     </tr>
@@ -256,8 +281,8 @@
         </div>
         <br>
         
-        <div style="display: flex; justify-content: space-between; border: 2px solid #bb4415; padding: 0.5%; width: 100%; box-sizing: border-box;">
-            <div style="width: 48%; border: 2px solid #bb4415; padding: 0.5%; box-sizing: border-box;">
+        <div style="display: flex; justify-content: space-between; border: 2px solid #00065f; padding: 0.5%; width: 100%; box-sizing: border-box;">
+            <div style="width: 48%; border: 2px solid #00065f; padding: 0.5%; box-sizing: border-box;">
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
                         <th style="width: 20%; text-align: left;">
@@ -271,13 +296,17 @@
                             <p class="data">Tipo de objetos:</p>
                         </th>
                         <th style="width: 30%; text-align: left;">
-                            <p class="fillable"></p>
+                            <p class="fillable">
+                                @foreach ($hotels as $hotel)
+                                    {{ $hotel->objects ?? 'N/A' }} 
+                                @endforeach
+                            </p>
                         </th>
                     </tr>
                 </table>
             </div>
 
-            <div style="width: 48%; border: 2px solid #bb4415; padding: 0.5%; box-sizing: border-box;">
+            <div style="width: 48%; border: 2px solid #00065f; padding: 0.5%; box-sizing: border-box;">
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
                       
@@ -286,7 +315,11 @@
                             <p class="data">OBSERVACIONES</p>
                         </th>
                         <th style="width: 30%; text-align: left;">
-                            <p class="fillable"></p>
+                            <p class="fillable">
+                                @foreach ($hotels as $hotel)
+                                    {{ $hotel->observations ?? 'N/A' }} 
+                                @endforeach
+                            </p>
                         </th>
                     </tr>
                 </table>
@@ -301,31 +334,40 @@
                     <th class="tableup" style="text-align: center">Servicio</th>
                     <th class="tableup" style="text-align: center">Dias</th>
                     <th class="tableup" style="text-align: center">Precio</th>
+                    <th class="tableup" style="text-align: center">Precio total</th>
                 </tr>
             </thead>
             <tbody>
-                {{-- @php
+                @php
                     $total = 0;
                 @endphp
-                @foreach ($groomings as $grooming)
+                @foreach ($hotels as $hotel)
                     @php
-                        $price = $grooming->service->PRECIO ?? 0;
-                        $total += $price;
+                       $price = ($hotel->servicie->PRECIO ?? 0) * ($hotel->number_days ?? 0);
+                       $total += $price;
                     @endphp
                     <tr>
-                        <td class="fillable">{{ $grooming->serv->NOMBRE ?? 'N/A' }}</td>
-                        <td class="fillable">{{ $grooming->notes ?? 'Sin notas' }}</td>
+                        <td class="fillable">{{ $hotel->serv->NOMBRE ?? 'N/A' }}</td>
+                        <td class="fillable" style="text-align: center">
+                            {{ $hotel->number_days ?? '0' }}</td>
                         <td class="fillable" style="text-align: right">
-                            ${{ number_format($grooming->service->PRECIO ?? 0, 2) }}</td>
+                            ${{ number_format(($hotel->servicie->PRECIO ?? 0), 2) }}
+                            </td>
+                        <td class="fillable" style="text-align: right">
+                        ${{ number_format(($hotel->number_days ?? 0) *($hotel->servicie->PRECIO ?? 0), 2) }}
+                        </td>
+                          
                     </tr>
-                @endforeach --}}
+                @endforeach
             </tbody>
+          
             <tfoot>
                 <tr>
-                    <td style="text-align: right" colspan="2" > <p class="total" >Total:</p></td>
-                    {{-- <td style="text-align: left" >
-                        <p class="total">${{ number_format($total, 2) }}</p>
-                    </td> --}}
+                    <td style="text-align: right" colspan="3">
+                        <p class="total">Total:</p>
+                    </td>
+                    <td style="text-align: right">
+                        <p class="total">${{ number_format($total, 2) }}</p> 
                 </tr>
             </tfoot>
         </table>
@@ -334,12 +376,12 @@
 
     
 
-    <div  style="border: 1px solid #bb4415; margin-top: 1.5%; width: 100%">
+    <div  style="border: 1px solid #00065f; margin-top: 1.5%; width: 100%">
         <table style="width: 100%; border-collapse: collapse; ">
             <tr>
                 <td>  <p class="titles">NOTA:  </p></td>
                 <td style="text-align: justify;  ">
-                    <p class="aclarations" style="color: #bb4415;">
+                    <p class="aclarations" style="color: #00065f;">
                          LA INCUBACIÓN DE AGENTES VIRALES O BACTERIANAS QUE PROVOCAN ENFERMEDADES CANINAS Y FELINAS, ES
                         DE APROXIMADAMENTE 15 (QUINCE) DIAS, POR LO QUE AL RECIBIR A SU MASCOTA PARA CUALQUIER SERVICIO,
                         PETS CARE NO SE HACE RESPONSABLE SI EN ESE MOMENTO DICHA MASCOTA VIENE INFECTADA: AUN Y CUANDO
@@ -386,12 +428,12 @@
     </div>
     @endif
 
-    <div  style="border: 1px solid #bb4415; margin-top: 1.5%; width: 100%">
+    <div  style="border: 1px solid #00065f; margin-top: 1.5%; width: 100%">
         <p class="titles" style="margin-bottom: 0">NOTA IMPORTANTE </p>
         <table style="width: 100%; border-collapse: collapse; ">
             <tr>
                 <td style="text-align: justify;  ">
-                    <p class="aclarations" style="color: #bb4415;">
+                    <p class="aclarations" style="color: #00065f;">
                        EN FUNCIÓN DE BRINDARLE UN MEJOR SERVICIO, LE ROGAMOS TOMAR EN CUENTA LO SIGUIENTE: <br>
                        1.- LA CONFIRMACIÓN DE LA SALIDA DE SU MASCOTYA SE HARA DE LUNES A SABADO DE 9:00 am A 1:00pm. <br>
                        2.- LA ENTREGA SERA DE 12:00pm A 6:00pm DE LUNES A SABADO. <br>
@@ -407,9 +449,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/formats/pension.js') }}" defer></script>
-     <script>
-    const RECEPTION_ID = "{{ $reception->id }}";
-    </script> 
+    <script>
+        const RECEPTION_ID = "{{ $reception->id }}";
+    </script>
+   
 </body>
 
 
