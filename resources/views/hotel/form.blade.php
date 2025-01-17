@@ -12,6 +12,7 @@
         flex: 1 1 auto;
     }
 </style>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <div class="row padding-1 p-1">
     <div class="col-md-12">

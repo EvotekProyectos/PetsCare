@@ -42,21 +42,40 @@ class HotelController extends Controller
         $hotel = new Hotel();
         $reception = Reception::with('pet','family', 'vet')->findorfail($id);
         $products = Producto::where("ESTATUS",  "A")->get();
-        $cubicles=Cubicle::all();
+        $cubicles=Cubicle::where("state", "0")->get();
         return view('hotel.create', compact('hotel', 'reception', 'products', 'cubicles'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(HotelRequest $request)
-    {
-        $new=Hotel::create($request->validated());
+    // public function store(HotelRequest $request)
+    // {
+    //     $new=Hotel::create($request->validated());
 
-        return response()->json($new);
-        // return redirect()->route('hotels.index')
-        //     ->with('success', 'Hotel created successfully.');
-    }
+    //     return response()->json($new);
+    //     // return redirect()->route('hotels.index')
+    //     //     ->with('success', 'Hotel created successfully.');
+    // }
+
+     public function store(HotelRequest $request)
+ {
+    
+     $validatedData = $request->validated();
+
+      $cubicle = Cubicle::find($validatedData['cubicle_id']);
+       if ($cubicle) {
+           $cubicle->state = 1; 
+           $cubicle->save();
+       }
+
+     $hotel = Hotel::create($validatedData);
+     return response()->json($hotel);
+ }
+
+
+
+
 
     /**
      * Display the specified resource.
@@ -92,11 +111,16 @@ class HotelController extends Controller
     public function destroy($id)
     {
         $hotel=Hotel::find($id);
+        $cubicleId = $hotel->cubicle_id;
         $hotel->delete();
-
+    
+        $cubicle = Cubicle::find($cubicleId);
+        if ($cubicle) {
+            $cubicle->state = 0;
+            $cubicle->save();
+        }
         return response()->json($hotel);
-        // return redirect()->route('hotels.index')
-        //     ->with('success', 'Hotel deleted successfully');
+       
     }
 
     
@@ -143,20 +167,36 @@ class HotelController extends Controller
 
 
     // public function view(){
-    //     $hotel= Hotel::with(['reception','cubicle'])->get();
+    //     $cubicles = Cubicle::all();
+    //     $hotel = Hotel::with('reception')->first(); 
+    
+    //     return view('cubicle.view', compact('cubicles', 'hotel'));
+    // }
+    
+    // public function view() {
+       
+    //     $hotel = Hotel::with(['cubicle', 'reception'])->get();
     //     $cubicles = Cubicle::all();
 
-    //     return view ('cubicle.view' , compact('cubicles', 'hotel'));
+    //     return view('cubicle.view', compact('cubicles', 'hotel'));
     //     //return response()->json($hotel);
     // }
 
-    public function view(){
-        $cubicles = Cubicle::all();
-        $hotel = Hotel::with('reception')->first(); // Suponiendo que solo haya un hotel
+   public function view() {
     
-        return view('cubicle.view', compact('cubicles', 'hotel'));
-    }
+    $cubicles = Cubicle::all();
+
+    $cubicles = $cubicles->map(function ($cubicle) {
+        $cubicle->hotels = Hotel::where('cubicle_id', $cubicle->id)->with('reception')->latest('created_at')->first();
+        return $cubicle;
+    });
     
+
+    return view('cubicle.view', compact('cubicles'));
+    //return response()->json($cubicles);
+}
+
+
 
      public function all()
      {

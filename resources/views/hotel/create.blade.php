@@ -59,7 +59,7 @@
                             </div>
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Clasificación: <span style="font-weight: normal">
-                                        {{-- {{ $reception->pet->petClassification->name }} </span> --}}
+                                        {{ $reception->pet->petClassification->name }} </span>
                                     </p>
                             </div>
                         </div>
@@ -131,7 +131,7 @@
                         <div class="row d-flex justify-content-center" style="margin-bottom: -11px;">
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Contacto emergencia: <span style="font-weight: normal">
-                                        {{ $reception->family->contact_name }} </span></p>
+                                        {{ $reception->family->contact_name}}-{{$reception->family->contact_number  }} </span></p>
                             </div>
                             <div class="col-md-3">
                                 <p> 
@@ -171,7 +171,7 @@
                                 <div class="col">
                                     <button 
                                         class="btn btn-costum-services btn-sm text-uppercase rounded-4" 
-                                        onclick="window.open('{{ route('cubicle.view') }}', '_blank')">
+                                        onclick="window.open('{{ route('hotel.view') }}', '_blank')">
                                         <span class="badge custom-badge-pill">
                                             <span class="game-icons--dog-house "></span>
                                         </span>

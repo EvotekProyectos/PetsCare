@@ -373,6 +373,15 @@
         </table>
 
     </div>
+    <div>
+        <table>
+            <tr>
+                <th style="width: 10%; text-align: right;">
+                    <p class="data">Folio de Pago: {{ $reception->payment->folio_odv }} </p>
+                </th>
+            </tr>
+        </table>
+    </div>
 
     
 

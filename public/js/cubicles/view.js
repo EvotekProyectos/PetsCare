@@ -1,39 +1,78 @@
-function showCubicleInfo(state,exit) {
-    const status = state ? 'Ocupado' : 'Disponible';
-    const color = state ? 'gray' : 'blue';
+function showCubicleInfo(state, exit, pet, collar) {
+    const status = state ? "Ocupado" : "Disponible";
+    const color = state ? "gray" : "blue";
 
-    Swal.fire({
-        title: `Información del Cubículo`,
-        html: `
+    if (state == "Ocupado") {
+        Swal.fire({
+            title: `Información del Cubículo`,
+            html: `
            
             <p><strong>Estado:</strong> <span style="color:">${state}</span></p>
-              <p><strong>Nombre:</strong> ${exit}</p>
+              <p><strong>Salida:</strong> ${exit}</p>
+              <p><strong>Mascota:</strong> ${pet}</p>
+               <p><strong>No.Collar:</strong> ${collar}</p>
         `,
-        icon: 'info', 
-        confirmButtonText: 'Cerrar'
-    });
+            icon: "info",
+            confirmButtonText: "Cerrar",
+        });
+    } else {
+        Swal.fire({
+            title: `Información del Cubículo`,
+            html: `
+           
+            <p><strong>Estado:</strong> <span style="color:">${state}</span></p>
+        `,
+            icon: "info",
+            confirmButtonText: "Cerrar",
+        });
+    }
 }
 
+// function showInfo(event, status, exit) {
+//     const infoBox = document.getElementById("info-box");
+//     const infoExit = document.getElementById("info-exit");
+//     const infoStatus = document.getElementById("info-status");
 
-function showInfo(event, name, status, exit) {
-    const infoBox = document.getElementById('info-box');
-    const infoExit = document.getElementById('info-exit');
-    const infoStatus = document.getElementById('info-status');
+//     const offsetX = -300;
+//     const offsetY = -50;
 
-    const offsetX = -300; 
-    const offsetY = -50; 
+//     infoBox.style.display = "block";
+//     infoBox.style.left = event.pageX + offsetX + "px";
+//     infoBox.style.top = event.pageY + offsetY + "px";
 
-    infoBox.style.display = 'block';
-    infoBox.style.left = event.pageX + offsetX + 'px';
-    infoBox.style.top = event.pageY + offsetY + 'px';
+//     if (status == "Ocupado") {
+//         infoBox.innerHTML = `
+//     <br><strong>Estado:</strong> ${status}
+//     <br><strong>Salida:</strong> ${exit ? exit : "N/A"}`;
+//     } else {
+//         infoBox.innerHTML = `
+//     <br><strong>Estado:</strong> ${status}`;
+//     }
+// }
 
-    infoBox.innerHTML = `<strong>Nombre:</strong> ${name}
+function showInfo(event, status, exit) {
+    const infoBox = document.getElementById("info-box");
+    const infoExit = document.getElementById("info-exit");
+    const infoStatus = document.getElementById("info-status");
+
+    const offsetX = -300;
+    const offsetY = -50;
+
+    infoBox.style.display = "block";
+    infoBox.style.left = event.pageX + offsetX + "px";
+    infoBox.style.top = event.pageY + offsetY + "px";
+
+    if (status == "Ocupado") {
+        infoBox.innerHTML = `
     <br><strong>Estado:</strong> ${status}
-    <br><strong>Salida:</strong> ${exit ? exit : 'N/A'}`;
+    <br><strong>Salida:</strong> ${exit ? exit : "N/A"}`;
+    } else {
+        infoBox.innerHTML = `
+    <br><strong>Estado:</strong> ${status}`;
+    }
 }
 
 function hideInfo() {
-    const infoBox = document.getElementById('info-box');
-    infoBox.style.display = 'none';
+    const infoBox = document.getElementById("info-box");
+    infoBox.style.display = "none";
 }
-

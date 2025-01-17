@@ -10,7 +10,11 @@ async function NewEntry() {
     event.preventDefault();
     let url = route('hotels.store');
     let form = new FormData(document.getElementById("NewService"));
-    let pet = await fetch(url, { method: "POST", body: form });
+    let pet = await fetch(url, { method: "POST", body: form,  headers: {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        'Accept': 'application/json'
+    }
+});
     let resp = await pet.json();
 
     if (pet.ok) {

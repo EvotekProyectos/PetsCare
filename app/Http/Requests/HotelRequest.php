@@ -29,7 +29,7 @@ class HotelRequest extends FormRequest
 			'observations' => 'required|string',
 			'number_days' => 'required',
             'service_type_id' => 'required',
-            'cubicle_id' => 'nullable|integer|exists:receptions,id',
+            'cubicle_id' => 'nullable|integer|exists:cubicles,id',
             
         ];
     }

@@ -40,5 +40,11 @@ class Cubicle extends Model
         return $this->belongsTo(\App\Models\CubicleType::class, 'cubicle_type_id', 'id');
     }
     
+ // Relación con Hotel
+ public function hotels() {
+    return $this->hasMany(Hotel::class, 'cubicle_id');
+}
+
+
 
 }
