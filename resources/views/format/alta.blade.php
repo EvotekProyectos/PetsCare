@@ -7,7 +7,7 @@
         @import url(https://themes.googleusercontent.com/fonts/css?kit=fOEonugfEEW2k3BWBOC73CXHfZMcH88HuPcErL5npACHpuVWaP-GHFPZzt35558q);
 
         .head {
-            color: #646c9a;
+            color: #3459A4;
             font-weight: 700;
             font-size: 12pt;
             font-weight: bold;
@@ -73,7 +73,25 @@
                 display: none;
             }
         }
+
+        .button {
+        background-color: #3459A4; 
+        color: #fff; 
+        border: none;  
+        border-radius: 5px; 
+        padding: 10px 20px; 
+        font-size: 16px; 
+        cursor: pointer; 
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); 
+        transition: all 0.3s ease; 
+    }
+
+    .button:hover {
+        background-color: #0056b3; 
+        box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3); 
+    }
     </style>
+
 </head>
 
 <body>
@@ -81,8 +99,10 @@
     <div>
         <table style="width: 100%; text-align: center;">
             <tr>
-                <td style="align-items: center;">
-                    {{-- <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px"> --}}
+               <td style="align-items: center;">
+                    @if($isPdf ?? false)
+                        <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px">
+                    @endif
                 </td>
                 <td>
                     <p class="head">Hospital Veterinario Pets Care</p>
@@ -114,70 +134,81 @@
     </div>
 
     <div>
-        <p>Saltillo, Coahuila a  {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</p>
+        <p style="text-align:right;  margin-top:10px;">
+            <b>Saltillo, Coahuila a {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</b></p>
     </div>
+    
     
     <div>
         <table style="width: 100%; border-collapse: collapse; margin-top:2%;">
             <tr>
-                <td>
-                    <ol>
-                        <li>
+                <td style="text-align: justify;" >
+                    
                             Yo: 
                             @if (!isset($isPdf) || !$isPdf)
-                                <input type="text" id="name_family" value="{{ $nameFamily ?? '' }}" class="form-control">
+                                <input type="text" id="name_family" value="{{ $nameFamily ?? '' }}" class="form-control"  style="width: 600px;">
                             @else
                                 <span>{{ $nameFamily ?? '' }}</span>
                             @endif
-                            <br>
-                            declaro que por mi propia voluntad decido llevarme de ALTA VOLUNTARIA al paciente de Nombre: 
+                            , declaro que por mi propia voluntad decido llevarme de ALTA VOLUNTARIA al paciente de Nombre: 
                             <b>{{ $pet->name }}</b>, Especie: <b>{{ $pet->specie }}</b>, 
-                            Edad: <b>{{ $pet->id }}</b>, del cual no acepto el tratamiento médico indicado. 
-                            Dejando exento de responsabilidades al Hospital Veterinario Pets Care y a los médicos encargados del caso.
-                        </li>
+                            Edad: 
+                            @php
+                            $birthday = \Carbon\Carbon::parse($pet->birthday);
+                            $now = \Carbon\Carbon::now();
+                            $years = $birthday->diffInYears($now);
+                            $months = $birthday->copy()->addYears($years)->diffInMonths($now);
+                            $days = $birthday->copy()->addYears($years)->addMonths($months)->diffInDays($now);
+                        @endphp
+                        {{ $years }} años, {{ $months }} meses,
+                         del cual no acepto el tratamiento médico indicado. 
+                        Dejando exento de responsabilidades al Hospital Veterinario Pets Care y a los médicos encargados del caso.
                         
-                        <li>
-                            <h3> MOTIVO:</h3> 
+                            <h3 style="margin-top: 5%"> MOTIVO:</h3> 
             @if (!isset($isPdf) || !$isPdf)
-                <input type="text" id="reason" value="{{ $reason ?? '' }}" class="form-control">
+                <input type="text" id="reason" value="{{ $reason ?? '' }}" class="form-control" style="width: 900px; height: 80px;">
             @else
                 <span>{{ $reason ?? '' }}</span>
             @endif
-                        </li>
-                    </ol>
+                       
                 </td>
             </tr>
         </table>
     </div>
-
-    <div>
-        <p style="margin-top: 2%;"><b>Nombre y firma:</b></p>
-
+    <div style="text-align: center;">
+        <p style="margin-top: 80px;"><b>NOMBRE Y FIRMA:</b></p>
+    
         @if (isset($signatureDataUrl))
             <img src="{{ $signatureDataUrl }}" alt="Firma del propietario" style="width: 200px; height: 100px;">
         @else
-            <canvas id="canvas" class="border border-dark p-0" width="200" height="100"></canvas>
+            <canvas id="canvas" class="border border-dark p-0" width="500" height="100" style="border-bottom: 2px solid #2b2b2b;"></canvas>
         @endif
-    </div>
+    
+        <div style="margin-top: 20px; text-align: center;">
+            @if (!isset($isPdf) || !$isPdf)
+                <div style="display: flex; justify-content: center; gap: 20px;">
 
-    @if (!isset($isPdf) || !$isPdf)
-        <div class="row mx-0">
-            <div class="col-6">
-                <button class="btnLimpiar btn btn-lmx" data-target="canvas">Limpiar</button>
-            </div>
-            <div class="col-6">
-                <form>
-                    <button class="btnEnviar btn btn-lmx">Aceptar</button>
-                </form>
-            </div>
+                    <div style="align-self: flex-start;">
+                        <button class="btnLimpiar btn btn-lmx button" data-target="canvas" style="width: 100px;">Limpiar</button>
+                    </div>
+                    <div>
+                        <form>
+                            <button class="btnEnviar btn btn-lmx button" style="width: 100px;">Aceptar</button>
+                        </form>
+                    </div>
+                </div>
+            @endif
         </div>
-    @endif
+    </div>
+    
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/formats/alta.js') }}" defer></script>
     <script>
         const PET_ID = "{{ $pet->id }}";
     </script> 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 </body>
 

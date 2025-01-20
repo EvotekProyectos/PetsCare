@@ -178,6 +178,17 @@ function renderEntryRow(entry) {
             </tr>
         `;
     }
+    // if (entry.observations) {
+    //     rows += `
+    //         <tr>
+    //             <td>Tentativo</td>
+    //             <td>Procedimiento</td>
+    //             <td>${entry.observations || ''}</td>
+    //             <td>${entry.vet ? entry.vet.name : ''}</td>
+    //             <td>$0</td>
+    //         </tr>
+    //     `;
+    // }
 
     return rows;
 }

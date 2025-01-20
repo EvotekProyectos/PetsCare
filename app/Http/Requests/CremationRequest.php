@@ -29,9 +29,12 @@ class CremationRequest extends FormRequest
 			'servicie' => 'string',
 			'CM_id' => 'string',
 			'type_urn' => 'string',
+            'vet_id' => 'nullable|integer|exists:users,id',
 			'urn_model' => 'string',
+            'text_placa' => 'nullable',
 			'observations' => 'nullable|string',
 			'placa_type_id' => 'string',
+            'status' => 'string',
 			'price' => 'nullable',
         ];
     }

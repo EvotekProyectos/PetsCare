@@ -216,7 +216,7 @@ $('#table-container').append(totalFinalSection);
     });
 }
 
-// Ejemplo de uso
+
 if (grandTotal === 0) {
     showPaymentCompleted();
 } else {
@@ -281,6 +281,17 @@ function renderEntryRow(entry) {
                 <td>${entry.observations || ''}</td>
                 <td>${entry.vet ? entry.vet.name : ''}</td>
                 <td>$${entry.surgery.PRECIO}</td>
+            </tr>
+        `;
+    }
+    if (entry.observations) {
+        rows += `
+            <tr>
+                <td>Tentativo</td>
+                <td>Procedimiento</td>
+                <td>${entry.observations || ''}</td>
+                <td>${entry.vet ? entry.vet.name : ''}</td>
+                <td>$0</td>
             </tr>
         `;
     }

@@ -22,12 +22,16 @@
                     <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                         <span class="vaadin--lines-list"></span>
                     </span>
+
                 <select name="format_type_id" class="form-control @error('format_type_id') is-invalid @enderror" id="format_type_id">
                     <option value="">Selecciona el tipo</option>
                     @foreach ($format_types as $format_type)
+                    @if ($format_type->id != 4 && $format_type->id != 5)
                         <option value="{{ $format_type->id }}" {{ old('format_type_id', $format->format_type_id) == $format_type->id ? 'selected' : '' }}>
                             {{ $format_type->name }}
                         </option>
+                        @endif
+
                     @endforeach
                 </select>
                 {!! $errors->first('format_type_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
@@ -61,6 +65,7 @@
                     1: '{{ route("format.hospital", $pet->id) }}',
                     2: '{{ route("format.alta", $pet->id) }}',
                     3: '{{ route("format.surgery", $pet->id) }}',
+                    4: '{{ route("format.responsiva", $pet->id) }}',
                 };
         
                 selectElement.addEventListener('change', function () {

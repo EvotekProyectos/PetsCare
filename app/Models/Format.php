@@ -57,7 +57,11 @@ class Format extends Model
         return $this->belongsTo(\App\Models\Pet::class, 'pet_id', 'id');
     }
 
-
+    
+    public function price()
+    {
+        return $this->belongsTo(\App\Models\Producto::class, 'ARTICULO_ID');
+    }
 
 }
 

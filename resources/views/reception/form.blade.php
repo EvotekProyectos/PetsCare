@@ -325,7 +325,7 @@
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="f7--number"></span>
                         </span>
-                        <input type="text" name="num"
+                        <input type="number" name="num"
                             class="form-control @error('num') is-invalid @enderror"
                             value="{{ old('num', $reception?->num) }}" id="num"
                             placeholder="Número de Collar/Arete">

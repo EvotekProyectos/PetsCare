@@ -375,7 +375,7 @@
                 </div>
             </div>
 
-            <div>
+             <div>
                 <table style="width: 100%; border:1px solid #c5e8f7;">
                     @foreach ($certificate->where('service_id', 2) as $cert)
                         <tr>

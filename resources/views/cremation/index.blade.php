@@ -40,7 +40,7 @@
                                         <thead class="thead table-primary text-uppercase">
                                             <tr>
                                                 <th>Fecha de registro</th>
-                                                <th>M.V.Z</th>
+                                                <th>Recepcionista</th>
                                                 <th>Propietario</th>
                                                 <th>Mascota</th>
                                                 <th>Servicio</th>

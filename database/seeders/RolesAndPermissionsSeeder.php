@@ -176,6 +176,13 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'ver panel cirugías', 'type' => 'cirugías']);
         Permission::create(['name' => 'crear cirugía', 'type' => 'cirugías']);
         Permission::create(['name' => 'editar cirugía', 'type' => 'cirugías']);
+        Permission::create(['name' => 'eliminar cirugía', 'type' => 'cirugías']);
+
+        //Surgery schedules
+        Permission::create(['name' => 'ver panel horario de cirugías', 'type' => 'cirugías']);
+        Permission::create(['name' => 'crear asignación de cirugía', 'type' => 'cirugías']);
+        Permission::create(['name' => 'editar asignación de cirugía', 'type' => 'cirugías']);
+        Permission::create(['name' => 'eliminar asignación de cirugía', 'type' => 'cirugías']);
 
         //follow ups
         Permission::create(['name' => 'ver panel seguimientos', 'type' => 'seguimientos']);
@@ -248,6 +255,8 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'crear cremaciones', 'type' => 'cremaciones']);
         Permission::create(['name' => 'editar cremaciones', 'type' => 'cremaciones']);
         Permission::create(['name' => 'eliminar cremaciones', 'type' => 'cremaciones']);
+
+        
 
         // roles
         $role = Role::create(['name' => 'administrador']);

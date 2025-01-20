@@ -22,7 +22,7 @@ $(document).ready(function () {
             {
                 data: null,
                 render: function (data) {
-                    return data.reception ? data.reception.vet.name : '';
+                    return data.reception ? data.reception.receptionist.name : '';
                 }
             },
             {
@@ -73,10 +73,11 @@ $(document).ready(function () {
                            <a type="button" href="${route('cremation.comprobante', data.id)}" class="btn btn-sm text-primary">
                             <span class="mdi--eye"></span>
                         </a>
-                        <a type="button" href="${route('cremations.edit', data.id)}" class="btn btn-sm text-primary">
-                            <i class="fas fa-edit"></i>
-                        </a>
                          `;
+                        // <a type="button" href="${route('cremations.edit', data.id)}" class="btn btn-sm text-primary">
+                        //     <i class="fas fa-edit"></i>
+                        // </a>
+                        
                         
                     
                 }

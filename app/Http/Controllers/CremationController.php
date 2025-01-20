@@ -10,6 +10,7 @@ use App\Models\GenericModel;
 use App\Models\PaymentOrder;
 use App\Models\Producto;
 use App\Models\Reception;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -41,8 +42,10 @@ class CremationController extends Controller
         $cremation = new Cremation();
         $cremation->status = 'En espera de realizar';
         $cms = CmType::all();
+      
+        $vets=User::all();
         $this->authorize("create", Cremation::class);
-        return view('cremation.create', compact('cremation', 'cms'));
+        return view('cremation.create', compact('cremation', 'cms', 'vets'));
     }
 
     /**
@@ -77,10 +80,11 @@ class CremationController extends Controller
         $cremation = Cremation::find($id);
         $reception = $cremation->reception;
         $cms = CmType::all();
+        $vets=User::all();
         $products = Producto::where("ESTATUS",  "A")->get();
 
         $this->authorize("update", $cremation);
-        return view('cremation.edit', compact('cremation', 'reception', 'cms', 'products'));
+        return view('cremation.edit', compact('cremation', 'reception', 'cms', 'products', 'vets'));
     }
 
     /**
@@ -110,12 +114,12 @@ class CremationController extends Controller
     {
         $cremation = new Cremation();
         $cremation->status = "En espera de realizar";
-
+        $vets=User::all();
         $reception = Reception::with('pet', 'reason', 'vet', 'receptionist')->findorfail($id);
         $cms = CmType::all();
         $products = Producto::where("ESTATUS",  "A")->get();
 
-        return view('cremation.create', compact('cremation', 'reception', 'cms', 'products'));
+        return view('cremation.create', compact('cremation', 'reception', 'cms', 'products','vets'));
     }
 
     public function comprobante(int $id)
@@ -131,7 +135,7 @@ class CremationController extends Controller
 
     public function list()
     {
-        $cremations = Cremation::with('reception', 'reception.vet', 'reception.family', 'pet', 'cm', 'tag' , 'serv')->get();
+        $cremations = Cremation::with('reception', 'reception.receptionist', 'reception.family', 'pet', 'cm', 'tag' , 'serv', 'vet')->get();
         //return DataTables::of($cremations)->make(true);
         return response()->json($cremations);
     }
