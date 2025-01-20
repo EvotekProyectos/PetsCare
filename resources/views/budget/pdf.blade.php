@@ -195,7 +195,10 @@
     <div>
         <p class="titles">Servicios Presupuestados en la fecha {{ $budget->date }}</p>
         <table class="table-bordered">
-            @foreach ($details->whereNotNull('service_id') as $detail)
+            @php
+                $filteredSERV = $details->whereNotNull('service_id');
+            @endphp
+            @if ($filteredSERV->isNotEmpty())
                 <thead>
                     <tr>
                         <th class="tableup" style="text-align: center">Servicio Médico</th>
@@ -203,18 +206,23 @@
                         <th class="tableup" style="text-align: center">Precio</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td class="fillable">
-                            {{ $detail->serv->NOMBRE ?? 'N/A' }}
-                        </td>
-                        <td class="fillable">{{ $detail->notes ?? 'Sin notas' }}</td>
-                        <td class="fillable" style="text-align: right">
-                            ${{ number_format($detail->price ?? 0, 2) }}</td>
-                    </tr>
-                </tbody>
-            @endforeach
-            @foreach ($details->whereNotNull('lab_id') as $detail)
+                @foreach ($details->whereNotNull('service_id') as $detail)
+                    <tbody>
+                        <tr>
+                            <td class="fillable">
+                                {{ $detail->serv->NOMBRE ?? 'N/A' }}
+                            </td>
+                            <td class="fillable">{{ $detail->notes ?? 'Sin notas' }}</td>
+                            <td class="fillable" style="text-align: right">
+                                ${{ number_format($detail->price ?? 0, 2) }}</td>
+                        </tr>
+                    </tbody>
+                @endforeach
+            @endif
+            @php
+                $filteredLAB = $details->whereNotNull('lab_id');
+            @endphp
+            @if ($filteredLAB->isNotEmpty())
                 <thead>
                     <tr>
                         <th class="tableup" style="text-align: center">Laboratorio</th>
@@ -222,19 +230,24 @@
                         <th class="tableup" style="text-align: center">Precio</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td class="fillable">
-                            {{ $detail->lab->NOMBRE ?? 'N/A' }}
-                        </td>
-                        <td class="fillable">{{ $detail->notes ?? 'Sin notas' }}</td>
-                        <td class="fillable" style="text-align: right">
-                            ${{ number_format($detail->price ?? 0, 2) }}</td>
-                    </tr>
+                @foreach ($details->whereNotNull('lab_id') as $detail)
+                    <tbody>
+                        <tr>
+                            <td class="fillable">
+                                {{ $detail->lab->NOMBRE ?? 'N/A' }}
+                            </td>
+                            <td class="fillable">{{ $detail->notes ?? 'Sin notas' }}</td>
+                            <td class="fillable" style="text-align: right">
+                                ${{ number_format($detail->price ?? 0, 2) }}</td>
+                        </tr>
 
-                </tbody>
-            @endforeach
-            @foreach ($details->whereNotNull('img_id') as $detail)
+                    </tbody>
+                @endforeach
+            @endif
+            @php
+                $filteredIMG = $details->whereNotNull('img_id');
+            @endphp
+            @if ($filteredIMG->isNotEmpty())
                 <thead>
                     <tr>
                         <th class="tableup" style="text-align: center">Imageneología</th>
@@ -242,17 +255,19 @@
                         <th class="tableup" style="text-align: center">Precio</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td class="fillable">
-                            {{ $detail->img->NOMBRE ?? 'N/A' }}
-                        </td>
-                        <td class="fillable">{{ $detail->notes ?? 'Sin notas' }}</td>
-                        <td class="fillable" style="text-align: right">
-                            ${{ number_format($detail->price ?? 0, 2) }}</td>
-                    </tr>
-                </tbody>
-            @endforeach
+                @foreach ($details->whereNotNull('img_id') as $detail)
+                    <tbody>
+                        <tr>
+                            <td class="fillable">
+                                {{ $detail->img->NOMBRE ?? 'N/A' }}
+                            </td>
+                            <td class="fillable">{{ $detail->notes ?? 'Sin notas' }}</td>
+                            <td class="fillable" style="text-align: right">
+                                ${{ number_format($detail->price ?? 0, 2) }}</td>
+                        </tr>
+                    </tbody>
+                @endforeach
+            @endif
             <tfoot>
                 <tr>
                     <td style="text-align: right" colspan="2">

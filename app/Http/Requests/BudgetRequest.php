@@ -25,7 +25,7 @@ class BudgetRequest extends FormRequest
             'pet_id' => 'nullable|integer|exists:pets,id',
 			'date' => 'required|date',
 			'total' => 'string',
-            'notes' => 'nullable|string',
+            'others' => 'nullable|string',
             'vet_id' => 'nullable|integer|exists:users,id',
             'reception_id' => 'nullable|integer|exists:receptions,id',
         ];

@@ -149,8 +149,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($vaccineCertificates as $register)
-                                    @if ($register->service_id == 1)
+                                @foreach ($vaccineCertificates->where('service_id', 1) as $register)
                                         <tr>
                                             <td>{{ $register->application_date }}</td>
                                             <td>{{ $register->microsip->NOMBRE ?? $register->product }} {{ $register->lab }}
@@ -159,7 +158,6 @@
                                             <td>{{ $register->vet->name }}</td>
                                             <td>{{ $register->observations }}</td>
                                         </tr>
-                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
@@ -180,8 +178,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($vaccineCertificates as $register)
-                                    @if ($register->service_id == 3)
+                                @foreach ($vaccineCertificates->where('service_id', 3) as $register)
                                         <tr>
                                             <td>{{ $register->application_date }}</td>
                                             <td>{{ $register->microsip->NOMBRE ?? $register->product }} {{ $register->dose }}</td>
@@ -189,7 +186,6 @@
                                             <td>{{ $register->vet->name }}</td>
                                             <td>{{ $register->observations }}</td>
                                         </tr>
-                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
@@ -210,8 +206,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($vaccineCertificates as $register)
-                                    @if ($register->service_id == 2)
+                                @foreach ($vaccineCertificates->where('service_id', 2) as $register)
                                         <tr>
                                             <td>{{ $register->application_date }}</td>
                                             <td>{{ $register->microsip->NOMBRE ?? $register->product }} {{ $register->dose }}</td>
@@ -219,7 +214,6 @@
                                             <td>{{ $register->vet->name }}</td>
                                             <td>{{ $register->observations }}</td>
                                         </tr>
-                                    @endif
                                 @endforeach
                             </tbody>
                         </table>

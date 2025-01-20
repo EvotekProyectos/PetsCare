@@ -131,66 +131,79 @@
                                 </h5>
                             </div>
                             <table class="table table-striped table-hover responsive w-100">
-
-                                <thead class="thead table-primary text-uppercase">
-                                    <tr>
-                                        <th class="tableup" style="text-align: center">Servicio Médico</th>
-                                        <th class="tableup" style="text-align: center">Notas</th>
-                                        <th class="tableup" style="text-align: center">Precio</th>
-                                    </tr>
-                                </thead>
-                                @foreach ($details->whereNotNull('service_id') as $detail)
-                                    <tbody>
+                                @php
+                                    $filteredSERV = $details->whereNotNull('service_id');
+                                @endphp
+                                @if ($filteredSERV->isNotEmpty())
+                                    <thead class="thead table-primary text-uppercase">
                                         <tr>
-                                            <td class="fillable">
-                                                {{ $detail->serv->NOMBRE ?? 'N/A' }}
-                                            </td>
-                                            <td class="fillable">{{ $detail->notes ?? 'Sin notas' }}</td>
-                                            <td class="fillable" style="text-align: right">
-                                                ${{ number_format($detail->price ?? 0, 2) }}</td>
+                                            <th class="tableup" style="text-align: center">Servicio Médico</th>
+                                            <th class="tableup" style="text-align: center">Notas</th>
+                                            <th class="tableup" style="text-align: center">Precio</th>
                                         </tr>
-                                    </tbody>
-                                @endforeach
-
-                                <thead class="thead table-primary text-uppercase">
-                                    <tr>
-                                        <th class="tableup" style="text-align: center">Laboratorio</th>
-                                        <th class="tableup" style="text-align: center">Notas</th>
-                                        <th class="tableup" style="text-align: center">Precio</th>
-                                    </tr>
-                                </thead>
-                                @foreach ($details->whereNotNull('lab_id') as $detail)
-                                    <tbody>
+                                    </thead>
+                                    @foreach ($details->whereNotNull('service_id') as $detail)
+                                        <tbody>
+                                            <tr>
+                                                <td class="fillable">
+                                                    {{ $detail->serv->NOMBRE ?? 'N/A' }}
+                                                </td>
+                                                <td class="fillable">{{ $detail->notes ?? 'Sin notas' }}</td>
+                                                <td class="fillable" style="text-align: right">
+                                                    ${{ number_format($detail->price ?? 0, 2) }}</td>
+                                            </tr>
+                                        </tbody>
+                                    @endforeach
+                                @endif
+                                @php
+                                    $filteredLAB = $details->whereNotNull('lab_id');
+                                @endphp
+                                @if ($filteredLAB->isNotEmpty())
+                                    <thead class="thead table-primary text-uppercase">
                                         <tr>
-                                            <td class="fillable">
-                                                {{ $detail->lab->NOMBRE ?? 'N/A' }}
-                                            </td>
-                                            <td class="fillable">{{ $detail->notes ?? 'Sin notas' }}</td>
-                                            <td class="fillable" style="text-align: right">
-                                                ${{ number_format($detail->price ?? 0, 2) }}</td>
+                                            <th class="tableup" style="text-align: center">Laboratorio</th>
+                                            <th class="tableup" style="text-align: center">Notas</th>
+                                            <th class="tableup" style="text-align: center">Precio</th>
                                         </tr>
-                                    </tbody>
-                                @endforeach
+                                    </thead>
+                                    @foreach ($details->whereNotNull('lab_id') as $detail)
+                                        <tbody>
+                                            <tr>
+                                                <td class="fillable">
+                                                    {{ $detail->lab->NOMBRE ?? 'N/A' }}
+                                                </td>
+                                                <td class="fillable">{{ $detail->notes ?? 'Sin notas' }}</td>
+                                                <td class="fillable" style="text-align: right">
+                                                    ${{ number_format($detail->price ?? 0, 2) }}</td>
+                                            </tr>
+                                        </tbody>
+                                    @endforeach
+                                @endif
 
-                                <thead class="thead table-primary text-uppercase">
-                                    <tr>
-                                        <th class="tableup" style="text-align: center">Imageneología</th>
-                                        <th class="tableup" style="text-align: center">Notas</th>
-                                        <th class="tableup" style="text-align: center">Precio</th>
-                                    </tr>
-                                </thead>
-                                @foreach ($details->whereNotNull('img_id') as $detail)
-                                    <tbody>
+                                @php
+                                    $filteredIMG = $details->whereNotNull('img_id');
+                                @endphp
+                                @if ($filteredIMG->isNotEmpty())
+                                    <thead class="thead table-primary text-uppercase">
                                         <tr>
-                                            <td class="fillable">
-                                                {{ $detail->img->NOMBRE ?? 'N/A' }}
-                                            </td>
-                                            <td class="fillable">{{ $detail->notes ?? 'Sin notas' }}</td>
-                                            <td class="fillable" style="text-align: right">
-                                                ${{ number_format($detail->price ?? 0, 2) }}</td>
+                                            <th class="tableup" style="text-align: center">Imageneología</th>
+                                            <th class="tableup" style="text-align: center">Notas</th>
+                                            <th class="tableup" style="text-align: center">Precio</th>
                                         </tr>
-                                    </tbody>
-                                @endforeach
+                                    </thead>
+                                    @foreach ($details->whereNotNull('img_id') as $detail)
+                                        <tbody>
+                                            <tr>
+                                                <td class="fillable">
+                                                    {{ $detail->img->NOMBRE ?? 'N/A' }}
+                                                </td>
+                                                <td class="fillable">{{ $detail->notes ?? 'Sin notas' }}</td>
+                                                <td class="fillable" style="text-align: right">
+                                                    ${{ number_format($detail->price ?? 0, 2) }}</td>
+                                            </tr>
+                                        </tbody>
+                                    @endforeach
+                                @endif
                                 <tfoot>
                                     <tr>
                                         <td style="text-align: right; background-color: #0455a0db;" colspan="3">
@@ -205,7 +218,7 @@
                                 </tfoot>
                             </table>
                             <div class="col-12 mt-2 d-flex justify-content-end">
-                                <button type="button" class="btn btn-primary btn-sm text-uppercase rounded-4"
+                                <button type="button" class="btn btn-primary btn-lg text-uppercase rounded-4"
                                     onclick="window.open('{{ asset('storage/budgets/budget_' . $budget->id . '.pdf') }}', '_blank')">
                                     <i class="fas fa-file-pdf"></i>
                                     Ver PDF
