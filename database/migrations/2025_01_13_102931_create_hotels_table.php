@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('hotels', function (Blueprint $table) {
             $table->id();
             $table->foreignId('reception_id')->nullable()->references('id')->on('receptions');
-            $table->foreignId('vaccine_certificate_id')->nullable()->references('id')->on('vaccine_certificates');
+            //$table->foreignId('vaccine_certificate_id')->nullable()->references('id')->on('vaccine_certificates');
             $table->text("food");
             $table->text("objects");
             $table->text("observations");

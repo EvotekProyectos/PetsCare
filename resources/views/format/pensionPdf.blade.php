@@ -2,79 +2,10 @@
 <html lang="en">
 
 <head>
-    @routes
-    <style>
-        .data {
-            font-family: sans-serif;
-            font-size: 11pt;
-            color: #00065f;
-            font-weight: normal;
-            margin: 0;
-        }
-
-        .fillable {
-            font-family: sans-serif;
-            font-size: 11pt;
-            color: #585858;
-            font-weight: normal;
-            margin: 0;
-        }
-
-        .aclarations {
-            font-family: sans-serif;
-            font-size: 9pt;
-            color: #9779b3;
-            font-weight: lighter margin: 0;
-        }
-
-        .tableup {
-            font-family: sans-serif;
-            font-size: 12pt;
-            color: #00065f;
-            font-weight: semibold;
-        }
-
-        .titles {
-            font-family: sans-serif;
-            font-size: 15pt;
-            color: #00065f;
-            font-weight: bold;
-        }
-
-        .alarm {
-            font-family: sans-serif;
-            font-style: italic;
-            font-size: 10pt;
-            color: #00065f;
-            font-weight: semibold;
-        }
-
-        .total {
-            font-family: sans-serif;
-            font-style: italic;
-            font-size: 12pt;
-            color: #818080;
-            font-weight: bold;
-            margin: 0;
-        }
-
-        .table-bordered {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 1%;
-            border: 1px solid #00065f;
-        }
-
-        .table-bordered th,
-        .table-bordered td {
-            border: 1px solid #00065f;
-            padding: 5px;
-        }
-    </style>
+   
 </head>
 
-<body>
-    <input type="hidden" value="{{ route('hotel.pdf', $reception->id) }}" id="reception">
+<body> 
     <div>
         <table style="width: 100%; ">
             <tr>
@@ -83,8 +14,11 @@
                 <th style="width: 20%"></th>
             </tr>
             <tr>
-                <td style="text-align: center;">
+                <td style="align-items: center;">
                     <img src="{{ asset('img/logo-petscare.png') }}" style="height: 87px;">
+                    @if($isPdf ?? false)
+                    <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px">
+                @endif
                 </td>
                 
                 <td style="text-align: center;">
@@ -99,7 +33,7 @@
                     <hr style="color: #00065f; width: 100%; margin-bottom: -7%; margin-top: -7%;">
                     <p
                         style="font-family: 'Times New Roman', Times, serif; font-weight: lighter; font-size: 12pt; color: #776d6d;">
-                        {{-- {{ str_pad($reception->id, 4, '0', STR_PAD_LEFT) }} --}}
+                        {{ str_pad($reception->id, 4, '0', STR_PAD_LEFT) }}
                     </p>
                 </td>
             </tr>
@@ -430,7 +364,7 @@
     <div>
         <table style="width: 100%; border-collapse: collapse; ">
             <tr>
-                <td style="width: 10%;"><button class="btnEnviar btn btn-lmx">Aceptar</button></td>
+                <td style="width: 10%;"><form> <button  class="btnEnviar btn btn-lmx">Aceptar</button> </form></td>
                 <td style="width: 10%; text-align:left"> <button class="btnLimpiar btn btn-lmx" data-target="canvas">Limpiar</button></td>
             </tr>
         </table>
@@ -454,7 +388,8 @@
         </table>
     </div>
 
- 
+    <link rel="stylesheet" href="{{ asset('css/pension/responsiva.css') }}">
+    <input type="hidden" value="{{ route('hotel.pdf', $reception->id) }}" id="reception">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/formats/pension.js') }}" defer></script>

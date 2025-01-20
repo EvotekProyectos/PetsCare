@@ -6,6 +6,7 @@ use App\Models\Hotel;
 use App\Http\Requests\HotelRequest;
 use App\Models\Cubicle;
 use App\Models\Folio;
+use App\Models\Format;
 use App\Models\GenericModel;
 use App\Models\PaymentOrder;
 use App\Models\Producto;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf  as Pdf;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class HotelController
@@ -143,16 +145,19 @@ class HotelController extends Controller
 
     }
 
+
     public function FormatPdf(Request $request, int $id)
     {
-        dd($id);
-        $reception = Reception::find($id);
-        $hotel = Hotel::with('servicie', 'serv')->where('reception_id', $id)->get();
+     
+        $hotels = Hotel::with(['reception', 'cubicle', 'servicie', 'serv'])
+        ->where('reception_id', $id)
+        ->get();
+        $reception = $hotels->first()->reception;
         $signatureDataUrl = $request->input('signature');
 
         $pdf = PDF::loadView('format.pensionPdf', [
             'reception' => $reception,
-            'hotel' => $hotel,
+            'hotels' => $hotels,
             'signatureDataUrl' => $signatureDataUrl,
             'isPdf' => true
         ]);
@@ -160,27 +165,23 @@ class HotelController extends Controller
         $pdfPath = '/formats/pension_' . $id . '.pdf';
         Storage::put('public' . $pdfPath, $pdf->output());
 
+        
+        $format = new Format();
+        $format->format_type_id = 5;
+        $format->reception_id = $id;
+        $format->pet_id = $reception->pet->id;
+        $format->format_pdf = $pdfPath;
+        $format->save();
+
+
         $pdfUrl = Storage::url($pdfPath);
 
         return response()->json(['url' => asset('storage' . $pdfPath)]);
     }
 
-
-    // public function view(){
-    //     $cubicles = Cubicle::all();
-    //     $hotel = Hotel::with('reception')->first(); 
     
-    //     return view('cubicle.view', compact('cubicles', 'hotel'));
-    // }
-    
-    // public function view() {
-       
-    //     $hotel = Hotel::with(['cubicle', 'reception'])->get();
-    //     $cubicles = Cubicle::all();
+        
 
-    //     return view('cubicle.view', compact('cubicles', 'hotel'));
-    //     //return response()->json($hotel);
-    // }
 
    public function view() {
     

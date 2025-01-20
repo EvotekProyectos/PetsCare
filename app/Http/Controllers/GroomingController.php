@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Grooming;
 use App\Http\Requests\GroomingRequest;
 use App\Models\Folio;
+use App\Models\Format;
 use App\Models\GenericModel;
 use App\Models\GroomingStatusHistory;
 use App\Models\PaymentOrder;
@@ -160,6 +161,13 @@ class GroomingController extends Controller
 
         $pdfPath = '/groomings/grooming_' . $id . '.pdf';
         Storage::put('public' . $pdfPath, $pdf->output());
+
+        $format = new Format();
+        $format->format_type_id = 4;
+        $format->reception_id = $id;
+        $format->pet_id = $reception->pet->id;
+        $format->format_pdf = $pdfPath;
+        $format->save();
 
         $pdfUrl = Storage::url($pdfPath);
 

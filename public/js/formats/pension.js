@@ -54,17 +54,18 @@ $("canvas").each(function(index) {
     clear();
 });
 
+
 // $("form").on("submit", function (e) {
 //     e.preventDefault();
 
 //     const formData = new FormData(this);
-//     console.log(route('pension.pdf', RECEPTION_ID));
+//     //const signatureData = canvas.toDataURL("image/png");
 //     formData.append("signature", canvas.toDataURL("image/png"));
 
+
 //     $.ajax({
-//        // url: route('grooming.pdf', RECEPTION_ID),
-       
-//         url: route('pension.pdf', RECEPTION_ID),
+
+//         url: route('hotel.pdf', RECEPTION_ID),
 //         type: "post",
 //         headers: {
 //             "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content'),
@@ -73,8 +74,8 @@ $("canvas").each(function(index) {
 //         processData: false,
 //         data: formData,
 //         success: function (response) {
-//             window.open(response.url, '_blank');
-//             window.location.href = route('receptions.index');
+//                 window.open(response.url, '_blank');
+//                 window.location.href = route('receptions.index');
 //         },
 //         error: function (error) {
 //             console.error("Error:", error);
@@ -87,12 +88,11 @@ $("form").on("submit", function (e) {
     e.preventDefault();
 
     const formData = new FormData(this);
-    //const signatureData = canvas.toDataURL("image/png");
-    formData.append("signature", canvas.toDataURL("image/png"));
-
+    const canvas = document.getElementById("canvas"); // Asegúrate de obtener el canvas correcto
+    const signatureData = canvas.toDataURL("image/png");
+    formData.append("signature", signatureData);
 
     $.ajax({
-
         url: route('hotel.pdf', RECEPTION_ID),
         type: "post",
         headers: {
@@ -102,8 +102,8 @@ $("form").on("submit", function (e) {
         processData: false,
         data: formData,
         success: function (response) {
-                window.open(response.url, '_blank');
-                window.location.href = route('receptions.index');
+            window.open(response.url, '_blank');
+            window.location.href = route('receptions.index');
         },
         error: function (error) {
             console.error("Error:", error);
