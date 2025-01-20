@@ -110,23 +110,21 @@
                                 </div>
 
                                 <div class="col-md-3">
-                                    <p style="font-weight: bold">Médico responsable: <span style="font-weight: normal">
-                                            {{ $reception->vet->name }} </span></p>
+                                    {{-- <p style="font-weight: bold">Médico responsable: <span style="font-weight: normal"> --}}
+                                            {{-- {{ $reception->vet->name }} </span></p> --}}
                                 </div>
 
                                 
                             </div>
                           
                         </div>
-                        <div class="card-body ">
+
+                        <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
                                     DETALLES DEL SERVICIO
                                 </h5>
                             </div>
-                        </div>
-
-                        <div class="card-body">
                             {{-- <form method="POST" onsubmit="Cremation()" role="form" id="newCremation"
                             enctype="multipart/form-data">
                                 @csrf
@@ -149,5 +147,13 @@
 @endsection
 
 @push('scripts')
+<script>
+    var ruta = "{{ asset('') }}";
+    var imgDefault = "{{ asset('img/pet_pic.png') }}";
+    var Reception_Id = {{ $reception->id }};
+    var Pet_Id = {{ $reception->pet_id }};
+    var Pic_id = {{ $reception->pet->picture_id ?? 'null' }};
+    var Pic_route = "{{ $reception->pet->file->route ?? '' }}";
+</script>
 <script src="{{ asset('js/cremations/create.js') }}" defer></script>
 @endpush

@@ -7,10 +7,6 @@ window.onload = function () {
     else {
         $("#preview").attr("src", imgDefault);
     }
-    // const now = new Date();
-    // const hours = String(now.getHours()).padStart(2, '0');
-    // const minutes = String(now.getMinutes()).padStart(2, '0');
-    // document.getElementById("time").value = `${hours}:${minutes}`;
 
 }
 
@@ -20,16 +16,16 @@ $(document).ready(function () {
         width: 'resolve'
     });
     $('#lab_type_id').select2({
-         placeholder: 'Añadir Laboratorio',
-          width: 'resolve'
-     });
-     $('#imaging_type_id').select2({
-        placeholder: 'Añadir Imagenologia',
-         width: 'resolve'
+        placeholder: 'Añadir Laboratorio',
+        width: 'resolve'
     });
     $('#imaging_type_id').select2({
         placeholder: 'Añadir Imagenologia',
-         width: 'resolve'
+        width: 'resolve'
+    });
+    $('#imaging_type_id').select2({
+        placeholder: 'Añadir Imagenologia',
+        width: 'resolve'
     });
     // $('#product_type_id').select2({
     //     placeholder: 'Añadir Cirugia',
@@ -46,9 +42,9 @@ function fetchAndRenderData() {
         url: route('red-sheets.recap', Reception_Id),
         method: 'GET',
         success: function (response) {
-            const Data = response.data.flat(); 
-            const normalizedData = normalizeData(Data); 
-            renderData(normalizedData); 
+            const Data = response.data.flat();
+            const normalizedData = normalizeData(Data);
+            renderData(normalizedData);
         },
         error: function (error) {
             console.error("Error fetching data:", error);
@@ -68,7 +64,7 @@ function normalizeData(data) {
 }
 
 function renderData(data) {
-    
+
     const groupedData = data.reduce((acc, item) => {
         acc[item.day_count] = acc[item.day_count] || [];
         acc[item.day_count].push(item);
@@ -76,8 +72,8 @@ function renderData(data) {
     }, {});
 
     let grandTotal = 0;
-    
-    $('#table-container').empty(); 
+
+    $('#table-container').empty();
 
     for (const [dayCount, entries] of Object.entries(groupedData)) {
         const dayHeader = `<h5>Día ${dayCount}</h5>`;
@@ -100,7 +96,7 @@ function renderData(data) {
         });
         grandTotal += total;
 
-        
+
         const table = `
             <table class="table table-striped table-hover responsive w-100" style="background-color: #2596be;">
                 <thead>
@@ -182,6 +178,17 @@ function renderEntryRow(entry) {
             </tr>
         `;
     }
+    // if (entry.observations) {
+    //     rows += `
+    //         <tr>
+    //             <td>Tentativo</td>
+    //             <td>Procedimiento</td>
+    //             <td>${entry.observations || ''}</td>
+    //             <td>${entry.vet ? entry.vet.name : ''}</td>
+    //             <td>$0</td>
+    //         </tr>
+    //     `;
+    // }
 
     return rows;
 }
@@ -222,7 +229,7 @@ async function NewEntry() {
 async function OpenFollowUps() {
     document.getElementById("reception_id_followup").value = Reception_Id;
     console.log(Reception_Id);
-    
+
     $('#ModalFollowUps').modal('show');
 }
 
@@ -262,147 +269,193 @@ async function AddFollowUp() {
     }
 }
 
-// async function OpenPrescription(petId, receptionId) {
-//     const result = await Swal.fire({
-//         title: '¿Dar de alta a este paciente?',
-//         text: "Confirma su atención",
-//         icon: 'question',
-//         showCancelButton: true,
-//         confirmButtonColor: '#3085d6',
-//         cancelButtonColor: '#d33',
-//         confirmButtonText: 'Sí, dar alta.',
-//         cancelButtonText: 'No, regresar.'
-//     });
 
-//     if (result.isConfirmed) {
-//             const response = await fetch(`/redSheet/discharge`, {
-//                 method: 'POST',
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-//                 },
-//                 body: JSON.stringify({ petId, receptionId })
-//             });
-//             const data = await response.json();
-//             if (response.ok) {
-//                 Swal.fire(
-//                     'Paciente dado de alta',
-//                     'Se ha registrado la salida.'
-//                 );
-//                 window.location.href = `/prescriptions/create/${petId}`;
-//             } else {
-//                 Swal.fire('Error', data.message || 'No se pudo dar de alta.', 'error');
-//             }
-//     }
-// }
 
-async function OpenPrescription(petId, receptionId) {
+async function discharge(receptionID) {
+    event.preventDefault();
     const result = await Swal.fire({
         title: '¿Dar de alta a este paciente?',
-        text: "Confirma su atención",
+        text: "Por favor seleccione el tipo de alta para seguir el proceso",
         icon: 'question',
+        input: 'select',
+        inputOptions: getDischarges(altas),
+        inputPlaceholder: 'Selecciona el tipo de alta',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, dar alta.',
-        cancelButtonText: 'No, regresar.'
+        confirmButtonText: 'Confirmar.',
+        cancelButtonText: 'Cancelar.',
+        inputValidator: (value) => {
+            return new Promise((resolve) => {
+                if (value === '') {
+                    resolve('Debes seleccionar un tipo de alta');
+                } else {
+                    resolve();
+                }
+            });
+        }
     });
 
     if (result.isConfirmed) {
-        const { value: selectedType } = await Swal.fire({
-            title: 'Selecciona el tipo de alta',
-            html: `
-                <select id="dischargeType" class="swal2-input">
-                    <option value="" disabled selected>Selecciona una opción</option>
-                    <option value="Alta normal" style="color: #2BEA91;">Alta normal</option>
-                    <option value="Alta voluntaria" style="color: #2DAAF8;">Alta voluntaria</option>
-                    <option value="Alta por fallecimiento" style="color: #F862AA;">Alta por fallecimiento</option>
-                </select>
-            `,
-            focusConfirm: false,
-            preConfirm: () => {
-                return document.getElementById('dischargeType').value;
-            }
+        const selectedOption = result.value;
+
+        switch (selectedOption) {
+            case '1':
+                normal(receptionID, selectedOption);
+                break;
+            case '2':
+                volunteer(receptionID, selectedOption);
+                break;
+            case '3':
+                death(receptionID, selectedOption);
+                break;
+
+        }
+    }
+}
+
+async function normal(reception, type) {
+    try {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        let form = new FormData();
+        form.append('reception_id', reception);
+        form.append('hospital_discharges_id', type);
+        form.append('_token', csrfToken);
+
+        let url = route('hospitalization.discharge');
+
+        let response = await fetch(url, {
+            method: "POST",
+            body: form,
+
         });
 
-        if (!selectedType) {
-            Swal.fire('Error', 'Debes seleccionar un tipo de alta.', 'error');
-            return;
+        if (response.ok) {
+            window.location.href = route('prescriptions.new', reception);
         }
-
-        if (selectedType === "Alta normal") {
-            const response = await fetch(route('redsheet-discharge'), {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({ petId, receptionId })
-            });
-            const data = await response.json();
-            if (response.ok) {
-                // Swal.fire(
-                //     'Paciente dado de alta',
-                //     'Se ha registrado la salida.'
-                // );
-                window.location.href = route('prescription.create', { id: petId });
-
-                //Swal.fire('Error', data.message || 'No se pudo dar de alta.', 'error');
-            }
-        } else if (selectedType === "Alta voluntaria") {
-            const nameFamily = $("#name_family").val();
-            const reason = $("#reason").val();
-            window.location.href = route ('alta.voluntaria', {id: receptionId }); 
-            
-        } else if (selectedType === "Alta por fallecimiento") {
-            $.post(route('discharge-death'), { 
-                receptionId: receptionId, // Incluye el parámetro necesario
-                _token: $('meta[name="csrf-token"]').attr('content') // Token CSRF
-            })
-                .done(() => {
-                    Swal.fire({
-                        title: 'Alta por fallecimiento',
-                        text: '¿Desea iniciar el proceso de cremación?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Sí, iniciar proceso',
-                        cancelButtonText: 'No, solo registrar',
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = route('new.cremation', { id: receptionId });
-                        } else if (result.dismiss === Swal.DismissReason.cancel) {
-                            window.location.href = route('hospitalization.historic', { id: receptionId });
-                        }
-                    });
-                })
-                .fail((error) => {
-                    console.error('Error al ejecutar la ruta de alta por fallecimiento:', error);
-                    Swal.fire('Error', 'No se pudo registrar el alta por fallecimiento.', 'error');
-                });
-        }
-        
+    } catch (error) {
+        console.error('Error:', error);
     }
-        
 }
- async function OpenSurgeries() {
-     const receptionId = document.getElementById("reception_id_followup").value;
 
-         const url = route('surgery.checkRequirements', receptionId) ; 
-         const response = await fetch(url);
-         const data = await response.json();
+async function volunteer(reception, type) {
+    try {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-         if (data.status === 'ok') {
-             $('#ModalSurgeries').modal('show');
-             
-         } else {
-             Swal.fire({
-                 icon: 'error',
-                 title: 'Error',
-                 text: data.message || 'Ocurrió un error al verificar los requisitos.',
-             });
- }
- }
- jQuery('#ModalSurgeries').on('shown.bs.modal', function() {
+        let form = new FormData();
+        form.append('reception_id', reception);
+        form.append('hospital_discharges_id', type);
+        form.append('_token', csrfToken);
+
+        let url = route('hospitalization.discharge');
+
+        let response = await fetch(url, {
+            method: "POST",
+            body: form,
+
+        });
+
+        if (response.ok) {
+            window.location.href = route('alta.voluntaria', reception);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+
+}
+
+async function death(reception, type) {
+    try {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        let form = new FormData();
+        form.append('reception_id', reception);
+        form.append('hospital_discharges_id', type);
+        form.append('_token', csrfToken);
+
+        let url = route('hospitalization.discharge');
+
+        let response = await fetch(url, {
+            method: "POST",
+            body: form,
+
+        });
+
+        if (response.ok) {
+            const result = await Swal.fire({
+                title: 'Alta por fallecimiento',
+                text: '¿Desea iniciar el proceso de cremación con Pets Care?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, iniciar proceso',
+                cancelButtonText: 'No, solo registrar',
+            });
+
+            if (result.isConfirmed) {
+                window.location.href = route('new.cremation', { id: reception });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire({
+                    title: 'Procesando...',
+                    text: 'Por favor espera mientras procesamos la solicitud.',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                let url3 = route('redsheet.pay', reception);
+                let pet3 = await fetch(url3, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                let resp3 = await pet3.json();
+                Swal.close();
+                Swal.fire({
+                    icon: "success",
+                    title: "El folio para pagar el servicio es " + resp3,
+                    timer: 27000,
+                    showConfirmButton: true
+                }).then(() => {
+                    window.location.href = route('assignment.hospital');
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+
+
+function getDischarges(DischargeData) {
+    return DischargeData.reduce((options, Discharges) => {
+        options[Discharges.id] = Discharges.name;
+        return options;
+    }, {});
+}
+
+async function OpenSurgeries() {
+    const receptionId = document.getElementById("reception_id_followup").value;
+
+    const url = route('surgery.checkRequirements', receptionId);
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.status === 'ok') {
+        $('#ModalSurgeries').modal('show');
+
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: data.message || 'Ocurrió un error al verificar los requisitos.',
+        });
+    }
+}
+jQuery('#ModalSurgeries').on('shown.bs.modal', function () {
     jQuery(document).off('focusin.modal');
 });
 
@@ -500,51 +553,7 @@ $(document).ready(function () {
     });
 });
 
-// var surgerytable = undefined;
-// $(document).ready(function () {
-//     surgerytable = $('#surgeries').DataTable({
-//         ajax: route('surgeries.entry', Reception_Id),
-//         responsive: true,
-//         order: [0, 'desc'],
-//         columns: [
-//             {
-//                 data: 'date',
-//                 render: function (data) {
-//                     if (data) {
-//                         let date = new Date(data);
-//                         let formattedDate = date.toLocaleDateString('en-US', {
-//                             year: 'numeric',
-//                             month: 'short',
-//                             day: 'numeric'
-//                         });
-//                         let formattedTime = date.toLocaleTimeString('en-US', {
-//                             hour: '2-digit',
-//                             minute: '2-digit'
-//                         });
-//                         return `${formattedDate} ${formattedTime}`;
-//                     }
-//                     return '';
-//                 }
-//             },
 
-//             {
-//                 data: null,
-//                 render: function (data) {
-//                     return data.service ? data.service.name : '';
-//                 }
-//             },
-//             {
-//                 data: 'observations',
-//             },
-//             {
-//                 data: null,
-//                 render: function (data) {
-//                     return data.vet ? data.vet.name : '';
-//                 }
-//             },
-//         ],
-//     });
-// });
 
 async function Transfer() {
     event.preventDefault();
@@ -572,12 +581,12 @@ async function Transfer() {
             const form = new FormData();
             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             form.append("_token", token);
-            form.append("_method", "PUT"); 
-            form.append("admission_type_id", result.value); 
+            form.append("_method", "PUT");
+            form.append("admission_type_id", result.value);
 
-            let url = route('reception.transfer', Reception_Id); 
+            let url = route('reception.transfer', Reception_Id);
             let pet = await fetch(url, {
-                method: "POST", 
+                method: "POST",
                 body: form
             });
             if (pet.ok) {
@@ -598,27 +607,27 @@ function getAdm(AdminssionData) {
 }
 
 async function ButtonDeath(receptionId) {
-        const response = await fetch(route('button-death'), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            },
-            body: JSON.stringify({ receptionId: receptionId }),
-        });
+    const response = await fetch(route('button-death'), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        },
+        body: JSON.stringify({ receptionId: receptionId }),
+    });
 
-        if (!response.ok) {
-            throw new Error('Error en la solicitud.');
-        }
+    if (!response.ok) {
+        throw new Error('Error en la solicitud.');
+    }
 
-        const data = await response.json();
-        Swal.fire({
-            icon: 'info', 
-            title: 'Paciente Fallecido',
-            text: 'El estado del paciente ha sido actualizado.',
-            confirmButtonText: 'Aceptar'
-        }).then(() => {
-            location.reload();
-        });
+    const data = await response.json();
+    Swal.fire({
+        icon: 'info',
+        title: 'Paciente Fallecido',
+        text: 'El estado del paciente ha sido actualizado.',
+        confirmButtonText: 'Aceptar'
+    }).then(() => {
+        location.reload();
+    });
 }
 

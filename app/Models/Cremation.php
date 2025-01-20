@@ -41,7 +41,7 @@ class Cremation extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_id', 'pet_id', 'date_death', 'date_finish', 'servicie', 'CM_id', 'type_urn', 'urn_model', 'observations', 'placa_type_id', 'price'];
+    protected $fillable = ['reception_id', 'pet_id', 'date_death', 'date_finish', 'servicie', 'CM_id', 'type_urn', 'vet_id','urn_model', 'observations','text_placa', 'placa_type_id', 'price','status'];
 
 
     /**
@@ -77,6 +77,23 @@ class Cremation extends Model
         return $this->belongsTo(\App\Models\TagType::class, 'placa_type_id', 'id');
     }
     
+    public function service()
+    {
+        return $this->belongsTo(\App\Models\Precios::class, 'servicie', 'ARTICULO_ID');
+    }
+
+    public function serv()
+    {
+        return $this->belongsTo(\App\Models\Producto::class, 'servicie', 'ARTICULO_ID');
+    }
+    
+       /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function vet()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'vet_id', 'id');
+    }
     
 
 }

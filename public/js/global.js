@@ -138,13 +138,15 @@ const deleteVaccinationCertificate = (id, table) => {
     deleteResource(url, table);
 }
 
-const deleteSurgeryPacks = (id, table) => {
-    const url = route("surgery-packs.destroy", id);
-    deleteResource(url, table);
-}
+
 
 const deleteBudget = (id, table) => {
     const url = route("budgets.destroy", id);
+    deleteResource(url, table);
+}
+
+const deleteBudgetDetail = (id, table) => {
+    const url = route("budget-details.destroy", id);
     deleteResource(url, table);
 }
 
@@ -183,5 +185,25 @@ const deleteCmType = (id, table) => {
 
 const deleteTagType = (id, table) => {
     const url = route("tag-types.destroy", id);
+    deleteResource(url, table);
+}
+
+const deletesurgerySchedule = (id, table) => {
+    const url = route("surgery-schedules.destroy", id);
+    deleteResource(url, table);
+}
+
+const deleteCubicle= (id, table) => {
+    const url = route("cubicles.destroy", id);
+    deleteResource(url, table);
+}
+
+const deleteCubicleTypes= (id, table) => {
+    const url = route("cubicle-types.destroy", id);
+    deleteResource(url, table);
+}
+
+const deleteServicieHotel = (id, table) => {
+    const url = route("hotels.destroy", id);
     deleteResource(url, table);
 }

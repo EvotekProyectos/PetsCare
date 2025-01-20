@@ -96,7 +96,7 @@
                    
                     <td>
                         <p style="font-size: 10pt; font-family:sans-serif;">
-                            Médico responsable: {{ $cremation->reception->vet->name}}
+                            Médico responsable: {{ $cremation->vet->name ?? 'Sin especificar'}}
                         </p>
                     </td>
                     
@@ -128,7 +128,7 @@
                     </td>
                     <td style="text-align: left; padding: 5px 10px;">
                         <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">
-                            {{ $cremation->pet->id }}
+                            {{ $cremation->pet->family->name }}
                         </p>
                     </td>
                     <td>
@@ -224,6 +224,14 @@
                                 <p style="font-family: sans-serif; font-size: 10pt; margin: 0;"> Detalles del servicio
                                 </p>
                             </td>
+                            <td></td>
+                         
+                            <td style="padding: 5px 10px;">
+                                 <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Folio para Pagar:
+                                    {{ $reception->payment->folio_odv ?? 'Pendiente'}}
+                                </p>
+                            </td>
+
                         </tr>
                     </table>
                 </div>
@@ -236,14 +244,14 @@
                         </td>
                         <td style="padding: 5px 10px;">
                             <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                {{ $cremation->servicie }}
+                                {{ $cremation->serv->NOMBRE }}
                             </p>
                             <td>
-                                <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Modelo de Urna:</p>
+                                <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Tipo de Urna:</p>
                             </td>
                             <td style="padding: 5px 10px;">
                                 <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                    {{ $cremation->urn_model ?? 'Sin especificar'}}
+                                    {{ $cremation->type_urn ?? 'Sin especificar'}}
                                 </p>
                             </td>
                     </tr>
@@ -265,16 +273,57 @@
                             </td>
                     </tr>
                     <tr>
+                        <td>
+                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Mensaje placa:</p>
+                        </td>
+                        <td style="padding: 5px 10px;">
+                            <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
+                                {{ $cremation->text_placa ?? 'Sin especificar'}}
+                            </p>
+                            <td>
+                                <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">Observaciones:</p>
+                            </td>
+                            <td style="padding: 5px 10px; word-wrap: break-word; word-break: break-word; white-space: normal;">
+                                <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
+                                    {{ $cremation->observations ?? 'Sin especificar'}}
+                                </p>
+                            </td>
+                            
+                    </tr>
+                    <tr>
                        
                             <td>
                                 <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Precio:</p>
                             </td>
                             <td style="padding: 5px 10px;">
                                 <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                    {{ $cremation->price ?? 'Sin especificar'}}
+                                    ${{ $cremation->service?->PRECIO ?? 'Sin especificar'}}
                                 </p>
                             </td>
+                            <td>
+                                <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Fecha de entrega:</p>
+                            </td>
+                            <td style="padding: 5px 10px;">
+                                <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
+                                    {{$cremation->date_finish ?? 'Sin especificar'}}
+                                </p>
+                            </td>
+                            
                     </tr>
+
+                   
+
+                    {{-- <tr>
+                        <td>
+                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Folio para Pagar:</p>
+                        </td>
+                        <td style="padding: 5px 10px;">
+                            <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
+                                {{ $reception->payment->folio_odv ?? 'Pendiente'}}
+                            </p>
+                        </td>
+                        
+                </tr> --}}
                 </div>
 
                 {{-- <div
@@ -284,21 +333,22 @@
                        
 
                 
-            <div>
+            {{-- <div>
                 <table style="width: 100%;">
                     <tr>
+                       
                         <td>
-                            <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;">
-                                <strong>Fecha de entrega:</strong> {{ $cremation->date_finish ?? 'Sin especificar'}}
+                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">  <strong> Folio para Pagar:</strong> </p>
+                        </td>
+                        <td style="padding: 5px 10px;">
+                            <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
+                                <strong>{{$reception->payment->folio_odv ?? 'Pendiente'}}</strong>
                             </p>
-                       </td>
-                            {{-- <p style="font-size: 10pt;font-family:sans-serif;">
-                            </p>
-                        </td> --}}
-
-                    </tr>
+                        </td>
+                 </tr>
+                    
                 </table>
-            </div>
+            </div> --}}
 
         </div>
 

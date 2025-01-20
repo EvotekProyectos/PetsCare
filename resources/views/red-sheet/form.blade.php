@@ -1,3 +1,17 @@
+<style>
+    .select2-container .select2-selection--single {
+        height: 2rem;
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+    }
+
+    .input-group .select2-container {
+        width: auto !important;
+        flex: 1 1 auto;
+    }
+</style>
 <div class="row padding-1 p-1">
     <div class="col-md-12">
 

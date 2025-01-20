@@ -67,8 +67,9 @@
         <table style="width: 100%; text-align: center;">
             <tr>
                 <td style="align-items: center;">
-                    {{-- <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px"> --}}
-
+                    @if($isPdf ?? false)
+                        <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px">
+                    @endif
                 </td>
                 <td>
                     <p class="head">Hospital Veterinario Pets Care</p>

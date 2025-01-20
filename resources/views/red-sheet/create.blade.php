@@ -21,7 +21,7 @@
                     <div class="card-header bg-transparent border-0">
                         <div class="d-flex justify-content-between align-items-center">
                             <h4 id="card_title" class="text-primary text-uppercase">
-                                <span class="ic--twotone-pets"></span> HOSPITALIZACIÓN
+                                <span class="ri--hospital-lineB"></span> HOSPITALIZACIÓN
                             </h4>
                         </div>
                     </div>
@@ -64,7 +64,8 @@
                             </div>
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Clasificación: <span style="font-weight: normal">
-                                        {{ $reception->pet->petClassification->name }} </span></p>
+                                        {{-- {{ $reception->pet->petClassification->name }} </span> --}}
+                                    </p>
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center">
@@ -127,7 +128,7 @@
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
                                     <button class="btn btn-costum-services btn-sm text-uppercase rounded-4"
-                                    onclick="OpenPrescription({{ $reception->pet->id }}, {{ $reception->id }})">
+                                    onclick="discharge( {{ $reception->id }})">
                                     <span class="badge custom-badge-pill"><span class="mynaui--inbox-up"></span></span>
                                     Dar Alta
                                 </button>
@@ -285,6 +286,7 @@
     <script>
         var ruta = "{{ asset('') }}";
         var admisiones = @json($admissions);
+        var altas = @json($discharges);
         var imgDefault = "{{ asset('img/pet_pic.png') }}";
         var Reception_Id = {{ $reception->id }};
         var Pet_Id = {{ $reception->pet_id }};

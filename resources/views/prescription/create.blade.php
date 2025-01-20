@@ -33,5 +33,8 @@
 @endsection
 
 @push('scripts')
+{{-- <script>
+    var Reception_Id = {{ $reception->id }};
+</script> --}}
 <script src="{{ asset('js/prescriptions/create.js') }}" defer></script>
 @endpush

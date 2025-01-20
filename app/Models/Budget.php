@@ -53,7 +53,7 @@ class Budget extends Model
      *
      * @var array
      */
-    protected $fillable = ['pet_id', 'date', 'surgery_pack_id', 'procedure', 'procedure_price', 'biometric', 'biometric_price', 'chemistry', 'chemistry_price', 'nodulectomy', 'nodulectomy_price', 'histopathology', 'histopathology_price', 'xrays', 'xrays_price', 'collar', 'collar_price', 'body', 'body_price', 'others', 'total', 'vet_id'];
+    protected $fillable = ['pet_id', 'date',  'total', 'vet_id', 'others', 'reception_id'];
 
 
     /**
@@ -63,15 +63,8 @@ class Budget extends Model
     {
         return $this->belongsTo(\App\Models\Pet::class, 'pet_id', 'id');
     }
-    
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function surgeryPack()
-    {
-        return $this->belongsTo(\App\Models\SurgeryPack::class, 'surgery_pack_id', 'id');
-    }
-    
+
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -79,6 +72,12 @@ class Budget extends Model
     {
         return $this->belongsTo(\App\Models\User::class, 'vet_id', 'id');
     }
-    
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function reception()
+    {
+        return $this->belongsTo(\App\Models\Reception::class, 'reception_id', 'id');
+    }
 }

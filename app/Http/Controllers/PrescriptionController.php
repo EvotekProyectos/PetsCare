@@ -7,6 +7,7 @@ use App\Http\Requests\PrescriptionRequest;
 use App\Models\Appointment;
 use App\Models\Pet;
 use App\Models\Reason;
+use App\Models\Reception;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Client\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -24,7 +25,7 @@ class PrescriptionController extends Controller
     {
 
         $prescriptions = Prescription::paginate();
-        $this->authorize("viewAny",Prescription::class);
+        $this->authorize("viewAny", Prescription::class);
 
         return view('prescription.index', compact('prescriptions'))
             ->with('i', (request()->input('page', 1) - 1) * $prescriptions->perPage());
@@ -41,25 +42,25 @@ class PrescriptionController extends Controller
     //       return view('prescription.create', compact('prescription'));
     //   }
 
-      public function create($id)
-      {   $pet = Pet::find($id);
-          $prescription = new Prescription();
-          $reasons = Reason::all();
-          $this->authorize("create",Prescription::class);
-          return view('prescription.create', compact('prescription','pet', 'reasons'));
-     }
+    public function create($id)
+    {
+        $pet = Pet::find($id);
+        $prescription = new Prescription();
+        $reasons = Reason::all();
+        $this->authorize("create", Prescription::class);
+        return view('prescription.create', compact('prescription', 'pet', 'reasons'));
+    }
 
 
     /**
      * Store a newly created resource in storage.
      */
-     public function store(PrescriptionRequest $request)
-     {
-         $new = Prescription::create($request->validated());
-         $this->authorize("create",Prescription::class);
-         
-         return response()->json($new);
-        
+    public function store(PrescriptionRequest $request)
+    {
+        $new = Prescription::create($request->validated());
+        $this->authorize("create", Prescription::class);
+
+        return response()->json($new);
     }
 
     /**
@@ -68,7 +69,7 @@ class PrescriptionController extends Controller
     public function show($id)
     {
         $prescription = Prescription::find($id);
-        $this->authorize("view",Prescription::class);
+        $this->authorize("view", Prescription::class);
         return view('prescription.show', compact('prescription'));
     }
 
@@ -80,7 +81,7 @@ class PrescriptionController extends Controller
         $prescription = Prescription::find($id);
         $pet = $prescription->pet;
         $reasons = Reason::all();
-        $this->authorize("update",$prescription);
+        $this->authorize("update", $prescription);
         return view('prescription.edit', compact('prescription', 'pet', 'reasons'));
     }
 
@@ -90,22 +91,23 @@ class PrescriptionController extends Controller
     public function update(PrescriptionRequest $request, Prescription $prescription)
     {
         $prescription->update($request->validated());
-        $this->authorize("update",$prescription);
+        $this->authorize("update", $prescription);
         return redirect()->route('prescriptions.index')
             ->with('success', 'Prescription updated successfully');
     }
 
     public function destroy($id)
     {
-        $prescription= Prescription::find($id);
+        $prescription = Prescription::find($id);
         $this->authorize("delete", $prescription);
         $prescription->delete();
 
         return response()->json($prescription);
     }
 
-    public function list(){
-        $prescription= Prescription::with('reception','vet', 'receptionist')->get();
+    public function list()
+    {
+        $prescription = Prescription::with('reception', 'vet', 'receptionist')->get();
         return DataTables::of($prescription)->make(true);
     }
 
@@ -115,12 +117,20 @@ class PrescriptionController extends Controller
             "vet",
             "reception"
         )->find($id);
-        $reception= $prescription->reception_id;
-        
-        $next=Appointment::where("reception_id", $reception)->get()->First();       
+        $reception = $prescription->reception_id;
+
+        $next = Appointment::where("reception_id", $reception)->get()->First();
         $pdf = Pdf::loadView("prescription.pdf", compact("prescription", "next"));
         return $pdf->stream("PDF.pdf");
     }
 
-   
+    public function new(int $id)
+    {
+        $reception = Reception::findOrFail($id);
+        $pet = Pet::findOrFail($reception->pet_id);
+        $prescription = new Prescription();
+        $reasons = Reason::all();
+        $this->authorize("create", Prescription::class);
+        return view('prescription.new', compact('prescription', 'pet', 'reasons', 'reception'));
+    }
 }

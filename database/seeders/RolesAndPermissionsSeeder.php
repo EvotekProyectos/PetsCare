@@ -176,6 +176,13 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'ver panel cirugías', 'type' => 'cirugías']);
         Permission::create(['name' => 'crear cirugía', 'type' => 'cirugías']);
         Permission::create(['name' => 'editar cirugía', 'type' => 'cirugías']);
+        Permission::create(['name' => 'eliminar cirugía', 'type' => 'cirugías']);
+
+        //Surgery schedules
+        Permission::create(['name' => 'ver panel horario de cirugías', 'type' => 'cirugías']);
+        Permission::create(['name' => 'crear asignación de cirugía', 'type' => 'cirugías']);
+        Permission::create(['name' => 'editar asignación de cirugía', 'type' => 'cirugías']);
+        Permission::create(['name' => 'eliminar asignación de cirugía', 'type' => 'cirugías']);
 
         //follow ups
         Permission::create(['name' => 'ver panel seguimientos', 'type' => 'seguimientos']);
@@ -200,12 +207,6 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'crear servicios consultas', 'type' => 'sevicios consultas']);
         Permission::create(['name' => 'editar servicios consultas', 'type' => 'sevicios consultas']);
         Permission::create(['name' => 'eliminar servicios consultas', 'type' => 'sevicios consultas']);
-
-        // surgery packs permissions
-        Permission::create(['name' => 'ver panel paquetes cirugias', 'type' => 'paquetes cirugias']);
-        Permission::create(['name' => 'crear paquetes cirugias', 'type' => 'paquetes cirugias']);
-        Permission::create(['name' => 'editar paquetes cirugias', 'type' => 'paquetes cirugias']);
-        Permission::create(['name' => 'eliminar paquetes cirugias', 'type' => 'paquetes cirugias']);
 
         // surgery budgets permissions
         Permission::create(['name' => 'ver panel presupuestos', 'type' => 'presupuestos']);
@@ -254,6 +255,8 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'crear cremaciones', 'type' => 'cremaciones']);
         Permission::create(['name' => 'editar cremaciones', 'type' => 'cremaciones']);
         Permission::create(['name' => 'eliminar cremaciones', 'type' => 'cremaciones']);
+
+        
 
         // roles
         $role = Role::create(['name' => 'administrador']);

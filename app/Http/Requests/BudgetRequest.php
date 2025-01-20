@@ -24,26 +24,10 @@ class BudgetRequest extends FormRequest
         return [
             'pet_id' => 'nullable|integer|exists:pets,id',
 			'date' => 'required|date',
-            'surgery_pack_id' => 'nullable|integer|exists:surgery_packs,id',
-			'procedure' => 'required|string',
-			'procedure_price' => 'required',
-            'biometric' => 'string',
-			'biometric_price' => 'nullable|string',
-            'chemistry' => 'string',
-			'chemistry_price' => 'nullable|string',
-            'nodulectomy' => 'string',
-			'nodulectomy_price' => 'nullable|string',
-            'histopathology' => 'string',
-			'histopathology_price' => 'nullable|string',
-            'xrays' => 'string',
-			'xrays_price' => 'nullable|string',
-            'collar' => 'string',
-			'collar_price' => 'nullable|string',
-            'body' => 'string',
-			'body_price' => 'nullable|string',
-			'others' => 'string',
 			'total' => 'string',
+            'others' => 'nullable|string',
             'vet_id' => 'nullable|integer|exists:users,id',
+            'reception_id' => 'nullable|integer|exists:receptions,id',
         ];
     }
 }

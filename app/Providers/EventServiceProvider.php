@@ -37,7 +37,7 @@ use App\Models\Schedule;
 use App\Models\Service;
 use App\Models\Shift;
 use App\Models\Surgery;
-use App\Models\SurgeryPack;
+use App\Models\SurgerySchedule;
 use App\Models\TagType;
 use App\Models\User;
 use App\Models\VaccineCertificate;
@@ -73,6 +73,7 @@ use App\Observers\ServiceObserver;
 use App\Observers\ShiftObserver;
 use App\Observers\SurgeryObserver;
 use App\Observers\SurgeryPackObserver;
+use App\Observers\SurgeryScheduleObserver;
 use App\Observers\TagTypeObserver;
 use App\Observers\UserObserver;
 use App\Observers\VaccineCertificateObserver;
@@ -124,7 +125,6 @@ class EventServiceProvider extends ServiceProvider
         VaccineCertificate::observe(VaccineCertificateObserver::class);
         Hospitalization::observe(HospitalizationObserver::class);
         Surgery::observe(SurgeryObserver::class);
-        SurgeryPack::observe(SurgeryPackObserver::class);
         FormatType::observe(FormatTypesObserver::class);
         Format::observe(FormatsObserver::class);
         FollowupIntern::observe(FollowupInternObserver::class);
@@ -136,6 +136,7 @@ class EventServiceProvider extends ServiceProvider
         CmType::observe(CmTypeObserver::class);
         TagType::observe(TagTypeObserver::class);
         Cremation::observe(CremationObserver::class);
+        SurgerySchedule::observe(SurgeryScheduleObserver::class);
         
     }
 

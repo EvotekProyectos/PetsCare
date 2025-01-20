@@ -4,6 +4,8 @@
     Budget
 @endsection
 
+@section('budgets', 'active border-start border-3 border-primary') 
+
 @section('content')
     <div class="container-fluid">
         <div class="row">
@@ -39,16 +41,7 @@
                                         <th>Folio</th>
                                         <th>Fecha</th>
                                         <th>Mascota</th>
-                                        <th>Paquete</th>
-                                        <th>Procedimiento</th>
-                                        <th>Biometria Hematica</th>
-                                        <th>Quimica Sanguinea</th>
-                                        <th>Nodulectomia</th>
-                                        <th>Histopatologia</th>
-                                        <th>Radiografías</th>
-                                        <th>Collar Isabelino</th>
-                                        <th>Body de Cobre</th>
-                                        <th>Otros</th>
+                                        <th>Notas Extra</th>
                                         <th>Gran Total</th>
                                         <th>M.V.Z</th>
                                         <th>Acciones</th>

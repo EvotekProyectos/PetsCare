@@ -121,6 +121,17 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col d-flex justify-content-between align-items-center my-2">
+                                <div class="col">
+                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
+                                        onclick="OpenCarnet()">
+                                        <span class="badge custom-badge-pill"><span
+                                                class="healthicons--syringe-vaccine"></span></span> Registrar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 class="text-uppercase" style="color: #0445A0;">
@@ -138,16 +149,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($vaccineCertificates as $register)
-                                    @if ($register->service_id == 1)
+                                @foreach ($vaccineCertificates->where('service_id', 1) as $register)
                                         <tr>
                                             <td>{{ $register->application_date }}</td>
-                                            <td>{{ $register->microsip->NOMBRE }} {{ $register->lab }} {{ $register->lote }}</td>
+                                            <td>{{ $register->microsip->NOMBRE ?? $register->product }} {{ $register->lab }}
+                                                {{ $register->lote }}</td>
                                             <td>{{ $register->next_application_date }}</td>
                                             <td>{{ $register->vet->name }}</td>
                                             <td>{{ $register->observations }}</td>
                                         </tr>
-                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
@@ -168,16 +178,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($vaccineCertificates as $register)
-                                    @if ($register->service_id == 3)
+                                @foreach ($vaccineCertificates->where('service_id', 3) as $register)
                                         <tr>
                                             <td>{{ $register->application_date }}</td>
-                                            <td>{{ $register->microsip->NOMBRE }} {{ $register->dose }}</td>
+                                            <td>{{ $register->microsip->NOMBRE ?? $register->product }} {{ $register->dose }}</td>
                                             <td>{{ $register->next_application_date }}</td>
                                             <td>{{ $register->vet->name }}</td>
                                             <td>{{ $register->observations }}</td>
                                         </tr>
-                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
@@ -198,16 +206,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($vaccineCertificates as $register)
-                                    @if ($register->service_id == 2)
+                                @foreach ($vaccineCertificates->where('service_id', 2) as $register)
                                         <tr>
                                             <td>{{ $register->application_date }}</td>
-                                            <td>{{ $register->microsip->NOMBRE }} {{ $register->dose }}</td>
+                                            <td>{{ $register->microsip->NOMBRE ?? $register->product }} {{ $register->dose }}</td>
                                             <td>{{ $register->next_application_date }}</td>
                                             <td>{{ $register->vet->name }}</td>
                                             <td>{{ $register->observations }}</td>
                                         </tr>
-                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
@@ -222,6 +228,32 @@
                 </div>
             </div>
         </div>
+        <div class="modal" id="ModalCertificate" tabindex="-1" role="dialog" aria-hidden="true"
+            style="display: none;">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content" style="background-color: #e9eced; border-radius: 20px;">
+                    <div class="modal-header">
+                        <div class="col-11 d-flex justify-content-between align-items-center">
+                            <h5 id="card_title" class=" text-uppercase" style="color: #0455A0">
+                                <span class="map--veterinary-care"></span> VACUNAS Y DESPARACITACIONES
+                            </h5>
+                        </div>
+                        <div class="col-1">
+                            <button type="button" class="btn-close" onclick="closeModal()" aria-label="Close"></button>
+                        </div>
+
+                    </div>
+                    <div class="modal-body" style="width: 100%;">
+
+                        <div class="row">
+                            <div class="col-12">
+                                @include('vaccine-certificate.fillform')
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 @endsection
 
@@ -232,15 +264,7 @@
         var Pic_id = {{ $pet->picture_id ?? 'null' }};
         var Pic_route = "{{ $pet->file->route ?? '' }}";
         var Pet_Id = {{ $pet->id }};
-        window.onload = function() {
-            let fileRoute = Pic_route.startsWith('/') ? Pic_route.substring(1) : Pic_route;
-
-            if (Pic_id !== null) {
-                $("#preview").attr("src", ruta + fileRoute);
-            } else {
-                $("#preview").attr("src", imgDefault);
-            }
-
-        }
     </script>
+
+    <script src="{{ asset('js/vaccine-certificates/show.js') }}" defer></script>
 @endpush

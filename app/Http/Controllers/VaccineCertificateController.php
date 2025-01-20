@@ -53,10 +53,14 @@ class VaccineCertificateController extends Controller
      */
     public function show(int $id)
     {
-        $pet=Pet::with('family')->find($id);
-        $vaccineCertificates = VaccineCertificate::with("pet", 'microsip')->where("pet_id", $id)->get();
+        $pet = Pet::with('family')->find($id);
+        $vaccineCertificates = VaccineCertificate::with("pet", "microsip")
+            ->where("pet_id", $id)
+            ->orderBy("application_date", "asc")
+            ->get();
+        $vaccineCertificate = new VaccineCertificate();
         // $this->authorize("viewAny", VaccineCertificate::class);
-        return view('vaccine-certificate.show', compact('vaccineCertificates', 'pet'));
+        return view('vaccine-certificate.show', compact('vaccineCertificates', 'pet', 'vaccineCertificate'));
     }
 
     /**
@@ -82,24 +86,26 @@ class VaccineCertificateController extends Controller
 
     public function destroy($id)
     {
-        $vaccineCertificate = VaccineCertificate::find($id); 
+        $vaccineCertificate = VaccineCertificate::find($id);
         $this->authorize("delete", $vaccineCertificate);
         $vaccineCertificate->delete();
         return response()->json($vaccineCertificate);
     }
-    
+
     public function imprimir(int $id)
-    {   
-        $pet=Pet::with('family','genre')->find($id);
-        $certificate = VaccineCertificate::with("pet")->where("pet_id", $id)->get();
+    {
+        $pet = Pet::with('family', 'genre')->find($id);
+        $certificate = VaccineCertificate::with("pet", "microsip")
+            ->where("pet_id", $id)
+            ->orderBy("application_date", "asc")
+            ->get();
         $pdf = Pdf::loadView("vaccine-certificate.pdf", compact("certificate", "pet"));
         return $pdf->stream("PDF.pdf");
-        
     }
 
     public function list()
     {
         $vaccineCertificate = VaccineCertificate::with('pet')->get();
-        return DataTables::of($vaccineCertificate) ->make(true);
+        return DataTables::of($vaccineCertificate)->make(true);
     }
 }

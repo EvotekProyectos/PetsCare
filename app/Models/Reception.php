@@ -48,7 +48,7 @@ class Reception extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_type_id', 'admission_type_id', 'area_id', 'family_id', 'pet_id', 'reason_id', 'veterinarian_id', 'recepcionist_id', 'room_id', 'entry_date', 'exit_date'];
+    protected $fillable = ['reception_type_id', 'admission_type_id', 'area_id', 'family_id', 'pet_id', 'reason_id', 'veterinarian_id', 'recepcionist_id', 'room_id', 'entry_date', 'exit_date', 'num'];
 
 
     /**
@@ -146,5 +146,9 @@ class Reception extends Model
 
     public function statusGrooming() {
         return $this->hasMany(GroomingStatusHistory::class, 'reception_id', 'id');
+   }
+
+   public function payment() {
+        return $this->belongsTo(\App\Models\PaymentOrder::class, 'id', 'reception_id');
    }
 }

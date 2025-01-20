@@ -97,6 +97,12 @@
                             Asignaciones de Grooming
                         </a>
                     </li>
+                    <li class="@yield('assignmentssurgery')">
+                        <a href="{{ route('assignament.surgery') }}" class=" ms-2">
+                            <i class="fas fa-hand-holding-heart"></i>
+                            Asignaciones de Cirugía
+                        </a>
+                    </li>
                     <li class="@yield('hospitalization.recap')">
                         <a href="{{ route('hospitalization.altas') }}" class=" ms-2">
                             <span class="ri--hospital-line"></span>
@@ -104,10 +110,30 @@
                         </a>
                     </li>
                     
+                    <li class="@yield('surgery.schedule')">
+                        <a href="{{ route('surgery-schedules.index') }}" class=" ms-2">
+                            <span class="healthicons--surgical-sterilization-outlineblack"></span>
+                           Cirugías
+                        </a>
+                    </li>
+
+                    <li class="@yield('hotel')">
+                        <a href="{{ route('hotels.index') }}" class=" ms-2">
+                            <span class="icon-park-solid--hotelBlack "></span>
+                          Hotel
+                        </a>
+                    </li>
+                    
                     <li class="@yield('cremations')">
                         <a href="{{ route('cremations.index') }}" class=" ms-2">
                             <span class="emojione-monotone--funeral-urn1"></span>
                            Cremaciones
+                        </a>
+                    </li>
+                    <li class="@yield('budgets')">
+                        <a href="{{ route('budgets.index') }}" class=" ms-2">
+                            <span class="fluent--receipt-money-16-regular"></span>
+                           Presupuestos
                         </a>
                     </li>
                     <li class="@yield('families')">

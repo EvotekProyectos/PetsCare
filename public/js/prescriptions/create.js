@@ -60,3 +60,59 @@ async function EndAppointment(event) {
         });
     }
 }
+
+//Función Para Guardar Receta y Generar Folio de Orden de Venta para los casos de alta de Hospital
+async function DischargePrescription() {
+    event.preventDefault();
+    Swal.fire({
+        title: 'Procesando...',
+        text: 'Por favor espera mientras procesamos la solicitud.',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    try {
+        let url = route('prescriptions.store');
+        let form = new FormData(document.getElementById("NewPrescription"));
+        let pet = await fetch(url, { method: "POST", body: form });
+        let resp = await pet.json();
+
+        if (pet.ok) {
+            let url3 = route('redsheet.pay', Reception_Id);
+            let pet3 = await fetch(url3, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            let resp3 = await pet3.json();
+
+            Swal.close();
+
+            Swal.fire({
+                icon: "success",
+                title: "El folio para pagar el servicio es " + resp3,
+                timer: 27000,
+                showConfirmButton: true
+            }).then(() => {
+                let prescription = resp.id;
+                window.open(route('prescription.imprimir', prescription), '_blank');
+                window.location.href = route('assignment.hospital');
+            });
+        } else {
+            let resp = await pet.json();
+            Swal.fire({
+                icon: "error",
+                body: resp
+            })
+        }
+    } catch (error) {
+        Swal.fire({
+            icon: "error",
+            title: "Error inesperado",
+            text: "Por favor, intenta nuevamente."
+        });
+    }
+}

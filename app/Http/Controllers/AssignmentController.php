@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Appointment;
 use App\Models\Assignment;
 use App\Models\Hospitalization;
 use App\Models\Reception;
@@ -22,6 +23,7 @@ class AssignmentController extends Controller
     public function appointments()
     {
         $user = auth()->user();
+        $this->authorize("viewAny", Appointment::class);
         $receptions = Reception::with(['receptionType', 'family', 'pet', 'reason', 'room', 'statusHistory'])
             ->where('veterinarian_id', $user->id)
             ->where('reception_type_id', 1)

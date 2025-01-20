@@ -15,9 +15,24 @@
 
         .body {
             font-size: 10pt;
-            font-family: "sans-serif;";
+            font-family: sans-serif;
             margin: 0;
 
+        }
+
+        .titles {
+            text-align: center;
+            font-size: 11pt;
+            font-weight: bold;
+            font-family: sans-serif;
+            margin: 0;
+            color: #2d5cbb;
+
+        }
+        .upper {
+            border-top:2px solid #c5e8f7;
+            border-left:2px solid #c5e8f7;
+            border-right:2px solid #c5e8f7;
         }
 
         .footer {
@@ -184,9 +199,16 @@
                                 {{ $pet->genre->name }}
                             </p>
                         </td>
-                        
-                        
-                    </tr>
+                        <td>
+                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Fecha Nacimeinto:</p>
+                        </td>
+                        <td style="padding: 5px 10px;">
+                            <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
+                                {{ \Carbon\Carbon::parse($pet->birthday)->translatedFormat('j \d\e F \d\e\l Y') }}
+
+                            </p>
+                        </td>
+                    </tr>>
                 </table>
             </div>
 
@@ -194,25 +216,30 @@
 
             <div
                 style="border:1px solid #c5e8f7; margin-top:20px; border-left:none; border-right:none;  background-color: #eef7fc;">
+                <p class="titles">REGISTRO DE VACUNACIONES</p>
                 <div>
                     <table style="width: 100%;">
                         <tr>
-                            <th style="border-right:2px solid #c5e8f7; border-left:2px solid #c5e8f7;  ">
+                            <th >
                                 <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;">
                                     <strong>Tipo</strong>
                                 </p>
                             </th>
 
-                            <th style="border-right:2px solid #c5e8f7;">
+                            <th >
                                 <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;"><strong>Fecha de
                                         aplicación</strong>
                                 </p>
                             </th>
-                            <th style="border-right:2px solid #c5e8f7;">
+                            <th >
                                 <p style="font-size: 10pt;font-family:sans-serif;"><strong>Nombre/ Producto</strong></p>
                             </th>
-                            <th style="border-right:2px solid #c5e8f7;">
+                            <th >
                                 <p style="font-size: 10pt;font-family:sans-serif;"> <strong>Próxima aplicación</strong>
+                                </p>
+                            </th>
+                            <th >
+                                <p style="font-size: 10pt;font-family:sans-serif;"> <strong>M.V.Z.</strong>
                                 </p>
                             </th>
                         </tr>
@@ -222,27 +249,163 @@
 
             <div>
                 <table style="width: 100%; border:1px solid #c5e8f7;">
-                    @foreach($certificate as $cert)
-                    <tr>
-                         <td>
-                            <p class="body" style="text-align: center;">{{ $cert->service->name }}</p> 
-                        </td>
-                        <td>
-                         <p class="body" style="text-align: center;">{{ $cert->application_date }}</p>
-                        </td>
-                        <td>
-                            <p class="body" style="text-align: center;">{{ $cert->microsip->NOMBRE }}</p>
-                        </td>
-                        <td>
-                            <p class="body" style="text-align: center;">{{ $cert->next_application_date }}</p>
-                        </td> 
-                    </tr>
+                    @foreach ($certificate->where('service_id', 1) as $cert)
+                        <tr>
+                            <td>
+                                <p class="body" style="text-align: center;">{{ $cert->service->name }}</p>
+                            </td>
+                            <td>
+                                <p class="body" style="text-align: center;">{{ $cert->application_date }}</p>
+                            </td>
+                            <td>
+                                <p class="body" style="text-align: center;">
+                                    @if (is_numeric($cert->product) && $cert->microsip)
+                                        {{ $cert->microsip->NOMBRE }}
+                                    @else
+                                        {{ $cert->product }}
+                                    @endif
+                                </p>
+                            </td>
+                            <td>
+                                <p class="body" style="text-align: center;">{{ $cert->next_application_date }}</p>
+                            </td>
+                            <td>
+                                <p class="body" style="text-align: center;">{{ $cert->vet->name }}</p>
+                            </td>
+                        </tr>
                     @endforeach
 
                 </table>
             </div>
 
+            <div
+                style="border:1px solid #c5e8f7; margin-top:20px; border-left:none; border-right:none;  background-color: #eef7fc;">
+                <p class="titles">PROGRAMA DE DESPARACITACIONES EXTERNAS</p>
+                <div>
+                    <table style="width: 100%;">
+                        <tr>
+                            <th >
+                                <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;">
+                                    <strong>Tipo</strong>
+                                </p>
+                            </th>
+
+                            <th >
+                                <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;"><strong>Fecha de
+                                        aplicación</strong>
+                                </p>
+                            </th>
+                            <th >
+                                <p style="font-size: 10pt;font-family:sans-serif;"><strong>Nombre/ Producto</strong></p>
+                            </th>
+                            <th >
+                                <p style="font-size: 10pt;font-family:sans-serif;"> <strong>Próxima aplicación</strong>
+                                </p>
+                            </th>
+                            <th >
+                                <p style="font-size: 10pt;font-family:sans-serif;"> <strong>M.V.Z.</strong>
+                                </p>
+                            </th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
             <div>
+                <table style="width: 100%; border:1px solid #c5e8f7;">
+                    @foreach ($certificate->where('service_id', 3) as $cert)
+                        <tr>
+                            <td>
+                                <p class="body" style="text-align: center;">{{ $cert->service->name }}</p>
+                            </td>
+                            <td>
+                                <p class="body" style="text-align: center;">{{ $cert->application_date }}</p>
+                            </td>
+                            <td>
+                                <p class="body" style="text-align: center;">
+                                    @if (is_numeric($cert->product) && $cert->microsip)
+                                        {{ $cert->microsip->NOMBRE }}
+                                    @else
+                                        {{ $cert->product }}
+                                    @endif
+                                </p>
+                            </td>
+                            <td>
+                                <p class="body" style="text-align: center;">{{ $cert->next_application_date }}</p>
+                            </td>
+                            <td>
+                                <p class="body" style="text-align: center;">{{ $cert->vet->name }}</p>
+                            </td>
+                        </tr>
+                    @endforeach
+
+                </table>
+            </div>
+
+            <div
+                style="border:1px solid #c5e8f7; margin-top:20px; border-left:none; border-right:none;  background-color: #eef7fc;">
+                <p class="titles">PROGRAMA DE DESPARACITACIONES INTERNAS</p>
+                <div>
+                    <table style="width: 100%;">
+                        <tr>
+                            <th >
+                                <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;">
+                                    <strong>Tipo</strong>
+                                </p>
+                            </th>
+
+                            <th >
+                                <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;"><strong>Fecha de
+                                        aplicación</strong>
+                                </p>
+                            </th>
+                            <th >
+                                <p style="font-size: 10pt;font-family:sans-serif;"><strong>Nombre/ Producto</strong></p>
+                            </th>
+                            <th >
+                                <p style="font-size: 10pt;font-family:sans-serif;"> <strong>Próxima aplicación</strong>
+                                </p>
+                            </th>
+                            <th >
+                                <p style="font-size: 10pt;font-family:sans-serif;"> <strong>M.V.Z.</strong>
+                                </p>
+                            </th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+             <div>
+                <table style="width: 100%; border:1px solid #c5e8f7;">
+                    @foreach ($certificate->where('service_id', 2) as $cert)
+                        <tr>
+                            <td>
+                                <p class="body" style="text-align: center;">{{ $cert->service->name }}</p>
+                            </td>
+                            <td>
+                                <p class="body" style="text-align: center;">{{ $cert->application_date }}</p>
+                            </td>
+                            <td>
+                                <p class="body" style="text-align: center;">
+                                    @if (is_numeric($cert->product) && $cert->microsip)
+                                        {{ $cert->microsip->NOMBRE }}
+                                    @else
+                                        {{ $cert->product }}
+                                    @endif
+                                </p>
+                            </td>
+                            <td>
+                                <p class="body" style="text-align: center;">{{ $cert->next_application_date }}</p>
+                            </td>
+                            <td>
+                                <p class="body" style="text-align: center;">{{ $cert->vet->name }}</p>
+                            </td>
+                        </tr>
+                    @endforeach
+
+                </table>
+            </div>
+            {{-- <div>
                 <div>
                     <table style="width: 100%; margin-top:20%;">
                         <tr>
@@ -260,7 +423,7 @@
                         </tr>
                     </table>
                 </div>
-            </div>
+            </div> --}}
 
 
 

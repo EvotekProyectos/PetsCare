@@ -8,7 +8,7 @@
         @import url(https://themes.googleusercontent.com/fonts/css?kit=fOEonugfEEW2k3BWBOC73CXHfZMcH88HuPcErL5npACHpuVWaP-GHFPZzt35558q);
 
         .head {
-            color: #646c9a;
+            color: #3459A4;
             font-weight: 700;
             font-size: 12pt;
             font-weight: bold;
@@ -59,6 +59,22 @@
             font-family: sans-serif;
             margin: 0;
         }
+        .button {
+        background-color: #3459A4; 
+        color: #fff; 
+        border: none;  
+        border-radius: 5px; 
+        padding: 10px 20px; 
+        font-size: 16px; 
+        cursor: pointer; 
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); 
+        transition: all 0.3s ease; 
+    }
+
+    .button:hover {
+        background-color: #63aaf7; 
+        box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3); 
+    }
     </style>
 </head>
 
@@ -68,8 +84,9 @@
         <table style="width: 100%; text-align: center;">
             <tr>
                 <td style="align-items: center;">
-                    {{-- <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px"> --}}
-
+                    @if($isPdf ?? false)
+                        <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px">
+                    @endif
                 </td>
                 <td>
                     <p class="head">Hospital Veterinario Pets Care</p>
@@ -106,7 +123,7 @@
     <div>
         <table style="width: 100%; border-collapse: collapse;">
             <br>
-            <p>Fecha: {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</p>
+            <p style="text-align: right">Fecha: {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</p>
 
             <tr>
                 <td>
@@ -156,21 +173,21 @@
                     <p> Edad:</p>
                 </td>
 
-                {{-- @php
-                    $birthday = \Carbon\Carbon::parse($pet->pet->birthday);
+                 @php
+                    $birthday = \Carbon\Carbon::parse($pet->birthday);
                     $now = \Carbon\Carbon::now();
 
                     $years = $birthday->diffInYears($now);
                     $months = $birthday->copy()->addYears($years)->diffInMonths($now);
                     $days = $birthday->copy()->addYears($years)->addMonths($months)->diffInDays($now);
-                @endphp --}}
+                @endphp 
 
-                {{-- <td style="padding:  0.5px 10px;">
+               <td style="padding:  0.5px 10px;">
                     <p><span style="font-weight: normal">
                             {{ $years }} años, {{ $months }} meses
                         </span>
                     </p>
-                </td> --}}
+                </td> 
 
             <tr>
                 <td>
@@ -202,20 +219,29 @@
                     <ol>
                         <li> Por medio de la presente autorizo la realización del procedimiento quirúrgico y/o anestésico
                             @if (!isset($isPdf) || !$isPdf)
-                             <input type="text" id="procedure" value="{{ $procedure ?? '' }}" class="form-control">
-                             @else
-                                 <span>{{ $procedure ?? '' }}</span>
+                                <select id="procedure" class="form-control select2" name="procedure">
+                                    <option value="">Selecciona el procedimiento a realizar</option>
+                                    @foreach ($products as $product)
+                                       <option value="{{ $product->NOMBRE }}" 
+                                                {{ old('procedure', $procedure ?? '') == $product->ARTICULO_ID ? 'selected' : '' }}>
+                                            {{ $product->NOMBRE }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            @else
+                            <span><strong>{{ $procedure ?? '' }}</strong></span>
                              @endif
                             mismo que ha sido explicado por el médico, por lo que estoy consciente de los beneficios y riesgos 
-                            que indica el mismo. El presupuesto de dicha intervención es de TOTAL $ 
+                            que indica el mismo. El presupuesto de dicha intervención es de <b>TOTAL $ 
                             @if (!isset($isPdf) || !$isPdf)
-                            <input type="text" id="total"  value="{{ $total ?? '' }}" class="form-control">
+                            <input type="text" id="total"  value="{{ $total ?? '' }}" class="form-control" style="width: 300px;">
                             @else
                                  <span>{{ $total ?? '' }}</span>
                              @endif
-                             INCLUYE
+                            </b>
+                             <br> <b>INCLUYE</b>
                              @if (!isset($isPdf) || !$isPdf)
-                             <input type="text" id="include" value="{{ $include ?? '' }}" class="form-control">
+                             <input type="text" id="include" value="{{ $include ?? '' }}" class="form-control" style="width: 900px; height: 50px;">
                              @else
                                  <span>{{ $include ?? '' }}</span>
                              @endif
@@ -286,39 +312,40 @@
 
 
 
-
-    <div>
-        <p style="margin-top: 2%;"><b>Firma y nombre:</b></p>
-
+    <div style="text-align: center;">
+        <p style="margin-top: 80px;"><b>NOMBRE Y FIRMA:</b></p>
+    
         @if (isset($signatureDataUrl))
             <img src="{{ $signatureDataUrl }}" alt="Firma del propietario" style="width: 200px; height: 100px;">
         @else
-            <canvas id="canvas" class="border border-dark p-0" width="200" height="100"></canvas>
+            <canvas id="canvas" class="border border-dark p-0" width="500" height="100" style="border-bottom: 2px solid #2b2b2b;"></canvas>
         @endif
+    
+        <div style="margin-top: 20px; text-align: center;">
+            @if (!isset($isPdf) || !$isPdf)
+                <div style="display: flex; justify-content: center; gap: 20px;">
+
+                    <div style="align-self: flex-start;">
+                        <button class="btnLimpiar btn btn-lmx button" data-target="canvas" style="width: 100px;">Limpiar</button>
+                    </div>
+                    <div>
+                        <form>
+                            <button class="btnEnviar btn btn-lmx button" style="width: 100px;">Aceptar</button>
+                        </form>
+                    </div>
+                </div>
+            @endif
+        </div>
     </div>
 
-    @if (!isset($isPdf) || !$isPdf)
-        <div class="row mx-0">
-            <div class="col-6">
-                <button class="btnLimpiar btn btn-lmx" data-target="canvas">Limpiar</button>
-            </div>
-            <div class="col-6">
-                <form>
-                    <button class="btnEnviar btn btn-lmx">Aceptar</button>
-                </form>
-            </div>
-        </div>
-    @endif
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/formats/aut_quirurgic.js') }}" defer></script>
     <script>
         const PET_ID = "{{ $pet->id }}";
     </script> 
-
-      <script>
-        document.getElementById("current-date").innerText = new Date().toLocaleDateString();
-    </script>
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      
 </body>
 
 </html>
