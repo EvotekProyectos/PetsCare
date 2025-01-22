@@ -141,6 +141,14 @@ class PetController extends Controller
          return response()->json($pets);
      }
 
+     public function data($family)
+     {
+        $pets = Pet::where("deceased", 0)
+             ->where("family_id", $family)->get();
+
+         return response()->json($pets);
+     }
+
 
 
 }

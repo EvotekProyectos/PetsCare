@@ -23,7 +23,7 @@ class HotelRequest extends FormRequest
     {
         return [
             'reception_id' => 'nullable|integer|exists:receptions,id',
-            'vaccine_certificate_id' => 'nullable|integer|exists:vaccine_certificates,id',
+            // 'vaccine_certificate_id' => 'nullable|integer|exists:vaccine_certificates,id',
 			'food' => 'required|string',
 			'objects' => 'required|string',
 			'observations' => 'required|string',

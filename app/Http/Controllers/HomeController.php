@@ -38,7 +38,7 @@ class HomeController extends Controller
         $reasons = Reason::all();
         $users = User::all();
         $rooms = Room::all();
-        $pets = Pet::all();
+        $pets = Pet::where("deceased", 0)->get(); 
 
         $this->authorize("create", Reception::class);
         return view('reception.create', compact('reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms', 'pets'));

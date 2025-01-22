@@ -10,7 +10,7 @@ async function getpets(family_id) {
     if (isUpdating) return;
     isUpdating = true;
 
-    let url = route("pets.preview", family_id)
+    let url = route("pets.data", family_id)
     let peticion = await fetch(url)
     if (peticion.ok) {
         document.getElementById("pet_id").value

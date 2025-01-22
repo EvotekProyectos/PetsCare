@@ -34,12 +34,12 @@ $(document).ready(function () {
                     return data.reception_type ? data.reception_type.name : '';
                 }
             },
-            {
-                data: null,
-                render: function (data) {
-                    return data.reason ? data.reason.name : '';
-                }
-            },
+            // {
+            //     data: null,
+            //     render: function (data) {
+            //         return data.reason ? data.reason.name : '';
+            //     }
+            // },
             {
                 data: null,
                 render: function (data) {
@@ -49,7 +49,7 @@ $(document).ready(function () {
                         </a>`;
                 }
             },
-            
+
         ],
     });
 });
@@ -63,6 +63,18 @@ async function Details(Type, ID) {
     }
     if (Type === 2) {
         window.location.href = route('hospitalization.historic', ID);
+
+    }
+    if (Type === 3) {
+        window.location.href = route('grooming.history', ID);
+
+    }
+    if (Type === 4) {
+        window.location.href = route('hotel.history', ID);
+
+    }
+    if (Type === 5) {
+        window.location.href = route('cremation.history', ID);
 
     }
 };
