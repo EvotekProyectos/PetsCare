@@ -314,10 +314,10 @@ class FormatController extends Controller
         return response()->json(['url' => asset('storage' . $pdfPath)]);
     }
 
-    public function responsiva($id)
+    public function responsivaEg($id)
     {
         $pet = Pet::with('family', 'genre')->find($id);
-        return view('format.responsiva', compact("pet"));
+        return view('format.responsivaEG', compact("pet"));
     }
 
     public function responsivaPdf(Request $request, $id)
@@ -330,7 +330,7 @@ class FormatController extends Controller
         $uniqueId = uniqid();
         $pdfPath = 'public/formats/responsiva_EG' . $id . '_' . $uniqueId . '.pdf';
 
-        $pdf = PDF::loadView('format.responsiva', [
+        $pdf = PDF::loadView('format.responsivaEG', [
             'pet' => $pet,
             'signatureDataUrl' => $signatureDataUrl,
             'name' => $name,
@@ -342,7 +342,7 @@ class FormatController extends Controller
         $pdfUrl = Storage::url($pdfPath);
 
         $format = new Format();
-        $format->format_type_id = 4;
+        $format->format_type_id = 6;
         $format->pet_id = $id;
         $format->format_pdf = $pdfPath;
         $format->save();

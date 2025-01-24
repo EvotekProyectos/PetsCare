@@ -1,67 +1,123 @@
+:root {
+  --primary-blue: #0455a0;
+  --text-dark: #181c18;
+  --secondary-grey: #696969;
+  --border-grey: #776d6d;
+}
+
 .data {
-    font-family: sans-serif;
-    font-size: 11pt;
-    color: #00065f;
-    font-weight: normal;
-    margin: 0;
+  font-family: sans-serif;
+  font-size: 11pt;
+  color: #181c18;
+  font-weight: normal;
+  margin: 0;
 }
 
 .fillable {
-    font-family: sans-serif;
-    font-size: 11pt;
-    color: #585858;
-    font-weight: normal;
-    margin: 0;
+  font-family: sans-serif;
+  font-size: 11pt;
+  color: #696969;
+  font-weight: normal;
+  margin: 0;
 }
 
 .aclarations {
-    font-family: sans-serif;
-    font-size: 9pt;
-    color: #9779b3;
-    font-weight: lighter;
-    margin: 0;
+  font-family: sans-serif;
+  font-size: 9pt;
+  color: #112220;
+  /* font-weight: lighter;  */
+  padding-right: 15px;
+  padding-left: 15px;
+  line-height: 1.5;
 }
 
 .tableup {
-    font-family: sans-serif;
-    font-size: 12pt;
-    color: #00065f;
-    font-weight: semibold;
+  font-family: sans-serif;
+  font-size: 10pt;
+  color: #181c18;
+  text-align: left;
 }
 
 .titles {
-    font-family: sans-serif;
-    font-size: 15pt;
-    color: #00065f;
-    font-weight: bold;
+  font-family: sans-serif;
+  font-size: 15pt;
+  color: #0455a0;
+  font-weight: bold;
 }
 
 .alarm {
-    font-family: sans-serif;
-    font-style: italic;
-    font-size: 10pt;
-    color: #00065f;
-    font-weight: semibold;
+  font-family: sans-serif;
+  font-style: italic;
+  font-size: 10pt;
+  color: #973121;
+  font-weight: semibold;
 }
 
 .total {
-    font-family: sans-serif;
-    font-style: italic;
-    font-size: 12pt;
-    color: #818080;
-    font-weight: bold;
-    margin: 0;
+  font-family: sans-serif;
+  font-style: italic;
+  font-size: 12pt;
+  color: #818080;
+  font-weight: bold;
+  margin: 0;
 }
 
 .table-bordered {
-    border-collapse: collapse;
-    width: 100%;
-    margin-top: 1%;
-    border: 1px solid #00065f;
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 1%;
+  border: 1px solid #96a0a6;
 }
 
 .table-bordered th,
 .table-bordered td {
-    border: 1px solid #00065f;
-    padding: 5px;
+  border: 1px solid #96a0a6;
+  padding: 5px;
+}
+
+.table-header {
+  font-family: sans-serif;
+  background-color: #ddf7ff;
+  font-weight: bold;
+  color: white;
+  padding: 8px;
+}
+
+.button {
+  background-color: #0455a0;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.button:hover {
+  background-color: #5577a5;
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+.div-first {
+  border: 1px solid #96a0a6;
+  margin-top: 20px;
+  width: 100%;
+  font-family: sans-serif;
+}
+
+.table-100 {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-100-tr {
+  background-color: #0455a0;
+  color: white;
+  border-bottom: 2px solid #96a0a6;
+}
+
+.tr-basic{
+    border-bottom: 1px solid #96a0a6;
 }

@@ -140,7 +140,7 @@ class HotelController extends Controller
         $reception = $hotels->first()->reception;
         //$hotel=$hotels->first();
 
-        return view('format.pensionPdf', compact('hotels', 'reception'));
+        return view('hotel.responsiva', compact('hotels', 'reception'));
         //return response()->json($hotels);
 
     }
@@ -155,7 +155,7 @@ class HotelController extends Controller
         $reception = $hotels->first()->reception;
         $signatureDataUrl = $request->input('signature');
 
-        $pdf = PDF::loadView('format.pensionPdf', [
+        $pdf = PDF::loadView('hotel.responsiva', [
             'reception' => $reception,
             'hotels' => $hotels,
             'signatureDataUrl' => $signatureDataUrl,

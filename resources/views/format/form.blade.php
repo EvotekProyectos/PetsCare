@@ -65,7 +65,7 @@
                     1: '{{ route("format.hospital", $pet->id) }}',
                     2: '{{ route("format.alta", $pet->id) }}',
                     3: '{{ route("format.surgery", $pet->id) }}',
-                    4: '{{ route("format.responsiva", $pet->id) }}',
+                    6: '{{ route("format.responsivaEG", $pet->id) }}',
                 };
         
                 selectElement.addEventListener('change', function () {

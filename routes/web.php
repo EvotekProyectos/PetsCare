@@ -306,8 +306,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/pension/{id}', [FormatController::class, 'pensionFormat'])->name('pension.format');
     Route::get('/pension/pdf/{id}', [FormatController::class, 'pensionPdf'])->name('pension.pdf');
     // Route::get('/pension/inf/{id}', [FormatController::class, 'pensionDatos'])->name('pension.inf');
-    Route::get('/formats/responsiva/{id}', [FormatController::class, 'responsiva'])->name('format.responsiva');
-    Route::post('/formats/responsiva/pdf/{id}', [FormatController::class, 'responsivaPdf'])->name('format-responsiva.pdf');
+    Route::get('/formats/responsiva//EG/{id}', [FormatController::class, 'responsivaEg'])->name('format.responsivaEG');
+    Route::post('/formats/responsiva/EG/pdf/{id}', [FormatController::class, 'responsivaPdf'])->name('format-responsiva.pdf');
     Route::resource('formats', FormatController::class);
 
     //Appointment Services

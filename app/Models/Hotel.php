@@ -39,7 +39,7 @@ class Hotel extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_id', 'vaccine_certificate_id', 'food', 'objects', 'observations', 'number_days', 'service_type_id', 'cubicle_id'];
+    protected $fillable = ['reception_id', 'food', 'objects', 'observations', 'number_days', 'service_type_id', 'cubicle_id'];
 
 
     /**
@@ -61,10 +61,10 @@ class Hotel extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function vaccineCertificate()
-    {
-        return $this->belongsTo(\App\Models\VaccineCertificate::class, 'vaccine_certificate_id', 'id');
-    }
+    // public function vaccineCertificate()
+    // {
+    //     return $this->belongsTo(\App\Models\VaccineCertificate::class, 'vaccine_certificate_id', 'id');
+    // }
     
     public function servicie()
     {
