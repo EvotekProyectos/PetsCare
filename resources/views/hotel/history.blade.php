@@ -109,7 +109,7 @@
                                         <tr>
                                             <td>
                                                 <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
-                                                    DATOS DE LA MASCOT
+                                                    DATOS DE LA MASCOTA
                                                 </h5>
                                             </td>
                                         </tr>
@@ -141,7 +141,7 @@
                                             <p style="font-weight:bold;  margin: 0;"> Peso:</p>
                                         </td>
                                         <td style="padding: 5px 10px;">
-                                            <p style=" font-weight:bold; margin: 0;">
+                                            <p style=" font-weight:normal; margin: 0;">
                                                 {{ $reception->pet->weight }}
                                             </p>
                                         </td>
@@ -149,7 +149,7 @@
                                             <p style="font-weight:bold;  margin: 0;"> Sexo:</p>
                                         </td>
                                         <td style="padding: 5px 10px;">
-                                            <p style=" font-weight:bold; margin: 0;">
+                                            <p style=" font-weight:normal; margin: 0;">
                                                 {{ $reception->pet->genre->name }}
                                             </p>
                                         </td>
@@ -160,7 +160,7 @@
                                             <p style="font-weight:bold;  margin: 0;"> Fecha de nacimiento:</p>
                                         </td>
                                         <td style="padding: 5px 10px;">
-                                            <p style=" font-weight:bold; margin: 0;">
+                                            <p style=" font-weight:normal; margin: 0;">
                                                 {{ $reception->pet->birthday}}
                                             </p>
                                         </td>
@@ -169,7 +169,7 @@
                                         </td>
                                         <td style="padding: 5px 10px;">
                                             <p style=" font-weight:normal; margin: 0;">
-                                                <a href="{{ route('certificate.imprimir', $reception->pet->id) }}">SI</a>
+                                                <a href="{{ route('vaccine-certificates.show', $reception->pet->id) }}">SI</a>
                                             </p>
                                             
                                         </td>

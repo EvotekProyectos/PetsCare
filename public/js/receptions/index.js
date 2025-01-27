@@ -157,9 +157,9 @@ $(document).ready(function () {
     });
 }); 
 
-var table = undefined;
+var table2 = undefined;
 $(document).ready(function () {
-    table = $('#table2').DataTable({
+    table2 = $('#table2').DataTable({
         ajax: route('reception.hospitalizations'),
         responsive: true,
         order: [0, 'desc'],
@@ -213,7 +213,7 @@ $(document).ready(function () {
                         <a type="button" href="${route('receptions.edit', data.id)}" class="btn btn-sm text-primary">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <button type="button" class="btn btn-sm text-primary" onclick="showAlertWithCallback(() => deleteReception(${data.id}, table));">
+                        <button type="button" class="btn btn-sm text-primary" onclick="showAlertWithCallback(() => deleteReception(${data.id}, table2));">
                             <i class="fas fa-trash"></i>
                         </button>`;
                 }
@@ -222,9 +222,9 @@ $(document).ready(function () {
     });
 }); 
 
-var table = undefined;
+var table3 = undefined;
 $(document).ready(function () {
-    table = $('#table3').DataTable({
+    table3 = $('#table3').DataTable({
         ajax: route('reception.groomings'),
         responsive: true,
         order: [0, 'desc'],
@@ -262,7 +262,7 @@ $(document).ready(function () {
                         <a type="button" href="${route('receptions.edit', data.id)}" class="btn btn-sm text-primary">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <button type="button" class="btn btn-sm text-primary" onclick="showAlertWithCallback(() => deleteReception(${data.id}, table));">
+                        <button type="button" class="btn btn-sm text-primary" onclick="showAlertWithCallback(() => deleteReception(${data.id}, table3));">
                             <i class="fas fa-trash"></i>
                         </button>`;
                 }
@@ -271,9 +271,9 @@ $(document).ready(function () {
     });
 }); 
 
-var table = undefined;
+var table4 = undefined;
 $(document).ready(function () {
-    table = $('#table4').DataTable({
+    table4 = $('#table4').DataTable({
         ajax: route('reception.hotels'),
         responsive: true,
         order: [0, 'desc'],
@@ -311,7 +311,7 @@ $(document).ready(function () {
                         <a type="button" href="${route('receptions.edit', data.id)}" class="btn btn-sm text-primary">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <button type="button" class="btn btn-sm text-primary" onclick="showAlertWithCallback(() => deleteReception(${data.id}, table));">
+                        <button type="button" class="btn btn-sm text-primary" onclick="showAlertWithCallback(() => deleteReception(${data.id}, table4));">
                             <i class="fas fa-trash"></i>
                         </button>`;
                 }
@@ -320,9 +320,9 @@ $(document).ready(function () {
     });
 }); 
 
-var table = undefined;
+var table5 = undefined;
 $(document).ready(function () {
-    table = $('#table5').DataTable({
+    table5 = $('#table5').DataTable({
         ajax: route('reception.cremations'),
         responsive: true,
         order: [0, 'desc'],
@@ -357,7 +357,7 @@ $(document).ready(function () {
                         <a type="button" href="${route('receptions.edit', data.id)}" class="btn btn-sm text-primary">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <button type="button" class="btn btn-sm text-primary" onclick="showAlertWithCallback(() => deleteReception(${data.id}, table));">
+                        <button type="button" class="btn btn-sm text-primary" onclick="showAlertWithCallback(() => deleteReception(${data.id}, table5));">
                             <i class="fas fa-trash"></i>
                         </button>`;
                 }
