@@ -139,12 +139,14 @@ class FormatController extends Controller
     public function generateHospitalAuthorizationPdf(Request $request, $id)
     {
         $pet = Pet::with('family', 'genre')->find($id);
+        $total = $request->input('total');
         $signatureDataUrl = $request->input('signature');
         $uniqueId = uniqid();
 
 
         $pdf = PDF::loadView('format.aut_hospital', [
             'pet' => $pet,
+            'total' => $total,
             'signatureDataUrl' => $signatureDataUrl,
             'isPdf' => true
         ]);

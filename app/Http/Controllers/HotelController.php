@@ -95,8 +95,10 @@ class HotelController extends Controller
     public function edit($id)
     {
         $hotel = Hotel::find($id);
-
-        return view('hotel.edit', compact('hotel'));
+        $reception = Reception::with('pet','family', 'vet')->findorfail($id);
+        $products = Producto::where("ESTATUS",  "A")->get();
+        $cubicles=Cubicle::where("state", "0")->get();
+        return view('hotel.edit', compact('hotel', 'reception', 'products', 'cubicles'));
     }
 
     /**

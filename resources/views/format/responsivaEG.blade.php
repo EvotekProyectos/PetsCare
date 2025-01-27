@@ -4,9 +4,7 @@
 <head>
     @routes
     
-    <style type="text/css">
-        @import url(https://themes.googleusercontent.com/fonts/css?kit=fOEonugfEEW2k3BWBOC73CXHfZMcH88HuPcErL5npACHpuVWaP-GHFPZzt35558q);
-
+    <style>
         .head {
             color: #3459A4;
             font-weight: 700;
@@ -20,18 +18,6 @@
             font-family: "sans-serif;";
             margin: 0;
 
-        }
-
-        .footer {
-            text-align: right;
-            padding-top: 20px;
-            border-top: 2px solid #f1f1f1;
-            font-size: 9pt;
-            color: #888;
-        }
-
-        .footer p {
-            margin: 0;
         }
 
         table {
@@ -85,7 +71,9 @@
             <tr>
                 <td style="align-items: center;">
                     @if($isPdf ?? false)
-                        <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px">
+                    <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px">
+                    @else
+                    <img src="{{ asset('img/logo-petscare.png') }}" style="height: 87px;">
                     @endif
                 </td>
                 
@@ -123,13 +111,15 @@
     </div>
 
     <div>
-        <p style="text-align:right;  margin-top:10px;"><b>Saltillo, Coahuila a {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</b></p>
+        <p style="text-align:right;  margin-top:3%;">
+            <b>Saltillo, Coahuila a {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}</b></p>
     </div>
     
+    
     <div>
-        <table style="width: 100%; border-collapse: collapse; margin-top:5px;">
+        <table style="width: 100%; border-collapse: collapse; margin-top:3%;">
             <tr>
-                <td style="text-align: justify;">
+                <td style="text-align: justify; line-height: 1.5;">
                     Yo
                     @if (!isset($isPdf) || !$isPdf)
                         <input type="text" id="name" value="{{ $name ?? '' }}" class="form-control" style="width: 900px;">

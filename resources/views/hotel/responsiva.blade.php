@@ -472,7 +472,7 @@
         @if (isset($signatureDataUrl))
             <img src="{{ $signatureDataUrl }}" alt="Firma del propietario" style="width: 200px; height: 100px;">
         @else
-            <canvas id="canvas" class="border border-dark p-0" width="500" height="100" style="border-bottom: 2px solid #181c18 ;"></canvas>
+            <canvas id="canvas" class="border border-dark p-0" width="200" height="100" style="border-bottom: 2px solid #181c18 ;"></canvas>
         @endif
 
     <div style="margin-top: 20px; text-align: center;">

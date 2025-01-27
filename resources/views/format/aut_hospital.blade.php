@@ -4,8 +4,6 @@
 <head>
     @routes
     <style type="text/css">
-       /* // @import url(https://themes.googleusercontent.com/fonts/css?kit=fOEonugfEEW2k3BWBOC73CXHfZMcH88HuPcErL5npACHpuVWaP-GHFPZzt35558q); */
-
         .head {
             color: #3459A4;
             font-weight: 700;
@@ -19,18 +17,6 @@
             font-family: "sans-serif;";
             margin: 0;
 
-        }
-
-        .footer {
-            text-align: right;
-            padding-top: 20px;
-            border-top: 2px solid #f1f1f1;
-            font-size: 9pt;
-            color: #888;
-        }
-
-        .footer p {
-            margin: 0;
         }
 
         table {
@@ -58,22 +44,23 @@
             font-family: sans-serif;
             margin: 0;
         }
-        .button {
-        background-color: #3459A4; 
-        color: #fff; 
-        border: none;  
-        border-radius: 5px; 
-        padding: 10px 20px; 
-        font-size: 16px; 
-        cursor: pointer; 
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); 
-        transition: all 0.3s ease; 
-    }
 
-    .button:hover {
-        background-color: #0056b3; 
-        box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3); 
-    }
+        .button {
+            background-color: #3459A4; 
+            color: #fff; 
+            border: none;  
+            border-radius: 5px; 
+            padding: 10px 20px; 
+            font-size: 16px; 
+            cursor: pointer; 
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); 
+            transition: all 0.3s ease; 
+        }
+
+        .button:hover {
+            background-color: #3e6ac0; 
+            box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3); 
+        }
     </style>
 </head>
 
@@ -84,7 +71,9 @@
             <tr>
                 <td style="align-items: center;">
                     @if($isPdf ?? false)
-                        <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px">
+                    <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px">
+                    @else
+                    <img src="{{ asset('img/logo-petscare.png') }}" style="height: 87px;">
                     @endif
                 </td>
 
@@ -99,9 +88,6 @@
                 </td>
                 <td>
 
-                    <p style="font-family: sans-serif; font-size: 10pt; text-transform: uppercase;">
-                    </p>
-                    <p class="head"></p>
                 </td>
             </tr>
         </table>
@@ -121,100 +107,80 @@
     </div>
 
     <div>
-        <table style="width: 100%; border-collapse: collapse;">
-            <p style="text-align:right;  margin-top:10px;"> Fecha: {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</p>
+        <p style="text-align:right;  margin-top:10px;">
+            <b>Fecha:</b> {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}</p>
+    </div>
 
+    
+    <div style="margin-left: 3%;">
+        <table style="width: 100%; border-collapse: collapse;">
             <tr>
-                <td>
+                <td colspan="100%" style="text-align: left;">
                     <p>El que suscribe: {{ $pet->family->name }} </p>
                 </td>
-                <td>
+            </tr>
+            <tr>
+                <td colspan="100%" style="text-align: left;">
                     <p> Tel: {{ $pet->family->phone }}</p>
                 </td>
             </tr>
             <tr>
-                <td>
+                <td colspan="100%" style="text-align: left;">
                     <p>Domiclio: {{ $pet->family->address }}</p>
                 </td>
             </tr>
             <tr>
-                <td>
+                <td colspan="100%" style="text-align: left;"> 
                     <p>En caso de emergencia comunicarse con: {{ $pet->family->contact_name }} </p>
                 </td>
             </tr>
             <tr>
-                <td>
-                    <p>Tel: {{ $pet->family->contact_number }}</p>
+                <td colspan="100%" style="text-align: left;">
+                    <p> Tel de emergencia:{{ $pet->family->contact_number }}</p>
                 </td>
             </tr>
         </table>
     </div>
-    <div>
-        <p style="margin-top: 2%">Propietario de la mascota que a continuación se describe:</p>
+
+    <div style="margin-left: 3%;">
+        <p style="width: 100%; text-align: justify; margin-top: 2%; margin-bottom: 1%;">
+           <b> Propietario de la mascota que a continuación se describe:</p></b>
         <table style="width: 100%; border-collapse:collapse; margin-top:1% margin-left:25%; margin-right:25%;">
-            <tr>
+            <tr >
                 <td>
-                    <p> Nombre:</p>
-                </td>
-                <td style="padding: 0.5px 10px;">
                     <p>
-                        {{ $pet->name }}
+                        Nombre: {{ $pet->name }}
                     </p>
-                <td>
-                    <p> Especie</p>
                 </td>
-                <td style="padding: 0.5px 10px;">
-                    <p>
-                        {{ $pet->specie }}
-                    </p>
+                   
+                <td >
+                    <p> Especie: {{ $pet->specie }}</p>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <p> Raza:</p>
-                </td>
-                <td style="padding: 0.5px 10px;">
                     <p>
-                        {{ $pet->raza }}
+                        Raza: {{ $pet->raza }}
                     </p>
                 </td>
-                <td>
-                    <p> Edad:</p>
-                </td>
-
-                 @php 
-                    $birthday = \Carbon\Carbon::parse($pet->birthday);
-                    $now = \Carbon\Carbon::now();
-
-                    $years = $birthday->diffInYears($now);
-                    $months = $birthday->copy()->addYears($years)->diffInMonths($now);
-                    $days = $birthday->copy()->addYears($years)->addMonths($months)->diffInDays($now);
+                @php 
+                $birthday = \Carbon\Carbon::parse($pet->birthday);
+                $now = \Carbon\Carbon::now();
+                $years = $birthday->diffInYears($now);
+                $months = $birthday->copy()->addYears($years)->diffInMonths($now);
+                $days = $birthday->copy()->addYears($years)->addMonths($months)->diffInDays($now);
                 @endphp
-
-                <td style="padding:  0.5px 10px;">
-                    <p><span style="font-weight: normal">
-                            {{ $years }} años, {{ $months }} meses
-                        </span>
-                    </p>
-                </td> 
-
+                <td>
+                    <p> Edad: {{ $years }} años, {{ $months }} meses</p>
+                </td>
             <tr>
                 <td>
-                    <p> Sexo:</p>
-                </td>
-                <td style="padding: 0.5px 10px;">
                     <p>
-                        {{ $pet->genre->name }}
+                        Sexo: {{ $pet->genre->name }}
                     </p>
                 </td>
                 <td>
-                    <p> Peso:</p>
-                </td>
-
-                <td style="padding: 0.5px 10px;">
-                    <p>
-                        {{ $pet->weight }}
-                    </p>
+                    <p> Peso: {{ $pet->weight }}</p>
                 </td>
             </tr>
         </table>
@@ -222,7 +188,7 @@
 
 
     <div>
-        <table style="width: 100%; border-collapse: collapse; margin-top:2%;">
+        <table style="width: 100%; border-collapse: collapse; margin-top:1%; text-align: justify;">
             <tr>
                 <td>
                     <ol>
@@ -239,7 +205,13 @@
                             serán
                             previamente informados a sus tutores antes de realizarlos).
                         </li>
-                        <li>El costo del servicio de <b>hospitalización por día es de $ .</b> La hospitalización incluye
+                        <li>El costo del servicio de <b>hospitalización por día es de $ 
+                            @if (!isset($isPdf) || !$isPdf)
+                            <input type="text" id="total"  value="{{ $total ?? '' }}" class="form-control" style="width: 300px;">
+                            @else
+                                 <span>{{ $total ?? '' }}</span>
+                             @endif
+                            .</b> La hospitalización incluye
                             la
                             atención médica 24 hrs. Del día, insumos de hospital, alimento y medicamentos de cabecera,
                             importante mencionar que el alimento es de <b>MANTENIMIENTO, EN CASO DE QUE SU MASCOTA
@@ -266,41 +238,32 @@
                             todo caso
                             camas, juguetes o accesorios a los que la mascota este acostumbrada.
                         </li>
-                        <li>
+
+                        <li >
                             Ninguna mascota podrá ingresar a hospital si llegara a presentar algún ectoparásito, en tal
                             caso se
                             deberán de seguir las indicaciones del médico.
-                        </li>
-                        <li>
+                        </li> 
+                        <li style="page-break-before: always;">
                             El propietario será informado diariamente vía telefónica por el médico a cargo sobre la
                             evolución de su mascota. <b>Podrá visitarlo únicamente en un horario de 3:00pm a 5:00pm,
                                 durante un tiempo no mayor a 15 min. Los días domingos y días festivos no hay
                                 visitas.</b>
                         </li>
-                    </ol>
-                </td>
-            </tr>
-        </table>
-    </div>
 
-    <div>
-        <table style="width: 100%; border-collapse: collapse;">
-            <ol start="8">
-
-                <li>Los pacientes serán dados de alta en un horario de 10:00 am a 7:00 pm. El medico a cargo les
+                       <li>Los pacientes serán dados de alta en un horario de 10:00 am a 7:00 pm. El medico a cargo les
                     informara oportunamente el día y hora de salida de su mascota. Para tal efecto la cuenta
                     correspondiente deberá de estar liquidada en su totalidad. En caso de no ser recogida en la
                     fecha y hora indicada por el médico, pasará a nuestra área de pensión lo cual implicara el
                     costo de la misma, si después de tres días <b>el propietario no se reporta</b>, la mascota será
                     considerada abandonada y la empresa podrá disponer de ella como mejor le convenga, <b>sin
                         reclamo alguno.</b> </li>
-
-                <li>
-                    <b>Me comprometo a realizar los cuidados y dar la medicación que se me indiquen por escrito.</b>
+                    <li>
+                        <b>Me comprometo a realizar los cuidados y dar la medicación que se me indiquen por escrito.</b>
                     Así como asistir en forma puntual a las revisiones. Los médicos y la empresa no se hacen
                     responsables de la evolución del paciente en caso de no seguir el tratamiento.
 
-                </li>
+                    </li>
 
                 <li>
                     <b>No se aceptan niños menores de 16 años, o tendrá que estar un adulto presente, el uso de
@@ -331,16 +294,13 @@
         </table>
     </div>
 
-
-
-
     <div style="text-align: center;">
-        <p style="margin-top: 80px;"><b>NOMBRE Y FIRMA:</b></p>
+        <p style="margin-top: 30px;"><b>AUTORIZO:</b></p>
     
         @if (isset($signatureDataUrl))
             <img src="{{ $signatureDataUrl }}" alt="Firma del propietario" style="width: 200px; height: 100px;">
         @else
-            <canvas id="canvas" class="border border-dark p-0" width="500" height="100" style="border-bottom: 2px solid #2b2b2b;"></canvas>
+            <canvas id="canvas" class="border border-dark p-0" width="200" height="100" style="border-bottom: 2px solid #2b2b2b;"></canvas>
         @endif
     
         <div style="margin-top: 20px; text-align: center;">
@@ -367,7 +327,7 @@
        const PET_ID = "{{ $pet->id }}";
     </script>
         
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>

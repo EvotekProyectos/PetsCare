@@ -101,7 +101,7 @@
                                         <thead class="thead table-primary text-uppercase">
                                             <tr>
                                                 <th>Fecha</th>
-                                                <th>M.V.Z</th>
+                                                <th>Colaborador</th>
                                                 <th>Familia</th>
                                                 <th>Mascota</th>
                                                 <th>FECHA DE SALIDA</th>
@@ -117,6 +117,7 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
                                         HOTEL/PENSIÓN
+                                        <span class="icon-park-outline--hotelG"></span>
                                     </h5>
                                 </div>
 

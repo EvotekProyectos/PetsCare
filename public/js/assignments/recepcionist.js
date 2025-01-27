@@ -59,22 +59,13 @@ $(document).ready(function () {
             },
 ],
 createdRow: function (row, data, dataIndex) {
-    if (data.hospital_discharges && data.hospital_discharges.id) {
-        var dischargeId = data.hospital_discharges.id;
-        var color = '';
-        switch (dischargeId) {
-            case 1:
-                color = '#2BEA91'; 
-                break;
-            case 2:
-                color = '#2DAAF8';
-                break;
-            default:
-                color = ''; 
-                break;
-        }
-
-        $(row).css('background-color', color);
+    // Aplicar estilos en línea según el tipo de alta
+    if (data.hospital_discharges && data.hospital_discharges.id === "1") {
+        $(row).css('background-color', '#ffcccc'); // Rojo claro
+    } else if (data.hospital_discharges && data.hospital_discharges.id=== "2") {
+        $(row).css('background-color', '#ccffcc'); // Verde claro
+    } else if (data.hospital_discharges && data.hospital_discharges.id === "3") {
+        $(row).css('background-color', '#ccccff'); // Azul claro
     }
 }
 });

@@ -3,9 +3,7 @@
 
 <head>
     @routes
-    <style type="text/css">
-        @import url(https://themes.googleusercontent.com/fonts/css?kit=fOEonugfEEW2k3BWBOC73CXHfZMcH88HuPcErL5npACHpuVWaP-GHFPZzt35558q);
-
+    <style>
         .head {
             color: #3459A4;
             font-weight: 700;
@@ -19,19 +17,6 @@
             font-family: "sans-serif;";
             margin: 0;
         }
-
-        .footer {
-            text-align: right;
-            padding-top: 20px;
-            border-top: 2px solid #f1f1f1;
-            font-size: 9pt;
-            color: #888;
-        }
-
-        .footer p {
-            margin: 0;
-        }
-
         table {
             table-layout: fixed;
             font-family: sans-serif;
@@ -55,23 +40,6 @@
             font-size: 12pt;
             font-family: sans-serif;
             margin: 0;
-        }
-
-        /* Hide input fields for PDF generation */
-        @media print {
-            input[type="text"] {
-                border: none;
-                background: transparent;
-                outline: none;
-                color: inherit;
-                font-family: inherit;
-                font-size: inherit;
-                padding: 0;
-            }
-
-            .input-hidden {
-                display: none;
-            }
         }
 
         .button {
@@ -100,9 +68,11 @@
         <table style="width: 100%; text-align: center;">
             <tr>
                <td style="align-items: center;">
-                    @if($isPdf ?? false)
-                        <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px">
-                    @endif
+                @if($isPdf ?? false)
+                <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px">
+                @else
+                <img src="{{ asset('img/logo-petscare.png') }}" style="height: 87px;">
+                @endif
                 </td>
                 <td>
                     <p class="head">Hospital Veterinario Pets Care</p>
@@ -134,15 +104,15 @@
     </div>
 
     <div>
-        <p style="text-align:right;  margin-top:10px;">
-            <b>Saltillo, Coahuila a {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</b></p>
+        <p style="text-align:right;  margin-top:3%;">
+            <b>Saltillo, Coahuila a {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}</b></p>
     </div>
     
     
     <div>
-        <table style="width: 100%; border-collapse: collapse; margin-top:2%;">
+        <table style="width: 100%; border-collapse: collapse; margin-top:3%;">
             <tr>
-                <td style="text-align: justify;" >
+                <td style="text-align: justify; line-height: 1.6;" >
                     
                             Yo: 
                             @if (!isset($isPdf) || !$isPdf)
@@ -181,7 +151,7 @@
         @if (isset($signatureDataUrl))
             <img src="{{ $signatureDataUrl }}" alt="Firma del propietario" style="width: 200px; height: 100px;">
         @else
-            <canvas id="canvas" class="border border-dark p-0" width="500" height="100" style="border-bottom: 2px solid #2b2b2b;"></canvas>
+            <canvas id="canvas" class="border border-dark p-0"  width="200" height="100" style="border-bottom: 2px solid #2b2b2b;"></canvas>
         @endif
     
         <div style="margin-top: 20px; text-align: center;">
