@@ -55,41 +55,35 @@ $("canvas").each(function(index) {
 });
 
 
-// $("form").on("submit", function (e) {
-//     e.preventDefault();
-
-//     const formData = new FormData(this);
-//     //const signatureData = canvas.toDataURL("image/png");
-//     formData.append("signature", canvas.toDataURL("image/png"));
-
-
-//     $.ajax({
-
-//         url: route('hotel.pdf', RECEPTION_ID),
-//         type: "post",
-//         headers: {
-//             "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content'),
-//         },
-//         contentType: false,
-//         processData: false,
-//         data: formData,
-//         success: function (response) {
-//                 window.open(response.url, '_blank');
-//                 window.location.href = route('receptions.index');
-//         },
-//         error: function (error) {
-//             console.error("Error:", error);
-//             alert("Ocurrió un error al procesar la solicitud. Inténtalo de nuevo.");
-//         },
-//     });
-// });
 
 $("form").on("submit", function (e) {
     e.preventDefault();
 
-    const formData = new FormData(this);
-    const canvas = document.getElementById("canvas"); // Asegúrate de obtener el canvas correcto
+    const canvas = document.getElementById("canvas"); 
     const signatureData = canvas.toDataURL("image/png");
+    const ctx = canvas.getContext("2d");
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = imageData.data;
+    let isSignatureEmpty = true;
+
+    for (let i = 0; i < pixels.length; i += 4) {
+        if (pixels[i] !== 255 || pixels[i + 1] !== 255 || pixels[i + 2] !== 255 || pixels[i + 3] !== 255) {
+            isSignatureEmpty = false; 
+            break;
+        }
+    }
+
+    if (isSignatureEmpty) {
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Se necesita la firma para continuar.',
+            //confirmButtonText: 'Entendido',
+        });
+        return;
+    }
+
+    const formData = new FormData(this);
     formData.append("signature", signatureData);
 
     $.ajax({

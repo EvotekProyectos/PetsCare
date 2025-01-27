@@ -95,8 +95,10 @@ class HotelController extends Controller
     public function edit($id)
     {
         $hotel = Hotel::find($id);
-
-        return view('hotel.edit', compact('hotel'));
+        $reception = Reception::with('pet','family', 'vet')->findorfail($id);
+        $products = Producto::where("ESTATUS",  "A")->get();
+        $cubicles=Cubicle::where("state", "0")->get();
+        return view('hotel.edit', compact('hotel', 'reception', 'products', 'cubicles'));
     }
 
     /**
@@ -140,7 +142,7 @@ class HotelController extends Controller
         $reception = $hotels->first()->reception;
         //$hotel=$hotels->first();
 
-        return view('format.pensionPdf', compact('hotels', 'reception'));
+        return view('hotel.responsiva', compact('hotels', 'reception'));
         //return response()->json($hotels);
 
     }
@@ -155,7 +157,7 @@ class HotelController extends Controller
         $reception = $hotels->first()->reception;
         $signatureDataUrl = $request->input('signature');
 
-        $pdf = PDF::loadView('format.pensionPdf', [
+        $pdf = PDF::loadView('hotel.responsiva', [
             'reception' => $reception,
             'hotels' => $hotels,
             'signatureDataUrl' => $signatureDataUrl,

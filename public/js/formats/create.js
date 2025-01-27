@@ -57,8 +57,33 @@ $("canvas").each(function(index) {
 $("form").on("submit", function (e) {
     e.preventDefault();
 
+    const total = $("#total").val();
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = imageData.data;
+    let isSignatureEmpty = true;
+
+        // Comprobar si todos los píxeles son blancos 
+        for (let i = 0; i < pixels.length; i += 4) {
+            if (pixels[i] !== 255 || pixels[i + 1] !== 255 || pixels[i + 2] !== 255 || pixels[i + 3] !== 255) {
+                isSignatureEmpty = false; 
+                break;
+            }
+        }
+       
+            if ( !total || isSignatureEmpty) {
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Completa todos los campos requeridos.',
+            });
+            return; 
+        }
+
     const formData = new FormData(this);
     formData.append("signature", canvas.toDataURL("image/png"));
+    formData.append("total", total);
 
     $.ajax({
         //url:route('format-hospital.pdf', {id:PET_ID} ), 
