@@ -5,7 +5,7 @@
 @endsection
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/receptions/form.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/receptions/form.css') }}">
 @endpush
 
 @section('content')
@@ -21,7 +21,8 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('receptions.update', $reception->id) }}"  role="form" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('receptions.update', $reception->id) }}" role="form"
+                            enctype="multipart/form-data">
                             {{ method_field('PATCH') }}
                             @csrf
 
@@ -37,10 +38,12 @@
 
 @push('scripts')
     <script>
+        const errors = @json($errors->toArray());
+        var type = {{ $reception->reception_type_id }};
+    </script>
+    <script>
         const selectedPetId = {{ old('pet_id', $reception?->pet_id) ?? 'null' }};
-        var type = {{$reception-> reception_type_id}};
     </script>
 
-    <script src="{{asset('js/receptions/edit.js')}}" defer></script>
-
+    <script src="{{ asset('js/receptions/edit.js') }}" defer></script>
 @endpush

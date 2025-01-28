@@ -29,6 +29,7 @@
             <div class="col-md-4">
                 <div class="form-group mb-2">
                     <input type="radio" id="consulta" name="reception_type_id" value="1"
+                        class="form-control @error('reception_type_id') is-invalid @enderror"
                         {{ old('reception_type_id', $reception?->reception_type_id) == 1 ? 'checked' : '' }}
                         onchange="togglee(this)">
 
@@ -42,6 +43,7 @@
             <div class="col-md-4">
                 <div class="form-group mb-2">
                     <input type="radio" id="hospital" name="reception_type_id" value="2"
+                        class="form-control @error('reception_type_id') is-invalid @enderror"
                         {{ old('reception_type_id', $reception?->reception_type_id) == 2 ? 'checked' : '' }}
                         onchange="togglee(this)">
 
@@ -55,6 +57,7 @@
             <div class="col-md-4">
                 <div class="form-group mb-2">
                     <input type="radio" id="estetica" name="reception_type_id" value="3"
+                        class="form-control @error('reception_type_id') is-invalid @enderror"
                         {{ old('reception_type_id', $reception?->reception_type_id) == 3 ? 'checked' : '' }}
                         onchange="togglee(this)">
                     <label for="estetica" class="radio-label  shadow border-0">
@@ -84,6 +87,7 @@
             <div class="col-md-4">
                 <div class="form-group mb-2">
                     <input type="radio" id="hotel" name="reception_type_id" value="4"
+                        class="form-control @error('reception_type_id') is-invalid @enderror"
                         {{ old('reception_type_id', $reception?->reception_type_id) == 4 ? 'checked' : '' }}
                         onchange="togglee(this)">
                     <label for="hotel" class="radio-label  shadow border-0">
@@ -96,14 +100,20 @@
             <div class="col-md-4">
                 <div class="form-group mb-2">
                     <input type="radio" id="cremacion" name="reception_type_id" value="5"
+                        class="form-control @error('reception_type_id') is-invalid @enderror"
                         {{ old('reception_type_id', $reception?->reception_type_id) == 5 ? 'checked' : '' }}
                         onchange="togglee(this)">
                     <label for="cremacion" class="radio-label  shadow border-0">
                         <img src="{{ asset('img/cremacion.png') }}" alt="Foto estetica" class="img-fixed"
                             style="width: 25px; height: 25px; object-fit: cover; ">
                         <span> Cremación</label>
+                    {{-- {!! $errors->first(
+                        'reception_type_id',
+                        '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>',
+                    ) !!} --}}
                 </div>
             </div>
+
         </div>
         <div class="row">
 
@@ -163,6 +173,7 @@
                             @endforeach
                         </select>
                     </div>
+                    {!! $errors->first('pet_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                 </div>
             </div>
 
@@ -245,7 +256,7 @@
 
             <div class="col-md-4" id="mvz" style="display: none">
                 <div class="form-group mb-2">
-                    <label for="name" class="form-label" id="person" >M.V.Z</label>
+                    <label for="name" class="form-label" id="person">M.V.Z</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="maki--doctor"></span>
@@ -333,8 +344,7 @@
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="f7--number"></span>
                         </span>
-                        <input type="number" name="num"
-                            class="form-control @error('num') is-invalid @enderror"
+                        <input type="number" name="num" class="form-control @error('num') is-invalid @enderror"
                             value="{{ old('num', $reception?->num) }}" id="num"
                             placeholder="Número de Collar/Arete">
                         {!! $errors->first('num', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
@@ -349,3 +359,4 @@
                 Guardar recepción</button>
         </div>
     </div>
+    

@@ -349,4 +349,14 @@ class HotelController extends Controller
         //return response()->json($hotels);
         //return view('format.pension_datos', compact('reception'));
     }
+
+    public function history(int $id)
+    {
+        $hotels = Hotel::with(['reception', 'cubicle', 'servicie', 'serv'])
+        ->where('reception_id', $id)
+        ->get();
+        $reception = $hotels->first()->reception;
+
+        return view('hotel.history', compact('hotels', 'reception'));
+    }
  }

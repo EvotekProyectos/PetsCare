@@ -165,7 +165,7 @@
                                                     <th>Fecha</th>
                                                     <th>M.V.Z</th>
                                                     <th>Recepción</th>
-                                                    <th>Tipo</th>
+                                                    {{-- <th>Tipo</th> --}}
                                                     <th>Detalles</th>
                                                 </tr>
                                             </thead>

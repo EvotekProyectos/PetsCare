@@ -8,6 +8,7 @@ use App\Models\CmType;
 use App\Models\Folio;
 use App\Models\GenericModel;
 use App\Models\PaymentOrder;
+use App\Models\Pet;
 use App\Models\Producto;
 use App\Models\Reception;
 use App\Models\User;
@@ -42,8 +43,8 @@ class CremationController extends Controller
         $cremation = new Cremation();
         $cremation->status = 'En espera de realizar';
         $cms = CmType::all();
-      
-        $vets=User::all();
+
+        $vets = User::all();
         $this->authorize("create", Cremation::class);
         return view('cremation.create', compact('cremation', 'cms', 'vets'));
     }
@@ -53,10 +54,10 @@ class CremationController extends Controller
      */
     public function store(CremationRequest $request)
     {
+        $this->authorize("create", Cremation::class);
         $new = Cremation::create($request->validated());
 
-        $this->authorize("create", Cremation::class);
-
+        Pet::where('id', $request->pet_id)->update(['deceased' => 1]);
         //return redirect()->route('cremations.index')
         // ->with('success', 'Cremation created successfully.');
         return response()->json($new);
@@ -80,7 +81,7 @@ class CremationController extends Controller
         $cremation = Cremation::find($id);
         $reception = $cremation->reception;
         $cms = CmType::all();
-        $vets=User::all();
+        $vets = User::all();
         $products = Producto::where("ESTATUS",  "A")->get();
 
         $this->authorize("update", $cremation);
@@ -114,18 +115,18 @@ class CremationController extends Controller
     {
         $cremation = new Cremation();
         $cremation->status = "En espera de realizar";
-        $vets=User::all();
+        $vets = User::all();
         $reception = Reception::with('pet', 'reason', 'vet', 'receptionist')->findorfail($id);
         $cms = CmType::all();
         $products = Producto::where("ESTATUS",  "A")->get();
 
-        return view('cremation.create', compact('cremation', 'reception', 'cms', 'products','vets'));
+        return view('cremation.create', compact('cremation', 'reception', 'cms', 'products', 'vets'));
     }
 
     public function comprobante(int $id)
     {
         $cremation = Cremation::with("reception", "pet", "serv", "service")->find($id);
-        $reception = Reception::with("payment")->find($cremation->reception_id); 
+        $reception = Reception::with("payment")->find($cremation->reception_id);
 
         //$next=Appointment::where("reception_id", $reception)->get()->First();       
         $pdf = Pdf::loadView("cremation.comprobante", compact("cremation", "reception"));
@@ -135,7 +136,7 @@ class CremationController extends Controller
 
     public function list()
     {
-        $cremations = Cremation::with('reception', 'reception.receptionist', 'reception.family', 'pet', 'cm', 'tag' , 'serv', 'vet')->get();
+        $cremations = Cremation::with('reception', 'reception.receptionist', 'reception.family', 'pet', 'cm', 'tag', 'serv', 'vet')->get();
         //return DataTables::of($cremations)->make(true);
         return response()->json($cremations);
     }
@@ -266,5 +267,13 @@ class CremationController extends Controller
 
         //Regresamos el Folio de la ODV con el que pueden pasar a pagar a caja
         return response()->json($newFolio);
+    }
+
+    public function history(int $id)
+    {
+        $cremation = Cremation::with("reception", "pet", "serv", "service")->where('reception_id', $id)->first();
+        $reception = Reception::with("payment")->find($id);
+
+        return view('cremation.history', compact('reception', 'cremation'));
     }
 }

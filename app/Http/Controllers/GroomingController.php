@@ -302,4 +302,10 @@ class GroomingController extends Controller
         //Regresamos el Folio de la ODV con el que pueden pasar a pagar a caja
         return response()->json($newFolio);
     }
+
+    public function history($id)
+    {
+        $reception = Reception::with('pet', 'admissionType', 'area', 'statusGrooming.groomingStatus')->findorfail($id);
+        return view('grooming.history', compact('reception'));
+    }
 }

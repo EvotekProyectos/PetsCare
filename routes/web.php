@@ -182,8 +182,8 @@ Route::group(['middleware' => ['auth']], function () {
     //Pets
     Route::get('/pets/list', [PetController::class, 'list'])->name('pets.list');
     Route::get('/pets/preview/{family}', [PetController::class, 'preview'])->name('pets.preview');
-
-    Route::get('/pets/{pet}/family', [PetController::class, 'getFamilyByPet'])->name('pets.family');
+    Route::get('/pets/data/{family}', [PetController::class, 'data'])->name('pets.data');
+    // Route::get('/pets/{pet}/family', [PetController::class, 'getFamilyByPet'])->name('pets.family');
     Route::resource('pets', PetController::class);
 
     //RECEPTIONS
@@ -346,6 +346,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('followup-surgicals', FollowupSurgicalController::class);
 
     //Groomings
+    Route::get('/groomings/history/{id}', [GroomingController::class, 'history'])->name('grooming.history');
     Route::get('/groomings/sign/pdf/{id}', [GroomingController::class, 'groomingsign'])->name('grooming.sign');
     Route::post('/groomings/authorization/pdf/{id}', [GroomingController::class, 'groomingpdf'])->name('grooming.pdf');
     Route::get('test/pdf/{id}', [GroomingController::class, 'generatePdf'])->name('test.pdf');
@@ -366,6 +367,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('cm-types', CmTypeController::class);
 
     //CREMATIONS
+    Route::get('/cremations/history/{id}', [CremationController::class, 'history'])->name('cremation.history');
     Route::get('/cremations/pv/{id}', [CremationController::class, 'ordenventa'])->name("cremation.pay");
     Route::get('/cremations/list', [CremationController::class, 'list'])->name('cremation.list');
     Route::get('/cremations/new/{id}', [CremationController::class, 'new'])->name('new.cremation');
@@ -394,15 +396,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('cubicles', CubicleController::class);
 
     //HOTEL
+    Route::get("/hotel/history/{id}", [HotelController::class, 'history'])->name('hotel.history');
     Route::get("/hotel/create/{id}", [HotelController::class, 'create'])->name('hotel.create');
     Route::get("/hotel/format/{id}", [HotelController::class, 'hotelFormat'])->name('hotel.format');
-    Route::post('/hotel/pdf/{id}', [HotelController::class, 'FormatPdf'])->name('hotel.pdf');
+    Route::post("/hotel/pdf/{id}", [HotelController::class, 'FormatPdf'])->name('hotel.pdf');
     Route::get("/hotel/list/{id}", [HotelController::class, 'list'])->name('hotel.list');
     Route::get("/hotel/all", [HotelController::class, 'all'])->name('hotel.all');
     Route::get("/hotel/cubicles/view", [HotelController::class, 'view'])->name('hotel.view');
     Route::get('/hotel/pv/{id}', [HotelController::class, 'ordenventa'])->name("hotel.pay");
     Route::get('/pension/inf/{id}', [HotelController::class, 'pensionInf'])->name('pension.inf');
-
     Route::resource('hotels', HotelController::class);
 });
 
