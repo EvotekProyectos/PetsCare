@@ -1,16 +1,24 @@
 <style>
+    .select2-container {
+    width: 100% !important; /* Se asegura que el select ocupe todo el ancho */
+}
+
     .select2-container .select2-selection--single {
         height: 2rem;
         padding-top: 0.25rem;
         padding-bottom: 0.25rem;
         border: 1px solid #ced4da;
         border-radius: 0.25rem;
+        display: flex;
+    align-items: center; /* Centra verticalmente el contenido */
+    box-sizing: border-box;
     }
 
     .input-group .select2-container {
         width: auto !important;
         flex: 1 1 auto;
     }
+    
 </style>
 
 <div class="row padding-1 p-1">

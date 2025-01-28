@@ -1,20 +1,9 @@
-const reasons = {
-    "1": "#6CC3E3",
-    "2": "#917AAC",
-    "3": "#F8A693",
-    "4": "#FFF7952",
-    "5":"#95FFEA",
-    "6": "#FF69B42",
-    "7": "#A52A2A",
-    "8":"#FF69B4"
-};
-
 const areas= {
-    "1": "#079dd1",
-    "2": "#f52528",
-    "3": "#85c98b",
-    "4": "#f8a693",
-    "5": "#71459e",
+    "1": "#079BCE", // Quirúrgicos (Azul)
+    "2": "#F54245", // Cuidado Intensivo (Rojo)
+    "3": "#2ecb56", // Internos (Verde)
+    "4": "#ff7855", // Felinos (Salmón)
+    "5": "#8C65B5", // Infecciosos (Morado)
 };
 
 // var table = undefined;
