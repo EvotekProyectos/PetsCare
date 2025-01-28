@@ -23,13 +23,13 @@ class ReceptionRequest extends FormRequest
     {
         return [
 
-            'pet_id' => 'nullable|integer|exists:pets,id',
-            'reception_type_id' => 'nullable|integer|exists:reception_types,id',
+            'pet_id' => 'required|integer|exists:pets,id',
+            'reception_type_id' => 'required|integer|exists:reception_types,id',
 			'admission_type_id' => 'nullable|integer|exists:admission_types,id',
             'area_id' => 'nullable|integer|exists:areas,id',
             'family_id' => 'nullable|integer|exists:families,id',
             'reason_id' => 'nullable|integer|exists:reasons,id',
-            'veterinarian_id' => 'nullable|integer|exists:users,id',
+            'veterinarian_id' => 'required|integer|exists:users,id',
             'recepcionist_id' => 'nullable|integer|exists:users,id',
             'room_id' => 'nullable|integer|exists:rooms,id',
             'entry_date' => 'required|date|',

@@ -1,10 +1,9 @@
 @extends('layouts.app')
 
-@section('home', 'active border-start border-3 border-primary') 
+@section('home', 'active border-start border-3 border-primary')
 
 @push('styles')
-
-<link rel="stylesheet" href="{{ asset('css/receptions/form.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/receptions/form.css') }}">
 @endpush
 
 @section('content')
@@ -35,5 +34,8 @@
 @endsection
 
 @push('scripts')
-    <script src="{{asset('js/receptions/form.js')}}" defer></script>
+        <script>
+            const errors = @json($errors->toArray());
+        </script>
+    <script src="{{ asset('js/receptions/form.js') }}" defer></script>
 @endpush

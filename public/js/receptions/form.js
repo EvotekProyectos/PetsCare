@@ -7,6 +7,32 @@ $(document).ready(function () {
         placeholder: 'Buscar Mascota',
         width: 'resolve'
     });
+
+    if (errors['reception_type_id']) {
+        $('input[name="reception_type_id"]').addClass('is-invalid');
+        $('#cremacion').parent().append('<div class="invalid-feedback"><strong>' + errors['reception_type_id'][0] + '</strong></div>');
+    } else {
+        $('input[name="reception_type_id"]').removeClass('is-invalid');
+        $('.invalid-feedback').remove();
+    }
+    if (errors['pet_id']) {
+        $('#pet_id').addClass('is-invalid');
+        $('.select2-selection').addClass('is-invalid');
+        $('#pet_id').parent().append('<div class="invalid-feedback"><strong>' + errors['pet_id'][0] + '</strong></div>');
+    }
+    if (errors['veterinarian_id']) {
+        $('#veterinarian_id').addClass('is-invalid');
+        $('.select2-selection').addClass('is-invalid');
+        $('#veterinarian_id').parent().append('<div class="invalid-feedback"><strong>' + errors['veterinarian_id'][0] + '</strong></div>');
+    }
+    if (errors) {
+        const selectedRadio = $('input[name="reception_type_id"]:checked');
+        if (selectedRadio.length > 0) {
+            togglee(selectedRadio[0]); 
+        }
+    }
+
+
 });
 
 let isUpdating = false;
