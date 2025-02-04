@@ -51,6 +51,7 @@ use App\Http\Controllers\CmTypeController;
 use App\Http\Controllers\CremationController;
 use App\Http\Controllers\CubicleController;
 use App\Http\Controllers\CubicleTypeController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FollowupsCriticController;
 use App\Http\Controllers\FollowupInternController;
 use App\Http\Controllers\FollowupSurgicalController;
@@ -66,6 +67,7 @@ use App\Http\Controllers\RedSheetController;
 use App\Http\Controllers\StatusSurgeryController;
 use App\Http\Controllers\SurgeryScheduleController;
 use App\Http\Controllers\TagTypeController;
+use App\Models\Dashboard;
 use App\Models\FollowUp;
 use App\Models\Hospitalization;
 use App\Models\Hotel;
@@ -406,6 +408,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/hotel/pv/{id}', [HotelController::class, 'ordenventa'])->name("hotel.pay");
     Route::get('/pension/inf/{id}', [HotelController::class, 'pensionInf'])->name('pension.inf');
     Route::resource('hotels', HotelController::class);
+
+    //DASHBOARD
+    Route::get('/dash', [DashboardController::class, 'dashboard'])->name('dash.inf');
+    Route::get('/appointments', [DashboardController::class, 'appointments'])->name('dash.info');
 });
 
  

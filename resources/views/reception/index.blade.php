@@ -117,7 +117,7 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
                                         HOTEL/PENSIÓN
-                                        <span class="icon-park-outline--hotelG"  style="margin-top: 30%" ></span>
+                                        <span class="icon-park-outline--hotelG"   ></span>
                                     </h5>
                                 </div>
 

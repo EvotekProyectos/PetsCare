@@ -182,7 +182,9 @@
                         </th>
                         <th style="width: 35%; text-align: left;">
                             <p class="data">
-                            <a href="{{ route('certificate.imprimir', $reception->pet->id) }}">SI</a>
+                            {{-- <a href="{{ route('certificate.imprimir', $reception->pet->id) }}" target="_blank">SI</a> --}}
+                            <a href="{{ route('certificate.imprimir', $reception->pet->id) }}" target="_blank" rel="noopener noreferrer">Imprimir Certificado</a>
+
                         </p>
                         </th>
                     </tr>

@@ -359,4 +359,7 @@ class HotelController extends Controller
 
         return view('hotel.history', compact('hotels', 'reception'));
     }
- }
+ 
+
+  
+}
