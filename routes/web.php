@@ -411,7 +411,11 @@ Route::group(['middleware' => ['auth']], function () {
 
     //DASHBOARD
     Route::get('/dash', [DashboardController::class, 'dashboard'])->name('dash.inf');
-    Route::get('/appointments', [DashboardController::class, 'appointments'])->name('dash.info');
+    Route::get('/dash/appointments', [DashboardController::class, 'appointmentsTotal'])->name('dash.appointments');
+    Route::get('/dash/appointments-reasons', [DashboardController::class, 'appointmentsReason'])->name('dash.appointmentsReasons');
+    Route::get('/dash/appointments-days', [DashboardController::class, 'appointmentsDays'])->name('dash.appointmentsDays');
+    Route::get('/dash/appointments-vets', [DashboardController::class, 'appointmentsVet'])->name('dash.appointmentsVets');
+
 });
 
  
