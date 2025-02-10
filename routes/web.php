@@ -58,6 +58,7 @@ use App\Http\Controllers\GroomingController;
 use App\Http\Controllers\GroomingStatusController;
 use App\Http\Controllers\GroomingStatusHistoryController;
 use App\Http\Controllers\HotelController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ReproductiveStatusController;
 use App\Http\Controllers\VaccineCertificateController;
 use App\Http\Controllers\ProductClassificationController;
@@ -406,6 +407,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/hotel/pv/{id}', [HotelController::class, 'ordenventa'])->name("hotel.pay");
     Route::get('/pension/inf/{id}', [HotelController::class, 'pensionInf'])->name('pension.inf');
     Route::resource('hotels', HotelController::class);
+
+    //Notificacions
+    Route::get('/notifications',[NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/list',[NotificationController::class, 'list'])->name('notifications.list');
+    Route::get('/notifications/list/unread',[NotificationController::class, 'unreadList'])->name('notifications.unreadList');
+    Route::post('/notifications/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
 });
 
  

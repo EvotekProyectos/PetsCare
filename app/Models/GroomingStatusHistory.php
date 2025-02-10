@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * Class GroomingStatusHistory
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class GroomingStatusHistory extends Model
 {
+    use Notifiable;
     
 
     protected $perPage = 20;

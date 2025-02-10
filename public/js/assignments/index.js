@@ -18,7 +18,19 @@ const reasons = {
 
 $(document).ready(function () {
     table = $('#table').DataTable({
-        ajax: route('assignment.appointments'),
+        ajax: {
+            url: route('assignment.appointments'),
+            type: "GET",
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            error: function (xhr, error, thrown) {
+                if (xhr.status === 403) {
+                } else {
+                    console.error("Error en DataTable:", xhr.responseText);
+                }
+                table.clear().draw();
+            }},
         responsive: true,
         order: [0, 'desc'],
         columns: [

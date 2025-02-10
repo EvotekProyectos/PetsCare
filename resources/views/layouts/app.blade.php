@@ -45,8 +45,8 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@3.10.2/dist/locale/es.js'></script>
 
- 
-    
+
+
     @stack('styles')
 </head>
 
@@ -67,7 +67,7 @@
                 <ul class="list-unstyled components ps-4 pe-3">
 
                     <li class="@yield('home')">
-                        <a href="{{route('receptions.create')}}" class="ms-2">
+                        <a href="{{ route('receptions.create') }}" class="ms-2">
                             <i class="fas fa-home"></i>
                             Inicio
                         </a>
@@ -106,34 +106,34 @@
                     <li class="@yield('hospitalization.recap')">
                         <a href="{{ route('hospitalization.altas') }}" class=" ms-2">
                             <span class="ri--hospital-line"></span>
-                           Hospitalizaciones
+                            Hospitalizaciones
                         </a>
                     </li>
-                    
+
                     <li class="@yield('surgery.schedule')">
                         <a href="{{ route('surgery-schedules.index') }}" class=" ms-2">
                             <span class="healthicons--surgical-sterilization-outlineblack"></span>
-                           Cirugías
+                            Cirugías
                         </a>
                     </li>
 
                     <li class="@yield('hotel')">
                         <a href="{{ route('hotels.index') }}" class=" ms-2">
                             <span class="icon-park-solid--hotelBlack "></span>
-                          Hotel
+                            Hotel
                         </a>
                     </li>
-                    
+
                     <li class="@yield('cremations')">
                         <a href="{{ route('cremations.index') }}" class=" ms-2">
                             <span class="emojione-monotone--funeral-urn1"></span>
-                           Cremaciones
+                            Cremaciones
                         </a>
                     </li>
                     <li class="@yield('budgets')">
                         <a href="{{ route('budgets.index') }}" class=" ms-2">
                             <span class="fluent--receipt-money-16-regular"></span>
-                           Presupuestos
+                            Presupuestos
                         </a>
                     </li>
                     <li class="@yield('families')">
@@ -155,7 +155,7 @@
                             <i class="fas fa-cogs"></i>
                             Configuración
                         </a>
-                       {{-- <a href="#pageSubmenu" data-bs-toggle="collapse" aria-expanded="false"
+                        {{-- <a href="#pageSubmenu" data-bs-toggle="collapse" aria-expanded="false"
                             class="dropdown dropdown-toggle  ms-2">
                             <i class="fas fa-cogs"></i>
                             Configuración
@@ -277,6 +277,8 @@
                                         </li>
                                     @endif
                                 @else --}}
+                                <a href="{{ route('notifications.index') }}"><span
+                                        class="ic--twotone-notifications-none"></span></a>
                                 <li class="nav-item dropdown">
                                     <a id="navbarDropdown" class="nav-link p-0" href="#" role="button"
                                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -302,7 +304,21 @@
                     </div>
                 </nav>
                 <main class="">
+                    <div id="show-notifications">
+                        {{-- @foreach (auth()->user()->unreadNotifications as $notification)
+                            <div class="alert alert-info alert-dismissible fade show notification-alert"
+                                data-id="{{ $notification->id }}" style="width: 98%" role="alert">
+                                <h6 id="card_title" class="text-primary">
+                                    La mascota {{ $notification->data['pet'] }} está
+                                    {{ $notification->data['status'] }} de su {{ $notification->data['type'] }} </h6>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                        @endforeach --}}
+                    </div>
+
                     @yield('content')
+
                 </main>
 
             </div>
@@ -326,6 +342,7 @@
     <script src="{{ asset('js/jquery.dataTables.spanish.js') }}" defer></script>
     {{-- <script src="{{ asset('js/responsive.dataTables.min.js') }}" defer></script> --}}
     <script src="{{ asset('js/global.js') }}" defer></script>
+    {{-- <script src="{{ asset('js/notifications/show.js') }}" defer></script> --}}
     {{-- Select2 JS --}}
     <script src="{{ asset('js/select2.min.js') }}" defer></script>
     {{-- MOMENT JS --}}
@@ -348,6 +365,84 @@
                 $('a[aria-expanded=true]').attr('aria-expanded', 'false');
             });
         });
+        // Mark Notification As Read when close the alerts
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll(".notification-alert").forEach(alert => {
+                alert.addEventListener("closed.bs.alert", function() {
+                    let notificationId = this.getAttribute("data-id");
+                    let phone = this.getAttribute("phone");
+
+                    if (!notificationId) return;
+
+                    fetch("{{ route('notifications.read') }}", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                            },
+                            body: JSON.stringify({
+                                id: notificationId
+                            })
+                        }).then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                chat(phone);
+                            }
+                        }).catch(error => console.error("Error:", error));
+                });
+            });
+        });
+
+        //Open Whatsapp Web To Talk to the Family of the pet
+        async function chat(phone) {
+
+            const result = await Swal.fire({
+                icon: "info",
+                title: "Avisar a la Familia",
+                text: "Será redirigido a WhatsApp para enviar un mensaje.",
+                showConfirmButton: true,
+                confirmButtonText: "Continuar",
+                showCancelButton: true,
+                cancelButtonText: "Cancelar",
+            });
+
+
+            if (result.isConfirmed) {
+                const whatsappURL = `https://wa.me/${phone}?text=Hola,%20su%20mascota%20esta%20lista.`;
+
+                window.open(whatsappURL, '_blank');
+            }
+        }
+
+        // Check for unread notifications
+        function fetchNotifications() {
+            $.ajax({
+                url: "{{ route('notifications.unreadList') }}",
+                type: "GET",
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                success: function(data) {
+                    let notificationsHtml = "";
+                    data.forEach(notification => {
+                        notificationsHtml += `
+                    <div class="alert alert-info alert-dismissible fade show notification-alert"
+                        data-id="${notification.id}" style="width: 98%" role="alert" phone="${notification.data.phone}">
+                        <h6 class="text-primary">
+                            La mascota ${notification.data.pet} está ${notification.data.status} de su ${notification.data.type}
+                        </h6>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>`;
+                    });
+                    $("#show-notifications").html(notificationsHtml);
+                }
+            });
+
+
+        }
+
+        fetchNotifications();
+        setInterval(fetchNotifications, 60000);
     </script>
 
     @stack('scripts')

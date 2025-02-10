@@ -15,7 +15,7 @@ class PetSeeder extends Seeder
     {
         $pets = [
             ["family_id" => '1', "number_chip" => "1527", "name" => 'Happy', "specie" => 'canino', "raza" => 'French Poodle',
-        "gender_id" => '2', "birthday" => '2010-07-21', "reproductive_status_id" => '2', "weight" => '10kg', 
+        "gender_id" => '2', "birthday" => '2010-07-21', "reproductive_status_id" => '2', "weight" => '5kg', 
         "physic_descrip" => 'Perro blanco chico', "notes" => 'Por su edad tiene varios granos en su cuerpo',
         "pet_classification_id" => '2', "deceased" => '0' ],
         ];
