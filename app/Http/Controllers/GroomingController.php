@@ -11,6 +11,8 @@ use App\Models\GroomingStatusHistory;
 use App\Models\PaymentOrder;
 use App\Models\Producto;
 use App\Models\Reception;
+use App\Models\User;
+use App\Notifications\GroomingStatus;
 use Barryvdh\DomPDF\Facade\Pdf  as Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -123,6 +125,10 @@ class GroomingController extends Controller
 
         try {
             $new = GroomingStatusHistory::create($validatedData);
+            $recepcionistas = User::role('recepcionista')->get();
+            foreach ($recepcionistas as $recepcionista) {
+                $recepcionista->notify(new GroomingStatus($new));
+            }
 
             return response()->json([
                 'success' => true,
@@ -308,4 +314,5 @@ class GroomingController extends Controller
         $reception = Reception::with('pet', 'admissionType', 'area', 'statusGrooming.groomingStatus')->findorfail($id);
         return view('grooming.history', compact('reception'));
     }
+
 }
