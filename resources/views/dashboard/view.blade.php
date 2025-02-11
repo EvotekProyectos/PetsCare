@@ -1,108 +1,5 @@
 @extends('layouts.app')
 
-{{-- @section('content')
-<head>
-    <style>
-        .service-card {
-            width: 100%;
-            max-width: 250px;
-            height: 100px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        .service-card:hover {
-            transform: scale(1.05);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-content {
-            background-color: white;
-            margin: 10% auto;
-            padding: 20px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        .close {
-            float: right;
-            cursor: pointer;
-        }
-    </style>
-</head>
-
-<section class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-12 col-lg-10">
-            <div class="card bg-primary-soft border-0 p-3">
-                <div class="card-header bg-transparent border-0 text-center">
-                    <h4 class="text-primary text-uppercase">DASHBOARD</h4>
-                </div>
-                
-                <h5 class="text-uppercase text-muted text-center">DATOS GENERALES DEL DÍA</h5>
-                
-                <div class="row justify-content-center gap-3">
-                    <div class="service-card consulta d-flex bg-white p-3 rounded-4 shadow-sm col-5 col-md-3 col-lg-2" data-type="consultas">
-                        <div>
-                            <p class="text-muted small">Consultas</p>
-                            <h5 id="total-appointment" class="fw-bold">0</h5>
-                        </div>
-                    </div>
-                    <div class="service-card hospital d-flex bg-white p-3 rounded-4 shadow-sm col-5 col-md-3 col-lg-2" data-type="hospital">
-                        <div>
-                            <p class="text-muted small">Hospital</p>
-                            <h5 id="total-hospital" class="fw-bold">0</h5>
-                        </div>
-                    </div>
-                    <div class="service-card grooming d-flex bg-white p-3 rounded-4 shadow-sm col-5 col-md-3 col-lg-2" data-type="grooming">
-                        <div>
-                            <p class="text-muted small">Grooming</p>
-                            <h5 id="total-grooming" class="fw-bold">0</h5>
-                        </div>
-                    </div>
-                    <div class="service-card hotel d-flex bg-white p-3 rounded-4 shadow-sm col-5 col-md-3 col-lg-2" data-type="hotel">
-                        <div>
-                            <p class="text-muted small">Hotel</p>
-                            <h5 id="total-hotel" class="fw-bold">0</h5>
-                        </div>
-                    </div>
-                </div>
-
-                <h5 class="text-uppercase text-muted text-center mt-3">DATOS ESPECÍFICOS</h5>
-                
-                <div class="row mt-3 justify-content-center">
-                    <div class="col-12 col-md-8 bg-white p-3 rounded-4 shadow-sm">
-                        <canvas id="lineChart" style="width: 100%; height: 300px;"></canvas>
-                    </div>
-                </div>
-                
-                <div class="row mt-4 justify-content-center">
-                    <div class="col-12 col-md-7 bg-white p-3 rounded-4 shadow-sm">
-                        <canvas id="consultasChart" style="width: 100%; height: 300px;"></canvas>
-                    </div>
-                    <div class="col-12 col-md-4 bg-white p-3 rounded-4 shadow-sm mt-3 mt-md-0">
-                        <canvas id="consultasMedicoChart" style="width: 100%; height: 300px;"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-@endsection --}}
-
-
 @section('content')
 <head>
     <style>
@@ -237,7 +134,8 @@
                         </div>
                 </div>
 
-
+                
+              <div class="container-fluid">
                 <div class="row">
                     <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE; margin-top: 25px;">
                         DATOS ESPECÍFICOS
@@ -245,45 +143,69 @@
                 </div>
                
 
-                <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; margin">
-                    <label for="name" class="form-label">FILTRAR POR: </label>
-                        <div class="input-group mb-3" style="width: auto;">
-                             <span class="input-group-text bg-primary-subtle" id="basic-addon1">
-                                <span class="vaadin--lines-list"></span>
-                            </span>
-                            <select id="timeFilter">
-                                <option value="week">Semana</option>
-                                 <option value="month">Mes</option>
-                                 <option value="year">Año</option>
-                            </select>
+                <div class="d-flex flex-wrap justify-content-end align-items-center mb-3" style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+                    <label for="name" class="form-label" style="margin-top: 0;">FILTRAR POR: </label>
+                    <div class="input-group mb-3" style="width: auto; margin-left:3px;">
+                        <span class="input-group-text bg-primary-subtle">
+                            <span class="vaadin--lines-list"></span>
+                        </span>
+                        <select id="timeFilter">
+                            <option value="week">Semana</option>
+                            <option value="month">Mes</option>
+                            <option value="year">Año</option>
+                            <option value="custom">Personalizado</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-3" style="width: auto; margin-left:10px;">
+                        <span class="input-group-text bg-primary-subtle">
+                            <span class="lucide--calendar-clock"></span>
+                        </span>
+                        <input type="date" id="startDate" disabled>
+                    </div>
+                    <div class="input-group mb-3" style="width: auto; margin-left:10px;">
+                        <span class="input-group-text bg-primary-subtle">
+                            <span class="lucide--calendar-check"></span>
+                        </span>
+                        <input type="date" id="endDate"  disabled>
+                    </div>
+                    <button id="applyFilter" style="height: 30px; margin-left:10px;" class="btn btn-primary">
+                      Aplicar</button>
+                </div>
+
+                <div class="row mt-4 g-3">
+                    <div class="col-lg-10 col-md-12">
+                        <div class="bg-white p-3 rounded-4 shadow-sm" style="height: 300px;">
+                            <canvas id="lineChart"></canvas>
                         </div>
-                </div>
-
-
-                <div class="row mt-4 justify-content-between align-items-center"> 
-                    <div class="bg-white p-3 rounded-4 shadow-sm" style="width: 100%; height: 300px;">
-                        <canvas id="lineChart" style="width: 100% !important; height: 100% !important;"></canvas>
                     </div>
-
-                   
-                </div>
-           
-
-                <div class="row mt-4 justify-content-between align-items-center">
-                    <div class="bg-white p-3 rounded-4 shadow-sm" style="width: 70%; height: 300px;">
-                        <canvas id="consultasChart" style="width: 100% !important; height: 100% !important;"></canvas>
-                    </div>
-    
-                    <div class="bg-white p-3 rounded-4 shadow-sm d-flex justify-content-center align-items-center" style="width: 30%; height: 300px;">
-                        <canvas id="consultasMedicoChart" style="width: 100% !important; height: 100% !important;"></canvas>
+                    <div class="col-lg-2 col-md-12 d-flex flex-column align-items-center justify-content-center">
+                        <div class="bg-white p-3 rounded-4 shadow-sm text-center" style="width: 100%; height: 300px;">
+                            <p id="totalConsultas" class="fw-bold text-secondary" style="font-size:20px;"></p>
+                            <p id="promedioConsultas" style="font-size:13px;"></p>
+                            <p id="rangoFechas" style="font-size:13px;"></p>
+                        </div>
                     </div>
                 </div>
+
+
+               <div class="row mt-4 g-3">
+                <div class="col-lg-8 col-md-12">
+                    <div class="bg-white p-3 rounded-4 shadow-sm" style="height: 300px;">
+                        <canvas id="consultasChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-12 d-flex justify-content-center align-items-center">
+                    <div class="bg-white p-3 rounded-4 shadow-sm" style="height: 300px; width: 100%;">
+                        <canvas id="consultasMedicoChart"></canvas>
+                    </div>
+                </div>
+            </div>
 
                 
                 <div id="myModal" class="modal" style="display: none;">
                     <div class="modal-content">
                         <span style="text-align:right;"class="close">&times;</span>
-                        <h6>onsultas por  </h6>
+                        <h6>Consultas por  </h6>
                         <table id="modalTable" class="table table-striped table-hover responsive w-100">
                             <thead class="thead table-primary text-uppercase">
                                 <tr>
@@ -298,10 +220,10 @@
                         <a href="{{ route('receptions.index') }}">Ver más info</a>
 
                     </div>
-                </div>
+                </div> 
 
-                
-                
+               
+            </div>
             </div>
         </div>
     </div>
@@ -313,6 +235,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 
+//DATOS GENERALES DEL DIA
 fetch("{{ route('dash.appointments') }}")
     .then(response => response.json())
     .then(data => {
@@ -340,25 +263,48 @@ fetch("{{ route('dash.appointments') }}")
          });
     });
 
+
     //Gráfica 1 semana,mes,año 
-document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
     const ctx = document.getElementById('lineChart').getContext('2d');
     const timeFilter = document.getElementById('timeFilter');
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+    const applyFilterBtn = document.getElementById('applyFilter');
     let chartInstance = null;
 
-    function fetchData(time) {
-        fetch(`{{ route('dash.appointmentsDays') }}?time=${time}`)
+    function fetchData(time, startDate = '', endDate = '') {
+        let url = `{{ route('dash.appointmentsDays') }}?time=${time}`;
+        if (time === 'custom' && startDate && endDate) {
+            url += `&start_date=${startDate}&end_date=${endDate}`;
+        }
+
+        fetch(url)
             .then(response => response.json())
             .then(data => {
-                updateChart(data.labels, data.current, data.last);
+                updateChart(data.labels, data.current, data.dateRange);
             })
             .catch(error => console.error('Error al obtener los datos:', error));
     }
 
-    function updateChart(labels, currentData, lastData) {
+
+    function updateChart(labels, currentData, dateRange) {
         if (chartInstance) {
             chartInstance.destroy();
         }
+
+        const total = currentData.reduce((sum, value) => sum + value, 0); 
+        const days = labels.length;
+        const average = days > 0 ? (total / days).toFixed(2) : 0; // Promedio diario de consultas
+
+        // Usar el rango de fechas enviado desde el backend
+        const startDate = dateRange ? dateRange.start : 'Desconocido';
+        const endDate = dateRange ? dateRange.end : 'Desconocido';
+
+        document.getElementById("totalConsultas").innerText = `Total de consultas: \n ${total}`;
+        document.getElementById("promedioConsultas").innerText = `Promedio diario de consultas: \n ${average}`;
+        document.getElementById("rangoFechas").innerText = `Rango de fechas: \n ${startDate} - ${endDate}`;
+
 
         chartInstance = new Chart(ctx, {
             type: 'line',
@@ -366,26 +312,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 labels: labels,
                 datasets: [
                     {
-                        label: 'Periodo Actual',
+                        label: 'Número de consultas',
                         data: currentData,
                         borderColor: 'rgba(18, 18, 18 , 1)',
-                        backgroundColor: 'rgba(18, 18, 18 , 0.2)',
+                        backgroundColor: 'rgba(18, 18, 18 , 0.05)',
                         borderWidth: 1,
                         tension: 0.2,
-                        pointRadius: 4
+                        pointRadius: 2,
+                        pointHoverRadius: 5, // Tamaño de los puntos al pasar el mouse
+                        fill: true // Habilita el relleno bajo la línea
+                     }]
                     },
-                    {
-                        label: 'Periodo Anterior',
-                        data: lastData,
-                        borderColor: 'rgba(172,196,236, 1)',
-                        backgroundColor: 'rgba(172,196,236, 0.2)',
-                        borderWidth: 1,
-                        borderDash: [5, 5],
-                        tension: 0.2,
-                        pointRadius: 4
-                    }
-                ]
-            },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -399,7 +336,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     legend: {
                         labels: {
                             usePointStyle: true,
-                            pointStyle: 'circle'
+                            pointStyle: 'circle',
+                            //boxWidth: 8 
                         }
                     }
                 },
@@ -411,18 +349,45 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+
     timeFilter.addEventListener("change", function () {
-        fetchData(this.value);
+        if (this.value === "custom") {
+            startDateInput.disabled = false;
+            endDateInput.disabled = false;
+            applyFilterBtn.disabled = false;
+        } else {
+            startDateInput.disabled = true;
+            endDateInput.disabled = true;
+            applyFilterBtn.disabled = true;
+            fetchData(this.value);
+        }
+    });
+
+    applyFilterBtn.addEventListener("click", function () {
+        if (startDateInput.value && endDateInput.value) {
+            fetchData("custom", startDateInput.value, endDateInput.value);
+        } else {
+        Swal.fire({
+            icon: "warning",
+            title: "Rango de fechas inválido",
+            text: "Por favor, selecciona un rango de fechas válido.",
+            confirmButtonText: "Entendido"
+        });
+
+        }
     });
 
     fetchData('week');
 });
 
 
- //Gráfica 2 reasons de consultas
-    document.addEventListener("DOMContentLoaded", function() {
+//Gráfica 2 tipos de consultas
+document.addEventListener("DOMContentLoaded", function () {
     const ctx = document.getElementById('consultasChart').getContext('2d');
     const timeFilter = document.getElementById('timeFilter');
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+    const applyFilterBtn = document.getElementById('applyFilter');
 
     const reasonLabels = {
         1: 'General',
@@ -437,15 +402,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let chartInstance = null;
 
-    function fetchData(time) {
-        fetch(`{{ route('dash.appointmentsReasons') }}?time=${time}`)
+    function fetchData(time, startDate = null, endDate = null) {
+        let url = `{{ route('dash.appointmentsReasons') }}?time=${time}`;
+
+        if (time === 'custom' && startDate && endDate) {
+            url += `&start_date=${startDate}&end_date=${endDate}`;
+        }
+
+        fetch(url)
             .then(response => response.json())
             .then(data => {
+                if (data.error) {
+                    console.error('Error:', data.error);
+                    return;
+                }
+
                 const datasetValues = Array(8).fill(0);
-                
+
                 data.forEach(item => {
                     if (reasonLabels[item.reason_id]) {
-                        datasetValues[item.reason_id - 1] = item.total; 
+                        datasetValues[item.reason_id - 1] = item.total;
                     }
                 });
 
@@ -455,82 +431,131 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateChart(data) {
-        if (chartInstance) {
-            chartInstance.destroy();
-        }
-
-        chartInstance = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: Object.values(reasonLabels),
-                datasets: [{
-                    data: data,
-                    backgroundColor: [
-                        '#5EB1E4', '#8C70AE', '#FF8160', '#FFF176',
-                        '#82EAD1', '#FF6FB0', '#FF426D', '#C1F387'
-                    ],
-                    borderColor: [
-                        '#5EB1E4', '#8C70AE', '#FF8160', '#FFF176',
-                        '#82EAD1', '#FF6FB0', '#FF426D', '#C1F387'
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 10
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: {
-                            autoSkip: false,
-                            maxRotation: 0,
-                            minRotation: 0,
-                            font: { size: 12 },
-                            callback: function(value) {
-                                return this.getLabelForValue(value).split(' ').join('\n'); 
-                            }
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        grid: { display: false }
-                    }
-                },
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Tipo de consulta',
-                        font: { size: 18, weight: 'bold' },
-                        padding: { top: 10, bottom: 20 }
-                    },
-                    legend: { display: false }
-                }
-            }
-        });
+    if (chartInstance) {
+        chartInstance.destroy();
     }
 
-    // Cargar datos iniciales (por defecto semana)
-    fetchData('week');
+    const screenWidth = window.innerWidth;
+    const rotationAngle = screenWidth < 768 ? 45 : 0; 
 
-    // Evento para actualizar datos cuando cambia el filtro
-    timeFilter.addEventListener('change', function() {
-        fetchData(this.value);
+    chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Object.values(reasonLabels),
+            datasets: [{
+                data: data,
+                backgroundColor: [
+                    '#5EB1E4', '#8C70AE', '#FF8160', '#FFF176',
+                    '#82EAD1', '#FF6FB0', '#FF426D', '#C1F387'
+                ],
+                borderColor: [
+                    '#5EB1E4', '#8C70AE', '#FF8160', '#FFF176',
+                    '#82EAD1', '#FF6FB0', '#FF426D', '#C1F387'
+                ],
+                borderWidth: 1,
+                borderRadius: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: rotationAngle,
+                        minRotation: rotationAngle,
+                        font: { size: 12 },
+                             callback: function(value) {
+                                 return this.getLabelForValue(value).split(' ');
+                             }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: { display: false }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Tipo de consulta',
+                    font: { size: 18, weight: 'bold' },
+                    padding: { top: 10, bottom: 20 }
+                },
+                legend: { display: false }
+            }
+        }
     });
-});
-        
+}
 
-    //Gráfica 3 consultas por medico
-    document.addEventListener("DOMContentLoaded", function () {
+// Detectar cambios de tamaño de pantalla y actualizar la gráfica
+window.addEventListener('resize', () => {
+    if (chartInstance) {
+        updateChart(chartInstance.data.datasets[0].data);
+    }
+});
+
+    timeFilter.addEventListener('change', function () {
+        if (this.value === 'custom') {
+            startDateInput.removeAttribute('disabled');
+            endDateInput.removeAttribute('disabled');
+        } else {
+            startDateInput.setAttribute('disabled', true);
+            endDateInput.setAttribute('disabled', true);
+            fetchData(this.value);
+        }
+    });
+
+    applyFilterBtn.addEventListener('click', function () {
+        if (timeFilter.value === 'custom') {
+            const startDate = startDateInput.value;
+            const endDate = endDateInput.value;
+
+            if (!startDate || !endDate) {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Fechas incompletas',
+        text: 'Por favor, selecciona ambas fechas.',
+        confirmButtonText: 'Entendido'
+    });
+    return;
+            }
+
+            fetchData('custom', startDate, endDate);
+        }
+    });
+
+    // Cargar datos iniciales (semana por defecto)
+    fetchData('week');
+});
+    
+
+//Gráfica 3 consultas por medico
+document.addEventListener("DOMContentLoaded", function () {
     const ctx = document.getElementById('consultasMedicoChart').getContext('2d');
     let chartInstance = null;
     const timeFilter = document.getElementById('timeFilter');
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+    const applyFilterBtn = document.getElementById('applyFilter');
 
-    function fetchData(time) {
-        fetch(`{{ route('dash.appointmentsVets') }}?time=${time}`)
+    function fetchData(time, startDate = null, endDate = null) {
+        let url = `{{ route('dash.appointmentsVets') }}?time=${time}`;
+
+        if (time === 'custom' && startDate && endDate) {
+            url += `&start_date=${startDate}&end_date=${endDate}`;
+        }
+
+        fetch(url)
             .then(response => response.json())
             .then(data => {
+                if (data.error) {
+                    console.error('Error:', data.error);
+                    return;
+                }
+
                 const labels = data.map(item => item.veterinarian);
                 const values = data.map(item => item.total);
 
@@ -568,7 +593,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         display: true,
                         position: 'right',
                         labels: {
-                            font: { size: 14 },
+                            font: { size: 12},
                             usePointStyle: true,
                             pointStyle: 'circle',
                             padding: 20
@@ -583,37 +608,71 @@ document.addEventListener("DOMContentLoaded", function () {
                         const label = chartInstance.data.labels[index];
                         const value = chartInstance.data.datasets[0].data[index];
 
-                        openModal3(label, value);
+                             // Obtener los valores actualizados
+                             const selectedTimeFilter = timeFilter.value;
+                        const selectedStartDate = startDateInput.value;
+                        const selectedEndDate = endDateInput.value;
+
+                        openModal3(label, selectedTimeFilter, selectedStartDate, selectedEndDate);
+                        // openModal3(label, timeFilter, startDate, endDate);
                     }
                 }
             }
         });
     }
 
-    // Escuchar cambios en el filtro
-    timeFilter.addEventListener("change", function () {
-        fetchData(this.value);
-    });
+   
+     timeFilter.addEventListener("change", function () {
+         if (this.value === 'custom') {
+             startDateInput.removeAttribute('disabled');
+             endDateInput.removeAttribute('disabled');
+         } else {
+             startDateInput.setAttribute('disabled', true);
+             endDateInput.setAttribute('disabled', true);
+             fetchData(this.value);
+         }
+     });
 
-    // Cargar datos iniciales (semana por defecto)
-    fetchData('week');
-});
+     
+     applyFilterBtn.addEventListener('click', function () {
+         if (timeFilter.value === 'custom') {
+             const startDate = startDateInput.value;
+             const endDate = endDateInput.value;
+
+             if (!startDate || !endDate) {
+     Swal.fire({
+         icon: 'warning',
+         title: 'Fechas incompletas',
+         text: 'Por favor, selecciona ambas fechas.',
+         confirmButtonText: 'Entendido'
+     });
+     return;
+             }
+
+             fetchData('custom', startDate, endDate);
+         }
+     });
+     fetchData('week');
+ });
 
 
-function openModal3(veterinarianName, value) {
-    fetch(`{{ route('dash.appointmentsVets') }}?time=week`)
+function openModal3(veterinarianName, timeFilter, startDate, endDate) {
+    let url = `{{ route('dash.appointmentsVets') }}?time=${timeFilter}`;
+    if (timeFilter === 'custom' && startDate && endDate) {
+        url += `&start_date=${startDate}&end_date=${endDate}`; 
+    }
+
+    fetch(url)
         .then(response => response.json())
         .then(data => {
             const veterinarianData = data.find(item => item.veterinarian === veterinarianName);
 
             if (veterinarianData) {
                 const modalTableBody = document.getElementById('modalTableBody');
-                modalTableBody.innerHTML = ''; // Limpiar tabla antes de insertar nuevos datos
+                modalTableBody.innerHTML = ''; 
 
                 document.querySelector('#myModal h6').innerText = `Consultas por ${veterinarianName}`;
 
-
-                // Insertar los datos de las citas en la tabla del modal
                 veterinarianData.appointments.forEach(appointment => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
@@ -624,14 +683,12 @@ function openModal3(veterinarianName, value) {
                     modalTableBody.appendChild(row);
                 });
 
-                // Mostrar el modal
                 document.getElementById('myModal').style.display = 'block';
             }
         })
         .catch(error => console.error('Error al obtener los detalles de las citas:', error));
 }
 
-// Cerrar el modal al hacer clic en el botón de cierre
 document.querySelector('.close').addEventListener('click', function() {
     document.getElementById('myModal').style.display = "none";
 });
@@ -642,8 +699,6 @@ window.onclick = function(event) {
         document.getElementById('myModal').style.display = "none";
     }
 };
-
-
 
 </script>
 @endpush 

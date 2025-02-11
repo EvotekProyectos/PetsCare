@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Log;
 use App\Models\Reception;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -14,66 +16,44 @@ class DashboardController extends Controller
 
     }
 
-    //  public function appointmentsTotal()
-    //  {   
-        
-    //  $totalAppointments = Reception::where('reception_type_id', 1)->count();
-    //  $totalHospitalizations = Reception::where('reception_type_id', 2)->count();
-    //  $totalGrooming = Reception::where('reception_type_id', 3)->count();
-    //  $totalHotel = Reception::where('reception_type_id', 4)->count();
-    //  $totalCremations = Reception::where('reception_type_id', 5)->count();
+  
+//RECEPCIONES DEL DIA
+public function appointmentsTotal()
+{   
+    $today = Carbon::today();
 
-    //  return response()->json([
-    //      'total_appointment' => $totalAppointments,
-    //      'total_hospital' => $totalHospitalizations,
-    //      'total_grooming' => $totalGrooming,
-    //      'total_hotel' => $totalHotel,
-    //      'total_cremation' => $totalCremations,
-    //  ]);    
-    //  }
+    $totalAppointments = Reception::where('reception_type_id', 1)->whereDate('created_at', $today)->count();
+    $totalHospitalizations = Reception::where('reception_type_id', 2)->whereDate('created_at', $today)->count();
+    $totalGrooming = Reception::where('reception_type_id', 3)->whereDate('created_at', $today)->count();
+    $totalHotel = Reception::where('reception_type_id', 4)->whereDate('created_at', $today)->count();
+    $totalCremations = Reception::where('reception_type_id', 5)->whereDate('created_at', $today)->count();
 
-     public function appointmentsTotal(Request $request)
- {
-     $timeFilter = $request->input('time', 'week'); // Valor por defecto: semana
-     $query = Reception::query();
-
-     // Filtrar por tiempo
-     if ($timeFilter === 'week') {
-         $query->whereBetween('entry_date', [Carbon::now()->startOfWeek(), Carbon::now()]);
-     } elseif ($timeFilter === 'month') {
-         $query->whereBetween('entry_date', [Carbon::now()->startOfMonth(), Carbon::now()]);
-     } elseif ($timeFilter === 'year') {
-         $query->whereBetween('entry_date', [Carbon::now()->startOfYear(), Carbon::now()]);
-     }
-
-     return response()->json([
-         'total_appointment' => $query->where('reception_type_id', 1)->count(),
-         'total_hospital' => $query->where('reception_type_id', 2)->count(),
-         'total_grooming' => $query->where('reception_type_id', 3)->count(),
-         'total_hotel' => $query->where('reception_type_id', 4)->count(),
-         'total_cremation' => $query->where('reception_type_id', 5)->count(),
-     ]);
- }
+    return response()->json([
+        'total_appointment' => $totalAppointments,
+        'total_hospital' => $totalHospitalizations,
+        'total_grooming' => $totalGrooming,
+        'total_hotel' => $totalHotel,
+        'total_cremation' => $totalCremations,
+    ]);    
+}
 
 
-    
-
-
-//     public function appointmentsReason()
-// {   //Obtener las consultas en base a su reason
-//     $appointments = Reception::where('reception_type_id', 1)
-//         ->selectRaw('reason_id, COUNT(*) as total')
-//         ->groupBy('reason_id')
-//         ->get();
-//     return response()->json($appointments);
-// }
-
+//CONSULTAS EN BASE A SU TIPO 
 public function appointmentsReason(Request $request)
 {
     $timeFilter = $request->input('time', 'week');
     $query = Reception::where('reception_type_id', 1);
 
-    if ($timeFilter === 'week') {
+    if ($timeFilter === 'custom') {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        if (!$startDate || !$endDate) {
+            return response()->json(['error' => 'Fechas requeridas para filtro personalizado.'], 400);
+        }
+
+    $query->whereBetween(DB::raw('DATE(entry_date)'), [$startDate, $endDate]);
+    } elseif ($timeFilter === 'week') {
         $query->whereBetween('entry_date', [Carbon::now()->startOfWeek(), Carbon::now()]);
     } elseif ($timeFilter === 'month') {
         $query->whereBetween('entry_date', [Carbon::now()->startOfMonth(), Carbon::now()]);
@@ -89,172 +69,109 @@ public function appointmentsReason(Request $request)
     return response()->json($appointments);
 }
 
+//CONSULTAS EN BASE A SU DIA, MES, AÑO O PERSONALIZADO
+public function appointmentsDays(Request $request)
+{
+    try {
+        $timeFilter = $request->input('time', 'week');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
 
-//  public function appointmentsDays()
-//  {    
-//      $startOfWeek = Carbon::now()->startOfWeek(); // Lunes de la semana actual
-//      $startOfLastWeek = Carbon::now()->subWeek()->startOfWeek(); // Lunes de la semana pasada
+        $start = null;
+        $end = null;
+        $groupBy = null;
+        $range = [];
+        $labels = [];
 
-//      // Consultas de la semana actual
-//      $currentWeek = Reception::where('reception_type_id', 1)
-//          ->whereBetween('entry_date', [$startOfWeek, Carbon::now()])
-//          ->selectRaw('DAYOFWEEK(entry_date) as day, COUNT(*) as total')
-//          ->groupBy('day')
-//          ->get()
-//          ->pluck('total', 'day')
-//          ->toArray();
+        if ($timeFilter === 'custom') {
+            if (!$startDate || !$endDate) {
+                return response()->json(['error' => 'Fechas inválidas'], 400);
+            }
 
-//      // Consultas de la semana pasada
-//      $lastWeek = Reception::where('reception_type_id', 1)
-//          ->whereBetween('entry_date', [$startOfLastWeek, $startOfLastWeek->copy()->endOfWeek()])
-//          ->selectRaw('DAYOFWEEK(entry_date) as day, COUNT(*) as total')
-//          ->groupBy('day')
-//          ->get()
-//          ->pluck('total', 'day')
-//          ->toArray();
+            $start = Carbon::parse($startDate);
+            $end = Carbon::parse($endDate);
 
-//      // Formatear resultados (Llenar con 0 los días sin datos)
-//      $weekData = array_fill(1, 7, 0); // Domingo (1) a Sábado (7)
-//      $lastWeekData = array_fill(1, 7, 0);
+            if ($start->greaterThan($end)) {
+                return response()->json(['error' => 'La fecha de inicio no puede ser mayor que la fecha de fin'], 400);
+            }
 
-//      foreach ($currentWeek as $day => $total) {
-//          $weekData[$day] += $total;
-//      }
+            $groupBy = 'DATE(entry_date)';
+            $period = CarbonPeriod::create($start, $end);
+            foreach ($period as $date) {
+                $range[] = $date->format('Y-m-d');
+                $labels[] = $date->format('d-m-Y');
+            }
+        } else {
+            if ($timeFilter === 'week') {
+                $start = Carbon::now()->startOfWeek();
+                $groupBy = 'DAYOFWEEK(entry_date)';
+                $range = range(1, 7);
+                $labels = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado','Domingo'];
+            } elseif ($timeFilter === 'month') {
+                $start = Carbon::now()->startOfMonth();
+                $groupBy = 'DAY(entry_date)';
+                $daysInMonth = Carbon::now()->daysInMonth;
+                $range = range(1, $daysInMonth);
+                $labels = array_map(fn($day) => (string) $day, $range);
+            } elseif ($timeFilter === 'year') {
+                $start = Carbon::now()->startOfYear();
+                $groupBy = 'MONTH(entry_date)';
+                $range = range(1, 12);
+                $labels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            }
+            $end = Carbon::now();
+        }
 
-//      foreach ($lastWeek as $day => $total) {
-//          $lastWeekData[$day] += $total;
-//      }
+        $currentData = Reception::where('reception_type_id', 1)
+            ->whereBetween(DB::raw('DATE(entry_date)'), [$start->format('Y-m-d'), $end->format('Y-m-d')])
+            ->selectRaw("$groupBy as period, COUNT(*) as total")
+            ->groupBy('period')
+            ->get()
+            ->pluck('total', 'period')
+            ->toArray();
 
-//      return response()->json([
-//          'current_week' => array_values($weekData),
+        $formattedCurrent = array_fill_keys($range, 0);
+        foreach ($currentData as $period => $total) {
+            $formattedCurrent[$period] = $total;
+        }
 
-//          'last_week' => array_values($lastWeekData)
-//      ]);
- //}
-
- public function appointmentsDays(Request $request)
-{    
-    $timeFilter = $request->input('time', 'year');
-
-    if ($timeFilter === 'week') {
-        $start = Carbon::now()->startOfWeek();
-        $lastStart = Carbon::now()->subWeek()->startOfWeek();
-        $groupBy = 'DAYOFWEEK(entry_date)';
-        $range = range(1, 7); // Días de la semana
-    } elseif ($timeFilter === 'month') {
-        $start = Carbon::now()->startOfMonth();
-        $lastStart = Carbon::now()->subMonth()->startOfMonth();
-        $groupBy = 'DAY(entry_date)';
-        $range = range(1, Carbon::now()->daysInMonth); // Días del mes
-    } elseif ($timeFilter === 'year') {
-        $start = Carbon::now()->startOfYear();
-        $lastStart = Carbon::now()->subYear()->startOfYear();
-        $groupBy = 'MONTH(entry_date)';
-        $range = range(1, 12); // Meses del año
+        return response()->json([
+            'labels' => $labels,
+            'current' => array_values($formattedCurrent),
+            'dateRange' => [
+                'start' => $start->format('Y-m-d'),
+                'end' => $end->format('Y-m-d')
+            ]
+        ]);
+        
+    } catch (\Exception $e) {
+        Log::error('Error en appointmentsDays: ' . $e->getMessage());
+        return response()->json(['error' => 'Error interno del servidor'], 500);
     }
-
-    $currentData = Reception::where('reception_type_id', 1)
-        ->whereBetween('entry_date', [$start, Carbon::now()])
-        ->selectRaw("$groupBy as period, COUNT(*) as total")
-        ->groupBy('period')
-        ->get()
-        ->pluck('total', 'period')
-        ->toArray();
-
-    $lastData = Reception::where('reception_type_id', 1)
-        ->whereBetween('entry_date', [$lastStart, $lastStart->copy()->endOfMonth()])
-        ->selectRaw("$groupBy as period, COUNT(*) as total")
-        ->groupBy('period')
-        ->get()
-        ->pluck('total', 'period')
-        ->toArray();
-
-    // Rellenar datos con ceros si no existen
-    $formattedCurrent = array_fill_keys($range, 0);
-    $formattedLast = array_fill_keys($range, 0);
-
-    foreach ($currentData as $period => $total) {
-        $formattedCurrent[$period] = $total;
-    }
-
-    foreach ($lastData as $period => $total) {
-        $formattedLast[$period] = $total;
-    }
-
-    return response()->json([
-        'labels' => $timeFilter === 'year' 
-            ? ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-            : array_values($range),
-            'labels' => $timeFilter === 'week' 
-            ? ['Domingo','Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado']
-            : array_values($range),
-        'current' => array_values($formattedCurrent),
-        'last' => array_values($formattedLast)
-    ]);
 }
 
 
-
-// public function appointmentsVet()
-// {   
-//      //Obtener las consultas en base al medico
-//     $appointments = Reception::where('reception_type_id', 1)->with('vet')
-//         ->selectRaw('veterinarian_id, COUNT(*) as total')
-//         ->groupBy('veterinarian_id')
-//         ->get()
-//         ->map(function ($appointment) {
-//             return [
-//                 'veterinarian' => $appointment->vet->name ?? 'Desconocido', 
-//                 'total' => $appointment->total
-//             ];
-//         });
-//     return response()->json($appointments);
-// }
-
-// public function appointmentsVet(Request $request)
-// {
-//     $timeFilter = $request->input('time', 'week');
-//     //$query = Reception::where('reception_type_id', 1);
-//     $query = Reception::where('reception_type_id', 1)->with(['vet', 'pet', 'family']);
-
-//     if ($timeFilter === 'week') {
-//         $query->whereBetween('entry_date', [Carbon::now()->startOfWeek(), Carbon::now()]);
-//     } elseif ($timeFilter === 'month') {
-//         $query->whereBetween('entry_date', [Carbon::now()->startOfMonth(), Carbon::now()]);
-//     } elseif ($timeFilter === 'year') {
-//         $query->whereBetween('entry_date', [Carbon::now()->startOfYear(), Carbon::now()]);
-//     }
-
-   
-//     $appointments = $query->get()->groupBy('veterinarian_id')->map(function ($appointments, $vetId) {
-//         $vetName = $appointments->first()->vet->name ?? 'Desconocido';
-
-//         ->selectRaw('veterinarian_id, COUNT(*) as total')
-//         ->groupBy('veterinarian_id')
-//         ->get()
-//         ->map(function ($appointment) {
-//             return [
-//                 'veterinarian' => $vetName,
-//                 'total' => $appointments->count(),
-//                 'appointments' => $appointments->map(function ($appointment) {
-//                     return [
-//                         'date' => $appointment->entry_date ?? 'Desconocido',
-//                         'pet' => $appointment->pet->name ?? 'Desconocido',
-//                         'family' => $appointment->family->name ?? 'Desconocido',
-//                     ];
-//                 })
-//             ];
-//         })->values(); // Para resetear los índices del array
-    
-//         return response()->json($appointments);
-//     }
-
-    public function appointmentsVet(Request $request)
+//CONSULTAS EN BASE A SU VETERINARIO
+public function appointmentsVet(Request $request)
 {
     $timeFilter = $request->input('time', 'week');
     $query = Reception::where('reception_type_id', 1)->with(['vet', 'pet', 'family']);
 
-    if ($timeFilter === 'week') {
+    // Si el filtro es personalizado, asegúrate de que las fechas sean válidas
+    if ($timeFilter === 'custom') {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        if (!$startDate || !$endDate) {
+            return response()->json(['error' => 'Fechas requeridas para filtro personalizado.'], 400);
+        }
+
+        // Convertir las fechas a formato adecuado si es necesario (puedes usar Carbon si lo prefieres)
+        $startDate = Carbon::parse($startDate)->startOfDay(); // Asegurarse que inicie al principio del día
+        $endDate = Carbon::parse($endDate)->endOfDay(); // Asegurarse que termine al final del día
+
+        $query->whereBetween(DB::raw('DATE(entry_date)'), [$startDate, $endDate]);
+    } elseif ($timeFilter === 'week') {
         $query->whereBetween('entry_date', [Carbon::now()->startOfWeek(), Carbon::now()]);
     } elseif ($timeFilter === 'month') {
         $query->whereBetween('entry_date', [Carbon::now()->startOfMonth(), Carbon::now()]);
@@ -262,6 +179,7 @@ public function appointmentsReason(Request $request)
         $query->whereBetween('entry_date', [Carbon::now()->startOfYear(), Carbon::now()]);
     }
 
+    // Obtener las citas agrupadas por veterinario
     $appointments = $query->get()->groupBy('veterinarian_id')->map(function ($appointments, $vetId) {
         $vetName = $appointments->first()->vet->name ?? 'Desconocido';
 
@@ -276,7 +194,7 @@ public function appointmentsReason(Request $request)
                 ];
             })
         ];
-    })->values(); // Para resetear los índices del array
+    })->values();
 
     return response()->json($appointments);
 }

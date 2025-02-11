@@ -409,9 +409,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/pension/inf/{id}', [HotelController::class, 'pensionInf'])->name('pension.inf');
     Route::resource('hotels', HotelController::class);
 
+
     //DASHBOARD
     Route::get('/dash', [DashboardController::class, 'dashboard'])->name('dash.inf');
-    Route::get('/dash/appointments', [DashboardController::class, 'appointmentsTotal'])->name('dash.appointments');
+    Route::get('/dash/appointments-total', [DashboardController::class, 'appointmentsTotal'])->name('dash.appointments');
     Route::get('/dash/appointments-reasons', [DashboardController::class, 'appointmentsReason'])->name('dash.appointmentsReasons');
     Route::get('/dash/appointments-days', [DashboardController::class, 'appointmentsDays'])->name('dash.appointmentsDays');
     Route::get('/dash/appointments-vets', [DashboardController::class, 'appointmentsVet'])->name('dash.appointmentsVets');
