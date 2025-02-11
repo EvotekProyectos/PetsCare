@@ -222,11 +222,14 @@
                             </p>
                         </td>
                         <td>
-                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;">Cartilla virtual:</p>
+                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0; ">Cartilla virtual:</p>
                         </td>
                         <td style="padding: 5px 10px;">
                             <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
-                                <a href="{{ route('certificate.imprimir', $reception->pet->id) }}">SI</a>
+                                <a href="{{ route('certificate.imprimir', $reception->pet->id)}}" target="_blank">SI</a>
+                                <a href="{{ route('certificate.imprimir', $reception->pet->id) }}" target="_blank">Imprimir Certificado</a>
+                                <a href="{{ route('certificate.imprimir', $reception->pet->id) }}" target="_blank" rel="noopener noreferrer">Imprimir Certificado</a>
+
                             </p>
                             
                         </td>

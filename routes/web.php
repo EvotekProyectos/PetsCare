@@ -51,6 +51,7 @@ use App\Http\Controllers\CmTypeController;
 use App\Http\Controllers\CremationController;
 use App\Http\Controllers\CubicleController;
 use App\Http\Controllers\CubicleTypeController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FollowupsCriticController;
 use App\Http\Controllers\FollowupInternController;
 use App\Http\Controllers\FollowupSurgicalController;
@@ -67,6 +68,7 @@ use App\Http\Controllers\RedSheetController;
 use App\Http\Controllers\StatusSurgeryController;
 use App\Http\Controllers\SurgeryScheduleController;
 use App\Http\Controllers\TagTypeController;
+use App\Models\Dashboard;
 use App\Models\FollowUp;
 use App\Models\Hospitalization;
 use App\Models\Hotel;
@@ -413,6 +415,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/notifications/list',[NotificationController::class, 'list'])->name('notifications.list');
     Route::get('/notifications/list/unread',[NotificationController::class, 'unreadList'])->name('notifications.unreadList');
     Route::post('/notifications/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+
+
+    //DASHBOARD
+    Route::get('/dash', [DashboardController::class, 'dashboard'])->name('dash.inf');
+    Route::get('/dash/appointments-total', [DashboardController::class, 'appointmentsTotal'])->name('dash.appointments');
+    Route::get('/dash/appointments-reasons', [DashboardController::class, 'appointmentsReason'])->name('dash.appointmentsReasons');
+    Route::get('/dash/appointments-days', [DashboardController::class, 'appointmentsDays'])->name('dash.appointmentsDays');
+    Route::get('/dash/appointments-vets', [DashboardController::class, 'appointmentsVet'])->name('dash.appointmentsVets');
+
 });
 
  

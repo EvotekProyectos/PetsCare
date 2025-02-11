@@ -39,7 +39,7 @@
                                     <h5 id="card_title" class="text-uppercase d-flex align-items-center"
                                         style="color: #BEBEBE; font-size: 20px;">
                                         CONSULTAS
-                                        <span class="maki--doctorGray" style="font-size: 20px; margin-left: 8px;"></span>
+                                        <span class="maki--doctorGrey" style="font-size:18px; margin-left: 3px;"></span>
                                     </h5>
                                 </div>
 
@@ -67,7 +67,7 @@
                                     <h5 id="card_title" class="text-uppercase d-flex align-items-center"
                                         style="color: #BEBEBE; font-size: 20px;">
                                         HOSPITALIZACIONES
-                                        <span class="mdi--hospital" style="font-size: 28px; margin-left: 8px;"></span>
+                                        <span class="mdi--hospital"  style="font-size:20px; margin-left: 3px; margin-bottom:2px;"></span>
                                     </h5>
                                 </div>
 
@@ -94,7 +94,7 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
                                         GROOMING
-                                        <span class="humbleicons--scissors"></span>
+                                        <span class="humbleicons--scissors" style="margin-top: 1%" ></span>
                                     </h5>
                                 </div>
 
@@ -119,7 +119,7 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
                                         HOTEL/PENSIÓN
-                                        <span class="icon-park-outline--hotelG"></span>
+                                        <span class="icon-park-outline--hotelG"   ></span>
                                     </h5>
                                 </div>
 
@@ -144,7 +144,7 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
                                         CREMACIONES
-                                        <span class="emojione-monotone--funeral-urnGray"></span>
+                                        <span class="emojione-monotone--funeral-urnGrey"></span>
                                     </h5>
                                 </div>
 
