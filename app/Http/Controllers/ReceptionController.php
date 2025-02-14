@@ -209,11 +209,13 @@ class ReceptionController extends Controller
     {
         $reception = Reception::find($id);
         $pet = Pet::with('family', 'genre')->find($reception->pet_id);
+        $total = $request->input('total');
         $signatureDataUrl = $request->input('signature');
 
         $pdf = PDF::loadView('reception.pdf', [
             'reception' => $reception,
             'pet' => $pet,
+            'total' => $total,
             'signatureDataUrl' => $signatureDataUrl,
             'isPdf' => true
         ]);
@@ -232,6 +234,13 @@ class ReceptionController extends Controller
 
         return response()->json(['url' => asset('storage' . $pdfPath), 'format_id' => $format->id]);
     }
+
+
+    public function getReceptionArea($id)
+{
+    $reception = Reception::find($id);
+    return response()->json(['area_id' => $reception->area_id]);
+}
 
 
     public function getFamilyByPet($pet_id)

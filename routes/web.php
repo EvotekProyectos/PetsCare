@@ -199,6 +199,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/receptions/list/hotels', [ReceptionController::class, 'listHotels'])->name('reception.hotels');
     Route::get('/receptions/list/cremations', [ReceptionController::class, 'listCremations'])->name('reception.cremations');
 
+    Route::get('/receptions/{id}/area', [ReceptionController::class, 'getReceptionArea'])->name('receptions.getArea');
+
     Route::get('/receptions/historial/{id}', [ReceptionController::class, 'historial'])->name('reception.historial');
     
     Route::get('/receptions/hospital/{id}', [ReceptionController::class, 'hospital_authorization'])->name('hospital.list');
@@ -408,6 +410,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get("/hotel/cubicles/view", [HotelController::class, 'view'])->name('hotel.view');
     Route::get('/hotel/pv/{id}', [HotelController::class, 'ordenventa'])->name("hotel.pay");
     Route::get('/pension/inf/{id}', [HotelController::class, 'pensionInf'])->name('pension.inf');
+    Route::get('/hotel/exit/{id}', [HotelController::class, 'finishDate'])->name('hotel-exit');
     Route::resource('hotels', HotelController::class);
 
     //Notificacions

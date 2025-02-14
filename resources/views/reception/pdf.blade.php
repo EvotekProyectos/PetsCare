@@ -4,9 +4,7 @@
 <head>
     @routes
     <style type="text/css">
-        @import url(https://themes.googleusercontent.com/fonts/css?kit=fOEonugfEEW2k3BWBOC73CXHfZMcH88HuPcErL5npACHpuVWaP-GHFPZzt35558q);
-
-        .head {
+          .head {
             color: #646c9a;
             font-weight: 700;
             font-size: 12pt;
@@ -19,18 +17,6 @@
             font-family: "sans-serif;";
             margin: 0;
 
-        }
-
-        .footer {
-            text-align: right;
-            padding-top: 20px;
-            border-top: 2px solid #f1f1f1;
-            font-size: 9pt;
-            color: #888;
-        }
-
-        .footer p {
-            margin: 0;
         }
 
         table {
@@ -58,6 +44,23 @@
             font-family: sans-serif;
             margin: 0;
         }
+
+        .button {
+            background-color: #3459A4; 
+            color: #fff; 
+            border: none;  
+            border-radius: 5px; 
+            padding: 10px 20px; 
+            font-size: 16px; 
+            cursor: pointer; 
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); 
+            transition: all 0.3s ease; 
+        }
+
+        .button:hover {
+            background-color: #3e6ac0; 
+            box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3); 
+        }
     </style>
 </head>
 
@@ -67,9 +70,13 @@
         <table style="width: 100%; text-align: center;">
             <tr>
                 <td style="align-items: center;">
-                    {{-- <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px"> --}}
-
+                    @if($isPdf ?? false)
+                    <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px">
+                    @else
+                    <img src="{{ asset('img/logo-petscare.png') }}" style="height: 87px;">
+                    @endif
                 </td>
+
                 <td>
                     <p class="head">Hospital Veterinario Pets Care</p>
                     <p style="font-family: sans-serif; font-size: 10pt;">
@@ -103,17 +110,23 @@
     </div>
 
     <div>
-        <table style="width: 100%; border-collapse: collapse;">
-            <p>Fecha: {{ $reception->entry_date }}</p>
+        <p style="text-align:right;  margin-top:10px;">
+            <b>Fecha:</b> {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}</p>
+    </div>
 
+     <div style="margin-left: 3%;">
+        <table style="width: 100%; border-collapse: collapse;">
             <tr>
                 <td>
                     <p>El que suscribe: {{ $reception->pet->family->name }} </p>
                 </td>
+            </tr>
+            <tr>
                 <td>
                     <p> Tel: {{ $reception->pet->family->phone }}</p>
                 </td>
             </tr>
+
             <tr>
                 <td>
                     <p>Domicilio: {{ $reception->pet->family->address }}</p>
@@ -126,77 +139,51 @@
             </tr>
             <tr>
                 <td>
-                    <p>Tel: {{ $reception->pet->family->contact_number }}</p>
+                    <p>Tel de emergencia: {{ $reception->pet->family->contact_number }}</p>
                 </td>
             </tr>
         </table>
     </div>
-    <div>
-        <p style="margin-top: 2%">Propietario de la mascota que a continuación se describe:</p>
+    
+    <div style="margin-left: 3%;">
+        <p style="width: 100%; text-align: justify; margin-top: 2%; margin-bottom: 1%;">
+           <b> Propietario de la mascota que a continuación se describe:</p></b>
         <table style="width: 100%; border-collapse:collapse; margin-top:1% margin-left:25%; margin-right:25%;">
-            <tr>
+            <tr >
                 <td>
-                    <p> Nombre:</p>
-                </td>
-                <td style="padding: 0.5px 10px;">
                     <p>
-                        {{ $reception->pet->name }}
+                        Nombre: {{ $reception->pet->name }}
                     </p>
-                <td>
-                    <p> Especie</p>
                 </td>
-                <td style="padding: 0.5px 10px;">
-                    <p>
-                        {{ $reception->pet->specie }}
-                    </p>
+                   
+                <td >
+                    <p> Especie: {{ $reception->pet->specie }}</p>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <p> Raza:</p>
-                </td>
-                <td style="padding: 0.5px 10px;">
                     <p>
-                        {{ $reception->pet->raza }}
+                        Raza: {{ $reception->pet->raza }}
                     </p>
                 </td>
-                <td>
-                    <p> Edad:</p>
-                </td>
-
-                @php
-                    $birthday = \Carbon\Carbon::parse($reception->pet->birthday);
-                    $now = \Carbon\Carbon::now();
-
-                    $years = $birthday->diffInYears($now);
-                    $months = $birthday->copy()->addYears($years)->diffInMonths($now);
-                    $days = $birthday->copy()->addYears($years)->addMonths($months)->diffInDays($now);
+                @php 
+                $birthday = \Carbon\Carbon::parse($reception->pet->birthday);
+                $now = \Carbon\Carbon::now();
+                $years = $birthday->diffInYears($now);
+                $months = $birthday->copy()->addYears($years)->diffInMonths($now);
+                $days = $birthday->copy()->addYears($years)->addMonths($months)->diffInDays($now);
                 @endphp
-
-                <td style="padding:  0.5px 10px;">
-                    <p><span style="font-weight: normal">
-                            {{ $years }} años, {{ $months }} meses
-                        </span>
-                    </p>
+                <td>
+                    <p> Edad: {{ $years }} años, {{ $months }} meses</p>
                 </td>
-
             <tr>
                 <td>
-                    <p> Sexo:</p>
-                </td>
-                <td style="padding: 0.5px 10px;">
                     <p>
-                        {{ $reception->pet->genre->name }}
+                        Sexo: {{ $reception->pet->genre->name }}
                     </p>
                 </td>
                 <td>
-                    <p> Peso:</p>
-                </td>
-
-                <td style="padding: 0.5px 10px;">
-                    <p>
-                        {{ $reception->pet->weight }}
-                    </p>
+                    <p> Peso: {{ $reception->pet->weight }}</p>
                 </td>
             </tr>
         </table>
@@ -204,7 +191,7 @@
 
 
     <div>
-        <table style="width: 100%; border-collapse: collapse; margin-top:2%;">
+        <table style="width: 100%; border-collapse: collapse; margin-top:1%; text-align: justify;">
             <tr>
                 <td>
                     <ol>
@@ -221,7 +208,13 @@
                             serán
                             previamente informados a sus tutores antes de realizarlos).
                         </li>
-                        <li>El costo del servicio de <b>hospitalización por día es de $ .</b> La hospitalización incluye
+                        <li>El costo del servicio de <b>hospitalización por día es de $ 
+                            @if (!isset($isPdf) || !$isPdf)
+                            <input type="text" id="total"  value="{{ $total ?? '' }}" class="form-control" style="width: 300px;">
+                            @else
+                                 <span>{{ $total ?? '' }}</span>
+                             @endif
+                            .</b> La hospitalización incluye
                             la
                             atención médica 24 hrs. Del día, insumos de hospital, alimento y medicamentos de cabecera,
                             importante mencionar que el alimento es de <b>MANTENIMIENTO, EN CASO DE QUE SU MASCOTA
@@ -253,21 +246,13 @@
                             caso se
                             deberán de seguir las indicaciones del médico.
                         </li>
-                        <li>
+                        <li style="page-break-before: always;">
                             El propietario será informado diariamente vía telefónica por el médico a cargo sobre la
                             evolución de su mascota. <b>Podrá visitarlo únicamente en un horario de 3:00pm a 5:00pm,
                                 durante un tiempo no mayor a 15 min. Los días domingos y días festivos no hay
                                 visitas.</b>
                         </li>
-                    </ol>
-                </td>
-            </tr>
-        </table>
-    </div>
-
-    <div>
-        <table style="width: 100%; border-collapse: collapse;">
-            <ol start="8">
+                  
 
                 <li>Los pacientes serán dados de alta en un horario de 10:00 am a 7:00 pm. El medico a cargo les
                     informara oportunamente el día y hora de salida de su mascota. Para tal efecto la cuenta
@@ -316,34 +301,39 @@
 
 
 
-    <div>
-        <p style="margin-top: 2%;"><b>Firma y nombre:</b></p>
+    <div style="text-align: center;">
+        <p style="margin-top: 30px;"><b>AUTORIZO:</b></p>
 
         @if (isset($signatureDataUrl))
             <img src="{{ $signatureDataUrl }}" alt="Firma del propietario" style="width: 200px; height: 100px;">
         @else
-            <canvas id="canvas" class="border border-dark p-0" width="200" height="100"></canvas>
+            <canvas id="canvas" class="border border-dark p-0" width="200" height="100" style="border-bottom: 2px solid #2b2b2b;"></canvas>
         @endif
-    </div>
+    
+        <div style="margin-top: 20px; text-align: center;">
+            @if (!isset($isPdf) || !$isPdf)
+                <div style="display: flex; justify-content: center; gap: 20px;">
 
-    @if (!isset($isPdf) || !$isPdf)
-        <div class="row mx-0">
-            <div class="col-6">
-                <button class="btnLimpiar btn btn-lmx" data-target="canvas">Limpiar</button>
-            </div>
-            <div class="col-6">
-                <form>
-                    <button class="btnEnviar btn btn-lmx">Aceptar</button>
-                </form>
-            </div>
+                    <div style="align-self: flex-start;">
+                        <button class="btnLimpiar btn btn-lmx button" data-target="canvas" style="width: 100px;">Limpiar</button>
+                    </div>
+                    <div>
+                        <form>
+                            <button class="btnEnviar btn btn-lmx button" style="width: 100px;">Aceptar</button>
+                        </form>
+                    </div>
+                </div>
+            @endif
         </div>
-    @endif
+    </div>
+    
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/receptions/hospital_auth.js') }}" defer></script>
     <script>
         const RECEPTION_ID = "{{ $reception->id }}";
     </script>
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>

@@ -66,7 +66,13 @@ $(document).ready(function () {
                          return `
                                 <a type="button" href="${route('pension.inf', data.reception.id)}" class="btn btn-sm text-primary">
                                  <span class="mdi--eye"></span>
-                             </a>`;
+                             </a>
+                            
+                              <a type="button" class="btn btn-sm text-primary" onclick="exit(${ data.id})">
+                                  <span class="mingcute--exit-line"></span>
+                             </a>
+                            `;
+                            
          
             },
         //     {
@@ -110,6 +116,36 @@ async function Attend(phone) {
         
         window.open(whatsappURL, '_blank');
     }
+}
+
+async function exit(id) {
+   
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        const result = await Swal.fire({
+            title: 'Confirmar salida de la mascota',
+            text: '¿Desea confirmar que la mascota ya será entregada?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, continuar',
+            cancelButtonText: 'No, regresar',
+        });
+
+        if(!result.isConfirmed) return;
+
+        let formData = new FormData();
+        formData.append('hotel', id);
+        formData.append('_token', csrfToken);
+
+        let url = route('hotel-exit', id);
+
+        let response = await fetch(url, {
+            method: "POST",
+            body: formData,
+        
+        });
+
+        let data=await response.json();
 }
 
 // // async function updateStatus(ID, newStatus) {

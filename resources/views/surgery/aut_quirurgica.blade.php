@@ -3,11 +3,9 @@
 
 <head>
     @routes
-    <style type="text/css">
-        @import url(https://themes.googleusercontent.com/fonts/css?kit=fOEonugfEEW2k3BWBOC73CXHfZMcH88HuPcErL5npACHpuVWaP-GHFPZzt35558q);
-
+    <style>
         .head {
-            color: #646c9a;
+            color: #3459A4;
             font-weight: 700;
             font-size: 12pt;
             font-weight: bold;
@@ -19,18 +17,6 @@
             font-family: "sans-serif;";
             margin: 0;
 
-        }
-
-        .footer {
-            text-align: right;
-            padding-top: 20px;
-            border-top: 2px solid #f1f1f1;
-            font-size: 9pt;
-            color: #888;
-        }
-
-        .footer p {
-            margin: 0;
         }
 
         table {
@@ -58,6 +44,22 @@
             font-family: sans-serif;
             margin: 0;
         }
+        .button {
+        background-color: #3459A4; 
+        color: #fff; 
+        border: none;  
+        border-radius: 5px; 
+        padding: 10px 20px; 
+        font-size: 16px; 
+        cursor: pointer; 
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); 
+        transition: all 0.3s ease; 
+    }
+
+    .button:hover {
+        background-color: #63aaf7; 
+        box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3); 
+    }
     </style>
 </head>
 
@@ -68,7 +70,9 @@
             <tr>
                 <td style="align-items: center;">
                     @if($isPdf ?? false)
-                        <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px">
+                    <img src="{{ public_path('img/logo-petscare.png') }}" alt="Logo" style="height: 90px">
+                    @else
+                    <img src="{{ asset('img/logo-petscare.png') }}" style="height: 87px;">
                     @endif
                 </td>
                 <td>
@@ -104,95 +108,83 @@
     </div>
 
     <div>
+        <p style="text-align:right;  margin-top:10px;">
+            <b>Fecha:</b> {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}</p>
+    </div>
+
+    <div style="margin-left: 3%;">
         <table style="width: 100%; border-collapse: collapse;">
-            <br>
-            <p>Fecha: {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</p>
-
             <tr>
-                <td>
-                    <p>El que suscribe: {{ $reception->family->name }} </p>
+                <td colspan="100%" style="text-align: left;">
+                    <p>El que suscribe: {{ $reception->pet->family->name }} </p>
                 </td>
-                <td>
-                    <p> Tel: {{ $reception->family->phone }}</p>
+                
+            </tr>
+            <tr>
+                <td colspan="100%" style="text-align: left;">
+                    <p> Tel: {{ $reception->pet->family->phone }}</p>
                 </td>
             </tr>
             <tr>
-                <td>
-                    <p>Domiclio: {{ $reception->family->address }}</p>
+                <td colspan="100%" style="text-align: left;">
+                    <p>Domiclio: {{ $reception->pet->family->address }}</p>
                 </td>
             </tr>
         </table>
     </div>
-    <div>
-        <p style="margin-top: 2%">Propietario de la mascota que a continuación se describe:</p>
+
+    <div style="margin-left: 3%;">
+        <p style="width: 100%; text-align: justify; margin-top: 2%; margin-bottom: 1%;">
+           <b> Propietario de la mascota que a continuación se describe:</p></b>
         <table style="width: 100%; border-collapse:collapse; margin-top:1% margin-left:25%; margin-right:25%;">
-            <tr>
+            <tr >
                 <td>
-                    <p> Nombre:</p>
-                </td>
-                <td style="padding: 0.5px 10px;">
                     <p>
-                        {{ $reception->pet->name }}
-                    </p>
-                <td>
-                    <p> Especie</p>
-                </td>
-                <td style="padding: 0.5px 10px;">
-                    <p>
-                        {{ $reception->pet->specie }}
+                        Nombre: {{ $reception->pet->name }}
                     </p>
                 </td>
+                   
+                <td >
+                    <p> Especie: {{ $reception->pet->specie }}</p>
+                </td>
+               
             </tr>
-            <tr>
-                <td>
-                    <p> Raza:</p>
-                </td>
-                <td style="padding: 0.5px 10px;">
-                    <p>
-                        {{ $reception->pet->raza }}
-                    </p>
-                </td>
-                <td>
-                    <p> Edad:</p>
-                </td>
-
-                @php
-                    $birthday = \Carbon\Carbon::parse($reception->pet->birthday);
-                    $now = \Carbon\Carbon::now();
-
-                    $years = $birthday->diffInYears($now);
-                    $months = $birthday->copy()->addYears($years)->diffInMonths($now);
-                    $days = $birthday->copy()->addYears($years)->addMonths($months)->diffInDays($now);
-                @endphp
-
-                <td style="padding:  0.5px 10px;">
-                    <p><span style="font-weight: normal">
-                            {{ $years }} años, {{ $months }} meses
-                        </span>
-                    </p>
-                </td>
 
             <tr>
                 <td>
-                    <p> Sexo:</p>
-                </td>
-                <td style="padding: 0.5px 10px;">
                     <p>
-                        {{ $reception->pet->genre->name }}
+                        Raza: {{ $reception->pet->raza }}
                     </p>
                 </td>
+              
+                
+                @php 
+                $birthday = \Carbon\Carbon::parse($reception->pet->birthday);
+                $now = \Carbon\Carbon::now();
+
+                $years = $birthday->diffInYears($now);
+                $months = $birthday->copy()->addYears($years)->diffInMonths($now);
+                $days = $birthday->copy()->addYears($years)->addMonths($months)->diffInDays($now);
+            @endphp
                 <td>
-                    <p> Peso:</p>
+                    <p> Edad: {{ $years }} años, {{ $months }} meses</p>
+                </td>
+            <tr>
+                <td>
+                    <p>
+                        Sexo: {{ $reception->pet->genre->name }}
+                    </p>
+                </td>
+               
+                <td>
+                    <p> Peso: {{ $reception->pet->weight }}</p>
                 </td>
 
-                <td style="padding: 0.5px 10px;">
-                    <p>
-                        {{ $reception->pet->weight }}
-                    </p>
-                </td>
+               
             </tr>
         </table>
     </div>
+
 
 
     <div>
@@ -202,7 +194,7 @@
                     <ol>
                         <li> Por medio de la presente autorizo la realización del procedimiento quirúrgico y/o anestésico:
                             @if (!isset($isPdf) || !$isPdf)
-                                <select id="procedure" class="form-control" name="procedure">
+                                <select id="procedure" class="form-control select2" name="procedure">
                                     <option value="">Selecciona el procedimiento a realizar</option>
                                     @foreach ($products as $product)
                                        <option value="{{ $product->NOMBRE }}" 
@@ -213,20 +205,21 @@
                                 </select>
                             @else
                             <span><strong>{{ $procedure ?? '' }}</strong></span>
-                            @endif
-                            mismo que ha sido explicado por el médico, por lo que estoy consciente de los beneficios y riesgos 
-                            que indica el mismo. El presupuesto de dicha intervención es de TOTAL $ 
-                            @if (!isset($isPdf) || !$isPdf)
-                            <input type="text" id="total"  value="{{ $total ?? '' }}" class="form-control">
-                            @else
-                                 <span>{{ $total ?? '' }}</span>
                              @endif
-                             INCLUYE
+                             mismo que ha sido explicado por el médico, por lo que estoy consciente de los beneficios y riesgos 
+                             que indica el mismo. El presupuesto de dicha intervención es de <b>TOTAL $ 
                              @if (!isset($isPdf) || !$isPdf)
-                             <input type="text" id="include" value="{{ $include ?? '' }}" class="form-control">
+                             <input type="text" id="total"  value="{{ $total ?? '' }}" class="form-control" style="width: 300px;">
                              @else
-                                 <span>{{ $include ?? '' }}</span>
-                             @endif
+                                  <span>{{ $total ?? '' }}</span>
+                              @endif
+                             </b>
+                              <br> <b>INCLUYE</b>
+                              @if (!isset($isPdf) || !$isPdf)
+                              <input type="text" id="include" value="{{ $include ?? '' }}" class="form-control" style="width: 900px; height: 50px;">
+                              @else
+                                  <span>{{ $include ?? '' }}</span>
+                              @endif
                         </li>
 
                         <li>Si dentro del procedimiento quirúrgico se detecta alguna otra patología, seré notificado oportunamente 
@@ -295,38 +288,40 @@
 
 
 
-    <div>
-        <p style="margin-top: 2%;"><b>Firma y nombre:</b></p>
-
+    <div style="text-align: center;">
+        <p style="margin-top: 80px;"><b>NOMBRE Y FIRMA:</b></p>
+    
         @if (isset($signatureDataUrl))
             <img src="{{ $signatureDataUrl }}" alt="Firma del propietario" style="width: 200px; height: 100px;">
         @else
-            <canvas id="canvas" class="border border-dark p-0" width="200" height="100"></canvas>
+            <canvas id="canvas" class="border border-dark p-0" width="200" height="100" style="border-bottom: 2px solid #2b2b2b;"></canvas>
         @endif
+    
+        <div style="margin-top: 20px; text-align: center;">
+            @if (!isset($isPdf) || !$isPdf)
+                <div style="display: flex; justify-content: center; gap: 20px;">
+
+                    <div style="align-self: flex-start;">
+                        <button class="btnLimpiar btn btn-lmx button" data-target="canvas" style="width: 100px;">Limpiar</button>
+                    </div>
+                    <div>
+                        <form>
+                            <button class="btnEnviar btn btn-lmx button" style="width: 100px;">Aceptar</button>
+                        </form>
+                    </div>
+                </div>
+            @endif
+        </div>
     </div>
 
-    @if (!isset($isPdf) || !$isPdf)
-        <div class="row mx-0">
-            <div class="col-6">
-                <button class="btnLimpiar btn btn-lmx" data-target="canvas">Limpiar</button>
-            </div>
-            <div class="col-6">
-                <form>
-                    <button class="btnEnviar btn btn-lmx">Aceptar</button>
-                </form>
-            </div>
-        </div>
-    @endif
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/formats/auth_surgery.js') }}" defer></script>
     <script>
         const RECEPTION_ID = "{{ $reception->id }}";
     </script> 
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-      <script>
-        document.getElementById("current-date").innerText = new Date().toLocaleDateString();
-    </script>
 </body>
 
 </html>

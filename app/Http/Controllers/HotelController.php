@@ -361,5 +361,11 @@ class HotelController extends Controller
     }
  
 
+    public function finishDate(Request $request){
+        $hotel=Hotel::find($request->hotel);
+        $hotel->finish_date=now();
+        $hotel->save();
+        
+    }
   
 }
