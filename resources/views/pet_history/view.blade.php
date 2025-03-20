@@ -62,7 +62,7 @@
                             </div>
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Clasificación: <span style="font-weight: normal">
-                                        {{ $pet->petClassification->name }} </span></p>
+                                    {{ $pet->petClassification?->name ?? '' }} </span></p>
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center">

@@ -57,11 +57,35 @@ $("canvas").each(function(index) {
 $("form").on("submit", function (e) {
     e.preventDefault();
 
+    const name = $("#name").val();
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = imageData.data;
+    let isSignatureEmpty = true;
+
+    // Comprobar si todos los píxeles son blancos 
+    for (let i = 0; i < pixels.length; i += 4) {
+        if (pixels[i] !== 255 || pixels[i + 1] !== 255 || pixels[i + 2] !== 255 || pixels[i + 3] !== 255) {
+            isSignatureEmpty = false; 
+            break;
+        }
+    }
+    if (!name || isSignatureEmpty) {
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Completa todos los campos requeridos.',
+        });
+        return; 
+    }
     const formData = new FormData(this);
     formData.append("signature", canvas.toDataURL("image/png"));
-
+    formData.append("name", name);
+    
     $.ajax({
-        url: route('grooming.pdf', RECEPTION_ID),
+        
+        url: route('critic.status.pdf', ID),
         type: "post",
         headers: {
             "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content'),
@@ -71,16 +95,7 @@ $("form").on("submit", function (e) {
         data: formData,
         success: function (response) {
             window.open(response.url, '_blank');
-            if (SERVICE_TYPE == 1) {
-                window.open(route('pdf.delivery', RECEPTION_ID), '_blank');
-            }
-            if (CRITIC_STATUS == 1) {
-                window.location.href = route('critic.status.sign', RECEPTION_ID);
-            } else {
-                window.location.href = route('receptions.index');
-            }
-
-            
+            window.location.href = route('receptions.index');
         },
         error: function (error) {
             console.error("Error:", error);

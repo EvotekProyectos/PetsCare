@@ -103,6 +103,12 @@
                             Asignaciones de Cirugía
                         </a>
                     </li>
+                    <li class="@yield('assignmentsdelivery')">
+                        <a href="{{ route('assignment.delivery') }}" class=" ms-2">
+                            <span class="mdi--house-export-outline-black"></span>
+                             Domicilio
+                        </a>
+                    </li>
                     <li class="@yield('hospitalization.recap')">
                         <a href="{{ route('hospitalization.altas') }}" class=" ms-2">
                             <span class="ri--hospital-line"></span>

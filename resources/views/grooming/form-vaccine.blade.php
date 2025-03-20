@@ -13,12 +13,12 @@
         </div>
         <div class="row">
             <div class="col-12 form-group mb-2 mb20">
-                <label for="service_id" class="form-label">SERVICIO/S DE GROOMING</label>
+                <label for="service_id" class="form-label">SERVICIO/S DE CARTILLA</label>
                 <div class="input-group mb-3">
                     <span class="input-group-text bg-primary-subtle" id="basic-addon1">
-                        <span class="gravity-ui--scissors"></span></span>
+                        <span class="fluent-mdl2--vaccination"></span></span>
                     <select name="service_id" class="form-control @error('service_id') is-invalid @enderror"
-                        id="service_id">
+                        id="service_id_vaccine">
                         <option value=""> Selecciona el servico a registrar</option>
                         @foreach ($products as $product)
                             {{-- @if ($product->product_classification_id == 4) --}}

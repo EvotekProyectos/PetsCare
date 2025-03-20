@@ -7,6 +7,7 @@ use App\Models\Appointment;
 use App\Models\Assignment;
 use App\Models\Hospitalization;
 use App\Models\Reception;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -23,9 +24,11 @@ class AssignmentController extends Controller
     public function appointments()
     {
         $user = auth()->user();
+        $now = Carbon::now();
         $this->authorize("viewAny", Appointment::class);
         $receptions = Reception::with(['receptionType', 'family', 'pet', 'reason', 'room', 'statusHistory'])
             ->where('veterinarian_id', $user->id)
+            ->whereDate('created_at', $now )
             ->where('reception_type_id', 1)
             ->get();
 
@@ -77,10 +80,11 @@ class AssignmentController extends Controller
 
     public function groomings()
     {
+        $now = Carbon::now();
         if (request()->ajax()) {
-            $datas = Reception::with('pet','vet','statusGrooming.groomingStatus')
-            
-            ->where('reception_type_id', 3)
+            $datas = Reception::with('pet','vet','statusGrooming.groomingStatus', 'grooming')
+            ->whereDate('created_at', $now )
+            ->where('reception_type_id', 3) 
             ->get();
 
             return DataTables::of($datas)
@@ -101,5 +105,37 @@ class AssignmentController extends Controller
         }
 
         return view('assignment.grooming');
+    }
+
+    public function delivery() {
+        $now = Carbon::now();
+        if (request()->ajax()) {
+            $datas = Reception::with('pet','vet','statusGrooming.groomingStatus', 'grooming')
+            ->whereDate('created_at', $now )
+            ->where('reception_type_id', 3) 
+            ->whereHas('grooming', function ($query) {
+                $query->where('delivery_service', 1);
+            })
+            ->get();
+
+            return DataTables::of($datas)
+            ->addColumn('status', function ($data) {
+                $status = $data->statusGrooming->last();
+                if ($status && $status->groomingStatus) {
+                    return [
+                        'name' => $status->groomingStatus->name,
+                        'color' => $status->groomingStatus->color,
+                    ];
+                }
+                return [
+                    'name' => 'Sin Estado',
+                    'color' => '#cccccc', 
+                ];
+            })
+            ->make(true);
+        } 
+
+        return view('assignment.delivery');
+        
     }
 }

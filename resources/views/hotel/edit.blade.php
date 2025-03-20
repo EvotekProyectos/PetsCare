@@ -56,7 +56,7 @@
                             </div>
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Clasificación: <span style="font-weight: normal">
-                                        {{ $reception->pet->petClassification->name }} </span>
+                                    {{ $reception->pet->petClassification?->name ?? ''}} </span>
                                     </p>
                             </div>
                         </div>

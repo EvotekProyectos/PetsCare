@@ -37,7 +37,8 @@
                                             <th>Mascota</th>
                                             <th>Encargado</th>
                                             <th>Estado</th>
-                                            <th>Entrega</th>
+                                            <th>Hora Entrega</th>
+                                            <th>Servicio</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>
@@ -56,5 +57,8 @@
 @endsection
 
 @push('scripts')
+<script>
+    var rutaBase = "{{ asset('storage/groomings/critic-statuses/') }}";
+</script>
     <script src="{{asset('js/assignments/grooming.js')}}" defer></script>
 @endpush

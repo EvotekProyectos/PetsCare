@@ -29,7 +29,7 @@ $(document).ready(function () {
                     }
                     return 'No status';
                 }
-            
+
             },
             {
                 data: 'exit_date',
@@ -37,10 +37,33 @@ $(document).ready(function () {
             {
                 data: null,
                 render: function (data) {
-                    return `
-                        <a type="button" href="${route('groomings.show', data.id)}" class="btn btn-sm text-primary">
-                            <span class="mage--hospital-shield-fill"></span>
-                        </a>`;
+                    return data.grooming ? data.grooming.delivery_service == 1 ? 'Domicilio' : 'En tienda' : '';
+                }
+            },
+            {
+                data: null,
+                render: function (data) {
+                    let buttons = '';
+                    let CriticPDF = rutaBase + `/responsive_${data.grooming?.id}.pdf`;
+
+                    buttons += `  <a type="button" href="${route('groomings.show', data.id)}" class="btn btn-sm text-primary">
+                 <span class="gravity-ui--scissors"></span> </a>`;
+
+                    // if (data.grooming?.delivery_service == 1) {
+                    //     buttons += `
+                    //     <a type="button" href="${route('pdf.delivery', data.id)}" target="_blank" class="btn btn-sm text-danger">
+                    //         <span class="mdi--house-export-outline"></span> 
+                    //     </a>`;
+                    // }
+
+                    if (data.grooming?.critic_status == 1) {
+                        buttons += `
+                            <a type="button" href="${CriticPDF}" target="_blank" class="btn btn-sm text-warning">
+                                <span class="material-symbols--pulse-alert-outline"></span> 
+                            </a>`;
+                    }
+
+                    return buttons;
                 }
             },
         ],

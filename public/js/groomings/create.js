@@ -92,31 +92,65 @@ $(document).ready(function () {
         placeholder: 'Buscar Servicio',
         width: 'resolve'
     });
+    $('#service_id_vaccine').select2({
+        placeholder: 'Buscar Servicio',
+        width: 'resolve'
+    });
 });
 
-async function NewEntry() {
+async function Add() {
     event.preventDefault();
-    let url = route('groomings.store');
-    let form = new FormData(document.getElementById("NewService"));
-    let pet = await fetch(url, { method: "POST", body: form });
-    let resp = await pet.json();
 
-    if (pet.ok) {
-        Swal.fire({
-            icon: "success",
-            title: "Se registraron los servicios con exito",
-            timer: 7000,
-            showConfirmButton: true
-        })
-        table.ajax.reload();
-        $('#service_id').val('').trigger('change')
-        $('#notes').val('')
-    } else {
-        let resp = await pet.json();
-        Swal.fire({
-            icon: "error",
-            body: resp
-        })
+
+    let url = route('groomings.store');
+    let form1 = new FormData(document.getElementById("NewGroomingServ"));
+    let form2 = new FormData(document.getElementById("NewVaccineServ"));
+
+    let successCount = 0;
+    let errorMessages = [];
+    let serviceField = document.getElementById("service_id").value;
+    let vaccineField = document.getElementById("service_id_vaccine").value;
+
+    if (serviceField) {
+        await sendForm(form1);
+    }
+    if (vaccineField) {
+        await sendForm(form2);
+    }
+
+    async function sendForm(formData) {
+
+        let response = await fetch(url, { method: "POST", body: formData });
+        let respData = await response.json();
+
+        if (response.ok) {
+            successCount++;
+        } else {
+            errorMessages.push(respData.message || "Ocurrió un error en el registro.");
+        }
+
+
+        if (successCount > 0) {
+            Swal.fire({
+                icon: "success",
+                title: "Se registraron los servicios con éxito",
+                timer: 5000,
+                showConfirmButton: true
+            });
+
+            table.ajax.reload();
+            $('#service_id').val('').trigger('change');
+            $('#service_id_vaccine').val('').trigger('change');
+        }
+
+        if (errorMessages.length > 0) {
+            Swal.fire({
+                icon: "error",
+                title: "Error al guardar",
+                text: errorMessages.join("\n"),
+            });
+        }
+
     }
 }
 
@@ -130,9 +164,9 @@ $(document).ready(function () {
             {
                 data: 'serv.NOMBRE',
             },
-            {
-                data: 'notes',
-            },
+            // {
+            //     data: 'notes',
+            // },
             {
                 data: null,
                 render: function (data) {
@@ -182,6 +216,13 @@ async function generate(event) {
     });
 
     try {
+        let url = route('general-groomings.store');
+        let form = new FormData(document.getElementById("NewGrooming"));
+
+        let response = await fetch(url, { method: "POST", body: form });
+        if (!response.ok) throw new Error("Error al crear el servicio");
+
+
         let url3 = route('grooming.pay', Reception_Id);
         let pet3 = await fetch(url3, {
             method: 'GET',
@@ -189,6 +230,7 @@ async function generate(event) {
                 'Content-Type': 'application/json',
             },
         });
+        if (!pet3.ok) throw new Error("Error al obtener el folio de pago");
         let resp3 = await pet3.json();
 
         Swal.close();

@@ -148,7 +148,7 @@
                             @foreach ($families as $family)
                                 <option value="{{ $family->id }}"
                                     {{ old('family_id', $reception?->family_id) == $family->id ? 'selected' : '' }}>
-                                    {{ $family->name }} {{ $family->phone }}</option>
+                                    {{  str_pad($family->id, 4, '0', STR_PAD_LEFT) }}-{{ $family->name }} Tel.{{ $family->phone }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -353,10 +353,12 @@
             </div>
 
         </div>
+        @if (!isset($grooming) || !$grooming)
         <div class="col-12 mt-2 d-flex justify-content-end">
             <button type="submit" class="btn btn-primary btn-sm text-uppercase rounded-4">
                 <i class="fas fa-plus"></i>
                 Guardar recepción</button>
         </div>
+        @endif
     </div>
     

@@ -8,6 +8,7 @@ use App\Models\AdmissionType;
 use App\Models\Area;
 use App\Models\Family;
 use App\Models\Format;
+use App\Models\GeneralGrooming;
 use App\Models\Grooming;
 use App\Models\GroomingStatusHistory;
 use App\Models\Pet;
@@ -70,10 +71,12 @@ class ReceptionController extends Controller
         $this->authorize("create", Reception::class);
         $reception = Reception::create($request->validated());
 
-        ReceptionStatusHistory::create([
-            'reception_id' => $reception->id,
-            'attention_status_id' => 2,
-        ]);
+        if ($request->reception_type_id == 1) {
+            ReceptionStatusHistory::create([
+                'reception_id' => $reception->id,
+                'attention_status_id' => 2,
+            ]);
+        } 
 
         if ($request->reception_type_id == 2) {
             return redirect()->route('hospital.list', ['id' => $reception->id])
@@ -124,7 +127,7 @@ class ReceptionController extends Controller
         $reasons = Reason::all();
         $users = User::all();
         $rooms = Room::all();
-        $pets = Pet::all();
+        $pets = Pet::where("deceased", 0)->get(); 
         $this->authorize("update", $reception);
         return view('reception.edit', compact('reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms', 'pets'));
     }
@@ -273,6 +276,7 @@ class ReceptionController extends Controller
     public function groomingservice(int $id)
     {
         $grooming = new Grooming();
+        $generalGrooming = new GeneralGrooming();
         $products = Producto::where("ESTATUS",  "A")->get();
         $reception = Reception::find($id);
         $admissions = AdmissionType::all();
@@ -284,7 +288,7 @@ class ReceptionController extends Controller
         $pets = Pet::all();
 
         $this->authorize("create", Grooming::class);
-        return view('grooming.create', compact('grooming', 'products', 'reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms', 'pets'));
+        return view('grooming.create', compact('grooming', 'products', 'reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms', 'pets', 'generalGrooming'));
     }
 
     public function listAppointments()

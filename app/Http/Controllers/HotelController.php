@@ -42,9 +42,9 @@ class HotelController extends Controller
     public function create($id)
     {
         $hotel = new Hotel();
-        $reception = Reception::with('pet','family', 'vet')->findorfail($id);
+        $reception = Reception::with('pet', 'family', 'vet')->findorfail($id);
         $products = Producto::where("ESTATUS",  "A")->get();
-        $cubicles=Cubicle::where("state", "0")->get();
+        $cubicles = Cubicle::where("state", "0")->get();
         return view('hotel.create', compact('hotel', 'reception', 'products', 'cubicles'));
     }
 
@@ -60,20 +60,20 @@ class HotelController extends Controller
     //     //     ->with('success', 'Hotel created successfully.');
     // }
 
-     public function store(HotelRequest $request)
- {
-    
-     $validatedData = $request->validated();
+    public function store(HotelRequest $request)
+    {
 
-      $cubicle = Cubicle::find($validatedData['cubicle_id']);
-       if ($cubicle) {
-           $cubicle->state = 1; 
-           $cubicle->save();
-       }
+        $validatedData = $request->validated();
 
-     $hotel = Hotel::create($validatedData);
-     return response()->json($hotel);
- }
+        $cubicle = Cubicle::find($validatedData['cubicle_id']);
+        if ($cubicle) {
+            $cubicle->state = 1;
+            $cubicle->save();
+        }
+
+        $hotel = Hotel::create($validatedData);
+        return response()->json($hotel);
+    }
 
 
 
@@ -95,9 +95,9 @@ class HotelController extends Controller
     public function edit($id)
     {
         $hotel = Hotel::find($id);
-        $reception = Reception::with('pet','family', 'vet')->findorfail($id);
+        $reception = Reception::with('pet', 'family', 'vet')->findorfail($id);
         $products = Producto::where("ESTATUS",  "A")->get();
-        $cubicles=Cubicle::where("state", "0")->get();
+        $cubicles = Cubicle::where("state", "0")->get();
         return view('hotel.edit', compact('hotel', 'reception', 'products', 'cubicles'));
     }
 
@@ -114,20 +114,19 @@ class HotelController extends Controller
 
     public function destroy($id)
     {
-        $hotel=Hotel::find($id);
+        $hotel = Hotel::find($id);
         $cubicleId = $hotel->cubicle_id;
         $hotel->delete();
-    
+
         $cubicle = Cubicle::find($cubicleId);
         if ($cubicle) {
             $cubicle->state = 0;
             $cubicle->save();
         }
         return response()->json($hotel);
-       
     }
 
-    
+
     public function list(int $id)
     {
         $hotels = Hotel::with('servicie', 'cubicle', 'serv')->where('reception_id', $id)->get();
@@ -137,8 +136,8 @@ class HotelController extends Controller
     public function hotelFormat(int $id)
     {
         $hotels = Hotel::with(['reception', 'cubicle', 'servicie', 'serv'])
-        ->where('reception_id', $id)
-        ->get();
+            ->where('reception_id', $id)
+            ->get();
         $reception = $hotels->first()->reception;
         //$hotel=$hotels->first();
 
@@ -150,10 +149,10 @@ class HotelController extends Controller
 
     public function FormatPdf(Request $request, int $id)
     {
-     
+
         $hotels = Hotel::with(['reception', 'cubicle', 'servicie', 'serv'])
-        ->where('reception_id', $id)
-        ->get();
+            ->where('reception_id', $id)
+            ->get();
         $reception = $hotels->first()->reception;
         $signatureDataUrl = $request->input('signature');
 
@@ -167,7 +166,7 @@ class HotelController extends Controller
         $pdfPath = '/formats/pension_' . $id . '.pdf';
         Storage::put('public' . $pdfPath, $pdf->output());
 
-        
+
         $format = new Format();
         $format->format_type_id = 5;
         $format->reception_id = $id;
@@ -181,43 +180,44 @@ class HotelController extends Controller
         return response()->json(['url' => asset('storage' . $pdfPath)]);
     }
 
-    
-        
-
-
-   public function view() {
-    
-    $cubicles = Cubicle::all();
-
-    $cubicles = $cubicles->map(function ($cubicle) {
-        $cubicle->hotels = Hotel::where('cubicle_id', $cubicle->id)->with('reception')->latest('created_at')->first();
-        return $cubicle;
-    });
-    
-
-    return view('cubicle.view', compact('cubicles'));
-    //return response()->json($cubicles);
-}
 
 
 
-     public function all()
-     {
-         $hotels = Hotel::with('reception', 'reception.pet','reception.family','cubicle','serv','servicie')->get();
-         //return DataTables::of($hotels)->make(true);
-         return response()->json($hotels);
-     }
 
-//     public function all()
-// {
-//     $hotels = Hotel::with('reception', 'cubicle', 'serv', 'servicie')
-//         ->select('reception_id', DB::raw('MIN(id) as id'))
-//         ->groupBy('reception_id')
-//         ->get();
+    public function view()
+    {
 
-//         return response()->json($hotels);
-//     //return DataTables::of($hotels)->make(true);
-// }
+        $cubicles = Cubicle::all();
+
+        $cubicles = $cubicles->map(function ($cubicle) {
+            $cubicle->hotels = Hotel::where('cubicle_id', $cubicle->id)->with('reception')->latest('created_at')->first();
+            return $cubicle;
+        });
+
+
+        return view('cubicle.view', compact('cubicles'));
+        //return response()->json($cubicles);
+    }
+
+
+
+    public function all()
+    {
+        $hotels = Hotel::with('reception', 'reception.pet', 'reception.family', 'cubicle', 'serv', 'servicie')->get();
+        //return DataTables::of($hotels)->make(true);
+        return response()->json($hotels);
+    }
+
+    //     public function all()
+    // {
+    //     $hotels = Hotel::with('reception', 'cubicle', 'serv', 'servicie')
+    //         ->select('reception_id', DB::raw('MIN(id) as id'))
+    //         ->groupBy('reception_id')
+    //         ->get();
+
+    //         return response()->json($hotels);
+    //     //return DataTables::of($hotels)->make(true);
+    // }
 
 
     public function ordenventa(int $reception)
@@ -289,7 +289,7 @@ class HotelController extends Controller
             $importeNeto += $totalNetoProducto;
         }
 
-         //Campos para el insert de DOCTOS_PV
+        //Campos para el insert de DOCTOS_PV
         $ordenFields['CAJA_ID'] = 170159;
         $ordenFields['TIPO_DOCTO'] = 'O';
         $ordenFields['SUCURSAL_ID'] = 54057;
@@ -343,7 +343,7 @@ class HotelController extends Controller
     {
         $reception = Reception::find($id);
         $hotels = Hotel::where('reception_id', $id)->get();
-        $pdf = Pdf::loadView("format.pension_datos", compact( "reception", "hotels"));
+        $pdf = Pdf::loadView("format.pension_datos", compact("reception", "hotels"));
         return $pdf->stream('pension.inf');
 
         //return response()->json($hotels);
@@ -353,13 +353,20 @@ class HotelController extends Controller
     public function history(int $id)
     {
         $hotels = Hotel::with(['reception', 'cubicle', 'servicie', 'serv'])
-        ->where('reception_id', $id)
-        ->get();
+            ->where('reception_id', $id)
+            ->get();
         $reception = $hotels->first()->reception;
 
         return view('hotel.history', compact('hotels', 'reception'));
     }
- 
 
-  
+    public function folio()
+    {
+        $lastRecord = Hotel::where('extension', 0)
+            ->orderBy('folio', 'desc')
+            ->first();
+
+        $newFolio = $lastRecord ? (($lastRecord->folio % 200) + 1) : 1;
+        return response()->json(['folio' => $newFolio]);
+    }
 }

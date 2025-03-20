@@ -55,6 +55,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FollowupsCriticController;
 use App\Http\Controllers\FollowupInternController;
 use App\Http\Controllers\FollowupSurgicalController;
+use App\Http\Controllers\GeneralGroomingController;
 use App\Http\Controllers\GroomingController;
 use App\Http\Controllers\GroomingStatusController;
 use App\Http\Controllers\GroomingStatusHistoryController;
@@ -70,6 +71,7 @@ use App\Http\Controllers\SurgeryScheduleController;
 use App\Http\Controllers\TagTypeController;
 use App\Models\Dashboard;
 use App\Models\FollowUp;
+use App\Models\GeneralGrooming;
 use App\Models\Hospitalization;
 use App\Models\Hotel;
 use App\Models\Surgery;
@@ -226,6 +228,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/assignment/hospitalizations/altas', [AssignmentController::class, 'hospital_altas'])->name('hospitalization.altas');
     Route::get('/assignment/altas/list', [AssignmentController::class, 'altas'])->name('assignment.altas');
     Route::get('/assignment/groomings', [AssignmentController::class, 'groomings'])->name('assignment.groomings');
+    Route::get('/assignment/delivery-service', [AssignmentController::class, 'delivery'])->name('assignment.delivery');
 
     //Appointments
     Route::get('/appointments/consultation/{id}', [AppointmentController::class, 'consultation'])->name('appointment.consultation');
@@ -347,6 +350,15 @@ Route::group(['middleware' => ['auth']], function () {
     //FOLLOWUPS SURGICALS
     Route::get('/followup-surgicals/list/{id}', [FollowupSurgicalController::class, 'list'])->name('followup-surgicals.list');
     Route::resource('followup-surgicals', FollowupSurgicalController::class);
+
+    //General Groomings
+    Route::get('/critic-status/sign/pdf/{id}', [GeneralGroomingController::class, 'criticsign'])->name('critic.status.sign');
+    Route::post('/groomings/critic-status/pdf/{id}', [GeneralGroomingController::class, 'criticpdf'])->name('critic.status.pdf');
+    // Route::get('test/pdf/{id}', [GroomingController::class, 'generatePdf'])->name('test.pdf');
+    Route::get('groomings/pdf/delivery/{id}', [GeneralGroomingController::class, 'deliverytest'])->name('pdf.delivery');
+    Route::get('/delivery-service/grooming/{id}', [GeneralGroomingController::class, 'deliverydata'])->name('delivery.data');
+    Route::get('general-groomings/folios/{date}', [GeneralGroomingController::class, 'folio'])->name('general-groomings.folio');
+    Route::resource('general-groomings', GeneralGroomingController::class);
 
     //Groomings
     Route::get('/groomings/history/{id}', [GroomingController::class, 'history'])->name('grooming.history');
