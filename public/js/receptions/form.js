@@ -73,6 +73,8 @@ async function getFamily(pet_id) {
 }
 
 
+//Activar case 4
+let isCase4Active = false; 
 
 function togglee(radio) {
     document.getElementById("adm").style.display = "none";
@@ -82,7 +84,6 @@ function togglee(radio) {
     document.getElementById("consultorio").style.display = "none";
     document.getElementById("salida").style.display = "none";
     document.getElementById("num").style.display = "none";
-
 
     var type = parseInt(radio.value);
 
@@ -103,7 +104,8 @@ function togglee(radio) {
             document.getElementById("mvz").style.display = "block";
             document.getElementById("salida").style.display = "block";
             document.getElementById("num").style.display = "block";
-            document.getElementById('person').innerText = 'Colaborador';
+            document.getElementById('person').innerText = 'COLABORADOR';
+            isCase4Active = false;
 
             break;
         case 4:
@@ -111,6 +113,7 @@ function togglee(radio) {
             document.getElementById('person').innerText = 'M.V.Z.';
             document.getElementById("salida").style.display = "block";
             document.getElementById("num").style.display = "block";
+            isCase4Active = true; // Activamos el estado para el case 4
             break;
         case 5:
             document.getElementById("mvz").style.display = "block";
@@ -122,3 +125,20 @@ function togglee(radio) {
     }
 }
 
+//Bloquear los domingos para la fecha de salida de pension
+document.getElementById("exit_date").addEventListener("input", function () {
+    if (isCase4Active) { 
+        let input = this;
+        let date = new Date(input.value);
+        
+        if (date.getDay() === 0) { // Si el día es domingo
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Los domingos no están permitidos.',
+                confirmButtonText: 'Aceptar'
+            });
+            input.value = ""; 
+        }
+    }
+});

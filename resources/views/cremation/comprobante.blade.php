@@ -63,7 +63,7 @@
                         </p>
                     </td>
                     <td>
-                        <img src="{{ public_path('img/cremation_draw.jpg') }}" alt="Logo" style="height: 90px">
+                        <img src="{{ public_path('img/horno_crematorio.png') }}" alt="Logo" style="height: 90px">
                     </td>
                 </tr>
             </table>

@@ -145,6 +145,7 @@
             </tr>
         </table>
     </div>
+    
     <div style="text-align: center;">
         <p style="margin-top: 80px;"><b>NOMBRE Y FIRMA:</b></p>
     

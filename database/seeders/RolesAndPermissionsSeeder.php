@@ -256,6 +256,11 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'editar cremaciones', 'type' => 'cremaciones']);
         Permission::create(['name' => 'eliminar cremaciones', 'type' => 'cremaciones']);
 
+        //HOTEL
+        Permission::create(['name' => 'ver panel hotel', 'type' => 'Hotel']);
+        Permission::create(['name' => 'crear pensiones', 'type' => 'Hotel']);
+        Permission::create(['name' => 'editar pensiones', 'type' => 'Hotel']);
+        Permission::create(['name' => 'eliminar pensiones', 'type' => 'Hotel']);
         
 
         // roles

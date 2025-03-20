@@ -21,6 +21,7 @@ use App\Models\Grooming;
 use App\Models\GroomingStatus;
 use App\Models\GroomingStatusHistory;
 use App\Models\Hospitalization;
+use App\Models\Hotel;
 use App\Models\Pet;
 use App\Models\PetClassification;
 use App\Models\PetsStatus;
@@ -60,6 +61,7 @@ use App\Observers\GroomingObserver;
 use App\Observers\GroomingStatusHistoryObserver;
 use App\Observers\GroomingStatusObserver;
 use App\Observers\HospitalizationObserver;
+use App\Observers\HotelObserver;
 use App\Observers\PetClassificationObserver;
 use App\Observers\PetObserver;
 use App\Observers\PetsStatusObserver;
@@ -137,6 +139,7 @@ class EventServiceProvider extends ServiceProvider
         TagType::observe(TagTypeObserver::class);
         Cremation::observe(CremationObserver::class);
         SurgerySchedule::observe(SurgeryScheduleObserver::class);
+        Hotel::observe(HotelObserver::class);
         
     }
 

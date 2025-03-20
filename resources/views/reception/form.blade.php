@@ -339,7 +339,7 @@
 
             <div class="col-md-4" id="num" style="display: none">
                 <div class="form-group mb-2">
-                    <label for="name" class="form-label">Número de Collar/Arete</label>
+                    <label for="name" class="form-label">NÚMERO DE COLLAR/ARETE</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="f7--number"></span>
