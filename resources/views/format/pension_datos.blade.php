@@ -2,10 +2,7 @@
 <html>
 
 <head>
-    <style type="text/css">
-        @import url(https://themes.googleusercontent.com/fonts/css?kit=fOEonugfEEW2k3BWBOC73CXHfZMcH88HuPcErL5npACHpuVWaP-GHFPZzt35558q);
-
-
+    <style >
         .head {
             color: #646c9a;
             font-weight: 700;
@@ -74,7 +71,7 @@
                 <table style="width: 100%;">
                     <tr>
                         <th style="text-align: center; width: 20%">
-                            <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;"> DATOS DE PENSIÓN</p>
+                            <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;"> FICHA DE INFORMACIÓN DE PENSIÓN</p>
                         </th>
                     </tr>
                 </table>
@@ -90,13 +87,14 @@
                     </td>
                 
                     <td>
-                        <p style="font-size: 10pt; font-family:sans-serif;">Recepcionista: {{ $reception->receptionist->name}}
-                        </p>
+                        {{-- <p style="font-size: 10pt; font-family:sans-serif;">Recepcionista: {{ $reception->receptionist->name}}
+                        </p> --}}
                     </td>
                    
                     <td>
                         <p style="font-size: 10pt; font-family:sans-serif;">
-                            Médico responsable: {{ $reception->vet->name ?? 'Sin especificar'}}
+                            {{-- Médico responsable: {{ $reception->vet->name ?? 'Sin especificar'}} --}}
+                            Fecha de salida: {{ $reception->exit_date ?? 'Sin especificar'}}
                         </p>
                     </td>
                     
@@ -178,6 +176,23 @@
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
                         <td>
+                            <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> No. de Collar:</p>
+                        </td>
+                        <td style="padding: 5px 10px;">
+                            <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
+                                {{$reception->num ?? 'Sin especificar'}}
+                            </p>
+                            <td>
+                                <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Especie:</p>
+                            </td>
+                            <td style="padding: 5px 10px;">
+                                <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
+                                    {{ $reception->pet->specie }}
+                                </p>
+                            </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Nombre:</p>
                         </td>
                         <td style="padding: 5px 10px;">
@@ -212,7 +227,7 @@
                         </td>
                     </tr>
 
-                    <tr>
+                    {{-- <tr>
                         <td>
                             <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Fecha de nacimiento:</p>
                         </td>
@@ -233,13 +248,13 @@
                             </p>
                             
                         </td>
-                    </tr>
+                    </tr> --}}
 
                 </table>
             </div>
 
             <div
-                style="border:1px solid #c5e8f7; margin-top: 40px; border-left:none; border-right:none; border-top:none; background-color: #eef7fc;">
+                style="border:1px solid #c5e8f7; margin-top: 20px; border-left:none; border-right:none; border-top:none; background-color: #eef7fc;">
                 <div>
                     <table style="width: 100%; ">
                         <tr>
@@ -298,14 +313,14 @@
                             @endforeach
                                 </p>
                             </td>
-                            <td>
+                            {{-- <td>
                                 <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> No. Collar:</p>
                             </td>
                             <td style="padding: 5px 10px;">
                                 <p style="font-family: sans-serif; font-size: 10pt; margin: 0;">
                                     {{$reception->num ?? 'Sin especificar'}}
                                 </p>
-                            </td>
+                            </td> --}}
                             
                     </tr>
                     <tr>
@@ -346,7 +361,7 @@
                             </p>
                     </tr>
 
-                    <tr>
+                    {{-- <tr>
                        
                         <td>
                             <p style="font-size: 10pt; font-family:sans-serif; margin: 0;"> Fecha de salida:</p>
@@ -357,7 +372,7 @@
                             </p>
                         </td>
                         
-                </tr>
+                </tr> --}}
                    
 
                     {{-- <tr>

@@ -71,7 +71,16 @@ $("form").on("submit", function (e) {
         data: formData,
         success: function (response) {
             window.open(response.url, '_blank');
-            window.location.href = route('receptions.index');
+            if (SERVICE_TYPE == 1) {
+                window.open(route('pdf.delivery', RECEPTION_ID), '_blank');
+            }
+            if (CRITIC_STATUS == 1) {
+                window.location.href = route('critic.status.sign', RECEPTION_ID);
+            } else {
+                window.location.href = route('receptions.index');
+            }
+
+            
         },
         error: function (error) {
             console.error("Error:", error);

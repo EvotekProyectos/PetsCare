@@ -8,6 +8,7 @@ use App\Models\AdmissionType;
 use App\Models\Area;
 use App\Models\Family;
 use App\Models\Format;
+use App\Models\GeneralGrooming;
 use App\Models\Grooming;
 use App\Models\GroomingStatusHistory;
 use App\Models\Pet;
@@ -70,10 +71,12 @@ class ReceptionController extends Controller
         $this->authorize("create", Reception::class);
         $reception = Reception::create($request->validated());
 
-        ReceptionStatusHistory::create([
-            'reception_id' => $reception->id,
-            'attention_status_id' => 2,
-        ]);
+        if ($request->reception_type_id == 1) {
+            ReceptionStatusHistory::create([
+                'reception_id' => $reception->id,
+                'attention_status_id' => 2,
+            ]);
+        } 
 
         if ($request->reception_type_id == 2) {
             return redirect()->route('hospital.list', ['id' => $reception->id])
@@ -124,7 +127,7 @@ class ReceptionController extends Controller
         $reasons = Reason::all();
         $users = User::all();
         $rooms = Room::all();
-        $pets = Pet::all();
+        $pets = Pet::where("deceased", 0)->get(); 
         $this->authorize("update", $reception);
         return view('reception.edit', compact('reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms', 'pets'));
     }
@@ -209,11 +212,13 @@ class ReceptionController extends Controller
     {
         $reception = Reception::find($id);
         $pet = Pet::with('family', 'genre')->find($reception->pet_id);
+        $total = $request->input('total');
         $signatureDataUrl = $request->input('signature');
 
         $pdf = PDF::loadView('reception.pdf', [
             'reception' => $reception,
             'pet' => $pet,
+            'total' => $total,
             'signatureDataUrl' => $signatureDataUrl,
             'isPdf' => true
         ]);
@@ -232,6 +237,13 @@ class ReceptionController extends Controller
 
         return response()->json(['url' => asset('storage' . $pdfPath), 'format_id' => $format->id]);
     }
+
+
+    public function getReceptionArea($id)
+{
+    $reception = Reception::find($id);
+    return response()->json(['area_id' => $reception->area_id]);
+}
 
 
     public function getFamilyByPet($pet_id)
@@ -273,6 +285,7 @@ class ReceptionController extends Controller
     public function groomingservice(int $id)
     {
         $grooming = new Grooming();
+        $generalGrooming = new GeneralGrooming();
         $products = Producto::where("ESTATUS",  "A")->get();
         $reception = Reception::find($id);
         $admissions = AdmissionType::all();
@@ -284,7 +297,7 @@ class ReceptionController extends Controller
         $pets = Pet::all();
 
         $this->authorize("create", Grooming::class);
-        return view('grooming.create', compact('grooming', 'products', 'reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms', 'pets'));
+        return view('grooming.create', compact('grooming', 'products', 'reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms', 'pets', 'generalGrooming'));
     }
 
     public function listAppointments()

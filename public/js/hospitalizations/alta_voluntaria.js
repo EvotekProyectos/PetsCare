@@ -54,57 +54,33 @@ $("canvas").each(function(index) {
     clear();
 });
 
-// $("form").on("submit", function (e) {
-//     e.preventDefault();
-
-//     const nameFamily = $("#name_family").val();
-//     const reason = $("#reason").val();
-
-//     const formData = new FormData(this);
-//     formData.append("signature", canvas.toDataURL("image/png"));
-//      formData.append("name_family", nameFamily);
-//      formData.append("reason", reason);
-
-//     $.ajax({
-//         //url: route('altaVoluntaria.pdf' + RECEPTION_ID), 
-//         url: route('altaVoluntaria.pdf',  RECEPTION_ID ),
-//         type: "post",
-//         headers: {
-//             "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content'),
-//         },
-//         contentType: false,
-//         processData: false,
-//         data: formData,
-//         success: function (response) {
-//             let url3 = route('redsheet.pay', reception);
-//             let pet3 = await fetch(url3, {
-//                 method: 'GET',
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                 },
-//             });
-//             let resp3 = await pet3.json();
-//             Swal.close();
-//             Swal.fire({
-//                 icon: "success",
-//                 title: "El folio para pagar el servicio es " + resp3,
-//                 timer: 27000,
-//                 showConfirmButton: true
-//             }).then(() => {
-//                 window.location.href = route('assignment.hospital');
-//             });
-//             // window.open(response.url, '_blank');
-//             // window.location.href = route('hospitalization.historic' , { id: RECEPTION_ID });
-//         },
-//         error: function (error) {
-//             console.error("Error:", error);
-//             alert("Ocurrió un error al procesar la solicitud. Inténtalo de nuevo.");
-//         },
-//     });
-// });
-
 $("form").on("submit", async function (e) {
     e.preventDefault();
+    const nameFamily = $("#name_family").val();
+    const reason = $("#reason").val();
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = imageData.data;
+    let isSignatureEmpty = true;
+
+    for (let i = 0; i < pixels.length; i += 4) {
+        if (pixels[i] !== 255 || pixels[i + 1] !== 255 || pixels[i + 2] !== 255 || pixels[i + 3] !== 255) {
+            isSignatureEmpty = false; 
+            break;
+        }
+    }
+
+    if (!nameFamily || !reason || isSignatureEmpty) {
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Completa todos los campos requeridos.',
+            //confirmButtonText: 'Entendido',
+        });
+        return;
+    }
+    
     Swal.fire({
         title: 'Procesando...',
         text: 'Por favor espera mientras procesamos la solicitud.',
@@ -114,9 +90,6 @@ $("form").on("submit", async function (e) {
         }
     });
     try {
-        const nameFamily = $("#name_family").val();
-        const reason = $("#reason").val();
-
         const formData = new FormData(this);
         formData.append("signature", canvas.toDataURL("image/png"));
         formData.append("name_family", nameFamily);

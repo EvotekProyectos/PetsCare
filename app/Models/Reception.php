@@ -151,4 +151,9 @@ class Reception extends Model
    public function payment() {
         return $this->belongsTo(\App\Models\PaymentOrder::class, 'id', 'reception_id');
    }
+
+   public function grooming()
+   {
+        return $this->belongsTo(GeneralGrooming::class, 'id', 'reception_id');
+   }
 }

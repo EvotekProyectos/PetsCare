@@ -97,7 +97,7 @@
                     <hr style="color: #472964; width: 100%; margin-bottom: -7%; margin-top: -7%;">
                     <p
                         style="font-family: 'Times New Roman', Times, serif; font-weight: lighter; font-size: 12pt; color: #776d6d;">
-                        {{ str_pad($reception->id, 4, '0', STR_PAD_LEFT) }}
+                        {{ str_pad($general->folio, 4, '0', STR_PAD_LEFT) }}
                     </p>
                 </td>
             </tr>
@@ -192,7 +192,7 @@
             <thead>
                 <tr>
                     <th class="tableup" style="text-align: center">Servicio</th>
-                    <th class="tableup" style="text-align: center">Notas</th>
+                    {{-- <th class="tableup" style="text-align: center">Notas</th> --}}
                     <th class="tableup" style="text-align: center">Precio</th>
                 </tr>
             </thead>
@@ -207,7 +207,7 @@
                     @endphp
                     <tr>
                         <td class="fillable">{{ $grooming->serv->NOMBRE ?? 'N/A' }}</td>
-                        <td class="fillable">{{ $grooming->notes ?? 'Sin notas' }}</td>
+                        {{-- <td class="fillable">{{ $grooming->notes ?? 'Sin notas' }}</td> --}}
                         <td class="fillable" style="text-align: right">
                             ${{ number_format($grooming->service->PRECIO ?? 0, 2) }}</td>
                     </tr>
@@ -215,13 +215,25 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td style="text-align: right" colspan="2" > <p class="total" >Total:</p></td>
+                    <td style="text-align: right"  > <p class="total" >Total:</p></td>
                     <td style="text-align: left" >
                         <p class="total">${{ number_format($total, 2) }}</p>
                     </td>
                 </tr>
             </tfoot>
         </table>
+        <div  style="border: 1px solid #472964; margin-top: 1.5%; width: 100%">
+            <p class="titles">INSTRUCCIONES</p>
+            <table style="width: 98%; border-collapse: collapse; justify-content: center; ">
+                <tr>
+                    <td style="text-align: justify; ">
+                        <p class="alarm">
+                            {{ $general->instructions }}
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
     </div>
 
@@ -243,6 +255,20 @@
             </tr>
             <tr>
                 <th style="width: 15%; text-align: left;">
+                    <p class="data">Servicio:</p>
+                </th>
+                <th style="width: 35%; text-align: left;">
+                    <p class="fillable"> {{ $general->delivery_service == 1 ? 'Domicilio' : 'En tienda' }} </p>
+                </th>
+                <th style="width: 20%; text-align: left;">
+                    <p class="data">Proximo servicio:</p>
+                </th>
+                <th style="width: 30%; text-align: left;">
+                    <p class="fillable"> {{ $general->next_service }} </p>
+                </th>
+            </tr>
+            <tr>
+                <th style="width: 15%; text-align: left;">
                     <p class="data">Folio de Pago:</p>
                 </th>
                 <th style="width: 35%; text-align: left;">
@@ -252,6 +278,7 @@
         </table>
     </div>
 
+    <div style="page-break-before: always;"></div>
     <div  style="border: 1px solid #472964; margin-top: 1.5%; width: 100%">
         <p class="titles">ACLARACIONES</p>
         <table style="width: 100%; border-collapse: collapse; ">
@@ -309,6 +336,8 @@
     <script src="{{ asset('js/groomings/pdf.js') }}" defer></script>
     <script>
         const RECEPTION_ID = "{{ $reception->id }}";
+        const SERVICE_TYPE = "{{ $general->delivery_service }}";
+        const CRITIC_STATUS = "{{ $general->critic_status }}";
     </script>
 </body>
 

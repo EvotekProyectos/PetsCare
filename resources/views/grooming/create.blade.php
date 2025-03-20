@@ -37,13 +37,32 @@
                         </H5>
                     </div>
                     <div class="card-body">
-                        <form method="POST" onsubmit="NewEntry()" role="form"
-                            enctype="multipart/form-data" id="NewService">
-                            @csrf
+                        <div class="row">
+                            <div class="col-6">
+                                <form method="POST"  role="form" enctype="multipart/form-data"
+                                    id="NewGroomingServ">
+                                    @csrf
 
-                            @include('grooming.form')
+                                    @include('grooming.form')
 
-                        </form>
+                                </form>
+                            </div>
+
+                            <div class="col-6">
+                                <form method="POST"  role="form" enctype="multipart/form-data"
+                                    id="NewVaccineServ">
+                                    @csrf
+
+                                    @include('grooming.form-vaccine')
+
+                                </form>
+                            </div>
+
+                            <div class="col-12 mt-2 d-flex justify-content-end">
+                                <button type="button" onclick="Add()" class="btn btn-primary">
+                                    Agregar Servicio <i class="fas fa-arrow-right"></i></button>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -53,13 +72,13 @@
                                         <thead class="thead table-primary text-uppercase">
                                             <tr>
                                                 <th>Servicio</th>
-                                                <th>Notas</th>
+                                                {{-- <th>Notas</th> --}}
                                                 <th>Precio</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                           
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -67,16 +86,25 @@
                         </div>
                     </div>
                     <div class="col-12 mt-2 d-flex justify-content-end">
-                        <h5 id="total-price">Total  Final: $0.00</h5>
+                        <h5 id="total-price">Total Final: $0.00</h5>
                     </div>
-                    
-                    <div class="col-12 mt-2 d-flex justify-content-end">
-                        <button type="button" onclick="generate(event)" 
-                            class="btn btn-primary">
-                            Siguiente <i class="fas fa-arrow-right"></i></button>
+                    <div class="card-body">
+                        <form method="POST"  role="form" enctype="multipart/form-data"
+                            id="NewGrooming">
+                            @csrf
+
+                            @include('general-grooming.form')
+
+                        </form>
                     </div>
+
+                </div>
+                <div class="col-12 mt-2 d-flex justify-content-end">
+                    <button type="button" onclick="generate(event)" class="btn btn-primary">
+                        Siguiente <i class="fas fa-arrow-right"></i></button>
                 </div>
             </div>
+        </div>
         </div>
     </section>
 @endsection

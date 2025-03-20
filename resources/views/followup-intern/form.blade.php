@@ -24,20 +24,25 @@
         </div>
 
         <div class="row">
+            
             <div class="col-2">
                 <label for="alterations_interns" class="form-label">ALTERACIONES EN CONSTANTES</label>
             </div>
             
             <div class="col-md-1">
                 <input type="radio" id="alterations_yes_interns" name="alterations" 
-                value="0" {{ (int) old('alterations', $followupIntern?->alterations) === 0 ? 'checked' : '' }}>
+                value="0" 
+                {{ old('alterations', isset($followupIntern) ? $followupIntern->alterations : null) === 0 ? 'checked' : '' }}>
                 <label for="alterations_yes_interns" class="radio-label shadow border-0">Sí</label>
             </div>
+            
             <div class="col-md-1">
                 <input type="radio" id="alterations_no_interns" name="alterations" 
-                value="1" {{ (int) old('alterations', $followupIntern?->alterations) === 1 ? 'checked' : '' }}>
+                value="1" 
+                {{ old('alterations', isset($followupIntern) ? $followupIntern->alterations : null) === 1 ? 'checked' : '' }}>
                 <label for="alterations_no_interns" class="radio-label shadow border-0">No</label>
             </div>
+            
             
             <div class="col-md-8">
                 <div class="input-group mb-3">
@@ -58,12 +63,12 @@
             </div>
             <div class="col-md-1">
                 <input type="radio" id="therapeutic_yes_interns" name="therapeutic" 
-                    value="0" {{ (int) old('therapeutic', $followupIntern?->therapeutic) === 0 ? 'checked' : '' }}>
+                    value="0" {{ old('therapeutic', isset($followupIntern) ? $followupIntern->therapeutic: null) === 0 ? 'checked' : '' }}>
                 <label for="therapeutic_yes_interns" class="radio-label shadow border-0">Sí</label>
             </div>
             <div class="col-md-1">
                 <input type="radio" id="therapeutic_no_interns" name="therapeutic" 
-                    value="1" {{ (int) old('therapeutic', $followupIntern?->therapeutic) === 1 ? 'checked' : '' }}>
+                    value="1" {{  old('therapeutic', isset($followupIntern) ? $followupIntern->therapeutic: null) === 1 ? 'checked' : '' }}>
                 <label for="therapeutic_no_interns" class="radio-label shadow border-0">No</label>
             </div>
 
@@ -86,12 +91,12 @@
             
             <div class="col-md-1">
                 <input type="radio" id="vomiting_yes_interns" name="vomiting" 
-                    value="0" {{ (int) old('vomiting', $followupIntern?->vomiting) === 0 ? 'checked' : '' }}>
+                    value="0" {{ old('vomiting', isset($followupIntern) ? $followupIntern->vomiting: null) === 0 ? 'checked' : '' }}>
                 <label for="vomiting_yes_interns" class="radio-label shadow border-0">Sí</label>
             </div>
             <div class="col-md-1">
                 <input type="radio" id="vomiting_no_interns" name="vomiting" 
-                    value="1" {{ (int) old('vomiting', $followupIntern?->vomiting) === 1 ? 'checked' : '' }}>
+                    value="1" {{ old('vomiting', isset($followupIntern) ? $followupIntern->vomiting: null) === 1 ? 'checked' : '' }}>
                 <label for="vomiting_no_interns" class="radio-label shadow border-0">No</label>
             </div>
             
@@ -115,12 +120,12 @@
             
             <div class="col-md-1">
                 <input type="radio" id="defecation_yes_interns" name="defecation" 
-                    value="0" {{ (int) old('defecation', $followupIntern?->defecation) === 0 ? 'checked' : '' }}>
+                    value="0" {{ old('defecation', isset($followupIntern) ? $followupIntern->defecation:null) === 0 ? 'checked' : '' }}>
                 <label for="defecation_yes_interns" class="radio-label shadow border-0">Sí</label>
             </div>
             <div class="col-md-1">
                 <input type="radio" id="defecation_no_interns" name="defecation" 
-                    value="1" {{ (int) old('defecation', $followupIntern?->defecation) === 1 ? 'checked' : '' }}>
+                    value="1" {{ old('defecation', isset($followupIntern) ? $followupIntern->defecation:null) === 1 ? 'checked' : '' }}>
                 <label for="defecation_no_interns" class="radio-label shadow border-0">No</label>
             </div>
             
@@ -144,12 +149,12 @@
             
             <div class="col-md-1">
                 <input type="radio" id="urine_yes_interns" name="urine" 
-                    value="0" {{ (int) old('urine', $followupIntern?->urine) === 0 ? 'checked' : '' }}>
+                    value="0" {{ old('urine', isset($followupIntern) ? $followupIntern->urine: null) === 0 ? 'checked' : '' }}>
                 <label for="urine_yes_interns" class="radio-label shadow border-0">Sí</label>
             </div>
             <div class="col-md-1">
                 <input type="radio" id="urine_no_interns" name="urine" 
-                    value="1" {{ (int) old('urine', $followupIntern?->urine) === 1 ? 'checked' : '' }}>
+                    value="1" {{ old('urine', isset($followupIntern) ? $followupIntern->urine: null) === 1 ? 'checked' : '' }}>
                 <label for="urine_no_interns" class="radio-label shadow border-0">No</label>
             </div>
             
@@ -173,12 +178,12 @@
             
             <div class="col-md-1">
                 <input type="radio" id="feeding_yes_interns" name="feeding" 
-                    value="0" {{ (int) old('feeding', $followupIntern?->feeding) === 0 ? 'checked' : '' }}>
+                    value="0" {{old('feeding', isset($followupIntern) ? $followupIntern->feeding: null) === 0 ? 'checked' : '' }}>
                 <label for="feeding_yes_interns" class="radio-label shadow border-0">Sí</label>
             </div>
             <div class="col-md-1">
                 <input type="radio" id="feeding_no_interns" name="feeding" 
-                    value="1" {{ (int) old('feeding', $followupIntern?->feeding) === 1 ? 'checked' : '' }}>
+                    value="1" {{old('feeding', isset($followupIntern) ? $followupIntern->feeding: null) === 1 ? 'checked' : '' }}>
                 <label for="feeding_no_interns" class="radio-label shadow border-0">No</label>
             </div>
             
@@ -205,12 +210,12 @@
             
             <div class="col-md-1">
                 <input type="radio" id="ultrasounds_yes_interns" name="ultrasounds" 
-                    value="0" {{ (int) old('ultrasounds', $followupIntern?->ultrasounds) === 0 ? 'checked' : '' }}>
+                    value="0" {{old('ultrasounds', isset($followupIntern) ? $followupIntern->ultrasounds: null) === 0 ? 'checked' : '' }}>
                 <label for="ultrasounds_yes_interns" class="radio-label shadow border-0">Sí</label>
             </div>
             <div class="col-md-1">
                 <input type="radio" id="ultrasounds_no_interns" name="ultrasounds" 
-                    value="1" {{ (int) old('ultrasounds', $followupIntern?->ultrasounds) === 1 ? 'checked' : '' }}>
+                    value="1" {{old('ultrasounds', isset($followupIntern) ? $followupIntern->ultrasounds: null) === 1 ? 'checked' : '' }}>
                 <label for="ultrasounds_no_interns" class="radio-label shadow border-0">No</label>
             </div>
             

@@ -36,7 +36,7 @@ class BudgetController extends Controller
     public function create()
     {
         $budget = new Budget();
-        $pets = Pet::all();
+        $pets = Pet::where("deceased", 0)->get(); 
         $vets = User::all();
 
         $this->authorize("create", Budget::class);
@@ -74,7 +74,7 @@ class BudgetController extends Controller
     public function edit($id)
     {
         $budget = Budget::find($id);
-        $pets = Pet::all();
+        $pets = Pet::where("deceased", 0)->get(); 
         $vets = User::all();
         $budgetDetail = new BudgetDetail();
         $products = Producto::where("ESTATUS",  "A")->get();

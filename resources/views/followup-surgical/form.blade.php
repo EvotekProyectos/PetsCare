@@ -45,13 +45,15 @@
             
             <div class="col-md-1">
                 <input type="radio" id="alterations_yes_surgicals" 
-                name="alterations" value="0"
-                {{ (int) old('alterations', $followupSurgical?->alterations) == '0' ? 'checked' : '' }}>
-                <label for="alterations_yes_surgicals" class="radio-label shadow border-0">Si</label>
+                    name="alterations" value="0"
+                    {{ old('alterations', isset($followupSurgical) ? $followupSurgical->alterations : null) == '0' ? 'checked' : '' }}>
+                <label for="alterations_yes_surgicals" class="radio-label shadow border-0">Sí</label>
             </div>
+            
             <div class="col-md-1">
-                <input type="radio" id="alterations_no_surgicals" name="alterations" value="1"
-                {{ (int) old('alterations', $followupSurgical?->alterations) == '1' ? 'checked' : '' }}>
+                <input type="radio" id="alterations_no_surgicals" 
+                    name="alterations" value="1"
+                    {{ old('alterations', isset($followupSurgical) ? $followupSurgical->alterations : null) == '1' ? 'checked' : '' }}>
                 <label for="alterations_no_surgicals" class="radio-label shadow border-0">No</label>
             </div>
             
@@ -77,12 +79,12 @@
             </div>
             <div class="col-md-1">
                 <input type="radio" id="therapeutic_yes_surgicals" name="therapeutic" value="0"
-                {{ (int) old('therapeutic', $followupSurgical?->therapeutic) == '0' ? 'checked' : '' }}>
+                {{old('therapeutic', isset($followupSurgical) ? $followupSurgical->therapeutic: null) == '0' ? 'checked' : '' }}>
                 <label for="therapeutic_yes_surgicals" class="radio-label shadow border-0">Si</label>
             </div>
             <div class="col-md-1">
                 <input type="radio" id="therapeutic_no_surgicals" name="therapeutic" value="1"
-                {{ (int) old('therapeutic', $followupSurgical?->therapeutic) == '1' ? 'checked' : '' }}>
+                {{old('therapeutic', isset($followupSurgical) ? $followupSurgical->therapeutic: null) == '1' ? 'checked' : '' }}>
                 <label for="therapeutic_no_surgicals" class="radio-label shadow border-0">No</label>
             </div>
     
@@ -109,12 +111,12 @@
     
             <div class="col-md-1">
                 <input type="radio" id="vomiting_yes_surgicals" name="vomiting" value="0"
-                {{(int) old('vomiting',  $followupSurgical?->vomiting) == '0' ? 'checked' : '' }}>
+                {{old('vomiting', isset($followupSurgical) ?  $followupSurgical->vomiting: null) == '0' ? 'checked' : '' }}>
                 <label for="vomiting_yes_surgicals" class="radio-label shadow border-0">Si</label>
             </div>
             <div class="col-md-1">
                 <input type="radio" id="vomiting_no_surgicals" name="vomiting" value="1"
-                {{(int) old('vomiting',  $followupSurgical?->vomiting) == '1' ? 'checked' : '' }}>
+                {{old('vomiting', isset($followupSurgical) ?  $followupSurgical->vomiting: null) == '1' ? 'checked' : '' }}>
                 <label for="vomiting_no_surgicals" class="radio-label shadow border-0">No</label>
             </div>
     
@@ -141,12 +143,12 @@
     
             <div class="col-md-1">
                 <input type="radio" id="defecation_yes_surgicals" name="defecation" value="0"
-                {{(int) old('defecation',  $followupSurgical?->defecation) == '0' ? 'checked' : '' }}>
+                {{old('defecation', isset($followupSurgical) ?  $followupSurgical->defecation: null) == '0' ? 'checked' : '' }}>
                 <label for="defecation_yes_surgicals" class="radio-label shadow border-0">Si</label>
             </div>
             <div class="col-md-1">
                 <input type="radio" id="defecation_no_surgicals" name="defecation" value="1"
-                {{(int) old('defecation',  $followupSurgical?->defecation) == '1' ? 'checked' : '' }}>
+                {{old('defecation', isset($followupSurgical) ?  $followupSurgical->defecation: null) == '1' ? 'checked' : '' }}>
                 <label for="defecation_no_surgicals" class="radio-label shadow border-0">No</label>
             </div>
     
@@ -173,12 +175,12 @@
            
             <div class="col-md-1">
                 <input type="radio" id="urine_yes_surgicals" name="urine" value="0"
-                {{(int) old('urine', $followupSurgical?->urine) == '0' ? 'checked' : '' }}>
+                {{old('urine', isset($followupSurgical) ? $followupSurgical->urine: null) == '0' ? 'checked' : '' }}>
                 <label for="urine_yes_surgicals" class="radio-label shadow border-0">Si</label>
             </div>
             <div class="col-md-1">
                 <input type="radio" id="urine_no_surgicals" name="urine" value="1"
-                {{(int) old('urine', $followupSurgical?->urine) == '1' ? 'checked' : '' }}>
+                {{old('urine', isset($followupSurgical) ? $followupSurgical->urine: null) == '1' ? 'checked' : '' }}>
                 <label for="urine_no_surgicals" class="radio-label shadow border-0">No</label>
             </div>
     
@@ -205,12 +207,12 @@
        
             <div class="col-md-1">
                 <input type="radio" id="feeding_yes_surgicals" name="feeding" value="0"
-                {{(int) old('feeding',  $followupSurgical?->feeding) == '0' ? 'checked' : '' }}>
+                {{old('feeding', isset($followupSurgical) ?  $followupSurgical?->feeding: null) == '0' ? 'checked' : '' }}>
                 <label for="feeding_yes_surgicals" class="radio-label shadow border-0">Si</label>
             </div>
             <div class="col-md-1">
                 <input type="radio" id="feeding_no_surgicals" name="feeding" value="1"
-                {{(int) old('feeding', $followupSurgical?->feeding) == '1' ? 'checked' : '' }}>
+                {{old('feeding', isset($followupSurgical) ? $followupSurgical->feeding: null) == '1' ? 'checked' : '' }}>
                 <label for="feeding_no_surgicals" class="radio-label shadow border-0">No</label>
             </div>
     
@@ -256,12 +258,12 @@
        
             <div class="col-md-1">
                 <input type="radio" id="cleaning_yes_surgicals" name="cleaning" value="0"
-                {{(int) old('cleaning',  $followupSurgical?->cleaning) == '0' ? 'checked' : '' }}>
+                {{old('cleaning', isset($followupSurgical) ?  $followupSurgical?->cleaning: null) == '0' ? 'checked' : '' }}>
                 <label for="cleaning_yes_surgicals" class="radio-label shadow border-0">Si</label>
             </div>
             <div class="col-md-1">
                 <input type="radio" id="cleaning_no_surgicals" name="cleaning" value="1"
-                {{(int) old('cleaning', $followupSurgical?->cleaning) == '1' ? 'checked' : '' }}>
+                {{old('cleaning', isset($followupSurgical) ? $followupSurgical->cleaning: null) == '1' ? 'checked' : '' }}>
                 <label for="cleaning_no_surgicals" class="radio-label shadow border-0">No</label>
             </div>
 
@@ -287,12 +289,12 @@
        
             <div class="col-md-1">
                 <input type="radio" id="secretion_yes_surgicals" name="secretion" value="0"
-                {{(int) old('secretion',  $followupSurgical?->secretion) == '0' ? 'checked' : '' }}>
+                {{old('secretion', isset($followupSurgical) ?  $followupSurgical->secretion: null) == '0' ? 'checked' : '' }}>
                 <label for="secretion_yes_surgicals" class="radio-label shadow border-0">Si</label>
             </div>
             <div class="col-md-1">
                 <input type="radio" id="secretion_no_surgicals" name="secretion" value="1"
-                {{(int) old('secretion', $followupSurgical?->cleaning) == '1' ? 'checked' : '' }}>
+                {{old('secretion', isset($followupSurgical) ? $followupSurgical->secretion: null) == '1' ? 'checked' : '' }}>
                 <label for="secretion_no_surgicals" class="radio-label shadow border-0">No</label>
             </div>
 
@@ -317,12 +319,12 @@
         </div>
         <div class="col-md-1">
             <input type="radio" id="drainage_yes_surgicals" name="drainage" value="0"
-            {{(int) old('drainage', $followupSurgical?->drainage) == '0' ? 'checked' : '' }}>
+            {{old('drainage', isset($followupSurgical) ? $followupSurgical->drainage: null) == '0' ? 'checked' : '' }}>
             <label for="drainage_yes_surgicals" class="radio-label shadow border-0">Si</label>
         </div>
         <div class="col-md-1">
             <input type="radio" id="drainage_no_surgicals" name="drainage" value="1"
-            {{(int) old('drainage', $followupSurgical?->drainage) == '1' ? 'checked' : '' }}>
+            {{old('drainage', isset($followupSurgical) ? $followupSurgical->drainage: null) == '1' ? 'checked' : '' }}>
             <label for="drainage_no_surgicals" class="radio-label shadow border-0">No</label>
         </div>
         <div class="col-md-8">
@@ -349,12 +351,12 @@
         </div>
         <div class="col-md-1">
             <input type="radio" id="blockedages_yes_surgicals" name="blockedages" value="0"
-            {{(int) old('blockedages', $followupSurgical?->blockedages) == '0' ? 'checked' : '' }}>
+            {{old('blockedages', isset($followupSurgical) ? $followupSurgical->blockedages: null) == '0' ? 'checked' : '' }}>
             <label for="blockedages_yes_surgicals" class="radio-label shadow border-0">Si</label>
         </div>
         <div class="col-md-1">
             <input type="radio" id="blockedages_no_surgicals" name="blockedages" value="1"
-            {{(int) old('blockedages', $followupSurgical?->blockedages) == '1' ? 'checked' : '' }}>
+            {{old('blockedages', isset($followupSurgical) ? $followupSurgical->blockedages: null) == '1' ? 'checked' : '' }}>
             <label for="blockedages_no_surgicals" class="radio-label shadow border-0">No</label>
         </div>
         <div class="col-md-8">
@@ -378,12 +380,12 @@
         </div>
         <div class="col-md-1">
             <input type="radio" id="infusions_yes_surgicals" name="infusions" value="0"
-            {{(int) old('infusions', $followupSurgical?->infusions) == '0' ? 'checked' : '' }}>
+            {{old('infusions', isset($followupSurgical) ? $followupSurgical->infusions: null) == '0' ? 'checked' : '' }}>
             <label for="infusions_yes_surgicals" class="radio-label shadow border-0">Si</label>
         </div>
         <div class="col-md-1">
             <input type="radio" id="infusions_no_surgicals" name="infusions" value="1"
-            {{(int) old('infusions', $followupSurgical?->infusions) == '1' ? 'checked' : '' }}>
+            {{old('infusions', isset($followupSurgical) ? $followupSurgical->infusions: null) == '1' ? 'checked' : '' }}>
             <label for="infusions_no_surgicals" class="radio-label shadow border-0">No</label>
         </div>
         <div class="col-md-8">
@@ -407,12 +409,12 @@
         </div>
         <div class="col-md-1">
             <input type="radio" id="alterations_surgery_yes_surgicals" name="alterations_surgery" value="0"
-            {{(int) old('alterations_surgery', $followupSurgical?->alterations_surgery) == '0' ? 'checked' : '' }}>
+            {{old('alterations_surgery', isset($followupSurgical) ? $followupSurgical->alterations_surgery: null) == '0' ? 'checked' : '' }}>
             <label for="alterations_surgery_yes_surgicals" class="radio-label shadow border-0">Si</label>
         </div>
         <div class="col-md-1">
             <input type="radio" id="alterations_surgery_no_surgicals" name="alterations_surgery" value="1"
-            {{(int) old('alterations_surgery', $followupSurgical?->alterations_surgery) == '1' ? 'checked' : '' }}>
+            {{old('alterations_surgery', isset($followupSurgical) ? $followupSurgical->alterations_surgery: null) == '1' ? 'checked' : '' }}>
             <label for="alterations_surgery_no_surgicals" class="radio-label shadow border-0">No</label>
         </div>
 

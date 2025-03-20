@@ -6,6 +6,12 @@ $(document).ready(function () {
         order: [0, 'desc'],
         columns: [
             {
+                data: 'id',
+                render: function (data) {
+                    return data.toString().padStart(4, '0');
+                }
+            },
+            {
                 data: 'name',
             },
             {

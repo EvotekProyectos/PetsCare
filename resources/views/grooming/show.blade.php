@@ -55,7 +55,7 @@
                             </div>
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Clasificación: <span style="font-weight: normal">
-                                        {{ $reception->pet->petClassification->name }} </span></p>
+                                        {{ $reception->pet->petClassification?->name ?? ''}} </span></p>
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center">
@@ -112,6 +112,16 @@
                             <div class="col-md-3">
                             </div>
                         </div>
+                        <div class="row d-flex justify-content-center " style="margin-bottom: -11px;">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-3">
+                                <p style="font-weight: bold">Estado Critico: <span style="font-weight: normal">
+                                    {{ $reception->grooming->critic_status == 1 ? 'Aplica' : 'No aplica' }} </span></p>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
                         <div class="row d-flex justify-content-center ">
                             <div class="col-md-3">
                             </div>
@@ -123,6 +133,29 @@
                             </div>
                         </div>
                     </div>
+                    {{-- <div class="row">
+                        <div class="col d-flex justify-content-between align-items-center my-2">
+                            <div class="col">
+                                <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
+                                    onclick="OpenCarnet()">
+                                    <span class="badge custom-badge-pill"><span
+                                            class="healthicons--syringe-vaccine"></span></span> Registrar en Cartilla
+                                </button>
+                            </div>
+                        </div>
+                    </div> --}}
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="text-uppercase" style="color: #0445A0;">
+                            Instrucciones de los servicios a realizar
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-lg-12">
+                                <p style="font-size: 13pt">{{ $reception->grooming->instructions }}</p>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-lg-12">
@@ -131,7 +164,6 @@
                                         <thead class="thead table-primary text-uppercase">
                                             <tr>
                                                 <th>Servicio</th>
-                                                <th>Notas</th>
                                                 <th>Precio</th>
                                             </tr>
                                         </thead>
@@ -146,6 +178,7 @@
                     <div class="col-12 mt-2 d-flex justify-content-end">
                         <h5 id="total-price">Total Final: $0.00</h5>
                     </div>
+                    
                     @if ($reception->statusGrooming->last()->grooming_status_id != 2)
                         <div class="col-12 mt-2 d-flex justify-content-end">
                             <form method="POST" onsubmit="EndService()" role="form" id="updatestatus">
@@ -161,6 +194,34 @@
                 </div>
             </div>
         </div>
+
+        {{-- <div class="modal" id="ModalCertificate" tabindex="-1" role="dialog" aria-hidden="true"
+            style="display: none;">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content" style="background-color: #e9eced; border-radius: 20px;">
+                    <div class="modal-header">
+                        <div class="col-11 d-flex justify-content-between align-items-center">
+                            <h5 id="card_title" class=" text-uppercase" style="color: #0455A0">
+                                <span class="map--veterinary-care"></span> VACUNAS Y DESPARACITACIONES
+                            </h5>
+                        </div>
+                        <div class="col-1">
+                            <button type="button" class="btn-close" onclick="closeModal()" aria-label="Close"></button>
+                        </div>
+
+                    </div>
+                    <div class="modal-body" style="width: 100%;">
+
+                        <div class="row">
+                            <div class="col-12">
+                                @include('vaccine-certificate.fillform')
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> --}}
+
     </section>
 @endsection
 

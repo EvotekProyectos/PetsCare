@@ -18,12 +18,13 @@ return new class extends Migration
             $table->text("food");
             $table->text("objects");
             $table->text("observations");
-            $table->integer("number_days");
+            $table->integer("number_days")->nullable();
+            $table->boolean('extension')->default(0);
             $table->integer('service_type_id')->nullable();
             $table->foreignId('cubicle_id')->nullable()->references('id')->on('cubicles');
             $table->dateTime('finish_date')->nullable();
             $table->boolean('video')->default(0);
-            $table->boolean('state')->nullable();
+            $table->boolean('status')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

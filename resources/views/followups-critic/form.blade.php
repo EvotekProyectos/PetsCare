@@ -98,16 +98,16 @@
 
                 <div class="col-md-1">
                     <input type="radio" id="throwup_yes_critics" name="throwup" value="0"
-                        {{ old('throwup', $followupsCritic?->throwup) == 0 ? 'checked' : '' }}>
-                    <label for="throwup_yes_critics" class="radio-label shadow border-0">
-                        </span>Si</label>
+                        {{ old('throwup', isset($followupsCritic) ? $followupsCritic->throwup : null) === 0 ? 'checked' : '' }}>
+                    <label for="throwup_yes_critics" class="radio-label shadow border-0">Sí</label>
                 </div>
+                
                 <div class="col-md-1">
                     <input type="radio" id="throwup_no_critics" name="throwup" value="1"
-                        {{ old('throwup', $followupsCritic?->throwup) == 1 ? 'checked' : '' }}>
-                    <label for="throwup_no_critics" class="radio-label shadow border-0">
-                        </span>No</label>
+                        {{ old('throwup', isset($followupsCritic) ? $followupsCritic->throwup : null) === 1 ? 'checked' : '' }}>
+                    <label for="throwup_no_critics" class="radio-label shadow border-0">No</label>
                 </div>
+                
                 <div class="col-md-8">
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
@@ -134,13 +134,13 @@
 
                 <div class="col-md-1">
                     <input type="radio" id="defecate_yes_critics" name="defecate" value="0"
-                        {{ old('defecate', $followupsCritic?->defecate) == 0 ? 'checked' : '' }}>
+                        {{ old('defecate', isset($followupsCritic) ? $followupsCritic->defecate : null) === 0 ? 'checked' : '' }}>
                     <label for="defecate_yes_critics" class="radio-label shadow border-0">
                         </span>Si</label>
                 </div>
                 <div class="col-md-1">
                     <input type="radio" id="defecate_no_critics" name="defecate" value="1"
-                        {{ old('defecate', $followupsCritic?->defecate) == 1 ? 'checked' : '' }}>
+                        {{ old('defecate', isset($followupsCritic) ? $followupsCritic->defecate : null) === 1 ? 'checked' : '' }}>
                     <label for="defecate_no_critics" class="radio-label shadow border-0">
                         </span>No</label>
                 </div>
@@ -170,13 +170,13 @@
 
                 <div class="col-md-1">
                     <input type="radio" id="orino_yes_critics" name="orino" value="0"
-                        {{ old('orino', $followupsCritic?->orino) == 0 ? 'checked' : '' }}>
+                        {{ old('orino', isset($followupsCritic) ? $followupsCritic->orino: null ) === 0 ? 'checked' : '' }}>
                     <label for="orino_yes_critics" class="radio-label shadow border-0">
                         </span>Si</label>
                 </div>
                 <div class="col-md-1">
                     <input type="radio" id="orino_no_critics" name="orino" value="1"
-                        {{ old('orino', $followupsCritic?->orino) == 1 ? 'checked' : '' }}>
+                        {{ old('orino', isset($followupsCritic) ? $followupsCritic->orino: null ) === 1 ? 'checked' : '' }}>
                     <label for="orino_no_critics" class="radio-label shadow border-0">
                         </span>No</label>
                 </div>
@@ -203,13 +203,13 @@
 
                 <div class="col-md-1">
                     <input type="radio" id="eat_yes_critics" name="eat" value="0"
-                        {{ old('eat', $followupsCritic?->eat) == 0 ? 'checked' : '' }}>
+                        {{ old('eat', isset($followupsCritic) ? $followupsCritic->eat: null) === 0 ? 'checked' : '' }}>
                     <label for="eat_yes_critics" class="radio-label shadow border-0">
                         </span>Si</label>
                 </div>
                 <div class="col-md-1">
                     <input type="radio" id="eat_no_critics" name="eat" value="1"
-                        {{ old('eat', $followupsCritic?->eat) == 1 ? 'checked' : '' }}>
+                        {{ old('eat', isset($followupsCritic) ? $followupsCritic->eat: null) === 1 ? 'checked' : '' }}>
                     <label for="eat_no_critics" class="radio-label shadow border-0">
                         </span>No</label>
                 </div>
@@ -236,13 +236,13 @@
 
                 <div class="col-md-1">
                     <input type="radio" id="infusions_yes_critics" name="infusions" value="0"
-                        {{ old('infusions', $followupsCritic?->infusions) == 0 ? 'checked' : '' }}>
+                        {{ old('infusions', isset($followupsCritic) ? $followupsCritic->infusions: null) === 0 ? 'checked' : '' }}>
                     <label for="infusions_yes_critics" class="radio-label shadow border-0">
                         </span>Si</label>
                 </div>
                 <div class="col-md-1">
                     <input type="radio" id="infusions_no_critics" name="infusions" value="1"
-                        {{ old('infusions', $followupsCritic?->infusions) == 1 ? 'checked' : '' }}>
+                        {{ old('infusions', isset($followupsCritic) ? $followupsCritic->infusions: null) === 1 ? 'checked' : '' }}>
                     <label for="infusions_no_critics" class="radio-label shadow border-0">
                         </span>No</label>
                 </div>
@@ -271,13 +271,13 @@
 
                 <div class="col-md-1">
                     <input type="radio" id="terapeutic_yes_critics" name="terapeutic" value="0"
-                        {{ old('terapeutic', $followupsCritic?->terapeutic) == 0 ? 'checked' : '' }}>
+                        {{ old('terapeutic', isset($followupsCritic) ? $followupsCritic->terapeutic: null) === 0 ? 'checked' : '' }}>
                     <label for="terapeutic_yes_critics" class="radio-label shadow border-0">
                         </span>Si</label>
                 </div>
                 <div class="col-md-1">
                     <input type="radio" id="terapeutic_no_critics" name="terapeutic" value="1"
-                        {{ old('terapeutic', $followupsCritic?->terapeutic) == 1 ? 'checked' : '' }}>
+                        {{ old('terapeutic', isset($followupsCritic) ? $followupsCritic->terapeutic: null) === 1 ? 'checked' : '' }}>
                     <label for="terapeutic_no_critics" class="radio-label shadow border-0">
                         </span>No</label>
                 </div>
@@ -338,13 +338,13 @@
 
                 <div class="col-md-1">
                     <input type="radio" id="imaging_yes_critics" name="imaging" value="0"
-                        {{ old('imaging', $followupsCritic?->imaging) == 0 ? 'checked' : '' }}>
+                        {{ old('imaging', isset($followupsCritic) ? $followupsCritic->imaging: null) === 0 ? 'checked' : '' }}>
                     <label for="imaging_yes_critics" class="radio-label shadow border-0">
                         </span>Si</label>
                 </div>
                 <div class="col-md-1">
                     <input type="radio" id="imaging_no_critics" name="imaging" value="1"
-                        {{ old('imaging', $followupsCritic?->imaging) == 1 ? 'checked' : '' }}>
+                        {{ old('imaging', isset($followupsCritic) ? $followupsCritic->imaging: null) === 1 ? 'checked' : '' }}>
                     <label for="imaging_no_critics" class="radio-label shadow border-0">
                         </span>No</label>
                 </div>

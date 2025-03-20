@@ -48,13 +48,16 @@ use App\Http\Controllers\AppointmentServiceController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\BudgetDetailController;
 use App\Http\Controllers\CmTypeController;
+use App\Http\Controllers\ControlDateController;
 use App\Http\Controllers\CremationController;
 use App\Http\Controllers\CubicleController;
 use App\Http\Controllers\CubicleTypeController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DateTypeController;
 use App\Http\Controllers\FollowupsCriticController;
 use App\Http\Controllers\FollowupInternController;
 use App\Http\Controllers\FollowupSurgicalController;
+use App\Http\Controllers\GeneralGroomingController;
 use App\Http\Controllers\GroomingController;
 use App\Http\Controllers\GroomingStatusController;
 use App\Http\Controllers\GroomingStatusHistoryController;
@@ -68,8 +71,10 @@ use App\Http\Controllers\RedSheetController;
 use App\Http\Controllers\StatusSurgeryController;
 use App\Http\Controllers\SurgeryScheduleController;
 use App\Http\Controllers\TagTypeController;
+use App\Models\ControlDate;
 use App\Models\Dashboard;
 use App\Models\FollowUp;
+use App\Models\GeneralGrooming;
 use App\Models\Hospitalization;
 use App\Models\Hotel;
 use App\Models\Surgery;
@@ -199,6 +204,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/receptions/list/hotels', [ReceptionController::class, 'listHotels'])->name('reception.hotels');
     Route::get('/receptions/list/cremations', [ReceptionController::class, 'listCremations'])->name('reception.cremations');
 
+    Route::get('/receptions/{id}/area', [ReceptionController::class, 'getReceptionArea'])->name('receptions.getArea');
+
     Route::get('/receptions/historial/{id}', [ReceptionController::class, 'historial'])->name('reception.historial');
     
     Route::get('/receptions/hospital/{id}', [ReceptionController::class, 'hospital_authorization'])->name('hospital.list');
@@ -226,6 +233,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/assignment/hospitalizations/altas', [AssignmentController::class, 'hospital_altas'])->name('hospitalization.altas');
     Route::get('/assignment/altas/list', [AssignmentController::class, 'altas'])->name('assignment.altas');
     Route::get('/assignment/groomings', [AssignmentController::class, 'groomings'])->name('assignment.groomings');
+    Route::get('/assignment/delivery-service', [AssignmentController::class, 'delivery'])->name('assignment.delivery');
 
     //Appointments
     Route::get('/appointments/consultation/{id}', [AppointmentController::class, 'consultation'])->name('appointment.consultation');
@@ -348,6 +356,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/followup-surgicals/list/{id}', [FollowupSurgicalController::class, 'list'])->name('followup-surgicals.list');
     Route::resource('followup-surgicals', FollowupSurgicalController::class);
 
+    //General Groomings
+    Route::get('/critic-status/sign/pdf/{id}', [GeneralGroomingController::class, 'criticsign'])->name('critic.status.sign');
+    Route::post('/groomings/critic-status/pdf/{id}', [GeneralGroomingController::class, 'criticpdf'])->name('critic.status.pdf');
+    // Route::get('test/pdf/{id}', [GroomingController::class, 'generatePdf'])->name('test.pdf');
+    Route::get('groomings/pdf/delivery/{id}', [GeneralGroomingController::class, 'deliverytest'])->name('pdf.delivery');
+    Route::get('/delivery-service/grooming/{id}', [GeneralGroomingController::class, 'deliverydata'])->name('delivery.data');
+    Route::get('general-groomings/folios/{date}', [GeneralGroomingController::class, 'folio'])->name('general-groomings.folio');
+    Route::resource('general-groomings', GeneralGroomingController::class);
+
     //Groomings
     Route::get('/groomings/history/{id}', [GroomingController::class, 'history'])->name('grooming.history');
     Route::get('/groomings/sign/pdf/{id}', [GroomingController::class, 'groomingsign'])->name('grooming.sign');
@@ -376,6 +393,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/cremations/new/{id}', [CremationController::class, 'new'])->name('new.cremation');
     Route::get("/cremations/pdf/{id}", [CremationController::class, "comprobante"])->name("cremation.comprobante");
     Route::post('/cremations/{id}/updateStatus', [CremationController::class, 'updateStatus'])->name("cremation.updateStatus");
+    Route::get("/cremations/responsiva/{id}", [CremationController::class, "responsiva"])->name("cremation.responsiva");
+    Route::post("/cremations/responsiva/pdf/{id}", [CremationController::class, "responsivaPdf"])->name("responsivaPdf.cremation");
     Route::resource('cremations', CremationController::class);
     
     //Status surgery
@@ -404,10 +423,24 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get("/hotel/format/{id}", [HotelController::class, 'hotelFormat'])->name('hotel.format');
     Route::post("/hotel/pdf/{id}", [HotelController::class, 'FormatPdf'])->name('hotel.pdf');
     Route::get("/hotel/list/{id}", [HotelController::class, 'list'])->name('hotel.list');
-    Route::get("/hotel/all", [HotelController::class, 'all'])->name('hotel.all');
-    Route::get("/hotel/cubicles/view", [HotelController::class, 'view'])->name('hotel.view');
+    Route::get("/hotel/all", [HotelController::class, 'totalIndex'])->name('hotel.all');
+    Route::get("/hotel/cubicles/view", [HotelController::class, 'viewCubicles'])->name('hotel.view');
     Route::get('/hotel/pv/{id}', [HotelController::class, 'ordenventa'])->name("hotel.pay");
-    Route::get('/pension/inf/{id}', [HotelController::class, 'pensionInf'])->name('pension.inf');
+    Route::get('/pension/inf/{id}', [HotelController::class, 'serviceDetails'])->name('pension.inf');
+    Route::post('/hotel/exit/{id}', [HotelController::class, 'finishDate'])->name('hotel-exit');
+    
+    Route::get('/hotel/unavailable', [HotelController::class, 'unavailableCubicles'])->name('hotel.unavailable');
+    Route::post('/hotels/extend', [HotelController::class, 'storeExtension'])->name('hotels.storeExtension');
+    Route::get('/hotel/cubicle', [HotelController::class, 'cubicle'])->name('hotel.calendar');
+    Route::get('/hotel/exist/{id}', [HotelController::class, 'existExtension'])->name('exist-extension');
+    Route::get('/hotel/extension/{id}', [HotelController::class, 'createExtension'])->name('hotel.extension');
+    Route::get('/hotel/list/extension/{id}', [HotelController::class, 'listExtension'])->name('list.extension');
+    Route::get('/hotel/videos/{id}', [HotelController::class, 'existVideos'])->name('hotel-video');
+    Route::get('/hotel/video-exist/{id}', [HotelController::class, 'videoSent'])->name('video-exists');
+    Route::post('/hotel/video-sent/{id}', [HotelController::class, 'sendVideo'])->name('video-send');
+    Route::get('/hotel/cubicle/{id}', [HotelController::class, 'CubiclesByArticle'])->name('cubicles.article');
+    Route::get('/hotel/get-events', [HotelController::class, 'getEvents'])->name('hotel.getEvents');
+    
     Route::resource('hotels', HotelController::class);
 
     //Notificacions
@@ -424,6 +457,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/dash/appointments-days', [DashboardController::class, 'appointmentsDays'])->name('dash.appointmentsDays');
     Route::get('/dash/appointments-vets', [DashboardController::class, 'appointmentsVet'])->name('dash.appointmentsVets');
 
+    //DATE TYPES
+    Route::resource('date-types', DateTypeController::class);
+
+    //CONTROL DATES
+    Route::get('dates/list', [ControlDateController::class, 'list'])->name('dates.list');
+    Route::resource('control-dates', ControlDateController::class);
 });
 
  

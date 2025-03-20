@@ -6,12 +6,14 @@ use App\Models\Grooming;
 use App\Http\Requests\GroomingRequest;
 use App\Models\Folio;
 use App\Models\Format;
+use App\Models\GeneralGrooming;
 use App\Models\GenericModel;
 use App\Models\GroomingStatusHistory;
 use App\Models\PaymentOrder;
 use App\Models\Producto;
 use App\Models\Reception;
 use App\Models\User;
+use App\Models\VaccineCertificate;
 use App\Notifications\GroomingStatus;
 use Barryvdh\DomPDF\Facade\Pdf  as Pdf;
 use Carbon\Carbon;
@@ -70,10 +72,11 @@ class GroomingController extends Controller
     public function show($id)
     {
         // $grooming = Grooming::find($id);
-        $reception = Reception::with('pet', 'admissionType', 'area', 'statusGrooming.groomingStatus')->findorfail($id);
+        $reception = Reception::with('pet', 'admissionType', 'area', 'statusGrooming.groomingStatus', 'grooming')->findorfail($id);
         // $this->authorize("view",$grooming);
+        $vaccineCertificate = new VaccineCertificate();
 
-        return view('grooming.show', compact('reception'));
+        return view('grooming.show', compact('reception', 'vaccineCertificate'));
     }
 
     /**
@@ -110,7 +113,7 @@ class GroomingController extends Controller
 
     public function list(int $id)
     {
-
+        
         $groomings = Grooming::with('service', 'serv')->where('reception_id', $id)->get();
 
         return DataTables::of($groomings)->make(true);
@@ -148,19 +151,22 @@ class GroomingController extends Controller
     {
         $reception = Reception::find($id);
         $groomings = Grooming::with('service', 'serv')->where('reception_id', $id)->get();
+        $general = GeneralGrooming::where('reception_id', $id)->get()->first();
 
-        return view('grooming.pdf', compact("reception", "groomings"));
+        return view('grooming.pdf', compact("reception", "groomings", "general"));
     }
 
     public function groomingpdf(Request $request, int $id)
     {
         $reception = Reception::find($id);
         $groomings = Grooming::with('service', 'serv')->where('reception_id', $id)->get();
+        $general = GeneralGrooming::where('reception_id', $id)->get()->first();
         $signatureDataUrl = $request->input('signature');
 
         $pdf = PDF::loadView('grooming.pdf', [
             'reception' => $reception,
             'groomings' => $groomings,
+            'general' => $general,
             'signatureDataUrl' => $signatureDataUrl,
             'isPdf' => true
         ]);
@@ -186,7 +192,9 @@ class GroomingController extends Controller
 
         $groomings = Grooming::with('service', 'serv')->where('reception_id', $id)->get();
 
-        $pdf = Pdf::loadView("grooming.pdf", compact("reception", "groomings"));
+        $general = GeneralGrooming::where('reception_id', $id)->get()->first();
+
+        $pdf = Pdf::loadView("grooming.pdf", compact("reception", "groomings", "general"));
 
         return $pdf->stream("PDF.pdf");
     }
@@ -311,8 +319,11 @@ class GroomingController extends Controller
 
     public function history($id)
     {
-        $reception = Reception::with('pet', 'admissionType', 'area', 'statusGrooming.groomingStatus')->findorfail($id);
+        
+        $reception = Reception::with('pet', 'admissionType', 'area', 'statusGrooming.groomingStatus', 'grooming')->findorfail($id);
         return view('grooming.history', compact('reception'));
     }
+
+    
 
 }

@@ -58,6 +58,29 @@ document.addEventListener('DOMContentLoaded', function() {
       initialView: 'timeGridWeek',
       timeZone: 'GMT',
       events: route('schedules.getEvents'),
+    // events: [
+    //     {
+    //         title: 'Grooming- Happy',
+    //         start: '2025-03-16T09:00:00', // 16 de marzo a las 10 AM
+    //         end: '2025-03-16T11:00:00',   // Termina a las 11 AM
+    //         description: 'Revisión general',
+    //         color: '#007bff' // Color opcional
+    //     },
+    //     {
+    //         title: 'Consulta Preventiva- Galleta',
+    //         start: '2025-03-20T09:00:00', // 20 de marzo a las 10 AM
+    //         end: '2025-03-20T10:00:00',   // Termina a las 11 AM
+    //         description: 'Revisión general',
+    //         color: '#007bff' // Color opcional
+    //     },
+    //     {
+    //         title: 'Grooming- Happy',
+    //         start: '2025-03-16T09:00:00', // 16 de marzo a las 10 AM
+    //         end: '2025-03-16T11:00:00',   // Termina a las 11 AM
+    //         description: 'Revisión general',
+    //         color: '#007bff' // Color opcional
+    //     }
+    // ],
       locale: 'es',
     });
     calendar.render()

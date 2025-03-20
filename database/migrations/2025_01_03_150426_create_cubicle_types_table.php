@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('cubicle_types', function (Blueprint $table) {
             $table->id();
             $table->string("name");
+            $table->string("color")->nullable();
             $table->string("id_microsip")->nullable();
             $table->string("price")->nullable();
             $table->timestamps();

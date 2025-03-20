@@ -294,9 +294,9 @@
                     <p class="data">Tipo de alimentación:</p>
                 </th>
                 <th style="width: 30%; text-align: left;">
-                    <p class="fillable">  @foreach ($hotels as $hotel)
+                    <p class="fillable"> 
                         {{ $hotel->food ?? 'N/A' }}
-                    @endforeach</p>
+               </p>
                 </th>
             </tr>
             <tr >
@@ -328,17 +328,17 @@
                     <p class="data">Tipo de objetos:</p>
                 </th>
                 <th style="width: 35%; text-align: left;">
-                    <p class="fillable">    @foreach ($hotels as $hotel)
+                    <p class="fillable">    
                         {{ $hotel->objects ?? 'N/A' }}
-                    @endforeach </p>
+                  </p>
                 </th>
                 <th style="width: 20%; text-align: left; border-left: 1px solid #96a0a6; border-bottom: 1px solid #96a0a6;">
                     <p class="data">Detalles:</p>
                 </th>
                 <th style="width: 30%; text-align: left; border-bottom: 1px solid #96a0a6;">
-                    <p class="fillable">    @foreach ($hotels as $hotel)
+                    <p class="fillable">   
                         {{ $hotel->observations ?? 'N/A' }}
-                    @endforeach </p>
+                  </p>
                 </th>
             </tr>
             <tr>
@@ -397,7 +397,7 @@
                 <th class="tableup" >Precio por día</th>
                 <th class="tableup" >Precio total</th>
             </tr>
-            <tbody>
+            {{-- <tbody>
                 @php
                     $total = 0;
                 @endphp
@@ -419,7 +419,36 @@
                           
                     </tr>
                 @endforeach
+            </tbody> --}}
+            <tbody>
+                @php
+                    $total = 0;
+                @endphp
+            
+                @if ($hotel) {{-- Verifica que $hotel no sea null antes de acceder a sus propiedades --}}
+                    @php
+                        $price = ($hotel->servicie->PRECIO ?? 0) * ($hotel->number_days ?? 0);
+                        $total += $price;
+                    @endphp
+                    <tr class="tr-basic">
+                        <td class="fillable">{{ $hotel->serv->NOMBRE ?? 'N/A' }}</td>
+                        <td class="fillable" style="text-align: center">
+                            {{ $hotel->number_days ?? '0' }}
+                        </td>
+                        <td class="fillable" style="text-align: right">
+                            ${{ number_format(($hotel->servicie->PRECIO ?? 0), 2) }}
+                        </td>
+                        <td class="fillable" style="text-align: right">
+                            ${{ number_format($price, 2) }}
+                        </td>
+                    </tr>
+                @else
+                    <tr>
+                        <td colspan="4" style="text-align: center;">No hay registros disponibles</td>
+                    </tr>
+                @endif
             </tbody>
+            
             <tfoot>
                 <tr class="tr-basic">
                     <td style="text-align: right" colspan="3">

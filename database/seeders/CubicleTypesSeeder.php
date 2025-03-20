@@ -14,10 +14,11 @@ class CubicleTypesSeeder extends Seeder
     public function run(): void
     {
         $types = [
-            ['name' => 'Pensión chica', 'id_microsip'=>'136655'],
-            ['name' => 'Pensión mediana','id_microsip'=>'136659'],
-            ['name' => 'Pensión suite', 'id_microsip'=>'136663']
-        ];
+            ['name' => 'Pension chica', 'color' =>'#65d8bd','id_microsip'=>'136655'],
+            ['name' => 'Pension mediana','color' =>'#4fd4ff','id_microsip'=>'136659'],
+            ['name' => 'Pension suite', 'color' =>'#ff7c82','id_microsip'=>'136663'],
+            ['name' => 'Pension gatos', 'color' =>'#d780ff','id_microsip'=>'136667']
+                ];
 
         foreach ($types as $type){
             CubicleType::create($type);

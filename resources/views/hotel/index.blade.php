@@ -4,6 +4,10 @@
     Hotel
 @endsection
 
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/colorDatatables.css') }}">
+@endpush
+
 @section('hotel', 'active border-start border-3 border-primary') 
 
 @section('content')
@@ -15,7 +19,7 @@
                     <div class="card-header bg-transparent border-0">
                         <div class="d-flex justify-content-between align-items-center">
                             <h4 id="card_title" class="text-primary text-uppercase">
-                                <span class="icon-park-outline--hotel" style="font-size: 20px;"></span>
+                                <span class="icon-park-outline--hotel" style="font-size: 15px; "></span>
                                      HOTEL
                             </h4>
 
@@ -40,13 +44,15 @@
                                     <table class="table table-striped table-hover responsive w-100" id="table">
                                         <thead class="thead table-primary text-uppercase">
                                         <tr>
-
-										<th>Fecha de entrada</th>
+                                        
+                                        <th>No. Collar</th>
                                         <th>mascota</th>
-										<th>No. Collar</th>
+                                        <th>Raza</th>
+                                        <th>Familia</th>
 										<th>Pensión</th>
 										<th>No. Cubículo</th>
                                         <th>Video</th>
+                                        <th>Fecha de entrada</th>
                                         <th>Fecha de salida</th>
                                         <th>Acciones</th>
                                     </tr>
@@ -86,4 +92,6 @@
 
 @push('scripts')
     <script src="{{asset('js/hotels/index.js')}}" defer></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
 @endpush

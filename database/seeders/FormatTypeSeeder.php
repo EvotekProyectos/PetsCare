@@ -20,6 +20,7 @@ class FormatTypeSeeder extends Seeder
             ['name' => 'Responsiva Grooming'],
             ['name' => 'Responsiva Pensión'],
             ['name' => 'Responsiva de Estudios de Gabinete'],
+            ['name' => 'Responsiva cremación'],
         ];
 
         foreach ($formatTypes as $formatType){

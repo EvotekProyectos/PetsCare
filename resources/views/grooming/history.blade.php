@@ -55,7 +55,7 @@
                             </div>
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Clasificación: <span style="font-weight: normal">
-                                        {{ $reception->pet->petClassification->name }} </span></p>
+                                    {{ $reception->pet->petClassification?->name ?? ''}} </span></p>
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center">
@@ -112,6 +112,16 @@
                             <div class="col-md-3">
                             </div>
                         </div>
+                        <div class="row d-flex justify-content-center " style="margin-bottom: -11px;">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-3">
+                                <p style="font-weight: bold">Estado Critico: <span style="font-weight: normal">
+                                    {{ $reception->grooming?->critic_status == 1 ? 'Aplica' : 'No aplica' }} </span></p>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
                         <div class="row d-flex justify-content-center ">
                             <div class="col-md-3">
                             </div>
@@ -123,6 +133,18 @@
                             </div>
                         </div>
                     </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="text-uppercase" style="color: #0445A0;">
+                            Instrucciones de los servicios a realizar
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-lg-12">
+                                <p style="font-size: 13pt">{{ $reception->grooming?->instructions  }}</p>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-lg-12">
@@ -131,7 +153,6 @@
                                         <thead class="thead table-primary text-uppercase">
                                             <tr>
                                                 <th>Servicio</th>
-                                                <th>Notas</th>
                                                 <th>Precio</th>
                                             </tr>
                                         </thead>
@@ -145,6 +166,41 @@
                     </div>
                     <div class="col-12 mt-2 d-flex justify-content-end">
                         <h5 id="total-price">Total Final: $0.00</h5>
+                    </div>
+
+                    <div class="row d-flex justify-content-around align-content-center mb-3">
+                        <div class="col-12 col-lg-3 d-flex justify-content-between align-items-center my-2">
+                            <div class="col">
+                                <a class="btn btn-costum-services btn-lg text-uppercase rounded-5 shadow w-100 fs-6 d-flex justify-content-around align-items-center "
+                                onclick="window.open('{{ asset('storage/groomings/grooming_' . $reception->id . '.pdf') }}', '_blank')">
+                                    <span class="badge custom-badge-pill"><span class="gravity-ui--scissors"></span> </span> <small>
+                                        Formato Recepción</small>
+                                </a>
+                            </div>
+                        </div>
+                        @if ($reception->grooming?->critic_status == 1)
+                        <div class="col-12 col-lg-3 d-flex justify-content-between align-items-center my-2">
+                            <div class="col">
+                                <a class="btn btn-costum-services btn-lg text-uppercase rounded-5 shadow w-100 fs-6 d-flex justify-content-around align-items-center "
+                                onclick="window.open('{{ asset('storage/groomings/critic-statuses/responsive_' . $reception->grooming->id . '.pdf') }}', '_blank')">
+                                    <span class="badge custom-badge-pill"><span class="material-symbols--pulse-alert-outline"></span> </span> <small>
+                                        Estado Critico</small>
+                                </a>
+                            </div>
+                        </div>
+                        @endif
+
+                        @if ($reception->grooming?->delivery_service == 1)
+                        <div class="col-12 col-lg-3 d-flex justify-content-between align-items-center my-2">
+                            <div class="col">
+                                <a class="btn btn-costum-services btn-lg text-uppercase rounded-5 shadow w-100 fs-6 d-flex justify-content-around align-items-center "
+                                href="{{ route('pdf.delivery', $reception->id) }}" target="_blank">
+                                    <span class="badge custom-badge-pill"><span class="mdi--house-export-outline"></span> </span> <small>
+                                        Servicio Domicilio</small>
+                                </a>
+                            </div>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
