@@ -49,5 +49,7 @@ class DatabaseSeeder extends Seeder
         $this->call(StatusSurgeriesSeeder::class);
         $this->call(CubicleTypesSeeder::class);
         $this->call(CubiclesSeeder::class);
+        $this->call(dateTypesSeeder::class);
+        $this->call(statusDatesSeeder::class);
     }
 }

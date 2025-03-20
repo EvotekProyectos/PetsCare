@@ -27,8 +27,12 @@ class HotelRequest extends FormRequest
 			'food' => 'required|string',
 			'objects' => 'required|string',
 			'observations' => 'required|string',
-			'number_days' => 'required',
+			'number_days' => 'nullable',
+            'extension' => 'nullable',
             'service_type_id' => 'required',
+            'finish_date' => 'nullable',
+            'video' => 'nullable',
+            'status' => 'nullable',
             'cubicle_id' => 'nullable|integer|exists:cubicles,id',
             
         ];

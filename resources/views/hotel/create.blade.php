@@ -4,7 +4,12 @@
     {{ __('Create') }} Hotel
 @endsection
 
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/hotel/create.css') }}">
+@endpush
+
 @section('content')
+
 <input type="hidden" id="reception_id_followup" value="{{ $reception->id }}">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -124,14 +129,16 @@
                             </div>
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Fecha de entrada: <span style="font-weight: normal">
-                                        {{ $reception->entry_date }} </span>
+                                        {{-- {{ $reception->entry_date format('dddd DD-MM-YYYY'); }} </span> --}}
+                                        {{ \Carbon\Carbon::parse($reception->entry_date)->translatedFormat('d-M-Y ') }} </span>
                                     </p>
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center" style="margin-bottom: -11px;">
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Contacto emergencia: <span style="font-weight: normal">
-                                        {{ $reception->family->contact_name}}-{{$reception->family->contact_number  }} </span></p>
+                                        {{ $reception->family->contact_name}}-{{$reception->family->contact_number  }}
+                                     </span></p>
                             </div>
                             <div class="col-md-3">
                                 <p> 
@@ -141,39 +148,44 @@
                             </div>
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Fecha de salida: <span style="font-weight: normal">
-                                        {{ $reception->exit_date }} </span>
+                                        {{-- {{ $reception->exit_date }}  --}}
+                                        {{ \Carbon\Carbon::parse($reception->exit_date)->translatedFormat('d-M-Y ') }}
+                                    </span>
                                     </p>
                             </div>
                         </div>
+
 
                     <div class="card-body">
                         <div class="row">
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
-                                     <button class="btn btn-costum-services btn-sm text-uppercase rounded-4"
+                                     <button class="btn btn-costum-services btn-sm text-uppercase rounded-5 shadow "
                                     onclick="window.open('{{ route('vaccine-certificates.show', $reception->pet->id) }}', '_blank')">
                                     <span class="badge custom-badge-pill"><span
-                                            class="healthicons--syringe-vaccine"></span></span> CARTILLA VIRTUAL </button>
+                                            class="fluent-mdl2--vaccination"></span></span> CARTILLA VIRTUAL
                                 </button>
                                 </div>
                             </div>
+
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
-                                    <button class="btn btn-costum-services btn-sm text-uppercase rounded-4"
-                                    Onclick="window.open('{{ route('pet-history.index', $reception->pet_id) }}', '_blank')">
+                                    <button class="btn btn-costum-services btn-sm text-uppercase rounded-5 shadow"
+                                    onclick="window.open('{{ route('pet-history.index', $reception->pet_id) }}', '_blank')">
                                         <span class="badge custom-badge-pill"><span
                                             class="akar-icons--folder-add"></span></span> 
                                                 HISTORIAL MÉDICO
                                     </button>
                                 </div>
                             </div>
+
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
                                     <button 
-                                        class="btn btn-costum-services btn-sm text-uppercase rounded-4" 
+                                        class="btn btn-costum-services btn-sm text-uppercase rounded-5 shadow" 
                                         onclick="window.open('{{ route('hotel.view') }}', '_blank')">
                                         <span class="badge custom-badge-pill">
-                                            <span class="game-icons--dog-house "></span>
+                                            <span class="game-icons--dog-house"></span>
                                         </span>
                                        DISPONIBILIDAD CUBÍCULOS
                                     </button>
@@ -183,14 +195,16 @@
                         </div>
                     </div>
                    
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
-                            DETALLES DEL SERVICIO
-                        </h5>
-                    </div>
-
+                  
     
                     <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
+                                DETALLES DEL SERVICIO
+                            </h5>
+                        </div>
+
+                        
                         <form method="POST" onsubmit="NewEntry()"  role="form" 
                         enctype="multipart/form-data" id="NewService">
                             @csrf

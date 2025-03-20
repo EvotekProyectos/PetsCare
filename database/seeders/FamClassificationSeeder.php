@@ -16,6 +16,7 @@ class FamClassificationSeeder extends Seeder
         $famclassifications = [
             ['name' => 'Aprensivo'],
             ['name' => 'Conflictivo'],
+            ['name' => 'Cancelada'],
         ];
 
         foreach ($famclassifications as $famclassification){

@@ -6,6 +6,7 @@ use App\Models\Cremation;
 use App\Http\Requests\CremationRequest;
 use App\Models\CmType;
 use App\Models\Folio;
+use App\Models\Format;
 use App\Models\GenericModel;
 use App\Models\PaymentOrder;
 use App\Models\Pet;
@@ -16,6 +17,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 /**
@@ -149,6 +151,50 @@ class CremationController extends Controller
 
         return response()->json(['success' => true, 'status' => $cremation->status]);
     }
+
+    public function responsiva(int $id) {
+
+        $reception = Reception::with('family', 'pet')->find($id);
+        $cremation = Cremation::where('reception_id', $id)->first();
+
+        return view('cremation.responsiva', compact("cremation", "reception"));
+        
+    }
+
+   public function responsivaPdf(Request $request, $id)
+   {
+        $reception = Reception::with('family', 'pet')->find($id);
+        $cremation = Cremation::where('reception_id', $id)->first();
+        // $pet=$reception->pet;
+
+         $signatureDataUrl = $request->input('signature');
+         $nameFamily = $request->input('name_family');
+       
+         $pdf = PDF::loadView('cremation.responsiva', [
+             'reception' => $reception,
+            //   'pet' => $pet,
+             'signatureDataUrl' => $signatureDataUrl,
+             'nameFamily' => $nameFamily,
+             'isPdf' => true
+         ]);
+
+         $pdfPath = 'public/cremations/responsiva_' . $id . '.pdf';
+         Storage::put($pdfPath, $pdf->output());
+
+         $pdfUrl = Storage::url($pdfPath);
+
+          $format = new Format();
+          $format->format_type_id = 7;
+          $format->reception_id = $id;
+        //   $format->pet_id = $pet->id;
+          $format->format_pdf = $pdfPath;
+          $format->save();
+
+
+         return response()->json(['url' => asset($pdfUrl), 'format_id' => $format->id]);
+         //return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
+    //     //return response()->json(['url' => asset('storage/'.$pdfPath), 'format_id' => $format->id]);
+     }
 
     public function ordenventa(int $reception)
     {

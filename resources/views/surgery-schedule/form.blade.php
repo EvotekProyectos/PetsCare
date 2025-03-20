@@ -24,15 +24,16 @@
                     <span class="vaadin--lines-list"></span>
                 </span>
                 <input type="text" name="number_ticket" 
-       class="form-control @error('number_ticket') is-invalid @enderror"
-       value="{{ old('number_ticket', $surgerySchedule?->number_ticket) ?? '' }}" 
-       id="number_ticket" 
-       placeholder="Número de ticket">
+                 class="form-control @error('number_ticket') is-invalid @enderror"
+                value="{{ old('number_ticket', $surgerySchedule?->number_ticket) ?? '' }}" 
+                id="number_ticket" 
+                placeholder="Número de ticket">
 
                          
             {!! $errors->first('number_ticket', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
             </div>
      </div>
+     
         <div class="form-group mb-2 mb20">
             <label for="family_id" class="form-label">FAMILIA/PROPIETARIO</label>
             <div class="input-group mb-3">

@@ -1,42 +1,138 @@
-
+//Select del servicio de pension para que en base a su servicio se muestren los cubiculos
 $(document).ready(function () {
     $('#service_type_id').select2({
         placeholder: 'Buscar Servicio',
         width: 'resolve'
     });
+
+    // Deshabilitar el select de cubículos al inicio
+    $('#cubicle_id').prop('disabled', true);
+
+    // Evento cuando cambia el select de servicio
+    $('#service_type_id').on('change', function () {
+        let articleId = $(this).val(); 
+        let cubicleSelect = $('#cubicle_id');
+
+        // Si no hay un servicio seleccionado, deshabilitar el select de cubículos
+        if (!articleId) {
+            cubicleSelect.prop('disabled', true).html('<option value="">Selecciona el número de cubículo</option>');
+            return;
+        }
+
+        let url = route("cubicles.article", articleId)
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                cubicleSelect.prop('disabled', false); // Habilitar select
+                cubicleSelect.html('<option value="">Selecciona el número de cubículo</option>');
+
+                response.forEach(cubicle => {
+                    cubicleSelect.append(`<option value="${cubicle.id}">${cubicle.name}</option>`);
+                });
+            },
+            error: function () {
+                cubicleSelect.prop('disabled', true).html('<option value="">No hay cubículos disponibles</option>');
+            }
+        });
+    });
 });
 
+
+//Registro de servicio en la tabla y bd y que solo se pueda registrar un servicio a la vez
 async function NewEntry() {
     event.preventDefault();
+
+    // Verificar si ya hay un registro en la tabla
+    if (table.data().count() > 0) {
+        Swal.fire({
+            icon: "warning",
+            title: "Solo se permite un servicio a la vez",
+            text: "Elimina el servicio actual para agregar uno nuevo.",
+            timer: 5000,
+            showConfirmButton: true
+        });
+        return;
+    }
+
     let url = route('hotels.store');
+    
     let form = new FormData(document.getElementById("NewService"));
-    let pet = await fetch(url, { method: "POST", body: form,  headers: {
+
+    let pet = await fetch(url, { 
+        method: "POST",
+        body: form,  
+        headers: {
         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
         'Accept': 'application/json'
     }
 });
-    let resp = await pet.json();
 
-    if (pet.ok) {
-        Swal.fire({
-            icon: "success",
-            title: "Se registraron los servicios con exito",
-            timer: 7000,
-            showConfirmButton: true
-        })
-        table.ajax.reload();
-        $('#service_type_id').val('').trigger('change')
-        $('#number_days').val('')
-        $('#cubicle_id').val('')
-    } else {
-        let resp = await pet.json();
-        Swal.fire({
-            icon: "error",
-            body: resp
-        })
-    }
+let resp;
+try {
+    resp = await pet.json();
+} catch (error) {
+    console.error("Error al leer JSON:", error);
+    Swal.fire({
+        icon: "error",
+        text: "Error al procesar la respuesta del servidor."
+    });
+    return;
 }
 
+if (pet.ok) {
+    document.getElementById('number_days').value = resp.number_days ?? 0;
+
+    Swal.fire({
+        icon: "success",
+        title: "Se registraron los servicios con éxito",
+        timer: 7000,
+        showConfirmButton: true
+    });
+
+    table.ajax.reload();
+    $('#service_type_id').val('').trigger('change');
+    $('#number_days').val('');
+    $('#cubicle_id').val('');
+} else {
+    console.error("Error en la solicitud:", resp);
+    Swal.fire({
+        icon: "error",
+        text: resp.message || "Ocurrió un error al registrar el servicio"
+    });
+}
+}
+//     let resp = await pet.json();
+    
+//     if (pet.ok) {
+
+//         //document.getElementById('number_days').value = resp.number_days;
+//         document.getElementById('number_days').value = resp.number_days ?? 0;
+
+//         Swal.fire({
+//             icon: "success",
+//             title: "Se registraron los servicios con exito",
+//             timer: 7000,
+//             showConfirmButton: true
+//         });
+
+//         table.ajax.reload();
+//         $('#service_type_id').val('').trigger('change')
+//         $('#number_days').val('')
+//         $('#cubicle_id').val('')
+//     } else {
+//         let errorResp = await pet.json();
+//         console.log(errorResp);
+//         Swal.fire({
+//             icon: "error",
+//             text: errorResp.message || "Ocurrió un error al registrar el servicio"
+//         });
+//     }
+// }
+
+//Tabla del servicio registrado
 var table = undefined;
 $(document).ready(function () {
     table = $('#table').DataTable({
@@ -84,19 +180,7 @@ $(document).ready(function () {
       });
 });
 
-// function calculateTotal(table) {
-//     let total = 0;
-
-//     table.rows({ page: 'all' }).every(function () {
-//         const data = this.data();
-//         if (data.servicie && data.servicie.PRECIO) {
-//             total += parseFloat(data.servicie.PRECIO);
-//         }
-//     });
-
-//     $('#total-price').text(`Total Final: $${total.toFixed(2)}`);
-// }
-
+//Calcular el total del servicio 
 function calculateTotal(table) {
     let total = 0;
 
@@ -110,36 +194,7 @@ function calculateTotal(table) {
     $('#total-price').text(`Total Final: $${total.toFixed(2)}`);
 }
 
-
-
-    // document.getElementById('cubicle_id').addEventListener('change', function () {
-    //     const cubicleId = this.value;
-
-    //     if (cubicleId) {
-    //         fetch("{{ route('cubicles.updateState') }}", {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-    //             },
-    //             body: JSON.stringify({ cubicle_id: cubicleId }),
-    //         })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             if (data.success) {
-    //                 alert(data.message);
-    //             } else {
-    //                 alert('Error: ' + data.message);
-    //             }
-    //         })
-    //         .catch(error => console.error('Error:', error));
-    //     }
-    // });
-
-
-
-
-
+//Generar orden de venta y responsiva
  async function generate(event) {
      event.preventDefault();
      Swal.fire({
@@ -185,3 +240,6 @@ function calculateTotal(table) {
  }
 
 
+
+
+        

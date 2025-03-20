@@ -39,7 +39,7 @@ class Hotel extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_id', 'food', 'objects', 'observations', 'number_days', 'service_type_id', 'cubicle_id'];
+    protected $fillable = ['reception_id', 'food', 'objects', 'observations', 'number_days', 'extension','finish_date','video','status','service_type_id', 'cubicle_id'];
 
 
     /**

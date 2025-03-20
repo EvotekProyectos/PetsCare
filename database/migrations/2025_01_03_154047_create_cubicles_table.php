@@ -14,6 +14,10 @@ return new class extends Migration
         Schema::create('cubicles', function (Blueprint $table) {
             $table->id();
             $table->string("name");
+            $table->string("length");
+            $table->string("width");
+            $table->datetime('start_date')->nullable(); 
+            $table->datetime('end_date')->nullable(); 
             $table->foreignId('cubicle_type_id')->nullable()->references('id')->on('cubicle_types');
             $table->boolean('state')->nullable(); 
             $table->timestamps();

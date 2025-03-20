@@ -9,10 +9,6 @@
     text-align: center;
     cursor: pointer; /* Pointer cursor for hover effect */
 }
-.dog-house p {
-     /* Size of the icon */
-    /* color: #0455A0; */
-}
 
 .legend {
     display: flex;
@@ -40,6 +36,10 @@
 
 .legend-icon.occupied {
     background-color: #A5A5A5;
+}
+
+.legend-icon.expired {
+    background-color: #ff4343;
 }
 
 .tooltip {

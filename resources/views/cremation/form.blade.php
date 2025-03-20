@@ -150,109 +150,10 @@
             </div>
 
         </div>
-    </div>
+    {{-- </div> --}}
 
-   
 
-    <div class="row ">
-        <div class="col-md-6">
-            <div class="form-group mb-2">
-                <label for="observations" class="form-label">OBSERVACIONES</label>
-                <div class="input-group mb-3">
-                    <span class="input-group-text bg-primary-subtle" id="basic-addon1">
-                        <span class="vaadin--lines-list"></span>
-                    </span>
-                    <textarea name="observations" rows="3"
-                        class="form-control @error('observations') is-invalid @enderror" placeholder=""
-                        id="observations">{{ old('observations', $cremation?->observations) }}</textarea>
-                </div>
-                {!! $errors->first('observations', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-            </div>
-        </div>
-        
-       
-        <div class="col-md-6">
-            <div class="d-flex">
-                <div class="me-4">
-                    <div class="form-group mb-2">
-                        <label for="placa_type_id" class="form-label">TIPO DE PLACA</label>
-                        <div class="d-flex gap-3 align-items-center">
-                            <label class="text-center" style="margin-right: 10px;">
-                                <img src="{{asset('img/bone.png')}}" alt="Placa Hueso" class="img-fluid mb-2 shadow-custom" 
-                                    style="width: 80px; height: 80px; border-radius: 50%; box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);">
-                                <br>
-                                <input type="radio" name="placa_type_id" value="1" class="form-check-input">
-                            </label>
-                            <label class="text-center">
-                                <img src="{{asset('img/circle.png')}}" alt="Placa Circular" class="img-fluid mb-2" 
-                                    style="width: 80px; height: 80px;border-radius: 50%; box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);">
-                                <br>
-                                <input type="radio" name="placa_type_id" value="2" class="form-check-input">
-                            </label>
-                        </div>
-                        {!! $errors->first('placa_type_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-                    </div>
-                </div>
-                
-                <div style="flex: 1;">
-                    <div class="form-group mb-2">
-                        <label for="text_placa" class="form-label">MENSAJE DE LA PLACA</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-primary-subtle" id="basic-addon1">
-                                <span class="vaadin--lines-list"></span>
-                            </span>
-                            <textarea name="text_placa" rows="3"
-                                class="form-control @error('text_placa') is-invalid @enderror"
-                                placeholder="Nombre o texto que se desea para la placa"
-                                id="text_placa">{{ old('text_placa', $cremation?->text_placa) }}</textarea>
-                        </div>
-                        {!! $errors->first('text_placa', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
- {{-- <div class="container">
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <div class="form-group mb-2">
-                    <label for="placa_type_id" class="form-label">TIPO DE PLACA</label>
-                    <div class="d-flex gap-3 justify-content-center align-items-center">
-                        <label class="text-center">
-                            <img src="{{asset('img/bone.png')}}" alt="Placa Hueso" class="img-fluid mb-2" style="width: 80px; height: 80px; shadow-custom;">
-                            <br>
-                            <input type="radio" name="placa_type_id" value="1" class="form-check-input">
-                        </label>
-                        <label class="text-center">
-                            <img src="{{asset('img/circle.png')}}" alt="Placa Circular" class="img-fluid mb-2" style="width: 80px; height: 80px;">
-                            <br>
-                            <input type="radio" name="placa_type_id" value="2" class="form-check-input">
-                        </label>
-                    </div>
-                    {!! $errors->first('placa_type_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-                </div>
-            </div>
-
-        <!-- Mensaje para la Placa -->
-        <div class="col-md-6">
-            <div class="form-group mb-2">
-                <label for="observations_plate" class="form-label">MENSAJE PARA LA PLACA</label>
-                <div class="input-group">
-                    <span class="input-group-text bg-primary-subtle" id="basic-addon1">
-                        <span class="vaadin--lines-list"></span>
-                    </span>
-                    <textarea name="observations_plate" rows="3"
-                              class="form-control @error('observations_plate') is-invalid @enderror"
-                              placeholder="Nombre o texto de la placa y otras observaciones"
-                              id="observations_plate">{{ old('observations_plate', $cremation?->observations_plate) }}</textarea>
-                </div>
-                {!! $errors->first('observations_plate', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-            </div>
-        </div>
-    </div> --}}
-        
-        {{-- <div class="row">
+        <div class="row ">
             <div class="col-md-6">
                 <div class="form-group mb-2">
                     <label for="observations" class="form-label">OBSERVACIONES</label>
@@ -260,83 +161,72 @@
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="vaadin--lines-list"></span>
                         </span>
-                        <textarea name="observations" rows="2"
-                            class="form-control @error('observations') is-invalid @enderror"placeholder=""
+                        <textarea name="observations" rows="3"
+                            class="form-control @error('observations') is-invalid @enderror" placeholder=""
                             id="observations">{{ old('observations', $cremation?->observations) }}</textarea>
                     </div>
                     {!! $errors->first('observations', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                 </div>
             </div>
-
-            <div class="col-md-12 d-flex align-items-start">
-                <div class="me-4">
-                    <div class="form-group mb-2">
-                        <label for="placa_type_id" class="form-label">TIPO DE PLACA</label>
-                        <div class="d-flex gap-3 align-items-center">
-                            <label class="text-center" style="margin-right: 10px;">
-                                <img src="{{asset('img/bone.png')}}" alt="Placa Hueso" class="img-fluid mb-2 shadow-custom" 
-                                style="width: 80px; height: 80px; border-radius: 50%; box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);">
-                           
-                                <br>
-                                <input type="radio" name="placa_type_id" value="1" class="form-check-input">
-                            </label>
+            
         
-                            <label class="text-center">
-                                <img src="{{asset('img/circle.png')}}" alt="Placa Circular" class="img-fluid mb-2" style="width: 80px; height: 80px;border-radius: 50%; box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);">
-                                <br>
-                                <input type="radio" name="placa_type_id" value="2" class="form-check-input">
-                            </label>
+            <div class="col-md-6">
+                <div class="d-flex">
+                    <div class="me-4">
+                        <div class="form-group mb-2">
+                            <label for="placa_type_id" class="form-label">TIPO DE PLACA</label>
+                            <div class="d-flex gap-3 align-items-center">
+                                <label class="text-center" style="margin-right: 10px;">
+                                    <img src="{{asset('img/bone.png')}}" alt="Placa Hueso" class="img-fluid mb-2 shadow-custom" 
+                                        style="width: 80px; height: 80px; border-radius: 50%; box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);">
+                                    <br>
+                                    <input type="radio" name="placa_type_id" value="1" class="form-check-input">
+                                </label>
+                                <label class="text-center">
+                                    <img src="{{asset('img/circle.png')}}" alt="Placa Circular" class="img-fluid mb-2" 
+                                        style="width: 80px; height: 80px;border-radius: 50%; box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);">
+                                    <br>
+                                    <input type="radio" name="placa_type_id" value="2" class="form-check-input">
+                                </label>
+                            </div>
+                            {!! $errors->first('placa_type_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                         </div>
-                        {!! $errors->first('placa_type_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                     </div>
-                </div>
-        
-                <div style="flex: 1; max-width: 31.8%;">
-                    <div class="form-group mb-2">
-                        <label for="observations" class="form-label">MENSAJE DE LA PLACA</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-primary-subtle" id="basic-addon1">
-                                <span class="vaadin--lines-list"></span>
-                            </span>
-                            <textarea name="observations" rows="3"
-                                class="form-control @error('observations') is-invalid @enderror"
-                                placeholder="Nombre o texto que se desea para la placa"
-                                id="observations">{{ old('observations', $cremation?->observations) }}</textarea>
+                    
+                    <div style="flex: 1;">
+                        <div class="form-group mb-2">
+                            <label for="text_placa" class="form-label">MENSAJE DE LA PLACA</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-primary-subtle" id="basic-addon1">
+                                    <span class="vaadin--lines-list"></span>
+                                </span>
+                                <textarea name="text_placa" rows="3"
+                                    class="form-control @error('text_placa') is-invalid @enderror"
+                                    placeholder="Nombre o texto que se desea para la placa"
+                                    id="text_placa">{{ old('text_placa', $cremation?->text_placa) }}</textarea>
+                            </div>
+                            {!! $errors->first('text_placa', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                         </div>
-                        {!! $errors->first('observations', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                     </div>
                 </div>
             </div>
-        </div> --}}
-        
+        </div>
+
         <div class="form-group mb-2 mb20" hidden>
             <label for="price" class="form-label">{{ __('Price') }}</label>
             <input type="text" name="price" class="form-control @error('price') is-invalid @enderror" value="{{ old('price', $cremation?->price) }}" id="price" placeholder="Price">
             {!! $errors->first('price', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
     </div>
-     {{-- <div class="col-md-6">
-            <div class="form-group mb-2">
-            <label for="urn_model" class="form-label">MODELO DE URNA</label>
-            <div class="input-group mb-3">
-                <span class="input-group-text bg-primary-subtle" id="basic-addon1">
-                    <span class="vaadin--lines-list"></span>
-                </span>
-            <input type="text" name="urn_model" 
-            class="form-control @error('urn_model') is-invalid @enderror" 
-            value="{{ old('urn_model', $cremation?->urn_model) }}" id="urn_model" placeholder="Modelo de urna">
-            </div>
-            {!! $errors->first('urn_model', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-        </div> --}}
         
     
-    <div class="col-12 mt-2 d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary">
-            <i class="fas fa-plus"></i>
-           REGISTRAR SERVICIO</button>
-    </div>
-
-    <form action=""></form>
+        <div class="col-12 mt-2 d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-plus"></i>
+            REGISTRAR SERVICIO</button>
+        </div>
+        <form action=""></form>
+    </div>    
 </div>
 
 @push('scripts')
