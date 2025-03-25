@@ -202,6 +202,9 @@ $(document).ready(function () {
                         <a type="button" href="${route('receptions.edit', data.id)}" class="btn btn-sm text-primary">
                             <i class="fas fa-edit"></i>
                         </a>
+                        <a type="button" href="${route('advance-payments.add', data.id)}" class="btn btn-sm text-primary" title="Crear Anticipo">
+                            <span class="lets-icons--paper-fill"></span> 
+                        </a>
                         <button type="button" class="btn btn-sm text-primary" onclick="showAlertWithCallback(() => deleteReception(${data.id}, table2));">
                             <i class="fas fa-trash"></i>
                         </button>`;
@@ -299,6 +302,9 @@ $(document).ready(function () {
                     return `
                         <a type="button" href="${route('receptions.edit', data.id)}" class="btn btn-sm text-primary">
                             <i class="fas fa-edit"></i>
+                        </a>
+                        <a type="button" href="${route('advance-payments.add', data.id)}" class="btn btn-sm text-primary" title="Crear Anticipo">
+                            <span class="lets-icons--paper-fill"></span> 
                         </a>
                         <button type="button" class="btn btn-sm text-primary" onclick="showAlertWithCallback(() => deleteReception(${data.id}, table4));">
                             <i class="fas fa-trash"></i>

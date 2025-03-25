@@ -34,6 +34,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\AdmissionTypeController;
+use App\Http\Controllers\AdvancePaymentController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ReceptionTypeController;
 use App\Http\Controllers\AttentionStatusController;
@@ -463,6 +464,16 @@ Route::group(['middleware' => ['auth']], function () {
     //CONTROL DATES
     Route::get('dates/list', [ControlDateController::class, 'list'])->name('dates.list');
     Route::resource('control-dates', ControlDateController::class);
+
+    //Advance Payments 
+    Route::get('/advance-payments/receipt/{id}', [AdvancePaymentController::class, 'pdf'])->name('advance-payments.pdf');
+    Route::get('/advance-payments/generate-reference/{id}', [AdvancePaymentController::class, 'reference'])->name('advance-payments.refrence');
+    Route::get('/advance-payments/list', [AdvancePaymentController::class, 'list'])->name('advance-payments.list');
+    Route::get('/advance-payments/add/{id}', [AdvancePaymentController::class, 'add'])->name('advance-payments.add');
+    Route::resource('advance-payments', AdvancePaymentController::class);
 });
+
+
+
 
  

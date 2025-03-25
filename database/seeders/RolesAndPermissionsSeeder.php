@@ -237,6 +237,8 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'editar grooming', 'type' => 'Grooming']);
         Permission::create(['name' => 'eliminar grooming', 'type' => 'Grooming']);
 
+        //Delivery Services
+        Permission::create(['name' => 'ver panel servicios domicilio', 'type' => 'Domicilios']);
 
         //TAG TYPES
         Permission::create(['name' => 'ver panel tipo de placas para cremación', 'type' => 'cremaciones']);
@@ -261,7 +263,14 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'crear pensiones', 'type' => 'Hotel']);
         Permission::create(['name' => 'editar pensiones', 'type' => 'Hotel']);
         Permission::create(['name' => 'eliminar pensiones', 'type' => 'Hotel']);
+
+        //Advance Payments
+        Permission::create(['name' => 'ver panel anticipos', 'type' => 'Anticipos']);
+        Permission::create(['name' => 'crear anticipos', 'type' => 'Anticipos']);
+        Permission::create(['name' => 'editar anticipos', 'type' => 'Anticipos']);
+        Permission::create(['name' => 'eliminar anticipos', 'type' => 'Anticipos']);
         
+
 
         // roles
         $role = Role::create(['name' => 'administrador']);
