@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PaymentOrder extends Model
 {
-    use HasFactory;
+    use HasFactory, HasFactory;
 
     protected $table = 'payment_orders';
     protected $fillable = ['reception_id', 'folio_odv'];

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -19,7 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Service extends Model
 {
-    
+    use HasFactory;
 
     protected $perPage = 20;
 
@@ -28,7 +29,7 @@ class Service extends Model
      *
      * @var array
      */
-    protected $fillable = ['vaccine', 'deworming_internal', 'deworming_external'];
+    protected $fillable = ['name'];
 
 
 

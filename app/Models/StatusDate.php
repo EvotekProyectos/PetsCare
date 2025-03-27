@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class StatusDate extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
 
     protected $perPage = 20;
