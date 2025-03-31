@@ -209,6 +209,6 @@ const deleteServicieHotel = (id, table) => {
 }
 
 const deleteAdvancePayment = (id, table) => {
-    const url = route("advance-payments", id);
+    const url = route("advance-payments.destroy", id);
     deleteResource(url, table);
 }
