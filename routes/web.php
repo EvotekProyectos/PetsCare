@@ -48,6 +48,7 @@ use App\Http\Controllers\AppointmentServiceController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\BudgetDetailController;
 use App\Http\Controllers\CmTypeController;
+use App\Http\Controllers\ConfirmedDateController;
 use App\Http\Controllers\ControlDateController;
 use App\Http\Controllers\CremationController;
 use App\Http\Controllers\CubicleController;
@@ -247,6 +248,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/prescriptions/discharge/{id}',  [PrescriptionController::class, 'new'])->name('prescriptions.new');
     Route::get("/prescriptions/create/{id}", [PrescriptionController::class, 'create'])->name('prescription.create');
     Route::get("/prescriptions/pdf/{id}", [PrescriptionController::class, "imprimir"])->name("prescription.imprimir");
+    Route::post("/prescriptions/control-dates", [PrescriptionController::class, "storeControlDate"])->name("prescription.control-date");
     Route::resource('prescriptions', PrescriptionController::class);
 
     //PET-HISTORY
@@ -462,7 +464,14 @@ Route::group(['middleware' => ['auth']], function () {
 
     //CONTROL DATES
     Route::get('dates/list', [ControlDateController::class, 'list'])->name('dates.list');
+    Route::post('/control-dates/update-date/{id}', [ControlDateController::class, 'updateDate'])->name('control-dates.updateDate');
+    Route::get('dates/calendar', [ControlDateController::class, 'calendar'])->name('dates.calendar');
+    Route::post('control-dates/updateStatus/{id}', [ControlDateController::class, 'updateStatus'])->name('control-dates.updateStatus');
+    Route::get('/control-dates/get-events', [ControlDateController::class, 'getEvents'])->name('control-dates.getEvents');
+    Route::get('/control-dates/schedules/{id}', [ControlDateController::class, 'schedules'])->name('schedules.date');
     Route::resource('control-dates', ControlDateController::class);
+
+
 });
 
  

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\GeneralGrooming;
 use App\Http\Requests\GeneralGroomingRequest;
+use App\Models\ControlDate;
 use App\Models\Grooming;
 use App\Models\Reception;
 use Illuminate\Http\Request;
@@ -49,6 +50,21 @@ class GeneralGroomingController extends Controller
         $data = $request->validated();
         $data['folio'] = $newFolio;
         $new = GeneralGrooming::create($data);
+
+        $reception = Reception::find($request->reception_id);
+
+        ControlDate::create([
+            'reception_id' => $request->reception_id,
+            'pet_id' => $reception ? $reception->pet_id : null,
+            'family_id' => $reception ? $reception->family_id : null,
+            'date_type_id' => 7,
+            'status_date_id' => 1,
+            'user_id' => auth()->id(),
+            'date' => $request->next_service,
+        ]);
+
+
+
         return response()->json($new);
         // return redirect()->route('general-groomings.index')
         //     ->with('success', 'GeneralGrooming created successfully.');

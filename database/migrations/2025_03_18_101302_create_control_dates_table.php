@@ -18,8 +18,10 @@ return new class extends Migration
             $table->foreignId('pet_id')->nullable()->references('id')->on('pets');
 	        $table->foreignId('date_type_id')->nullable()->references('id')->on('date_types');
    	        $table->foreignId('status_date_id')->nullable()->references('id')->on('status_dates');
+            $table->foreignId('schedule_id')->nullable()->references('id')->on('schedules');
             $table->datetime('date');
             $table->foreignId('user_id')->nullable()->references('id')->on('users');
+            $table->boolean('status')->default(0);
             $table->timestamps();
             $table->softDeletes();
     

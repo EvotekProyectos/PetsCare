@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\VaccineCertificate;
 use App\Http\Requests\VaccineCertificateRequest;
 use App\Models\Appointment;
+use App\Models\ControlDate;
 use App\Models\Pet;
+use App\Models\Reception;
 use App\Models\Service;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Yajra\DataTables\Facades\DataTables;
@@ -44,6 +46,23 @@ class VaccineCertificateController extends Controller
     {
         $this->authorize("create", VaccineCertificate::class);
         $vaccine = VaccineCertificate::create($request->validated());
+
+        $reception = Reception::find($request->reception_id);
+        $next_application_date = $request->next_application_date;
+        $time_next_check = '08:00:00';
+
+         // Concatenar la fecha y la hora para lograr el formato de tipo datetime
+         $datetime = $next_application_date . ' ' . $time_next_check;
+
+        ControlDate::create([
+            'reception_id' => $request->reception_id,
+            'pet_id' => $reception ? $reception->pet_id : null,
+            'family_id' => $reception ? $reception->family_id : null,
+            'date_type_id' => 3,
+            'status_date_id' => 1,
+            'user_id' => $request->vet_id,
+            'date' => $datetime,
+        ]);
 
         return response()->json($vaccine);
     }

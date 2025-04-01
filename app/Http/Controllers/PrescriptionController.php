@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Prescription;
 use App\Http\Requests\PrescriptionRequest;
 use App\Models\Appointment;
+use App\Models\ControlDate;
+use App\Models\DateType;
+use App\Models\Log;
 use App\Models\Pet;
 use App\Models\Reason;
 use App\Models\Reception;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Client\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -55,14 +59,51 @@ class PrescriptionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
+
     public function store(PrescriptionRequest $request)
     {
-        $new = Prescription::create($request->validated());
         $this->authorize("create", Prescription::class);
+
+        $new = Prescription::create($request->validated());
 
         return response()->json($new);
     }
 
+
+    public function storeControlDate(PrescriptionRequest $request)
+    {
+        $this->authorize("create", Prescription::class);
+
+        $new = Prescription::create($request->validated());
+
+        $reception = $new->reception;
+        $pet = Pet::find($request->pet_id);
+
+        $day_next_check = $request->day_next_check;
+        $time_next_check = $request->time_next_check;
+
+        // Si no se define time_next_check, se asigna las 8:00 am
+        if (empty($time_next_check)) {
+            $time_next_check = '08:00:00';
+        }
+
+        // Concatenar la fecha y la hora para lograr el formato de tipo datetime
+        $datetime = $day_next_check . ' ' . $time_next_check;
+
+
+        ControlDate::create([
+            'reception' => $reception ? $reception->id : null,
+            'pet_id' => $request->pet_id,
+            'family_id' => $pet ? $pet->family_id : null,
+            'date_type_id' => $request->reason_next_check_id,
+            'status_date_id' => 1,
+            'user_id' => auth()->id(),
+            'date' => $datetime,
+        ]);
+
+        return response()->json($new);
+    }
     /**
      * Display the specified resource.
      */
