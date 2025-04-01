@@ -23,6 +23,7 @@ class DateTypeRequest extends FormRequest
     {
         return [
 			'name' => 'required|string',
+            'reason_id' => 'nullable|integer|exists:reasons,id'
         ];
     }
 }

@@ -1,6 +1,6 @@
 async function AddPrescription() {
     event.preventDefault();
-    let url = route('prescriptions.store');
+    let url = route('prescription.control-date');
     let form = new FormData(document.getElementById("NewPrescription"));
     let pet = await fetch(url, { method: "POST", body: form });
     let resp = await pet.json();

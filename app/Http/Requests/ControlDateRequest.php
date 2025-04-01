@@ -27,8 +27,10 @@ class ControlDateRequest extends FormRequest
             'pet_id' => 'nullable|integer|exists:pets,id',
             'date_type_id' => 'nullable|integer|exists:date_types,id',
             'status_type_id' => 'nullable|integer|exists:status_dates,id',
-			'date' => 'required',
+             'schedule_id' => 'nullable|integer|exists:schedules,id',
+			'date' => 'nullable',
             'user_id' => 'nullable|integer|exists:users,id',
+             'status' => 'nullable',
         ];
     }
 }

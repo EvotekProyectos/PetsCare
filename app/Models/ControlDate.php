@@ -42,7 +42,7 @@ class ControlDate extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_id', 'family_id', 'pet_id', 'date_type_id', 'status_date_id', 'date', 'user_id'];
+    protected $fillable = ['reception_id', 'family_id', 'pet_id', 'date_type_id', 'status_date_id', 'date', 'user_id', 'schedule_id', 'status'];
 
 
     /**
@@ -91,6 +91,15 @@ class ControlDate extends Model
     public function user()
     {
         return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
+    }
+    
+       
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function schedule()
+    {
+        return $this->belongsTo(\App\Models\Schedule::class, 'schedule_id', 'id');
     }
     
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use App\Http\Requests\AppointmentRequest;
 use App\Models\AppointmentService;
+use App\Models\ControlDate;
 use App\Models\Folio;
 use App\Models\GenericModel;
 use App\Models\PaymentOrder;
@@ -57,12 +58,34 @@ class AppointmentController extends Controller
      */
     public function store(AppointmentRequest $request)
     {
+        $this->authorize("create", Appointment::class);
+
         $new  = Appointment::create($request->validated());
         ReceptionStatusHistory::create([
             'reception_id' => $request->reception_id,
             'attention_status_id' => 1,
         ]);
-        $this->authorize("create", Appointment::class);
+
+        $reception = Reception::find($request->reception_id);
+        $day_next_check = $request->day_next_check;
+        $time_next_check = $request->time_next_check;
+
+        // Si no se define time_next_check, se asigna las 8:00 am
+        if (empty($time_next_check)) {
+            $time_next_check = '08:00:00';
+        }
+        // Concatenar la fecha y la hora para lograr el formato de tipo datetime
+        $datetime = $day_next_check . ' ' . $time_next_check;
+
+        ControlDate::create([
+            'reception_id' => $request->reception_id,
+            'pet_id' => $reception ? $reception->pet_id : null,
+            'family_id' => $reception ? $reception->family_id : null,
+            'date_type_id' => $request->reason_next_check_id,
+            'status_date_id' => 1,
+            'user_id' => auth()->id(),
+            'date' => $datetime,
+        ]);
 
         return response()->json($new);
 

@@ -25,7 +25,7 @@
         </div>
 
         
-        <div class="form-group mb-2 mb20">
+        {{-- <div class="form-group mb-2 mb20">
             <label for="family_id" class="form-label">FAMILIA/PROPIETARIO</label>
                 <div class="input-group mb-3">
                     <span class="input-group-text bg-primary-subtle" id="basic-addon1">
@@ -62,9 +62,51 @@
                 @endforeach
             </select>
             {!! $errors->first('pet_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-        </div>
+        </div> --}}
     </div>
 
+    <div class="form-group mb-2 mb20">
+        <label for="family_id" class="form-label">FAMILIA/PROPIETARIO</label>
+        <div class="input-group mb-3">
+            <span class="input-group-text bg-primary-subtle" id="basic-addon1">
+                <span class="fluent-mdl2--family text-primary"></span>
+            </span>
+            <select name="family_id" class="form-control select2 @error('family_id') is-invalid @enderror"
+                id="family_id" placeholder="Family Id" onchange="getpets(this.value)" style="width: 100%;"
+                {{ isset($controlDate) ? 'disabled' : '' }}>  <!-- Se deshabilita solo en edición -->
+                <option value="">Selecciona la familia</option>
+                @foreach ($families as $family)
+                    <option value="{{ $family->id }}" 
+                        {{ old('family_id', $controlDate?->family_id) == $family->id ? 'selected' : '' }}>
+                        {{ $family->name }} {{ $family->phone }}
+                    </option>
+                @endforeach
+            </select>        
+            {!! $errors->first('family_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+        </div>
+    </div>
+    
+    <div class="form-group mb-2 mb20">
+        <label for="pet_id" class="form-label">MASCOTA</label>
+        <div class="input-group mb-3">
+            <span class="input-group-text bg-primary-subtle" id="basic-addon2">
+                <span class="ic--twotone-pets"></span>
+            </span>
+            <select name="pet_id" class="form-control select2 @error('pet_id') is-invalid @enderror"
+                id="pet_id" placeholder="Pet Id" onchange="getFamily(this.value)" style="width: 100%;"
+                {{ isset($controlDate) ? 'disabled' : '' }}>  <!-- Se deshabilita solo en edición -->
+                <option value="">Selecciona la mascota</option>
+                @foreach ($pets as $pet)
+                    <option value="{{ $pet->id }}"
+                        {{ old('pet_id', $controlDate?->pet_id) == $pet->id ? 'selected' : '' }}>
+                        {{ $pet->name }} #{{ $pet->number_chip }}
+                    </option>
+                @endforeach
+            </select>
+            {!! $errors->first('pet_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+        </div>
+    </div>
+    
         <div class="form-group mb-2 mb20">
             <label for="surgical_procedures_type_id" class="form-label">TIPO DE CITA</label>
             <div class="input-group mb-3">

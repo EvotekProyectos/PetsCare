@@ -30,8 +30,14 @@ class DateType extends Model
      *
      * @var array
      */
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'reason_id'];
 
-
+        /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function reason()
+    {
+        return $this->belongsTo(\App\Models\Reason::class, 'reason_id', 'id');
+    }    
 
 }

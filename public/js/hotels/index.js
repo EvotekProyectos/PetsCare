@@ -102,18 +102,18 @@ $(document).ready(function () {
         },
       },
     ],
-    createdRow: function (row, data) {
-      const today = new Date(); // Fecha actual
-      const exitDate = new Date(data.reception.exit_date); // Convertir exit_date a fecha
-      const ready = new(data.hotel.finish_date);
   
-      if (data.extension === 1) {
-          $(row).addClass('table-warning');
-      } else if (exitDate < today) {
-          $(row).addClass('table-danger'); // Rojo si exit_date es menor a hoy
-      }
-  }
+     createdRow: function (row, data) {
+       const today = new Date(); // Fecha actual
+       const exitDate = new Date(data.reception.exit_date); // Convertir exit_date a fecha
+       //const ready = new(data.hotel.finish_date);
   
+       if (data.extension === 1) {
+           $(row).addClass('table-warning');
+       } else if (exitDate < today) {
+           $(row).addClass('table-danger'); // Rojo si exit_date es menor a hoy
+       }
+   }
   });
 });
 
