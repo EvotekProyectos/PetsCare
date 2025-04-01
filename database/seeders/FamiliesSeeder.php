@@ -16,6 +16,8 @@ class FamiliesSeeder extends Seeder
         $families = [
             ["name" => 'Alamilla Valdes', "phone" => "8442477138", "email" => "alealamilla27@gmail.com",
         "address" => "Saltillo, La Aurora", "contact_name" => "Lily", "contact_number" => "8442477148"],
+        ["name" => 'Lopez Armendariz', "phone" => "8443922106", "email" => "estrella.armendariz@evotek.com.mx",
+        "address" => "Calle Azel #1254", "contact_name" => "Estrella", "contact_number" => "8443922106"],
         ];
 
         foreach ($families as $fam) {

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Assignment extends Model
 {
     
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
 
     protected $perPage = 20;

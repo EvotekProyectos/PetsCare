@@ -79,6 +79,13 @@
                         </a>
                     </li>
 
+                    {{-- <li>
+                        <a href="{{ route('control-dates.index') }}" class="ms-2">
+                            <i class="lucide--calendar-check"></i>
+                           Citas
+                        </a>
+                    </li> --}}
+                    
                     <li class="@yield('assignments')">
                         <a href="{{ route('assignment.index') }}" class=" ms-2">
                             <i class="fas fa-hand-holding-heart"></i>
@@ -140,6 +147,12 @@
                         <a href="{{ route('budgets.index') }}" class=" ms-2">
                             <span class="fluent--receipt-money-16-regular"></span>
                             Presupuestos
+                        </a>
+                    </li>
+                    <li class="@yield('advance-payments')">
+                        <a href="{{ route('advance-payments.index') }}" class=" ms-2">
+                            <span class="lets-icons--paper-fill-black"></span>
+                            Anticipos
                         </a>
                     </li>
                     <li class="@yield('families')">

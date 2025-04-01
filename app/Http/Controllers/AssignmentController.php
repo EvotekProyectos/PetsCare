@@ -108,6 +108,7 @@ class AssignmentController extends Controller
     }
 
     public function delivery() {
+        $this->authorize('viewAny', 'delivery');
         $now = Carbon::now();
         if (request()->ajax()) {
             $datas = Reception::with('pet','vet','statusGrooming.groomingStatus', 'grooming')

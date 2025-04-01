@@ -9,21 +9,34 @@
         <div class="">
             <div class="col-md-12">
 
-                <div class="card card-default">
-                    <div class="card-header">
-                        <span class="card-title">{{ __('Update') }} Control Date</span>
+                <div class="card bg-primary-soft border-0 p-3">
+                    <div class="card-header bg-transparent border-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4 id="card_title" class="text-primary text-uppercase">
+                                <i class="fa fa-calendar-check"></i> EDITAR CITA
+                            </h4>
+                        </div>
                     </div>
-                    <div class="card-body bg-white">
-                        <form method="POST" action="{{ route('control-dates.update', $controlDate->id) }}"  role="form" enctype="multipart/form-data">
-                            {{ method_field('PATCH') }}
-                            @csrf
 
-                            @include('control-date.form')
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <form method="POST" action="{{ route('control-dates.update', $controlDate->id) }}"  role="form" enctype="multipart/form-data">
+                                    {{ method_field('PATCH') }}
+                                    @csrf
 
-                        </form>
+                                    @include('control-date.form')
+
+                                </form>
+                            </div> 
+                        </div> 
                     </div>
                 </div>
             </div>
         </div>
     </section>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/control_dates/create.js') }}" defer></script>
+@endpush

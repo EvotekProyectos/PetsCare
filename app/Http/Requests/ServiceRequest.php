@@ -22,9 +22,7 @@ class ServiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'vaccine' => 'string',
-			'deworming_internal' => 'string',
-			'deworming_external' => 'string',
+			'name' => 'required|string',
         ];
     }
 }

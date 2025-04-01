@@ -53,7 +53,7 @@ class ReasonPolicy
      */
     public function restore(User $user, Reason $reason): bool
     {
-        //
+        return false;
     }
 
     /**
@@ -61,6 +61,6 @@ class ReasonPolicy
      */
     public function forceDelete(User $user, Reason $reason): bool
     {
-        //
+        return false;
     }
 }

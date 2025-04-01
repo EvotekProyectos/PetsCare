@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -19,7 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class DateType extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
 
     protected $perPage = 20;
@@ -29,8 +30,14 @@ class DateType extends Model
      *
      * @var array
      */
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'reason_id'];
 
-
+        /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function reason()
+    {
+        return $this->belongsTo(\App\Models\Reason::class, 'reason_id', 'id');
+    }    
 
 }

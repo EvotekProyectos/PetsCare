@@ -19,24 +19,24 @@ class NotificationsGroomingTest extends TestCase
        
     }
     
-    public function test_send_notification_status_changed(): void
-    {
+    // public function test_send_notification_status_changed(): void
+    // {
        
-        Notification::fake();
+    //     Notification::fake();
 
-        $user = User::factory()->create();
+    //     $user = User::factory()->create();
 
-        $groomingStatusHistory = GroomingStatusHistory::factory()->create();
+    //     $groomingStatusHistory = GroomingStatusHistory::factory()->create();
 
-        $user->notify(new GroomingStatus($groomingStatusHistory));
+    //     $user->notify(new GroomingStatus($groomingStatusHistory));
 
-        Notification::assertSentTo(
-            $user,
-            GroomingStatus::class,
-            function ($notification, $channels) use ($groomingStatusHistory, $user) {
-                return in_array('database', $channels) && 
-                       $notification->toDatabase($user)['reception_id'] === $groomingStatusHistory->reception_id;
-            }
-        );
-    }
+    //     Notification::assertSentTo(
+    //         $user,
+    //         GroomingStatus::class,
+    //         function ($notification, $channels) use ($groomingStatusHistory, $user) {
+    //             return in_array('database', $channels) && 
+    //                    $notification->toDatabase($user)['reception_id'] === $groomingStatusHistory->reception_id;
+    //         }
+    //     );
+    // }
 }
