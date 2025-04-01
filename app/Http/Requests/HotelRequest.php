@@ -33,6 +33,7 @@ class HotelRequest extends FormRequest
             'finish_date' => 'nullable',
             'video' => 'nullable',
             'status' => 'nullable',
+            'folio' => 'nullable|integer',
             'cubicle_id' => 'nullable|integer|exists:cubicles,id',
             
         ];

@@ -25,6 +25,7 @@ return new class extends Migration
             $table->dateTime('finish_date')->nullable();
             $table->boolean('video')->default(0);
             $table->boolean('status')->nullable();
+            $table->integer('folio');
             $table->timestamps();
             $table->softDeletes();
         });
