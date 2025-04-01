@@ -365,7 +365,7 @@ Route::group(['middleware' => ['auth']], function () {
     // Route::get('test/pdf/{id}', [GroomingController::class, 'generatePdf'])->name('test.pdf');
     Route::get('groomings/pdf/delivery/{id}', [GeneralGroomingController::class, 'deliverytest'])->name('pdf.delivery');
     Route::get('/delivery-service/grooming/{id}', [GeneralGroomingController::class, 'deliverydata'])->name('delivery.data');
-    Route::get('general-groomings/folios/{date}', [GeneralGroomingController::class, 'folio'])->name('general-groomings.folio');
+    Route::get('general-groomings/folios', [GeneralGroomingController::class, 'folio'])->name('general-groomings.folio');
     Route::resource('general-groomings', GeneralGroomingController::class);
 
     //Groomings
@@ -471,7 +471,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/control-dates/get-events', [ControlDateController::class, 'getEvents'])->name('control-dates.getEvents');
     Route::get('/control-dates/schedules/{id}', [ControlDateController::class, 'schedules'])->name('schedules.date');
     Route::resource('control-dates', ControlDateController::class);
-    
+
     //Advance Payments 
     Route::get('/advance-payments/receipt/{id}', [AdvancePaymentController::class, 'pdf'])->name('advance-payments.pdf');
     Route::get('/advance-payments/generate-reference/{id}', [AdvancePaymentController::class, 'reference'])->name('advance-payments.refrence');
