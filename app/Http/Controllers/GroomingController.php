@@ -319,7 +319,6 @@ class GroomingController extends Controller
 
     public function history($id)
     {
-        
         $reception = Reception::with('pet', 'admissionType', 'area', 'statusGrooming.groomingStatus', 'grooming')->findorfail($id);
         return view('grooming.history', compact('reception'));
     }
