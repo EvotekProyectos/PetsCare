@@ -149,6 +149,12 @@
                             Presupuestos
                         </a>
                     </li>
+                    <li class="@yield('advance-payments')">
+                        <a href="{{ route('advance-payments.index') }}" class=" ms-2">
+                            <span class="lets-icons--paper-fill-black"></span>
+                            Anticipos
+                        </a>
+                    </li>
                     <li class="@yield('families')">
                         <a href="{{ route('families.index') }}" class=" ms-2">
                             <span class="fluent-mdl2--family"></span>

@@ -44,8 +44,8 @@ class GeneralGroomingController extends Controller
      */
     public function store(GeneralGroomingRequest $request)
     {
-        $date = $request->created_at;
-        $newFolio = $this->folio($date)->getData()->folio;
+        // $date = $request->created_at;
+        $newFolio = $this->folio()->getData()->folio;
         
         $data = $request->validated();
         $data['folio'] = $newFolio;
@@ -57,7 +57,7 @@ class GeneralGroomingController extends Controller
             'reception_id' => $request->reception_id,
             'pet_id' => $reception ? $reception->pet_id : null,
             'family_id' => $reception ? $reception->family_id : null,
-            'date_type_id' => 7,
+            'date_type_id' => 9,
             'status_date_id' => 1,
             'user_id' => auth()->id(),
             'date' => $request->next_service,
@@ -109,14 +109,13 @@ class GeneralGroomingController extends Controller
             ->with('success', 'GeneralGrooming deleted successfully');
     }
 
-    public function folio($date)
+    public function folio()
     {
-        $date = Carbon::parse($date)->toDateString();
-        $lastRecord = GeneralGrooming::whereDate('created_at', $date)
-            ->orderBy('folio', 'desc')
+        // $date = Carbon::parse($date)->toDateString();
+        $lastRecord = GeneralGrooming::orderBy('folio', 'desc')
             ->first();
 
-        $newFolio = $lastRecord ? $lastRecord->folio + 1 : 1;
+        $newFolio = $lastRecord ? (($lastRecord->folio % 200) + 1) : 1;
 
         return response()->json(['folio' => $newFolio]);
     }

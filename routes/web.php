@@ -34,6 +34,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\AdmissionTypeController;
+use App\Http\Controllers\AdvancePaymentController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ReceptionTypeController;
 use App\Http\Controllers\AttentionStatusController;
@@ -364,7 +365,7 @@ Route::group(['middleware' => ['auth']], function () {
     // Route::get('test/pdf/{id}', [GroomingController::class, 'generatePdf'])->name('test.pdf');
     Route::get('groomings/pdf/delivery/{id}', [GeneralGroomingController::class, 'deliverytest'])->name('pdf.delivery');
     Route::get('/delivery-service/grooming/{id}', [GeneralGroomingController::class, 'deliverydata'])->name('delivery.data');
-    Route::get('general-groomings/folios/{date}', [GeneralGroomingController::class, 'folio'])->name('general-groomings.folio');
+    Route::get('general-groomings/folios', [GeneralGroomingController::class, 'folio'])->name('general-groomings.folio');
     Route::resource('general-groomings', GeneralGroomingController::class);
 
     //Groomings
@@ -475,7 +476,15 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('control-dates', ControlDateController::class);
 
-
+    //Advance Payments 
+    Route::get('/advance-payments/receipt/{id}', [AdvancePaymentController::class, 'pdf'])->name('advance-payments.pdf');
+    Route::get('/advance-payments/generate-reference/{id}', [AdvancePaymentController::class, 'reference'])->name('advance-payments.refrence');
+    Route::get('/advance-payments/list', [AdvancePaymentController::class, 'list'])->name('advance-payments.list');
+    Route::get('/advance-payments/add/{id}', [AdvancePaymentController::class, 'add'])->name('advance-payments.add');
+    Route::resource('advance-payments', AdvancePaymentController::class);
 });
+
+
+
 
  

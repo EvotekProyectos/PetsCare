@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\AdmissionType;
+use App\Models\AdvancePayment;
 use App\Models\Appointment;
 use App\Models\Area;
 use App\Models\AttentionStatus;
@@ -44,6 +45,7 @@ use App\Models\TagType;
 use App\Models\User;
 use App\Models\VaccineCertificate;
 use App\Observers\AdmissionTypeObserver;
+use App\Observers\AdvancePaymentObserver;
 use App\Observers\AppointmentObserver;
 use App\Observers\AttentionStatusObserver;
 use App\Observers\CmTypeObserver;
@@ -143,6 +145,7 @@ class EventServiceProvider extends ServiceProvider
         SurgerySchedule::observe(SurgeryScheduleObserver::class);
         Hotel::observe(HotelObserver::class);
         ControlDate::observe(ControlDateObserver::class);
+        AdvancePayment::observe(AdvancePaymentObserver::class);
         
     }
 

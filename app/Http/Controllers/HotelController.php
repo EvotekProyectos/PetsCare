@@ -157,9 +157,14 @@ class HotelController extends Controller
             $cubicle->save();
         }
 
+        //Obtener folio consecutivo correspondiente y asignarlo en el form 
+        $newFolio = $this->folio()->getData()->folio;
+        $validatedData['folio'] = $newFolio;
+        
+
         // Asignar el número de días calculado antes de crear el registro en la base de datos
         $validatedData['number_days'] = $days;
-
+        // dd($validatedData);
         $hotel = Hotel::create($validatedData);
         return response()->json($hotel);
     }

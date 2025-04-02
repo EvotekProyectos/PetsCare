@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -29,7 +30,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Hotel extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
 
     protected $perPage = 20;
@@ -39,7 +40,7 @@ class Hotel extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_id', 'food', 'objects', 'observations', 'number_days', 'extension','finish_date','video','status','service_type_id', 'cubicle_id'];
+    protected $fillable = ['reception_id', 'food', 'objects', 'observations', 'number_days', 'extension','finish_date','video','status', 'folio','service_type_id', 'cubicle_id'];
 
 
     /**
