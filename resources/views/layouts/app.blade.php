@@ -79,12 +79,12 @@
                         </a>
                     </li>
 
-                    {{-- <li>
+                    <li>
                         <a href="{{ route('control-dates.index') }}" class="ms-2">
-                            <i class="lucide--calendar-check"></i>
+                            <i class="ep--calendar"></i>
                            Citas
                         </a>
-                    </li> --}}
+                    </li> 
                     
                     <li class="@yield('assignments')">
                         <a href="{{ route('assignment.index') }}" class=" ms-2">

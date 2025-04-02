@@ -262,6 +262,11 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'editar pensiones', 'type' => 'Hotel']);
         Permission::create(['name' => 'eliminar pensiones', 'type' => 'Hotel']);
         
+        //CONTROL DATES
+        Permission::create(['name' => 'ver panel citas', 'type' => 'Citas']);
+        Permission::create(['name' => 'crear citas', 'type' => 'Citas']);
+        Permission::create(['name' => 'editar citas', 'type' => 'Citas']);
+        Permission::create(['name' => 'eliminar citas', 'type' => 'Citas']);
 
         // roles
         $role = Role::create(['name' => 'administrador']);

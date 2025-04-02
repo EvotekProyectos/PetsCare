@@ -469,6 +469,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('control-dates/updateStatus/{id}', [ControlDateController::class, 'updateStatus'])->name('control-dates.updateStatus');
     Route::get('/control-dates/get-events', [ControlDateController::class, 'getEvents'])->name('control-dates.getEvents');
     Route::get('/control-dates/schedules/{id}', [ControlDateController::class, 'schedules'])->name('schedules.date');
+    Route::get('/control-dates/confirmed', [ControlDateController::class, 'listConfirmed'])->name('confirmed.date');
+    Route::post('control-dates/updateAttend/{id}', [ControlDateController::class, 'updateAttend'])->name('control-dates.attend');
+    Route::post('/validate-schedule', [ControlDateController::class, 'validateSchedule'])->name('validate.schedule');
+
     Route::resource('control-dates', ControlDateController::class);
 
 

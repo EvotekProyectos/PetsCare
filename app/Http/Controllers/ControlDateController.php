@@ -8,6 +8,7 @@ use App\Models\DateType;
 use App\Models\Family;
 use App\Models\Pet;
 use App\Models\Schedule;
+use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Http\Request;
 
@@ -22,6 +23,7 @@ class ControlDateController extends Controller
      */
     public function index()
     {
+        $this->authorize("viewAny", ControlDate::class);
         $controlDates = ControlDate::paginate();
 
         return view('control-date.index', compact('controlDates'))
@@ -33,20 +35,22 @@ class ControlDateController extends Controller
      */
     public function create()
     {
+        $this->authorize("create", ControlDate::class);
         $controlDate = new ControlDate();
         $families = Family::all();
-        $pets = Pet::all(); 
+        $pets = Pet::all();
         $types = DateType::all();
-        $schedules =Schedule::all();
-        return view('control-date.create', compact('controlDate' ,'families', 'pets', 'types', 'schedules'));
+        $schedules = Schedule::all();
+        return view('control-date.create', compact('controlDate', 'families', 'pets', 'types', 'schedules'));
     }
-   
+
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(ControlDateRequest $request)
     {
+        $this->authorize("create", ControlDate::class);
         $data = $request->validated();
         $data['status_date_id'] = 1;
         $data['user_id'] = auth()->id();
@@ -72,10 +76,11 @@ class ControlDateController extends Controller
     public function edit($id)
     {
         $controlDate = ControlDate::find($id);
+        $this->authorize("update", $controlDate);
         $families = Family::all();
-        $pets = Pet::all(); 
+        $pets = Pet::all();
         $types = DateType::all();
-        $schedules =Schedule::all();
+        $schedules = Schedule::all();
 
         return view('control-date.edit', compact('controlDate', 'families', 'pets', 'types', 'schedules'));
     }
@@ -84,130 +89,172 @@ class ControlDateController extends Controller
      * Update the specified resource in storage.
      */
     public function update(ControlDateRequest $request, ControlDate $controlDate)
-    {
+    {   
+        $this->authorize("update", $controlDate);
         $controlDate->update($request->validated());
-
-        return redirect()->route('control-dates.index')
-            ->with('success', 'ControlDate updated successfully');
-    }
-
-    public function destroy($id)
-    {
-        ControlDate::find($id)->delete();
 
         return redirect()->route('control-dates.index')
             ->with('success', 'Cita actualizada correctamente');
     }
 
-    public function list(){
-        $dates = ControlDate::with('family', 'pet', 'user', 'dateType','reception','statusDate' )->get();
+    public function destroy($id)
+    {
+        $controlDate = ControlDate::find($id);
+        $this->authorize("delete", $controlDate);
+        $controlDate->delete();
+
+        return response()->json($controlDate);
+    }
+
+    public function list()
+    {
+        $dates = ControlDate::with('family', 'pet', 'user', 'dateType', 'reception', 'statusDate')->get();
         return DataTables::of($dates)->make(true);
     }
 
+
+    public function calendar()
+    {
+        $dates = ControlDate::with(['reception'])
+            ->get();
+
+
+        return view('control-date.calendar', compact('dates'));
+    }
+
+    public function listConfirmed()
+    {
+        $allEvents = ControlDate::with('family', 'pet', 'dateType', 'reception', 'schedule', 'schedule.user')
+            ->whereHas('statusDate', function ($query) {
+                $query->where('id', 3);
+            })
+            ->get();
+
+        return response()->json($allEvents);
+    }
+
+    public function getEvents()
+    {
+
+        // Obtener los eventos con las relaciones necesarias
+        $allEvents = ControlDate::with('family', 'pet', 'dateType', 'reception', 'schedule', 'schedule.user')
+            ->whereHas('statusDate', function ($query) {
+                $query->where('id', 3);
+            })
+            ->get();
+        $events = [];
+
+        foreach ($allEvents as $event) {
+
+            $events[] = [
+
+                'title' => ($event->dateType->name) . ' para ' . ($event->pet->name ?? 'Sin mascota'),
+                'mvz' => $event->schedule->user->name ?? '',
+                //'pet' => ($event->reception->pet->name ?? 'Sin mascota') . ' Collar:' . ($event->reception->num ?? 'Sin collar'),
+                //  'start' => $event->cubicle->start_date,
+                //  'end' => $event->cubicle->end_date,
+                'start' => $event->date ?? '',
+                //'status'=> $event->statusDate->name ?? '',
+                //'end' => $event->extension == 0 ? ($event->reception->exit_date ?? '') : ($event->cubicle->end_date ?? ''),
+
+                'backgroundColor' => '#8aef6d',
+                'borderColor' => '#8aef6d',
+                'textColor' => '#000000', // Letra en negro
+
+            ];
+        }
+        // Retornar la respuesta como JSON
+        return response()->json($events);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        // Validar la entrada
+        $request->validate([
+            'status_date_id' => 'required|integer|in:2,3',
+            'schedule_id' => 'required'  // Aceptamos solo los valores 2 y 3
+        ]);
+
+        // Buscar la cita por su ID
+        $controlDate = ControlDate::find($id);
+
+        // Actualizar el status_date_id
+        $controlDate->status_date_id = $request->status_date_id;
+        $controlDate->schedule_id = $request->schedule_id ?? null;
+        $controlDate->save();  // Guardar los cambios en la base de datos
+
+        // Retornar una respuesta exitosa
+        return response()->json(['success' => true, 'message' => 'Estado de la cita actualizado correctamente.']);
+    }
+
     public function updateDate(Request $request, $id)
-{
-    // Validar que se reciba una fecha válida
-    $request->validate([
-        'date' => 'required|date'
-    ]);
+    {
+        $request->validate([
+            'date' => 'required|date',
+        ]);
 
-    // Buscar la cita por ID y actualizar la fecha
-    $controlDate = ControlDate::find($id);
+        $controlDate = ControlDate::find($id);
+        $controlDate->date = $request->date;
+        $controlDate->status_date_id = 2;  // Se cambia a 2 automáticamente
+        $controlDate->save();
 
-    if (!$controlDate) {
-        return response()->json(['success' => false, 'message' => 'Cita no encontrada'], 404);
+        return response()->json(['success' => true, 'message' => 'Fecha actualizada correctamente.']);
     }
 
-    $controlDate->date = $request->date;
-    $controlDate->save();
 
-    return response()->json(['success' => true, 'message' => 'Fecha actualizada correctamente']);
-}
+    public function schedules($id)
+    {
+        // Buscar la cita en control_dates
+        $controlDate = ControlDate::find($id);
 
-public function calendar()
-{
-    $dates = ControlDate::with(['reception'])
-        ->get();
+        // Verificar si existe la cita
+        if (!$controlDate) {
+            return response()->json(['error' => 'Cita no encontrada'], 404);
+        }
 
+        // Obtener la fecha de la cita
+        $date = $controlDate->date;
 
-    return view('control-date.calendar', compact('dates'));
-}
+        // Buscar los schedules que contengan esa fecha en su rango
+        $schedules = Schedule::with('user', 'coverArea')->where('begin', '<=', $date)
+            ->where('end', '>=', $date)
+            ->get();
 
-public function getEvents()
-{
-
-    // Obtener los eventos con las relaciones necesarias
-    $allEvents = ControlDate::with('family', 'pet', 'dateType', 'reception')
-    ->whereHas('statusDate', function ($query) {
-        $query->where('id', 3); // Filtramos por statusDate = 1
-    })
-    ->get();
-    $events = [];
-
-    foreach ($allEvents as $event) {
-
-        $events[] = [
-
-            'title' => ($event->dateType->name) . ' para ' . ($event->pet->name ?? 'Sin mascota'),
-            //'pet' => ($event->reception->pet->name ?? 'Sin mascota') . ' Collar:' . ($event->reception->num ?? 'Sin collar'),
-            //  'start' => $event->cubicle->start_date,
-            //  'end' => $event->cubicle->end_date,
-            'start' => $event->date ?? '',
-            //'status'=> $event->statusDate->name ?? '',
-            //'end' => $event->extension == 0 ? ($event->reception->exit_date ?? '') : ($event->cubicle->end_date ?? ''),
-
-            'backgroundColor' =>'#8aef6d',
-            'borderColor' => '#8aef6d',
-            'textColor' => '#000000', // Letra en negro
-
-        ];
-    }
-    // Retornar la respuesta como JSON
-    return response()->json($events);
-}
-
-public function updateStatus(Request $request, $id)
-{
-    // Validar la entrada
-    $request->validate([
-        'status_date_id' => 'required|integer|in:2,3',  // Aceptamos solo los valores 2 y 3
-    ]);
-
-    // Buscar la cita por su ID
-    $controlDate = ControlDate::find($id);
-
-    // Verificar si la cita existe
-    if (!$controlDate) {
-        return response()->json(['success' => false, 'message' => 'Cita no encontrada.'], 404);
+        return response()->json($schedules);
     }
 
-    // Actualizar el status_date_id
-    $controlDate->status_date_id = $request->status_date_id;
-    $controlDate->save();  // Guardar los cambios en la base de datos
+    public function updateAttend(Request $request, $id)
+    {
+        // Validar la entrada
+        $request->validate([
+            'status' => 'required'
+        ]);
 
-    // Retornar una respuesta exitosa
-    return response()->json(['success' => true, 'message' => 'Estado de la cita actualizado correctamente.']);
-}
+        // Buscar la cita y actualizar el estado
+        $controlDate = ControlDate::find($id);
+        if (!$controlDate) {
+            return response()->json(['success' => false, 'message' => 'Cita no encontrada.'], 404);
+        }
 
-public function schedules($id)
-{
-    // Buscar la cita en control_dates
-    $controlDate = ControlDate::find($id);
+        $controlDate->status = $request->status;
+        $controlDate->save();
 
-    // Verificar si existe la cita
-    if (!$controlDate) {
-        return response()->json(['error' => 'Cita no encontrada'], 404);
+        return response()->json(['success' => true, 'message' => 'Estado de la cita actualizado correctamente.']);
     }
-
-    // Obtener la fecha de la cita
-    $date = $controlDate->date;
-
-    // Buscar los schedules que contengan esa fecha en su rango
-    $schedules = Schedule::with('user', 'coverArea')->where('begin', '<=', $date)
-                         ->where('end', '>=', $date)
-                         ->get();
-
-    return response()->json($schedules);
-}
-
+    public function validateSchedule(Request $request)
+    {
+        $selectedDate = Carbon::parse($request->date);
+    
+        $startRange = (clone $selectedDate)->subMinutes(30);
+        $endRange = (clone $selectedDate)->addMinutes(30);
+    
+        $conflict = ControlDate::where('status_date_id', 3)
+            ->whereBetween('date', [$startRange, $endRange])
+            ->exists();
+    
+        return response()->json(['conflict' => $conflict]);
+    }
+    
+    
+    
 }

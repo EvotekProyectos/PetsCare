@@ -145,72 +145,85 @@ async function confirmed(id) {
     });
 
     if (result.isConfirmed) {
-        let url = route('control-dates.updateStatus', id);
         try {
+            
+            let url = route("schedules.date", id);
             const response = await fetch(url, {
-                method: "POST",
+                method: "GET",
                 headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
-                },
-                body: JSON.stringify({ status_date_id: 3 })
+                    "Content-Type": "application/json"
+                }
             });
 
             const data = await response.json();
 
-            if (data.success) {
-                let url = route('schedules.date', id)
-                fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.length > 0) {
-              
-                        let options = data.map(schedule => 
-                            `<option value="${schedule.id}">${schedule.user.name}-${schedule.cover_area.name}</option>`
-                        ).join('');
-        
+            if (data.length > 0) {
+                let options = data
+                    .map(
+                        (schedule) =>
+                            `<option value="${schedule.id}">${schedule.user.name} - ${schedule.cover_area.name}</option>`
+                    )
+                    .join("");
+
                 // Mostrar SweetAlert con el select
-                Swal.fire({
-                    title: 'Selecciona un médico',
+                const { value: selectedScheduleId } = await
+                 Swal.fire({
+                    title: "Selecciona un médico",
                     html: `
+                        <label>Solo se muestran aquellos que están en turno.</label>
                         <select id="scheduleSelect" class="swal2-input">
                             ${options}
                         </select>
                     `,
                     showCancelButton: true,
-                    confirmButtonText: 'Aceptar',
+                    confirmButtonText: "Aceptar",
                     preConfirm: () => {
-                        let selectedSchedule = document.getElementById('scheduleSelect').value;
+                        let selectedSchedule = document.getElementById("scheduleSelect").value;
+
+                        if (!selectedSchedule) {
+                            Swal.showValidationMessage("Debes seleccionar un médico.");
+                        }
                         return selectedSchedule;
-                    }
-                }).then(result => {
-                    if (result.isConfirmed) {
-                        let selectedScheduleId = result.value;
-                    }
+                    },
                 });
 
+                if (selectedScheduleId) {
+                    let updateUrl = route("control-dates.updateStatus", id);
+                    const updateResponse = await fetch(updateUrl, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": document
+                                .querySelector('meta[name="csrf-token"]')
+                                .getAttribute("content"),
+                        },
+                        body: JSON.stringify({
+                            status_date_id: 3,
+                            schedule_id: selectedScheduleId,
+                        }),
+                    });
+
+                    const updateData = await updateResponse.json();
+
+                    if (updateData.success) {
+                        Swal.fire("¡Éxito!", "Cita confirmada correctamente.", "success")
+                        .then(() => {
+                            location.reload();  
+                        });
+                    } else {
+                        Swal.fire("Error", "No se pudo actualizar.", "error");
+                    }
+                }
             } else {
                 Swal.fire({
-                    icon: 'warning',
-                    title: 'No hay horarios disponibles',
-                    text: 'Intenta con otra fecha.'
+                    icon: "warning",
+                    title: "No hay horarios disponibles",
+                    text: "Intenta con otra fecha.",
                 });
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error al obtener los horarios',
-                text: 'Inténtalo de nuevo más tarde.'
-            });
-        });
-            } else {
-                Swal.fire("Error", data.message, "error");
-            }
         } catch (error) {
-            Swal.fire("Error", "Hubo un problema al actualizar el estado de la cita.", "error");
-            console.error(error);
+            console.error("Error:", error);
+            Swal.fire("Error", "Hubo un problema con la solicitud.", "error");
         }
     } else {
         // Si se elige reagendar, mostrar input de fecha
@@ -229,12 +242,12 @@ async function confirmed(id) {
                     Swal.showValidationMessage("Por favor, selecciona una fecha y hora.");
                 }
                 return fechaSeleccionada;
-            }
+            },
         });
 
         if (nuevaFecha) {
             let url = route('control-dates.updateDate', id);
-            // Enviar la nueva fecha al servidor usando AJAX
+            
             try {
                 const response = await fetch(url, {
                     method: "POST",
@@ -242,14 +255,16 @@ async function confirmed(id) {
                         "Content-Type": "application/json",
                         "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
                     },
-                    body: JSON.stringify({ date: nuevaFecha, status_date_id: 2 }) // Se cambia el status a 3 cuando se reagenda
+                    body: JSON.stringify({ date: nuevaFecha }) 
                 });
-
+        
                 const data = await response.json();
-
+        
                 if (data.success) {
-                    Swal.fire("¡Éxito!", "La fecha se han actualizado correctamente.", "success");
-                    // window.open(route('dates.calendar'));
+                    Swal.fire("¡Éxito!", "La fecha se ha actualizado correctamente.", "success")
+                    .then(() => {
+                        location.reload(); 
+                    });
                 } else {
                     Swal.fire("Error", data.message, "error");
                 }
@@ -258,34 +273,7 @@ async function confirmed(id) {
                 console.error(error);
             }
         }
+        
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    const calendarEl = document.getElementById('calendar')
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-        headerToolbar:{
-            left: 'prev,next,today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        initialView: 'timeGridWeek',
-        timeZone: 'GMT',
-        locale: 'es',
-        events: route('control-dates.getEvents'),
-        eventClick: function (info) {
-            Swal.fire({
-                title: 'Detalle de la cita',
-                html: `
-                     ${info.event.title} 
-                     <br>
-                    <strong>Horario:</strong> ${info.event.start?.toISOString() || 'Sin horario'}<br>
-                    `,
-                icon: 'info',
-                confirmButtonText: 'Cerrar',
-            });
-        },
-        
-    });
-    calendar.render();
-});

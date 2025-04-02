@@ -207,3 +207,8 @@ const deleteServicieHotel = (id, table) => {
     const url = route("hotels.destroy", id);
     deleteResource(url, table);
 }
+
+const deleteControlDate = (id, table) => {
+    const url = route("control-dates.destroy", id);
+    deleteResource(url, table);
+}
