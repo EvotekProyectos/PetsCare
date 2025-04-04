@@ -276,8 +276,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/red-sheets/pv/{id}', [RedSheetController::class, 'ordenventa'])->name("redsheet.pay");
     Route::get('/hospitalizations/entries/{id}', [RedSheetController::class, 'entry'])->name("redsheet.entry");
     Route::get('/red-sheets/recap/{id}', [RedSheetController::class, 'recap'])->name("red-sheets.recap");
-    Route::post('/redSheet/discharge', [RedSheetController::class, 'discharge'])->name("redsheet-discharge");
-    Route::post('/hospitalizations/discharge', [RedSheetController::class, 'dischargePatient']);
+    // Route::post('/redSheet/discharge', [RedSheetController::class, 'discharge'])->name("redsheet-discharge");
+    // Route::post('/hospitalizations/discharge', [RedSheetController::class, 'dischargePatient']);
     Route::resource('red-sheets', RedSheetController::class);
 
     //SURGERIES
