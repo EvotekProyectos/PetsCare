@@ -198,18 +198,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     //RECEPTIONS
     Route::put('/receptions/update/{id}',[ReceptionController::class, 'transfer'])->name('reception.transfer');
-    Route::get('/receptions/list', [ReceptionController::class, 'list'])->name('reception.list');
-
-    Route::get('/receptions/list/appointments', [ReceptionController::class, 'listAppointments'])->name('reception.appointments');
-    Route::get('/receptions/list/hospitalizations', [ReceptionController::class, 'listHospitalizations'])->name('reception.hospitalizations');
-    Route::get('/receptions/list/groomings', [ReceptionController::class, 'listGroomings'])->name('reception.groomings');
-    Route::get('/receptions/list/hotels', [ReceptionController::class, 'listHotels'])->name('reception.hotels');
-    Route::get('/receptions/list/cremations', [ReceptionController::class, 'listCremations'])->name('reception.cremations');
-
+    Route::get('/receptions/list/{reception_type_id}', [ReceptionController::class, 'list'])->name('reception.list');
     Route::get('/receptions/{id}/area', [ReceptionController::class, 'getReceptionArea'])->name('receptions.getArea');
-
     Route::get('/receptions/historial/{id}', [ReceptionController::class, 'historial'])->name('reception.historial');
-    
     Route::get('/receptions/hospital/{id}', [ReceptionController::class, 'hospital_authorization'])->name('hospital.list');
     Route::post('/receptions/hospital/pdf/{id}', [ReceptionController::class, 'hospital_authorizationpdf'])->name('hospital.pdf');
     Route::get('/receptions/grooming/{id}', [ReceptionController::class, 'groomingservice'])->name('receptions.grooming');
@@ -287,7 +278,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/red-sheets/recap/{id}', [RedSheetController::class, 'recap'])->name("red-sheets.recap");
     Route::post('/redSheet/discharge', [RedSheetController::class, 'discharge'])->name("redsheet-discharge");
     Route::post('/hospitalizations/discharge', [RedSheetController::class, 'dischargePatient']);
-    Route::post('/red-sheets/death', [RedSheetController::class, 'ButtonDeath'])->name("button-death");
     Route::resource('red-sheets', RedSheetController::class);
 
     //SURGERIES
