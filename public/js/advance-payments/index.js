@@ -40,12 +40,12 @@ $(document).ready(function () {
                     return `$${precio.toFixed(2)}`;
                 }
             },
-            {
-                data: 'status',
-                render: function(data, type, row) {
-                    return data == 1 ? 'Pagado' : 'Pendiente';
-                }
-            },
+            // {
+            //     data: 'status',
+            //     render: function(data, type, row) {
+            //         return data == 1 ? 'Pagado' : 'Pendiente';
+            //     }
+            // },
             // {
             //     data: null,
             //     render: function (data) {

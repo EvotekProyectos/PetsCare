@@ -86,7 +86,7 @@ const areas= {
 var table = undefined;
 $(document).ready(function () {
     table = $('#table').DataTable({
-        ajax: route('reception.appointments'),
+        ajax: route('reception.list', 1),
         responsive: true,
         order: [0, 'desc'],
         columns: [
@@ -149,7 +149,7 @@ $(document).ready(function () {
 var table2 = undefined;
 $(document).ready(function () {
     table2 = $('#table2').DataTable({
-        ajax: route('reception.hospitalizations'),
+        ajax: route('reception.list', 2),
         responsive: true,
         order: [0, 'desc'],
         columns: [
@@ -217,7 +217,7 @@ $(document).ready(function () {
 var table3 = undefined;
 $(document).ready(function () {
     table3 = $('#table3').DataTable({
-        ajax: route('reception.groomings'),
+        ajax: route('reception.list', 3),
         responsive: true,
         order: [0, 'desc'],
         columns: [
@@ -266,7 +266,7 @@ $(document).ready(function () {
 var table4 = undefined;
 $(document).ready(function () {
     table4 = $('#table4').DataTable({
-        ajax: route('reception.hotels'),
+        ajax: route('reception.list', 4),
         responsive: true,
         order: [0, 'desc'],
         columns: [
@@ -318,7 +318,7 @@ $(document).ready(function () {
 var table5 = undefined;
 $(document).ready(function () {
     table5 = $('#table5').DataTable({
-        ajax: route('reception.cremations'),
+        ajax: route('reception.list', 5),
         responsive: true,
         order: [0, 'desc'],
         columns: [

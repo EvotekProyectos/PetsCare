@@ -45,7 +45,7 @@
                                                 <th>Fecha Generado</th>
                                                 <th>Concepto</th>
                                                 <th>Monto</th>
-                                                <th>Status</th>
+                                                {{-- <th>Status</th> --}}
                                                 {{-- <th>Generado Por</th> --}}
                                                 <th>Acciones</th>
                                             </tr>

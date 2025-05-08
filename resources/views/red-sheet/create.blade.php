@@ -127,7 +127,7 @@
                         <div class="row">
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
-                                    <button class="btn btn-costum-services btn-sm text-uppercase rounded-4"
+                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
                                     onclick="discharge( {{ $reception->id }})">
                                     <span class="badge custom-badge-pill"><span class="mynaui--inbox-up"></span></span>
                                     Dar Alta
@@ -136,13 +136,13 @@
                             </div>
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
-                                    <button class="btn btn-costum-services btn-sm text-uppercase rounded-4" onclick="Transfer()">
+                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4" onclick="Transfer()">
                                         <span class="badge custom-badge-pill"><span
                                                 class="clarity--two-way-arrows-line"></span></span> Trasladar
                                     </button>
                                 </div>
                             </div>
-                            <div class="col d-flex justify-content-between align-items-center my-2">
+                            {{-- <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
                                     <button 
                                         class="btn btn-costum-services btn-sm text-uppercase rounded-4" 
@@ -153,7 +153,7 @@
                                         Falleció
                                     </button>
                                 </div>
-                            </div>
+                            </div> --}}
                             
                         </div>
                     </div>

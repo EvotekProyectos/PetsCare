@@ -73,7 +73,8 @@
             </span>
             <select name="family_id" class="form-control select2 @error('family_id') is-invalid @enderror"
                 id="family_id" placeholder="Family Id" onchange="getpets(this.value)" style="width: 100%;"
-                {{ isset($controlDate) ? 'disabled' : '' }}>  <!-- Se deshabilita solo en edición -->
+                {{ isset($controlDate) && $controlDate->id ? 'disabled' : '' }}>
+                {{-- {{ isset($controlDate) ? 'disabled' : '' }}>  <!-- Se deshabilita solo en edición --> --}}
                 <option value="">Selecciona la familia</option>
                 @foreach ($families as $family)
                     <option value="{{ $family->id }}" 
@@ -94,7 +95,7 @@
             </span>
             <select name="pet_id" class="form-control select2 @error('pet_id') is-invalid @enderror"
                 id="pet_id" placeholder="Pet Id" onchange="getFamily(this.value)" style="width: 100%;"
-                {{ isset($controlDate) ? 'disabled' : '' }}>  <!-- Se deshabilita solo en edición -->
+                {{ isset($controlDate) && $controlDate->id ? 'disabled' : '' }}>  <!-- Se deshabilita solo en edición -->
                 <option value="">Selecciona la mascota</option>
                 @foreach ($pets as $pet)
                     <option value="{{ $pet->id }}"

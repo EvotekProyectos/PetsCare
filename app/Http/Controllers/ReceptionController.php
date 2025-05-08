@@ -38,11 +38,9 @@ class ReceptionController extends Controller
      */
     public function index()
     {
-        $receptions = Reception::paginate();
-        $this->authorize("viewAny", Reception::class);
+        $this->authorize("viewAny", Reception::class); //valida permiso de ver recepciones
 
-        return view('reception.index', compact('receptions'))
-            ->with('i', (request()->input('page', 1) - 1) * $receptions->perPage());
+        return view('reception.index',); //regresa la vista 
     }
 
     /**
@@ -50,6 +48,7 @@ class ReceptionController extends Controller
      */
     public function create()
     {
+        //recopila los catalogos necesarios par que el form funcione
         $reception = new Reception();
         $admissions = AdmissionType::all();
         $areas = Area::all();
@@ -57,10 +56,10 @@ class ReceptionController extends Controller
         $reasons = Reason::all();
         $users = User::all();
         $rooms = Room::all();
-        $pets = Pet::where("deceased", 0)->get(); 
+        $pets = Pet::where("deceased", 0)->get(); //solo trae mascotas que no estn marcadas como fallecidas
 
-        $this->authorize("create", Reception::class);
-        return view('reception.create', compact('reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms', 'pets')); // Asegúrate de pasar $pets correctamente
+        $this->authorize("create", Reception::class); //valida el permiso para crear recepciones
+        return view('reception.create', compact('reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms', 'pets')); // Regresa la vista con los catalogos correspondienes 
     }
 
     /**
@@ -68,40 +67,40 @@ class ReceptionController extends Controller
      */
     public function store(ReceptionRequest $request)
     {
-        $this->authorize("create", Reception::class);
-        $reception = Reception::create($request->validated());
+        $this->authorize("create", Reception::class); //valida permiso de crear recepciones
+        $reception = Reception::create($request->validated()); //manda los daos a validar y crea el registro
 
-        if ($request->reception_type_id == 1) {
+        if ($request->reception_type_id == 1) { //cuando es una recepcion de consulta, le hace un registro al historial de atención poniendole un status
             ReceptionStatusHistory::create([
                 'reception_id' => $reception->id,
                 'attention_status_id' => 2,
             ]);
-        } 
+        }
 
-        if ($request->reception_type_id == 2) {
+        if ($request->reception_type_id == 2) {  //en los casos de recepcion d ehospital redirige la respuea an idex de hospitalizacion
             return redirect()->route('hospital.list', ['id' => $reception->id])
                 ->with('success', 'Recepción de hospitalización guardada exitosamente.');
-        } elseif ($request->reception_type_id == 5) {
+        } elseif ($request->reception_type_id == 5) { //en caso de ser cremación redirigue a seguir llenado el form para la cremacion
             return redirect()->route('new.cremation', ['id' => $reception->id])
                 ->with('success', 'Recepción de cremación guardada exitosamente.');
         }
 
-        if ($request->reception_type_id == 3) {
+        if ($request->reception_type_id == 3) { //en los casos de recepcion de grooming hace un registro de historial de atencion en esa tabla
             GroomingStatusHistory::create([
                 'reception_id' => $reception->id,
                 'grooming_status_id' => 1,
             ]);
-            return redirect()->route('receptions.grooming',  $reception->id);
+            return redirect()->route('receptions.grooming',  $reception->id); //redirigue a seguir llenado el form necesario para el grooming
         }
 
-        
-        if ($request->reception_type_id == 4) {
+
+        if ($request->reception_type_id == 4) { //en los casos de recpciion tipo hotel redirigue a seguir llenado el formulario de hotel 
             return redirect()->route('hotel.create', ['id' => $reception->id]);
-                //->with('success', 'Recepción de hotel guardada exitosamente.');
+            //->with('success', 'Recepción de hotel guardada exitosamente.');
         }
 
         return redirect()->route('receptions.index')
-            ->with('success', 'Recepción guardada exitosamente.');
+            ->with('success', 'Recepción guardada exitosamente.'); //el caso generico redigirue al index general de las recepciones 
     }
 
 
@@ -120,6 +119,7 @@ class ReceptionController extends Controller
      */
     public function edit($id)
     {
+        //recopila los catalogos para el form
         $reception = Reception::find($id);
         $admissions = AdmissionType::all();
         $areas = Area::all();
@@ -127,9 +127,9 @@ class ReceptionController extends Controller
         $reasons = Reason::all();
         $users = User::all();
         $rooms = Room::all();
-        $pets = Pet::where("deceased", 0)->get(); 
-        $this->authorize("update", $reception);
-        return view('reception.edit', compact('reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms', 'pets'));
+        $pets = Pet::where("deceased", 0)->get(); //filtra a mascotas no fallecidas
+        $this->authorize("update", $reception); //valida el permiso de edicion
+        return view('reception.edit', compact('reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms', 'pets')); //redirigue a la pantalla junto a todos los catalogos
     }
 
     /**
@@ -137,25 +137,38 @@ class ReceptionController extends Controller
      */
     public function update(ReceptionRequest $request, Reception $reception)
     {
-        $reception->update($request->validated());
-        $this->authorize("update", $reception);
+        $this->authorize("update", $reception); //valida el permiso de editar
+        $reception->update($request->validated()); //valida los datos y actualiza el registro 
         return redirect()->route('receptions.index')
-            ->with('success', 'Recepción actualizada exitósamente.');
+            ->with('success', 'Recepción actualizada exitósamente.'); //redirge al index 
     }
 
     public function destroy($id)
     {
-        $reception = Reception::find($id);
-        $this->authorize("delete", $reception);
-        $reception->delete();
+        $reception = Reception::find($id); //ecuentra que existe el registro a eliminar
+        $this->authorize("delete", $reception); //valida el permiso para eliminar
+        $reception->delete(); //elimina el registro
 
-        return response()->json($reception);
+        return response()->json($reception); //regresa el mensje
     }
 
-    public function list()
+    public function list(int $reception_type_id)
     {
-        $receptions = Reception::with('receptionType', 'family', 'pet', 'reason', 'room', 'area')->get();
-        return DataTables::of($receptions)->make(true);
+        //Recopilamos los registros de recepcion junto a todas las relaciones necesarias 
+        $receptions = Reception::with(
+            'admissionType',
+            'area',
+            'family',
+            'pet',
+            'reason',
+            'receptionist',
+            'receptionType',
+            'room',
+            'vet',
+        )
+            ->where('reception_type_id', $reception_type_id) //filtramos el tipo de recepcion de acuerdo al id recibido en la funcion
+            ->get();
+        return DataTables::of($receptions)->make(true); //regresamos como datatable
     }
 
     // public function historial($id)
@@ -169,52 +182,54 @@ class ReceptionController extends Controller
 
     public function historial($id)
     {
+        //se recopilan todas las recpciones de la mascota 
         $receptions = Reception::with('receptionType', 'reason', 'vet')->where('pet_id', $id)->get();
 
-        $redSheets = RedSheet::whereHas('reception', function ($query) use ($id) {
-            $query->where('pet_id', $id);
-        })->with('reception')->get();
+        //Pendiente de determinar
+        // $redSheets = RedSheet::whereHas('reception', function ($query) use ($id) {
+        //     $query->where('pet_id', $id);
+        // })->with('reception')->get();
 
-        $surgeries = Surgery::whereHas('reception', function ($query) use ($id) {
-            $query->where('pet_id', $id);
-        })->with('reception')->get();
+        // $surgeries = Surgery::whereHas('reception', function ($query) use ($id) {
+        //     $query->where('pet_id', $id);
+        // })->with('reception')->get();
 
-        $prescriptions = Prescription::where('pet_id', $id)->get();
+        // $prescriptions = Prescription::where('pet_id', $id)->get();
 
-        $data = [];
-        foreach ($receptions as $reception) {
-            $data[] = [
-                'entry_date' => $reception->entry_date,
-                'vet_name' => $reception->vet->name ?? '',
-                'reception_type' => $reception->receptionType->name ?? '',
-                'reason' => $reception->reason->name ?? '',
-                'reception_id' => $reception->id,
-                'pet_id' => $reception->pet_id,
-                'redSheets' => $redSheets->pluck('description')->toArray(),
-                'surgeries' => $surgeries->pluck('surgery_type')->toArray(),
-                'prescriptions' => $prescriptions->pluck('medicine')->toArray(),
-            ];
-        }
+        // $data = [];
+        // foreach ($receptions as $reception) {
+        //     $data[] = [
+        //         'entry_date' => $reception->entry_date,
+        //         'vet_name' => $reception->vet->name ?? '',
+        //         'reception_type' => $reception->receptionType->name ?? '',
+        //         'reason' => $reception->reason->name ?? '',
+        //         'reception_id' => $reception->id,
+        //         'pet_id' => $reception->pet_id,
+        //         'redSheets' => $redSheets->pluck('description')->toArray(),
+        //         'surgeries' => $surgeries->pluck('surgery_type')->toArray(),
+        //         'prescriptions' => $prescriptions->pluck('medicine')->toArray(),
+        //     ];
+        // }
 
-        return DataTables::of($receptions, $redSheets, $surgeries, $prescriptions)->make(true);
+        return DataTables::of($receptions)->make(true); //se regresa para datable la info
     }
 
 
 
     public function hospital_authorization($id)
     {
-        $reception = Reception::find($id);
-        $pet = Pet::with('family', 'genre')->find($id);
-        return view('reception.pdf', compact("reception", "pet"));
+        $reception = Reception::find($id); //buscamos la recepcion correspondiente
+        return view('reception.pdf', compact("reception")); //enviamos los datos a la vista del pfd para firma y llendo
     }
 
     public function hospital_authorizationpdf(Request $request, $id)
     {
-        $reception = Reception::find($id);
-        $pet = Pet::with('family', 'genre')->find($reception->pet_id);
-        $total = $request->input('total');
-        $signatureDataUrl = $request->input('signature');
+        $reception = Reception::find($id); //buscamos la recepcion correspondiente
+        $pet = Pet::with('family', 'genre')->find($reception->pet_id); //buscamos la mascota correspondiente
+        $total = $request->input('total'); // recuperamos el total enviado
+        $signatureDataUrl = $request->input('signature'); //recuperamos la firma del cliente 
 
+        // Generar el PDF con los datos de la recepción,  mascota y llenado del propietario
         $pdf = PDF::loadView('reception.pdf', [
             'reception' => $reception,
             'pet' => $pet,
@@ -223,67 +238,70 @@ class ReceptionController extends Controller
             'isPdf' => true
         ]);
 
+        // Guardar el PDF en el almacenamiento público
         $pdfPath = '/receptions/reception_' . $id . '.pdf';
         Storage::put('public' . $pdfPath, $pdf->output());
 
-        $pdfUrl = Storage::url($pdfPath);
+        $pdfUrl = Storage::url($pdfPath); // Obtener la URL pública del PDF
 
         $format = new Format();
-        $format->format_type_id = 1;
-        $format->reception_id = $id;
-        $format->pet_id = $pet->id;
-        $format->format_pdf = $pdfPath;
+        $format->format_type_id = 1; // Tipo de formato: autorización hospitalaria
+        $format->reception_id = $id; // Relacionado con la recepción
+        $format->pet_id = $pet->id; // Relacionado con la mascota
+        $format->format_pdf = $pdfPath; // Ruta del PDF almacenado
         $format->save();
 
+        // Retornar la respuesta JSON con la URL del PDF y el ID del formato generado
         return response()->json(['url' => asset('storage' . $pdfPath), 'format_id' => $format->id]);
     }
 
 
     public function getReceptionArea($id)
-{
-    $reception = Reception::find($id);
-    return response()->json(['area_id' => $reception->area_id]);
-}
+    {
+        $reception = Reception::find($id); //busca recepcion correpondinete 
+        return response()->json(['area_id' => $reception->area_id]); //regresa el area que tiene registrada la recepcion
+    }
 
 
     public function getFamilyByPet($pet_id)
     {
-        $pet = Pet::find($pet_id);
+        $pet = Pet::find($pet_id); //encuentra a la mascota
         if ($pet && $pet->family) {
-            return response()->json($pet->family);
+            return response()->json($pet->family); //cuando encuentra a la mascota y la relacion de familia, regrea la info
         }
         return response()->json(null, 404);
     }
 
     public function transfer(Request $request, $id)
     {
-        $reception = Reception::findOrFail($id);
-
+        $reception = Reception::findOrFail($id); // Buscar la recepción
+        $this->authorize("update", $reception); //valida permisos de editrae
         $reception->update($request->validate([
             'admission_type_id' => 'integer|exists:admission_types,id',
-        ]));
-        $this->authorize("update", $reception);
+        ]));  // Validar y actualizar el tipo de admisión
 
-        return response()->json($reception);
+        return response()->json($reception); // Retornar la recepción actualizada en formato JSON
     }
 
     public function cuenta($id)
     {
-        $reception = Reception::with('pet')->where('id', $id)->first();
-        $redSheets = RedSheet::where('reception_id', $id)->with('imaging', 'lab', 'service')->get();
-        $surgeries = Surgery::where('reception_id', $id)->with('service')->get();
+        $reception = Reception::with('pet')->where('id', $id)->first();  // Obtener la recepción con su mascota asociada
+        $redSheets = RedSheet::where('reception_id', $id)->with('imaging', 'lab', 'service')->get(); // Obtener hojas rojas relacionadas con imagenología, laboratorio y servicios
+        $surgeries = Surgery::where('reception_id', $id)->with('service')->get(); // Obtener cirugías asociadas con sus servicios
 
+        // Construir el arreglo de datos
         $data = [
             'reception' => $reception,
             'redSheets' => $redSheets,
             'surgeries' => $surgeries,
         ];
-        return DataTables::of($data)->make(true);
+        return DataTables::of($data)->make(true); // Retornar los datos formateados para DataTables
     }
 
 
     public function groomingservice(int $id)
     {
+         // Crear instancias vacías de Grooming y GeneralGrooming y recopila catalogos necesarios
         $grooming = new Grooming();
         $generalGrooming = new GeneralGrooming();
         $products = Producto::where("ESTATUS",  "A")->get();
@@ -296,46 +314,8 @@ class ReceptionController extends Controller
         $rooms = Room::all();
         $pets = Pet::all();
 
-        $this->authorize("create", Grooming::class);
+        $this->authorize("create", Grooming::class); //verifica permisos para crear groomings
+         // Retornar la vista con los datos necesario
         return view('grooming.create', compact('grooming', 'products', 'reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms', 'pets', 'generalGrooming'));
-    }
-
-    public function listAppointments()
-    {
-        $receptions = Reception::with('receptionType', 'family', 'pet', 'reason', 'room', 'area', 'vet')
-        ->where('reception_type_id', 1)
-        ->get();
-        return DataTables::of($receptions)->make(true);
-    }
-    public function listHospitalizations()
-    {
-        $receptions = Reception::with('receptionType', 'family', 'pet',  'area', 'vet', 'admissionType')
-        ->where('reception_type_id', 2)
-        ->get();
-        return DataTables::of($receptions)->make(true);
-    }
-
-    public function listGroomings()
-    {
-        $receptions = Reception::with('receptionType', 'family', 'pet',  'vet')
-        ->where('reception_type_id', 3)
-        ->get();
-        return DataTables::of($receptions)->make(true);
-    }
-
-    public function listCremations()
-    {
-        $receptions = Reception::with('receptionType', 'family', 'pet',  'vet','receptionist')
-        ->where('reception_type_id', 5)
-        ->get();
-        return DataTables::of($receptions)->make(true);
-    }
-
-    public function listHotels()
-    {
-        $receptions = Reception::with('receptionType', 'family', 'pet',  'vet')
-        ->where('reception_type_id', 4)
-        ->get();
-        return DataTables::of($receptions)->make(true);
     }
 }
