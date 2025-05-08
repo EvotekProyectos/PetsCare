@@ -168,7 +168,7 @@
                     <hr style="color: #0455a0; width: 100%; margin-bottom: -7%; margin-top: -7%;">
                     <p
                         style="font-family: 'Times New Roman', Times, serif; font-weight: lighter; font-size: 12pt; color: #776d6d;">
-                        {{ str_pad($reception->id, 4, '0', STR_PAD_LEFT) }}
+                        {{ str_pad($hotel->folio, 4, '0', STR_PAD_LEFT) }}
                     </p>
                 </td>
             </tr>

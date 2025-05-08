@@ -270,6 +270,11 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'editar anticipos', 'type' => 'Anticipos']);
         Permission::create(['name' => 'eliminar anticipos', 'type' => 'Anticipos']);
         
+        //CONTROL DATES
+        Permission::create(['name' => 'ver panel citas', 'type' => 'Citas']);
+        Permission::create(['name' => 'crear citas', 'type' => 'Citas']);
+        Permission::create(['name' => 'editar citas', 'type' => 'Citas']);
+        Permission::create(['name' => 'eliminar citas', 'type' => 'Citas']);
 
 
         // roles

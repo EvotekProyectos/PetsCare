@@ -8,6 +8,7 @@ use App\Models\Appointment;
 use App\Models\Area;
 use App\Models\AttentionStatus;
 use App\Models\CmType;
+use App\Models\ControlDate;
 use App\Models\CoverArea;
 use App\Models\Cremation;
 use App\Models\FamClassification;
@@ -48,6 +49,7 @@ use App\Observers\AdvancePaymentObserver;
 use App\Observers\AppointmentObserver;
 use App\Observers\AttentionStatusObserver;
 use App\Observers\CmTypeObserver;
+use App\Observers\ControlDateObserver;
 use App\Observers\CoverAreaObserver;
 use App\Observers\CremationObserver;
 use App\Observers\FamClassificationObserver;
@@ -142,6 +144,7 @@ class EventServiceProvider extends ServiceProvider
         Cremation::observe(CremationObserver::class);
         SurgerySchedule::observe(SurgeryScheduleObserver::class);
         Hotel::observe(HotelObserver::class);
+        ControlDate::observe(ControlDateObserver::class);
         AdvancePayment::observe(AdvancePaymentObserver::class);
         
     }
