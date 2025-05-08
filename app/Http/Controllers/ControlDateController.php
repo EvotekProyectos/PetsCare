@@ -241,20 +241,30 @@ class ControlDateController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Estado de la cita actualizado correctamente.']);
     }
-    public function validateSchedule(Request $request)
-    {
-        $selectedDate = Carbon::parse($request->date);
-    
-        $startRange = (clone $selectedDate)->subMinutes(30);
-        $endRange = (clone $selectedDate)->addMinutes(30);
-    
-        $conflict = ControlDate::where('status_date_id', 3)
-            ->whereBetween('date', [$startRange, $endRange])
-            ->exists();
-    
-        return response()->json(['conflict' => $conflict]);
-    }
-    
+
+ public function validateSchedule(Request $request)
+{
+    $selectedDate = Carbon::parse($request->date);
+    $scheduleId = $request->schedule_id;
+
+    $startRange = (clone $selectedDate)->subMinutes(30);
+    $endRange = (clone $selectedDate)->addMinutes(30);
+
+    $conflict = ControlDate::where('status_date_id', 3)
+        ->where('schedule_id', $scheduleId) // Validación por médico
+        ->whereBetween('date', [$startRange, $endRange])
+        ->exists();
+
+    return response()->json(['conflict' => $conflict]);
+}
+
+
+public function showDate($id)
+{
+    $cita = ControlDate::findOrFail($id);
+    return response()->json($cita);
+}
+
     
     
 }

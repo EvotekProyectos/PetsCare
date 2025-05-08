@@ -473,6 +473,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/control-dates/confirmed', [ControlDateController::class, 'listConfirmed'])->name('confirmed.date');
     Route::post('control-dates/updateAttend/{id}', [ControlDateController::class, 'updateAttend'])->name('control-dates.attend');
     Route::post('/validate-schedule', [ControlDateController::class, 'validateSchedule'])->name('validate.schedule');
+    Route::post('control-dates/updateAttend/{id}', [ControlDateController::class, 'updateAttend'])->name('control-dates.attend');
+    Route::get('/showDate/{id}', [ControlDateController::class, 'showDate'])->name('validate.date');
+
 
     Route::resource('control-dates', ControlDateController::class);
 

@@ -146,7 +146,17 @@ async function confirmed(id) {
 
     if (result.isConfirmed) {
         try {
-            
+            let dateFetchUrl = route("validate.date", id); 
+            const dateFetchResponse = await fetch(dateFetchUrl, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            const citaData = await dateFetchResponse.json();
+            const selectedDate = citaData.date; 
+
             let url = route("schedules.date", id);
             const response = await fetch(url, {
                 method: "GET",
@@ -188,23 +198,50 @@ async function confirmed(id) {
                 });
 
                 if (selectedScheduleId) {
-                    let updateUrl = route("control-dates.updateStatus", id);
-                    const updateResponse = await fetch(updateUrl, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": document
-                                .querySelector('meta[name="csrf-token"]')
-                                .getAttribute("content"),
-                        },
-                        body: JSON.stringify({
-                            status_date_id: 3,
-                            schedule_id: selectedScheduleId,
-                        }),
-                    });
+                    const selectedDate = citaData.date;
 
-                    const updateData = await updateResponse.json();
+                // Validación de conflicto de horario
+                let validateUrl = route("validate.schedule");
+                const validateResponse = await fetch(validateUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document
+                            .querySelector('meta[name="csrf-token"]')
+                            .getAttribute("content"),
+                    },
+                    body: JSON.stringify({
+                        schedule_id: selectedScheduleId,
+                        date: selectedDate,
+                    }),
+                });
 
+                const validateData = await validateResponse.json();
+
+                if (validateData.conflict) {
+                    Swal.fire("Error", "El médico seleccionado ya tiene una cita en ese horario.", "error");
+                    return; // ⛔ No continuar si hay conflicto
+                }
+
+                // ✅ Si no hay conflicto, confirmar cita
+                let updateUrl = route("control-dates.updateStatus", id);
+                const updateResponse = await fetch(updateUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document
+                            .querySelector('meta[name="csrf-token"]')
+                            .getAttribute("content"),
+                    },
+                    body: JSON.stringify({
+                        status_date_id: 3,
+                        schedule_id: selectedScheduleId,
+                    }),
+                });
+
+                const updateData = await updateResponse.json();
+
+                   
                     if (updateData.success) {
                         Swal.fire("¡Éxito!", "Cita confirmada correctamente.", "success")
                         .then(() => {
