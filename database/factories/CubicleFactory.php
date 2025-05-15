@@ -21,6 +21,8 @@ class CubicleFactory extends Factory
             'name' => $this->faker->word(), //nombre aleatorio
             'cubicle_type_id'=> CubicleType::factory(), //genera tipo cubiculo aleatorio
 			'state' => $this->faker->boolean(), // status aleatorio
+            'length' => $this->faker->randomFloat(2, 1, 10), // por ejemplo: 5.25 metros
+            'width' => $this->faker->randomFloat(2, 1, 10), 
         ];
     }
 }
