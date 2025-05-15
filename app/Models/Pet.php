@@ -101,6 +101,9 @@ class Pet extends Model
         {
             return $this->hasMany(Reception::class);
         }
-
+public function prescriptions()
+{
+    return $this->hasMany(Prescription::class);
+}
 
 }
