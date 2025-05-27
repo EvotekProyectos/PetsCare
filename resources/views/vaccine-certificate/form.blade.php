@@ -29,7 +29,6 @@
                 <div class="col-md-6">
                     <div class="form-group mb-2">
                         <label for="application_date" class="form-label">FECHA DE APLICACIÓN</label>
-
                         <div class="input-group mb-3">
                             <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                                 <span class="lucide--calendar-clock"></span>

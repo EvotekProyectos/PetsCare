@@ -31,11 +31,9 @@ class AppointmentController extends Controller
      */
     public function index()
     {
-        $appointments = Appointment::paginate();
-        $this->authorize("viewAny", Appointment::class);
+        $this->authorize("viewAny", Appointment::class); //verifica el permiso para ver el index
 
-        return view('appointment.index', compact('appointments'))
-            ->with('i', (request()->input('page', 1) - 1) * $appointments->perPage());
+        return view('appointment.index'); //regresa al index
     }
 
 
@@ -45,12 +43,13 @@ class AppointmentController extends Controller
      */
     public function create()
     {
+        //Instacia los nuevos registros y catalogo necesario
         $appointment = new Appointment();
         $reasons = Reason::all();
         $prescription = new Prescription();
 
-        $this->authorize("create", Appointment::class);
-        return view('appointment.create', compact('appointment', 'reasons', 'prescription',));
+        $this->authorize("create", Appointment::class); //verifica el permiso para crear citas
+        return view('appointment.create', compact('appointment', 'reasons', 'prescription',)); //regresa a la vista
     }
 
     /**
@@ -58,14 +57,15 @@ class AppointmentController extends Controller
      */
     public function store(AppointmentRequest $request)
     {
-        $this->authorize("create", Appointment::class);
+        $this->authorize("create", Appointment::class); //verifica el permiso para crear citas
 
-        $new  = Appointment::create($request->validated());
+        $new  = Appointment::create($request->validated()); //crea el nuevo registro con el form validado 
         ReceptionStatusHistory::create([
             'reception_id' => $request->reception_id,
             'attention_status_id' => 1,
-        ]);
+        ]); //actualiza el historial de atención para amrcar como atendida la consulta
 
+        //recolectamos datos necesarios para mandar la proxima cita  ala agenda
         $reception = Reception::find($request->reception_id);
         $day_next_check = $request->day_next_check;
         $time_next_check = $request->time_next_check;
@@ -85,9 +85,9 @@ class AppointmentController extends Controller
             'status_date_id' => 1,
             'user_id' => auth()->id(),
             'date' => $datetime,
-        ]);
+        ]); //creamos la cita para agenda
 
-        return response()->json($new);
+        return response()->json($new); //regresamos como respuesta el nuevo registro
 
         // return redirect()->route('assignment.index')
         //     ->with('success', 'Consulta Finalizada Exitosamente, puedes seguir atendiendo al siguiente paciente');
@@ -140,6 +140,7 @@ class AppointmentController extends Controller
 
     public function list($id)
     {
+        //Recopilamos todas los registros para mostralos en datatable
         $appointments = Appointment::with('reception', 'reason')->where('reception_id', $id)->get();
         return view('appointment.index', compact('appointments'));
     }
@@ -147,6 +148,7 @@ class AppointmentController extends Controller
 
     public function consultation(int $id)
     {
+        //Instacia los nuevos registros y catalogo necesario
         $appointment = new Appointment();
         $reception = Reception::with('pet', 'reason')->findorfail($id);
         $reasons = Reason::all();
@@ -154,21 +156,20 @@ class AppointmentController extends Controller
         $vaccineCertificate = new VaccineCertificate();
         $appointmentService = new AppointmentService();
         $products = Producto::where("ESTATUS",  "A")->get();
-        $this->authorize("create", Appointment::class);
-        // ReceptionStatusHistory::create([
-        //     'reception_id' => $id,
-        //     'attention_status_id' => 3,
-        // ]);
+        $this->authorize("create", Appointment::class); //verifica permiso para crear 
+      
         return view('appointment.create', compact('appointment', 'reasons', 'prescription', 'reception', 'vaccineCertificate', 'products', 'appointmentService'));
     }
 
     public function historic(int $id)
     {
+        //Recopilamos todos los registros de la recepcion tipo consulta
         $reception = Reception::find($id);
         $appointment = Appointment::where("reception_id", $id)->get()->first();
         $prescription = Prescription::where("reception_id", $id)->get()->first();
+        $vaccineCertificates = VaccineCertificate::where("reception_id", $id)->get();
 
-        return view('appointment.historic', compact('appointment', 'prescription', 'reception'));
+        return view('appointment.historic', compact('appointment', 'prescription', 'reception', 'vaccineCertificates')); //regresamos la vista del historico
     }
 
     public function ordenventa(int $reception, int $concepto)

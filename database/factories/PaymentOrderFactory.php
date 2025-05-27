@@ -22,4 +22,6 @@ class PaymentOrderFactory extends Factory
 			'folio_odv' => $this->faker->sentence(), //oracion aleatoria
         ];
     }
+
+    
 }

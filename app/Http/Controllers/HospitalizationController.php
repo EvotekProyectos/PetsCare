@@ -96,38 +96,40 @@ class HospitalizationController extends Controller
 
     public function historic(int $id)
     {
-        $reception = Reception::find($id);
+        $reception = Reception::find($id); //buscamos la recepcion solicitada
 
-        return view('hospitalization.historic', compact('reception'));
+        return view('hospitalization.historic', compact('reception')); //regresamos la vista del historial
     }
 
     public function followups(int $id)
     {
+        //Buscamos a que recepcion corrersponden e instaciamos los nuevos registros
         $reception = Reception::find($id);
         $followupsCritic = new FollowUp();
         $followupIntern = new FollowupIntern();
         $followupSurgical = new FollowupSurgical();
 
-        return view('follow-up.add', compact('reception', 'followupsCritic', 'followupIntern', 'followupSurgical'));
+        return view('follow-up.add', compact('reception', 'followupsCritic', 'followupIntern', 'followupSurgical')); //regresamos la infa a la vista
     }
 
 
     public function altaVoluntaria($id)
     {
-        $reception = Reception::find($id);
-        return view('hospital-discharge.alta_voluntaria', compact("reception"));
+        $reception = Reception::find($id);//encuentra la recepcion
+        return view('hospital-discharge.alta_voluntaria', compact("reception")); //regresa vista del pdf con la recedpcion para llenado y firma
     }
 
     public function altaVoluntariapdf(Request $request, $id)
     {
-        $reception = Reception::find($id);
-        $pet = Pet::with('family', 'genre')->find($reception->pet_id);
+        $reception = Reception::find($id); //buscamos la recepcion correspondiente
+        $pet = Pet::with('family', 'genre')->find($reception->pet_id); //buscamos la mascota correspondiente
 
-
+        //recuperamos los datos que lleno el propietario
         $signatureDataUrl = $request->input('signature');
         $nameFamily = $request->input('name_family');
         $reason = $request->input('reason');
 
+        // Generar el PDF con los datos de la recepción,  mascota y llenado del propietario
         $pdf = PDF::loadView('hospital-discharge.alta_voluntaria', [
             'reception' => $reception,
             'pet' => $pet,
@@ -137,11 +139,13 @@ class HospitalizationController extends Controller
             'isPdf' => true
         ]);
 
+         // Guardar el PDF en el almacenamiento público
         $pdfPath = 'public/hospitalizations/voluntary_discharge_' . $id . '.pdf';
         Storage::put($pdfPath, $pdf->output());
 
-        $pdfUrl = Storage::url($pdfPath);
+        $pdfUrl = Storage::url($pdfPath); // Obtener la URL pública del PDF
 
+        //Guardamos el formato en la tabla correspondiente
         $format = new Format();
         $format->format_type_id = 2;
         $format->reception_id = $id;
@@ -149,18 +153,17 @@ class HospitalizationController extends Controller
         $format->format_pdf = $pdfPath;
         $format->save();
 
-
+        // Retornar la respuesta JSON con la URL del PDF y el ID del formato generado
         return response()->json(['url' => asset($pdfUrl), 'format_id' => $format->id]);
-        //return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
-        //return response()->json(['url' => asset('storage/'.$pdfPath), 'format_id' => $format->id]);
     }
 
     public function dischargeDeath(Request $request)
     {
-        $reception = Reception::findOrFail($request->receptionId);
-        $reception->exit_date = now();
+        $reception = Reception::findOrFail($request->receptionId); //buscaos la recepcion
+        $reception->exit_date = now(); //marcamos la fecha y hora de salida
         $reception->save();
 
+        //creamos registro en hospitlizacion para registrar el tipo de salida
         $hospitalization = new Hospitalization();
         $hospitalization->reception_id = $request->receptionId;
         $hospitalization->exit_date = now();
@@ -169,19 +172,19 @@ class HospitalizationController extends Controller
 
         return response()->json([
             'message' => 'Paciente dado de alta por fallecimiento.',
-        ], 200);
+        ], 200); //regresamos mensaje 
     }
 
     public function discharge(Request $request)
     {
-        $reception = Reception::findOrFail($request->reception_id);
-        $reception->exit_date = now();
+        $reception = Reception::findOrFail($request->reception_id); //buscaos la recepcion
+        $reception->exit_date = now(); //marcamos la fecha y hora de salida 
         $reception->save();
 
         $data = $request->all();
         $data['exit_date'] = now();
-        $new = Hospitalization::create($data);
+        $new = Hospitalization::create($data); //registreamos el tipo de sdalida 
 
-        return response()->json($new);
+        return response()->json($new);//regresamos el nuevo registro
     }
 }

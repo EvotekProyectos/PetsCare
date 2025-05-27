@@ -108,8 +108,12 @@ class RedSheetController extends Controller
         return response()->json($redSheet);
     }
 
+    /**
+     * Muestra la vista general de una mascota hospitalizada y le agrega servicios
+     * */
     public function entry($id)
     {
+        //Instanceamos el nuevo registros y todos los catalogos de la pantalla
         $redSheet = new RedSheet();
         $reception = Reception::with('pet', 'admissionType', 'area')->findorfail($id);
         $products = Producto::where("ESTATUS",  "A")->get();
@@ -117,99 +121,95 @@ class RedSheetController extends Controller
         $surgery = new Surgery();
         $admissions = AdmissionType::all();
         $discharges = HospitalDischarge::all();
-        $this->authorize("create", RedSheet::class);
-        return view('red-sheet.create', compact('redSheet', 'discharges', 'reception', 'products', 'followUp', 'surgery', 'admissions'));
+        $this->authorize("create", RedSheet::class);//verificamos los permisos 
+        return view('red-sheet.create', compact('redSheet', 'discharges', 'reception', 'products', 'followUp', 'surgery', 'admissions')); //regresdamos la vista con al info
     }
 
+
+    /**
+     * Recupera y combina datos de cirugías y hojas rojas (RedSheets) asociadas a una recepción.
+     * */
     public function recap(int $id)
     {
+        // Obtener las hojas rojas y cirugias asociadas a la recepción, incluyendo relaciones con otros modelos.
         $redsheets = RedSheet::with('vet', 'imaging', 'img', 'lab', 'laboratory', 'service', 'serv')->where('reception_id', $id)->get();
         $surgeries = Surgery::with('surgery', 'vet', 'surg',)->where('reception_id', $id)->get();
 
-        // return DataTables::of($surgeries) ->make(true);
+        // Mapear los datos de las cirugías y relacionarlas con hojas rojas del mismo día.
         $combinedData = $surgeries->map(function ($surgery) use ($redsheets) {
+            // Extraer la fecha de la cirugía en formato 'Y-m-d'
             $surgeryDate = \Carbon\Carbon::parse($surgery->created_at)->format('Y-m-d');
 
-            $date_count = 0;
+            $date_count = 0; // Inicializar el contador de días
 
+            // Buscar una hoja roja que coincida con la fecha de la cirugía
             $matchingRedSheet = $redsheets->first(function ($redsheet) use ($surgeryDate) {
                 $redsheetDate = \Carbon\Carbon::parse($redsheet->created_at)->format('Y-m-d');
                 return $redsheetDate == $surgeryDate;
             });
 
+            // Si existe una hoja roja en la misma fecha, asignar su contador de días a la cirugía
             if ($matchingRedSheet) {
                 $date_count = $matchingRedSheet->day_count;
             }
+            // Agregar el atributo 'day_count' a la cirugía
             $surgery->setAttribute('day_count', $date_count);
 
             return $surgery;
         });
 
+        // Preparar la respuesta con cirugías y hojas rojas combinadas
         $allData = [
             'surgeries' => $combinedData,
             'redsheets' => $redsheets,
         ];
-
+        // Devolver los datos en formato compatible con DataTables
         return DataTables::of($allData)->make(true);
     }
 
-    public function discharge(Request $request)
-    {
-        $reception = Reception::findOrFail($request->receptionId);
-        $reception->exit_date = now();
-        $reception->save();
+    // public function discharge(Request $request)
+    // {
+    //     $reception = Reception::findOrFail($request->receptionId);
+    //     $reception->exit_date = now();
+    //     $reception->save();
 
-        $hospitalization = new Hospitalization();
-        $hospitalization->reception_id = $request->receptionId;
-        $hospitalization->exit_date = now();
-        $hospitalization->hospital_discharges_id = 1;
-        $hospitalization->save();
+    //     $hospitalization = new Hospitalization();
+    //     $hospitalization->reception_id = $request->receptionId;
+    //     $hospitalization->exit_date = now();
+    //     $hospitalization->hospital_discharges_id = 1;
+    //     $hospitalization->save();
 
-        return response()->json([
-            'message' => 'Paciente dado de alta.',
-        ], 200);
-    }
+    //     return response()->json([
+    //         'message' => 'Paciente dado de alta.',
+    //     ], 200);
+    // }
 
-    public function dischargePatient(Request $request)
-    {
-        $request->validate([
-            'receptionId' => 'required|exists:hospitalizations,reception_id',
-            'dischargeType' => 'required|string'
-        ]);
+    // public function dischargePatient(Request $request)
+    // {
+    //     $request->validate([
+    //         'receptionId' => 'required|exists:hospitalizations,reception_id',
+    //         'dischargeType' => 'required|string'
+    //     ]);
 
-        $discharge = HospitalDischarge::where('name', $request->dischargeType)->first();
+    //     $discharge = HospitalDischarge::where('name', $request->dischargeType)->first();
 
-        if (!$discharge) {
-            return response()->json(['message' => 'Tipo de alta no válido.'], 400);
-        }
+    //     if (!$discharge) {
+    //         return response()->json(['message' => 'Tipo de alta no válido.'], 400);
+    //     }
 
-        $hospitalization = Hospitalization::where('reception_id', $request->receptionId)->first();
+    //     $hospitalization = Hospitalization::where('reception_id', $request->receptionId)->first();
 
-        if (!$hospitalization) {
-            return response()->json(['message' => 'Hospitalización no encontrada.'], 404);
-        }
+    //     if (!$hospitalization) {
+    //         return response()->json(['message' => 'Hospitalización no encontrada.'], 404);
+    //     }
 
-        $hospitalization->update([
-            'hospital_discharges_id' => $discharge->id,
-            'exit_date' => now() // Asegura que se registre la fecha de salida actual
-        ]);
+    //     $hospitalization->update([
+    //         'hospital_discharges_id' => $discharge->id,
+    //         'exit_date' => now() // Asegura que se registre la fecha de salida actual
+    //     ]);
 
-        return response()->json(['message' => 'Alta registrada exitosamente.']);
-    }
-
-
-    public function ButtonDeath(Request $request)
-    {
-        $reception = Reception::findOrFail($request->receptionId);
-        $pet = $reception->pet;
-        $pet->deceased = 1;
-        $pet->save();
-
-
-        return response()->json([
-            'message' => 'Paciente fallecido.',
-        ], 200);
-    }
+    //     return response()->json(['message' => 'Alta registrada exitosamente.']);
+    // }
 
     public function ordenventa(int $reception)
     {

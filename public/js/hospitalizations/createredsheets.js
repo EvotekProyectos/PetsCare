@@ -606,28 +606,28 @@ function getAdm(AdminssionData) {
     }, {});
 }
 
-async function ButtonDeath(receptionId) {
-    const response = await fetch(route('button-death'), {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-        },
-        body: JSON.stringify({ receptionId: receptionId }),
-    });
+// async function ButtonDeath(receptionId) {
+//     const response = await fetch(route('button-death'), {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+//         },
+//         body: JSON.stringify({ receptionId: receptionId }),
+//     });
 
-    if (!response.ok) {
-        throw new Error('Error en la solicitud.');
-    }
+//     if (!response.ok) {
+//         throw new Error('Error en la solicitud.');
+//     }
 
-    const data = await response.json();
-    Swal.fire({
-        icon: 'info',
-        title: 'Paciente Fallecido',
-        text: 'El estado del paciente ha sido actualizado.',
-        confirmButtonText: 'Aceptar'
-    }).then(() => {
-        location.reload();
-    });
-}
+//     const data = await response.json();
+//     Swal.fire({
+//         icon: 'info',
+//         title: 'Paciente Fallecido',
+//         text: 'El estado del paciente ha sido actualizado.',
+//         confirmButtonText: 'Aceptar'
+//     }).then(() => {
+//         location.reload();
+//     });
+// }
 
