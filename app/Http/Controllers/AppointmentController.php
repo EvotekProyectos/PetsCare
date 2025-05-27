@@ -167,8 +167,9 @@ class AppointmentController extends Controller
         $reception = Reception::find($id);
         $appointment = Appointment::where("reception_id", $id)->get()->first();
         $prescription = Prescription::where("reception_id", $id)->get()->first();
+        $vaccineCertificates = VaccineCertificate::where("reception_id", $id)->get();
 
-        return view('appointment.historic', compact('appointment', 'prescription', 'reception')); //regresamos la vista del historico
+        return view('appointment.historic', compact('appointment', 'prescription', 'reception', 'vaccineCertificates')); //regresamos la vista del historico
     }
 
     public function ordenventa(int $reception, int $concepto)
