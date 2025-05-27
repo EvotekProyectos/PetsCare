@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ControlDatesExport;
 use App\Models\ControlDate;
 use App\Http\Requests\ControlDateRequest;
 use App\Models\DateType;
@@ -11,6 +12,8 @@ use App\Models\Schedule;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Http\Request;
+use App\Exports\UsuariosExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * Class ControlDateController
@@ -89,7 +92,7 @@ class ControlDateController extends Controller
      * Update the specified resource in storage.
      */
     public function update(ControlDateRequest $request, ControlDate $controlDate)
-    {   
+    {
         $this->authorize("update", $controlDate);
         $controlDate->update($request->validated());
 
@@ -242,29 +245,31 @@ class ControlDateController extends Controller
         return response()->json(['success' => true, 'message' => 'Estado de la cita actualizado correctamente.']);
     }
 
- public function validateSchedule(Request $request)
-{
-    $selectedDate = Carbon::parse($request->date);
-    $scheduleId = $request->schedule_id;
+    public function validateSchedule(Request $request)
+    {
+        $selectedDate = Carbon::parse($request->date);
+        $scheduleId = $request->schedule_id;
 
-    $startRange = (clone $selectedDate)->subMinutes(30);
-    $endRange = (clone $selectedDate)->addMinutes(30);
+        $startRange = (clone $selectedDate)->subMinutes(30);
+        $endRange = (clone $selectedDate)->addMinutes(30);
 
-    $conflict = ControlDate::where('status_date_id', 3)
-        ->where('schedule_id', $scheduleId) // Validación por médico
-        ->whereBetween('date', [$startRange, $endRange])
-        ->exists();
+        $conflict = ControlDate::where('status_date_id', 3)
+            ->where('schedule_id', $scheduleId) // Validación por médico
+            ->whereBetween('date', [$startRange, $endRange])
+            ->exists();
 
-    return response()->json(['conflict' => $conflict]);
-}
+        return response()->json(['conflict' => $conflict]);
+    }
 
 
-public function showDate($id)
-{
-    $cita = ControlDate::findOrFail($id);
-    return response()->json($cita);
-}
+    public function showDate($id)
+    {
+        $cita = ControlDate::findOrFail($id);
+        return response()->json($cita);
+    }
 
-    
-    
+    public function exportarExcel()
+    {
+        return Excel::download(new ControlDatesExport, 'citas_proximas.xlsx');
+    }
 }

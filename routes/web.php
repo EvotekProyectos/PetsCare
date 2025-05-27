@@ -475,6 +475,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/validate-schedule', [ControlDateController::class, 'validateSchedule'])->name('validate.schedule');
     Route::post('control-dates/updateAttend/{id}', [ControlDateController::class, 'updateAttend'])->name('control-dates.attend');
     Route::get('/showDate/{id}', [ControlDateController::class, 'showDate'])->name('validate.date');
+    Route::post('/enviar-citas-whatsapp', [\App\Http\Controllers\WhatsappController::class, 'enviar'])->name('whatsapp.enviar');
+    Route::get('/exportar-citas', [ControlDateController::class, 'exportarExcel'])->name('citas.exportar');
 
 
     Route::resource('control-dates', ControlDateController::class);
@@ -485,6 +487,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/advance-payments/list', [AdvancePaymentController::class, 'list'])->name('advance-payments.list');
     Route::get('/advance-payments/add/{id}', [AdvancePaymentController::class, 'add'])->name('advance-payments.add');
     Route::resource('advance-payments', AdvancePaymentController::class);
+
+
+
 });
 
 

@@ -92,7 +92,7 @@ class PrescriptionController extends Controller
         $datetime = $day_next_check . ' ' . $time_next_check;
 
 
-        ControlDate::create([
+        ControlDate::createIfNotDuplicate([
             'reception' => $reception ? $reception->id : null,
             'pet_id' => $request->pet_id,
             'family_id' => $pet ? $pet->family_id : null,

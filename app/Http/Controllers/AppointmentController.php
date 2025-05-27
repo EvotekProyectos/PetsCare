@@ -77,7 +77,7 @@ class AppointmentController extends Controller
         // Concatenar la fecha y la hora para lograr el formato de tipo datetime
         $datetime = $day_next_check . ' ' . $time_next_check;
 
-        ControlDate::create([
+        ControlDate::createIfNotDuplicate([
             'reception_id' => $request->reception_id,
             'pet_id' => $reception ? $reception->pet_id : null,
             'family_id' => $reception ? $reception->family_id : null,
