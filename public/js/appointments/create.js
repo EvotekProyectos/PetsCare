@@ -39,15 +39,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const date1 = document.getElementById('application_date1');
     const date2 = document.getElementById('application_date2');
     const date3 = document.getElementById('application_date3');
-    const control_date = document.getElementById('day_next_check');
+   
 
     const diagnosis_appointment = document.getElementById('diagnosis');
     const diagnosis_prescrition = document.getElementById('diagnosis_prescription');
-    if (date1 && date2 && date3 && control_date) {
+    if (date1 && date2 && date3 ) {
         date1.addEventListener('change', function () {
             date2.value = date1.value;
             date3.value = date1.value;
-            control_date.value = date1.value;
+           
         });
     }
     if (diagnosis_appointment && diagnosis_prescrition) {
@@ -95,7 +95,7 @@ async function EndAppointment() {
     const REQUIREMENTS_LIST = {
         1: { dayNextCheck: true, prescription: true },
         2: { dayNextCheck: false, prescription: false },
-        3: { dayNextCheck: true, prescription: false },
+        3: { dayNextCheck: false, prescription: false },
         4: { dayNextCheck: true, prescription: true },
         5: { dayNextCheck: false, prescription: false },
         6: { dayNextCheck: false, prescription: false },
