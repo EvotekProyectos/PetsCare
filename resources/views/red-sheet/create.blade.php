@@ -4,14 +4,13 @@
     {{ __('Create') }} Red Sheet
 @endsection
 @push('styles')
-
-<link rel="stylesheet" href="{{ asset('css/redsheets/form.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/redsheets/form.css') }}">
 @endpush
 
 
 @section('content')
-<input type="hidden" id="reception_id_followup" value="{{ $reception->id }}">
-<meta name="csrf-token" content="{{ csrf_token() }}">
+    <input type="hidden" id="reception_id_followup" value="{{ $reception->id }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <section class="container-fluid">
         <div class="row">
@@ -64,8 +63,8 @@
                             </div>
                             <div class="col-md-3">
                                 <p style="font-weight: bold">Clasificación: <span style="font-weight: normal">
-                                    {{ $reception->pet->petClassification?->name ?? ''}}
-                                    </p>
+                                        {{ $reception->pet->petClassification?->name ?? '' }}
+                                </p>
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center">
@@ -128,15 +127,16 @@
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
                                     <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
-                                    onclick="discharge( {{ $reception->id }})">
-                                    <span class="badge custom-badge-pill"><span class="mynaui--inbox-up"></span></span>
-                                    Dar Alta
-                                </button>
+                                        onclick="discharge( {{ $reception->id }})">
+                                        <span class="badge custom-badge-pill"><span class="mynaui--inbox-up"></span></span>
+                                        Dar Alta
+                                    </button>
                                 </div>
                             </div>
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
-                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4" onclick="Transfer()">
+                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
+                                        onclick="Transfer()">
                                         <span class="badge custom-badge-pill"><span
                                                 class="clarity--two-way-arrows-line"></span></span> Trasladar
                                     </button>
@@ -154,7 +154,7 @@
                                     </button>
                                 </div>
                             </div> --}}
-                            
+
                         </div>
                     </div>
                     @php
@@ -166,7 +166,7 @@
                     <div class="row card-body ">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
-                                 DÍA {{ $dayCount }}
+                                DÍA {{ $dayCount }}
                             </h5>
                         </div>
                         <form method="POST" onsubmit="NewEntry()" role="form" enctype="multipart/form-data"
@@ -184,14 +184,15 @@
                                     <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
                                         onclick="OpenSurgeries()">
                                         <span class="badge custom-badge-pill"><span
-                                                class="healthicons--surgical-sterilization-outline"></span></span> PROCEDIMIENTOS
+                                                class="healthicons--surgical-sterilization-outline"></span></span>
+                                        PROCEDIMIENTOS
                                     </button>
                                 </div>
                             </div>
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
                                     <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
-                                    onclick="window.open('{{ route('hospitalization.followups', $reception->id) }}', '_blank')">
+                                        onclick="window.open('{{ route('hospitalization.followups', $reception->id) }}', '_blank')">
                                         <span class="badge custom-badge-pill"><span
                                                 class="clarity--note-edit-line"></span></span> Seguimientos
                                     </button>
@@ -211,33 +212,38 @@
                         <h5 id="card_title" class="text-primary text-uppercase">
                             <span class="ic--twotone-pets"></span> RESUMEN DÍAS HOSPITALIZADO
                         </h5>
+                        <div id="table-loader" style="display:none; text-align:center; padding: 2rem;">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                            <p class="mt-2 text-muted">Cargando información...</p>
+                        </div>
                         <div id="table-container"></div>
                     </div>
                     
-                    {{-- <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 id="card_title" class="text-primary text-uppercase">
-                                <span class="ic--twotone-pets"></span> Cirugias
-                            </h5>
-                        </div>
-                        <div class="col-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover responsive w-100" id="surgeries">
-                                    <thead class="thead table-primary text-uppercase">
-                                        <tr>
-                                            <th>Fecha</th>
-                                            <th>Nombre</th>
-                                            <th>Observaciones</th>
-                                            <th>M.V.Z.</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                    <div class="card-body" id="DisplayRedSheet">
+                        <h5 id="card_title" class="text-primary text-uppercase">
+                            <span class="ic--twotone-pets"></span> CONSUMIBLES CON VALES
+                        </h5>
+                        <div id="table-container"></div>
+                    </div>
 
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div> --}}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover responsive w-100" id="tableVoucher">
+                            <thead class="thead table-primary text-uppercase">
+                                <tr>
+                                    <th>Folio</th>
+                                    <th>Fecha</th>
+                                    <th>Solicitante</th>
+                                    <th>Insumo</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -295,6 +301,6 @@
 
         document.getElementById("reception_id_followup").value = Reception_Id;
     </script>
-    
+
     <script src="{{ asset('js/hospitalizations/createredsheets.js') }}" defer></script>
 @endpush

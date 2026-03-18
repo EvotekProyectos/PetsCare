@@ -44,6 +44,7 @@ use App\Models\SurgerySchedule;
 use App\Models\TagType;
 use App\Models\User;
 use App\Models\VaccineCertificate;
+use App\Models\Voucher;
 use App\Observers\AdmissionTypeObserver;
 use App\Observers\AdvancePaymentObserver;
 use App\Observers\AppointmentObserver;
@@ -83,6 +84,7 @@ use App\Observers\SurgeryScheduleObserver;
 use App\Observers\TagTypeObserver;
 use App\Observers\UserObserver;
 use App\Observers\VaccineCertificateObserver;
+use App\Observers\VoucherObserver;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -146,6 +148,7 @@ class EventServiceProvider extends ServiceProvider
         Hotel::observe(HotelObserver::class);
         ControlDate::observe(ControlDateObserver::class);
         AdvancePayment::observe(AdvancePaymentObserver::class);
+        Voucher::observe(VoucherObserver::class);
         
     }
 

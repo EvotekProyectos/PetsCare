@@ -75,18 +75,58 @@
                     <li class="@yield('receptions')">
                         <a href="{{ route('receptions.index') }}" class="ms-2">
                             <i class="fas fa-list"></i>
-                            Recepción
+                            Recepciones
+                        </a>
+                    </li>
+
+                    <li class="@yield('control-dates')">
+                        <a href="{{ route('control-dates.index') }}" class="ms-2">
+                            <i class="ep--calendar"></i>
+                            Citas
                         </a>
                     </li>
 
                     <li>
-                        <a href="{{ route('control-dates.index') }}" class="ms-2">
-                            <i class="ep--calendar"></i>
-                           Citas
+                        <a data-bs-toggle="collapse" href="#asignacionesMenu" role="button"
+                            aria-expanded="{{ request()->routeIs('assignment.*', 'assignament.*') ? 'true' : 'false' }}"
+                            class="ms-2">
+                            <i class="fas fa-hand-holding-heart"></i>
+                            Asignaciones
+                            <i class="fas fa-chevron-down float-end"></i>
                         </a>
-                    </li> 
-                    
-                    <li class="@yield('assignments')">
+
+                        <ul class="collapse list-unstyled ms-3 {{ request()->routeIs('assignment.*', 'assignament.*') ? 'show' : '' }}"
+                            id="asignacionesMenu">
+
+                            <li class="@yield('assignments')">
+                                <a href="{{ route('assignment.index') }}">
+                                    Consultas
+                                </a>
+                            </li>
+
+                            <li class="@yield('hospitalizations')">
+                                <a href="{{ route('assignment.hospital') }}">
+                                    Hospital
+                                </a>
+                            </li>
+
+                            <li class="@yield('assignmentsgrooming')">
+                                <a href="{{ route('assignment.groomings') }}">
+                                    Grooming
+                                </a>
+                            </li>
+
+                            <li class="@yield('assignmentssurgery')">
+                                <a href="{{ route('assignament.surgery') }}">
+                                    Cirugía
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+
+                    {{-- <li class="@yield('assignments')">
                         <a href="{{ route('assignment.index') }}" class=" ms-2">
                             <i class="fas fa-hand-holding-heart"></i>
                             Asignaciones de Consulta
@@ -109,17 +149,12 @@
                             <i class="fas fa-hand-holding-heart"></i>
                             Asignaciones de Cirugía
                         </a>
-                    </li>
-                    <li class="@yield('assignmentsdelivery')">
-                        <a href="{{ route('assignment.delivery') }}" class=" ms-2">
-                            <span class="mdi--house-export-outline-black"></span>
-                             Domicilio
-                        </a>
-                    </li>
+                    </li> --}}
+
                     <li class="@yield('hospitalization.recap')">
                         <a href="{{ route('hospitalization.altas') }}" class=" ms-2">
                             <span class="ri--hospital-line"></span>
-                            Hospitalizaciones
+                            Hospital
                         </a>
                     </li>
 
@@ -127,6 +162,19 @@
                         <a href="{{ route('surgery-schedules.index') }}" class=" ms-2">
                             <span class="healthicons--surgical-sterilization-outlineblack"></span>
                             Cirugías
+                        </a>
+                    </li>
+
+                    <li class="@yield('budgets')">
+                        <a href="{{ route('budgets.index') }}" class=" ms-2">
+                            <span class="fluent--receipt-money-16-regular"></span>
+                            Presupuestos
+                        </a>
+                    </li>
+                    <li class="@yield('advance-payments')">
+                        <a href="{{ route('advance-payments.index') }}" class=" ms-2">
+                            <span class="lets-icons--paper-fill-black"></span>
+                            Anticipos
                         </a>
                     </li>
 
@@ -143,18 +191,36 @@
                             Cremaciones
                         </a>
                     </li>
-                    <li class="@yield('budgets')">
-                        <a href="{{ route('budgets.index') }}" class=" ms-2">
-                            <span class="fluent--receipt-money-16-regular"></span>
-                            Presupuestos
+
+
+                    <li>
+                        <a data-bs-toggle="collapse" href="#almacenMenu" role="button"
+                            aria-expanded="{{ request()->routeIs('vouchers.*') ? 'true' : 'false' }}" class="ms-2">
+                            <span class="streamline-sharp--warehouse-1"></span>
+                            Almacén
+                            <i class="fas fa-chevron-down float-end"></i>
+                        </a>
+
+                        <ul class="collapse list-unstyled ms-3 {{ request()->routeIs('vouchers.*') ? 'show' : '' }}"
+                            id="almacenMenu">
+
+                            <li class="@yield('vouchers')">
+                                <a href="{{ route('vouchers.index') }}" class="ms-2">
+                                    Vales
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+
+                    <li class="@yield('assignmentsdelivery')">
+                        <a href="{{ route('assignment.delivery') }}" class=" ms-2">
+                            <span class="mdi--house-export-outline-black"></span>
+                            Domicilio
                         </a>
                     </li>
-                    <li class="@yield('advance-payments')">
-                        <a href="{{ route('advance-payments.index') }}" class=" ms-2">
-                            <span class="lets-icons--paper-fill-black"></span>
-                            Anticipos
-                        </a>
-                    </li>
+
                     <li class="@yield('families')">
                         <a href="{{ route('families.index') }}" class=" ms-2">
                             <span class="fluent-mdl2--family"></span>

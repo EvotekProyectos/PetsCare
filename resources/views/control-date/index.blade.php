@@ -4,6 +4,8 @@
     Control Date
 @endsection
 
+@section('control-dates', 'active border-start border-3 border-primary')
+
 @section('content')
 <div class="container-fluid">
     <div class="row">
