@@ -80,7 +80,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-3">
+              <div class="col-md-3">
                 <div class="form-group mb-2 mb20">
                     <label for="day_next_check" class="form-label">PRÓXIMO CONTROL</label>
                     <div class="input-group mb-3">

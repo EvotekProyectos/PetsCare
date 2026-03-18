@@ -331,7 +331,7 @@
                         <div class="col-8"></div>
                         <div class="col-3">
                             <button class="btn btn-costum-services btn-sm text-uppercase rounded-4"
-                                onclick="window.location.href='{{ route('vaccine-certificates.show', $reception->pet_id) }}'">
+                                onclick="window.open('{{ route('vaccine-certificates.show', $reception->pet_id) }}', '_blank')">
                                 Ver Cartilla
                             </button>
                         </div>
@@ -353,6 +353,7 @@
         var ruta = "{{ asset('') }}";
         var imgDefault = "{{ asset('img/pet_pic.png') }}";
         var Reception_Id = {{ $reception->id }};
+        var Reason_Id = {{ $reception->reason_id }};
         var Pet_Id = {{ $reception->pet_id }};
         var Pic_id = {{ $reception->pet->picture_id ?? 'null' }};
         var Pic_route = "{{ $reception->pet->file->route ?? '' }}";

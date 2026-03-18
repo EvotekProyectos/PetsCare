@@ -67,28 +67,35 @@ class AppointmentController extends Controller
 
         //recolectamos datos necesarios para mandar la proxima cita  ala agenda
         $reception = Reception::find($request->reception_id);
+
         $day_next_check = $request->day_next_check;
         $time_next_check = $request->time_next_check;
 
-        // Si no se define time_next_check, se asigna las 8:00 am
-        if (empty($time_next_check)) {
-            $time_next_check = '08:00:00';
+        if (empty($day_next_check)) {
+              return response()->json($new);
+        } 
+        else {
+            // Si no se define time_next_check, se asigna las 8:00 am
+            if (empty($time_next_check)) {
+                $time_next_check = '08:00:00';
+            }
+            // Concatenar la fecha y la hora para lograr el formato de tipo datetime
+            $datetime = $day_next_check . ' ' . $time_next_check;
+
+            ControlDate::createIfNotDuplicate([
+                'reception_id' => $request->reception_id,
+                'pet_id' => $reception ? $reception->pet_id : null,
+                'family_id' => $reception ? $reception->family_id : null,
+                'date_type_id' => $request->reason_next_check_id,
+                'status_date_id' => 1,
+                'user_id' => auth()->id(),
+                'date' => $datetime,
+            ]); //creamos la cita para agenda
+
+             return response()->json($new); //regresamos como respuesta el nuevo registro
+
         }
-        // Concatenar la fecha y la hora para lograr el formato de tipo datetime
-        $datetime = $day_next_check . ' ' . $time_next_check;
-
-        ControlDate::create([
-            'reception_id' => $request->reception_id,
-            'pet_id' => $reception ? $reception->pet_id : null,
-            'family_id' => $reception ? $reception->family_id : null,
-            'date_type_id' => $request->reason_next_check_id,
-            'status_date_id' => 1,
-            'user_id' => auth()->id(),
-            'date' => $datetime,
-        ]); //creamos la cita para agenda
-
-        return response()->json($new); //regresamos como respuesta el nuevo registro
-
+       
         // return redirect()->route('assignment.index')
         //     ->with('success', 'Consulta Finalizada Exitosamente, puedes seguir atendiendo al siguiente paciente');
     }
@@ -157,7 +164,7 @@ class AppointmentController extends Controller
         $appointmentService = new AppointmentService();
         $products = Producto::where("ESTATUS",  "A")->get();
         $this->authorize("create", Appointment::class); //verifica permiso para crear 
-      
+
         return view('appointment.create', compact('appointment', 'reasons', 'prescription', 'reception', 'vaccineCertificate', 'products', 'appointmentService'));
     }
 
@@ -167,8 +174,9 @@ class AppointmentController extends Controller
         $reception = Reception::find($id);
         $appointment = Appointment::where("reception_id", $id)->get()->first();
         $prescription = Prescription::where("reception_id", $id)->get()->first();
+        $vaccineCertificates = VaccineCertificate::where("reception_id", $id)->get();
 
-        return view('appointment.historic', compact('appointment', 'prescription', 'reception')); //regresamos la vista del historico
+        return view('appointment.historic', compact('appointment', 'prescription', 'reception', 'vaccineCertificates')); //regresamos la vista del historico
     }
 
     public function ordenventa(int $reception, int $concepto)

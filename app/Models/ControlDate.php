@@ -102,5 +102,20 @@ class ControlDate extends Model
         return $this->belongsTo(\App\Models\Schedule::class, 'schedule_id', 'id');
     }
     
+    public static function createIfNotDuplicate(array $data): ?self
+{
+    $dateOnly = \Carbon\Carbon::parse($data['date'])->toDateString();
+
+    $exists = self::where('pet_id', $data['pet_id'] ?? null)
+        ->where('date_type_id', $data['date_type_id'] ?? null)
+        ->whereDate('date', $dateOnly)
+        ->exists();
+
+    if ($exists) {
+        return null;
+    }
+
+    return self::create($data);
+}
 
 }

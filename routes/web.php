@@ -464,6 +464,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/validate-schedule', [ControlDateController::class, 'validateSchedule'])->name('validate.schedule');
     Route::post('control-dates/updateAttend/{id}', [ControlDateController::class, 'updateAttend'])->name('control-dates.attend');
     Route::get('/showDate/{id}', [ControlDateController::class, 'showDate'])->name('validate.date');
+    Route::post('/enviar-citas-whatsapp', [\App\Http\Controllers\WhatsappController::class, 'enviar'])->name('whatsapp.enviar');
+    Route::get('/exportar-citas', [ControlDateController::class, 'exportarExcel'])->name('citas.exportar');
 
 
     Route::resource('control-dates', ControlDateController::class);

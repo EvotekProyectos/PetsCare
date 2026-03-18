@@ -29,7 +29,7 @@ class PrescriptionRequest extends FormRequest
 			'date' => 'required',
 			'medicine' => 'required|string',
 			'diagnosis' => 'required|string',
-			'observations' => 'string',
+			'observations' => 'nullable|string',
             'day_next_check' => 'required|date',
             'time_next_check' => 'nullable',
             'reason_next_check_id' => 'nullable|integer|exists:reasons,id',
