@@ -16,13 +16,15 @@ class dateTypesSeeder extends Seeder
         $dateTypes = [
             ['name' => 'Consulta General', 'reason_id'=>'1'],
             ['name' => 'Consulta de Seguimiento','reason_id'=>'2'],
-            ['name' => 'Medicina Preventiva','reason_id'=>'3'],
+            ['name' => 'Medicina Preventiva: Vacuna','reason_id'=>'3'],
             ['name' => 'Consulta especialidad','reason_id'=>'4'],
             ['name' => 'Curación/Cambio de vendaje', 'reason_id'=>'5'],
             ['name' => 'Retiro de sutura', 'reason_id'=>'6'],
             ['name' => 'Servicios externos', 'reason_id'=>'7'],
             ['name' => 'Estudios de laboratorio', 'reason_id'=>'8'],
             ['name' => 'Grooming'],
+            ['name' => 'Medicina Preventiva: Desparasitacion interna','reason_id'=>'3'],
+            ['name' => 'Medicina Preventiva: Desparasitacion externa','reason_id'=>'3'],
           
         ];
 

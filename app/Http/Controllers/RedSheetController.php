@@ -121,7 +121,7 @@ class RedSheetController extends Controller
         $surgery = new Surgery();
         $admissions = AdmissionType::all();
         $discharges = HospitalDischarge::all();
-        $this->authorize("create", RedSheet::class);//verificamos los permisos 
+        $this->authorize("create", RedSheet::class); //verificamos los permisos 
         return view('red-sheet.create', compact('redSheet', 'discharges', 'reception', 'products', 'followUp', 'surgery', 'admissions')); //regresdamos la vista con al info
     }
 
@@ -132,7 +132,7 @@ class RedSheetController extends Controller
     public function recap(int $id)
     {
         // Obtener las hojas rojas y cirugias asociadas a la recepción, incluyendo relaciones con otros modelos.
-        $redsheets = RedSheet::with('vet', 'imaging', 'img', 'lab', 'laboratory', 'service', 'serv')->where('reception_id', $id)->get();
+        $redsheets = RedSheet::with('vet', 'imaging', 'img', 'lab', 'laboratory', 'service', 'serv' , 'voucherProduct','voucherProduct.voucher')->where('reception_id', $id)->get();
         $surgeries = Surgery::with('surgery', 'vet', 'surg',)->where('reception_id', $id)->get();
 
         // Mapear los datos de las cirugías y relacionarlas con hojas rojas del mismo día.

@@ -41,7 +41,7 @@ class RedSheet extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_id', 'lab_type_id', 'imaging_type_id', 'service_type_id', 'observations', 'day_count', 'vet_id',];
+    protected $fillable = ['reception_id', 'lab_type_id', 'imaging_type_id', 'service_type_id', 'observations', 'day_count', 'vet_id', 'add_voucher'];
 
 
     /**
@@ -102,5 +102,10 @@ class RedSheet extends Model
     public function surgeries()
     {
         return $this->hasMany(Surgery::class, 'reception_id', 'reception_id');
+    }
+
+    public function voucherProduct()
+    {
+        return $this->hasMany(voucherProduct::class, 'red_sheet_id', 'id');
     }
 }

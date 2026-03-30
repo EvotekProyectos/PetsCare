@@ -19,271 +19,278 @@ class RolesAndPermissionsSeeder extends Seeder
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // create users permissions
-        Permission::create(['name' => 'ver panel usuarios', 'type' => 'usuarios']);
-        Permission::create(['name' => 'crear usuarios', 'type' => 'usuarios']);
-        Permission::create(['name' => 'editar usuarios', 'type' => 'usuarios']);
-        Permission::create(['name' => 'eliminar usuarios', 'type' => 'usuarios']);
+        // firstOrCreate users permissions
+        Permission::firstOrCreate(['name' => 'ver panel usuarios', 'type' => 'usuarios']);
+        Permission::firstOrCreate(['name' => 'crear usuarios', 'type' => 'usuarios']);
+        Permission::firstOrCreate(['name' => 'editar usuarios', 'type' => 'usuarios']);
+        Permission::firstOrCreate(['name' => 'eliminar usuarios', 'type' => 'usuarios']);
 
-        // create rooms permissions
-        Permission::create(['name' => 'ver panel consultorios', 'type' => 'consultorios']);
-        Permission::create(['name' => 'crear consultorios', 'type' => 'consultorios']);
-        Permission::create(['name' => 'editar consultorios', 'type' => 'consultorios']);
-        Permission::create(['name' => 'eliminar consultorios', 'type' => 'consultorios']);
+        // firstOrCreate rooms permissions
+        Permission::firstOrCreate(['name' => 'ver panel consultorios', 'type' => 'consultorios']);
+        Permission::firstOrCreate(['name' => 'crear consultorios', 'type' => 'consultorios']);
+        Permission::firstOrCreate(['name' => 'editar consultorios', 'type' => 'consultorios']);
+        Permission::firstOrCreate(['name' => 'eliminar consultorios', 'type' => 'consultorios']);
 
-        // create permissions 
-        Permission::create(['name' => 'ver permisos usuarios', 'type' => 'permisos']);
-        Permission::create(['name' => 'editar permisos usuarios', 'type' => 'permisos']);
+        // firstOrCreate permissions 
+        Permission::firstOrCreate(['name' => 'ver permisos usuarios', 'type' => 'permisos']);
+        Permission::firstOrCreate(['name' => 'editar permisos usuarios', 'type' => 'permisos']);
 
-        // create logs permissions
-        Permission::create(['name' => 'ver panel bitácora', 'type' => 'bitácora']);
+        // firstOrCreate logs permissions
+        Permission::firstOrCreate(['name' => 'ver panel bitácora', 'type' => 'bitácora']);
 
-        // create reasons permissions
-        Permission::create(['name' => 'ver panel motivos', 'type' => 'motivos']);
-        Permission::create(['name' => 'crear motivos', 'type' => 'motivos']);
-        Permission::create(['name' => 'editar motivos', 'type' => 'motivos']);
-        Permission::create(['name' => 'eliminar motivos', 'type' => 'motivos']);
+        // firstOrCreate reasons permissions
+        Permission::firstOrCreate(['name' => 'ver panel motivos', 'type' => 'motivos']);
+        Permission::firstOrCreate(['name' => 'crear motivos', 'type' => 'motivos']);
+        Permission::firstOrCreate(['name' => 'editar motivos', 'type' => 'motivos']);
+        Permission::firstOrCreate(['name' => 'eliminar motivos', 'type' => 'motivos']);
 
-        // create areas permissions
-        Permission::create(['name' => 'ver panel areas', 'type' => 'áreas']);
-        Permission::create(['name' => 'crear areas', 'type' => 'áreas']);
-        Permission::create(['name' => 'editar areas', 'type' => 'áreas']);
-        Permission::create(['name' => 'eliminar areas', 'type' => 'áreas']);
+        // firstOrCreate areas permissions
+        Permission::firstOrCreate(['name' => 'ver panel areas', 'type' => 'áreas']);
+        Permission::firstOrCreate(['name' => 'crear areas', 'type' => 'áreas']);
+        Permission::firstOrCreate(['name' => 'editar areas', 'type' => 'áreas']);
+        Permission::firstOrCreate(['name' => 'eliminar areas', 'type' => 'áreas']);
 
-        // create attention statuses permissions
-        Permission::create(['name' => 'ver panel estados de atención', 'type' => 'estados de atención']);
-        Permission::create(['name' => 'crear estados de atención', 'type' => 'estados de atención']);
-        Permission::create(['name' => 'editar estados de atención', 'type' => 'estados de atención']);
-        Permission::create(['name' => 'eliminar estados de atención', 'type' => 'estados de atención']);
+        // firstOrCreate attention statuses permissions
+        Permission::firstOrCreate(['name' => 'ver panel estados de atención', 'type' => 'estados de atención']);
+        Permission::firstOrCreate(['name' => 'crear estados de atención', 'type' => 'estados de atención']);
+        Permission::firstOrCreate(['name' => 'editar estados de atención', 'type' => 'estados de atención']);
+        Permission::firstOrCreate(['name' => 'eliminar estados de atención', 'type' => 'estados de atención']);
 
-        // create grooming statuses permissions
-        Permission::create(['name' => 'ver panel estados de grooming', 'type' => 'estados de grooming']);
-        Permission::create(['name' => 'crear estados de grooming', 'type' => 'estados de grooming']);
-        Permission::create(['name' => 'editar estados de grooming', 'type' => 'estados de grooming']);
-        Permission::create(['name' => 'eliminar estados de grooming', 'type' => 'estados de grooming']);
+        // firstOrCreate grooming statuses permissions
+        Permission::firstOrCreate(['name' => 'ver panel estados de grooming', 'type' => 'estados de grooming']);
+        Permission::firstOrCreate(['name' => 'crear estados de grooming', 'type' => 'estados de grooming']);
+        Permission::firstOrCreate(['name' => 'editar estados de grooming', 'type' => 'estados de grooming']);
+        Permission::firstOrCreate(['name' => 'eliminar estados de grooming', 'type' => 'estados de grooming']);
 
-        // create reception types permissions
-        Permission::create(['name' => 'ver panel tipos de recepción', 'type' => 'tipos de recepción']);
-        Permission::create(['name' => 'crear tipos de recepción', 'type' => 'tipos de recepción']);
-        Permission::create(['name' => 'editar tipos de recepción', 'type' => 'tipos de recepción']);
-        Permission::create(['name' => 'eliminar tipos de recepción', 'type' => 'tipos de recepción']);
+        // firstOrCreate reception types permissions
+        Permission::firstOrCreate(['name' => 'ver panel tipos de recepción', 'type' => 'tipos de recepción']);
+        Permission::firstOrCreate(['name' => 'crear tipos de recepción', 'type' => 'tipos de recepción']);
+        Permission::firstOrCreate(['name' => 'editar tipos de recepción', 'type' => 'tipos de recepción']);
+        Permission::firstOrCreate(['name' => 'eliminar tipos de recepción', 'type' => 'tipos de recepción']);
 
-        // create genres permissions
-        Permission::create(['name' => 'ver panel generos', 'type' => 'géneros']);
-        Permission::create(['name' => 'crear generos', 'type' => 'géneros']);
-        Permission::create(['name' => 'editar generos', 'type' => 'géneros']);
-        Permission::create(['name' => 'eliminar generos', 'type' => 'géneros']);
+        // firstOrCreate genres permissions
+        Permission::firstOrCreate(['name' => 'ver panel generos', 'type' => 'géneros']);
+        Permission::firstOrCreate(['name' => 'crear generos', 'type' => 'géneros']);
+        Permission::firstOrCreate(['name' => 'editar generos', 'type' => 'géneros']);
+        Permission::firstOrCreate(['name' => 'eliminar generos', 'type' => 'géneros']);
 
         //cretae reproductive status perissions
-        Permission::create(['name' => 'ver panel estados reproductivos', 'type' => 'estados reproductivos']);
-        Permission::create(['name' => 'crear estados reproductivos', 'type' => 'estados reproductivos']);
-        Permission::create(['name' => 'editar estados reproductivos', 'type' => 'estados reproductivos']);
-        Permission::create(['name' => 'eliminar estados reproductivos', 'type' => 'estados reproductivos']);
-        // create admission types permissions
-        Permission::create(['name' => 'ver panel tipos de ingreso', 'type' => 'tipos de ingreso']);
-        Permission::create(['name' => 'crear tipos de ingreso', 'type' => 'tipos de ingreso']);
-        Permission::create(['name' => 'editar tipos de ingreso', 'type' => 'tipos de ingreso']);
-        Permission::create(['name' => 'eliminar tipos de ingreso', 'type' => 'tipos de ingreso']);
+        Permission::firstOrCreate(['name' => 'ver panel estados reproductivos', 'type' => 'estados reproductivos']);
+        Permission::firstOrCreate(['name' => 'crear estados reproductivos', 'type' => 'estados reproductivos']);
+        Permission::firstOrCreate(['name' => 'editar estados reproductivos', 'type' => 'estados reproductivos']);
+        Permission::firstOrCreate(['name' => 'eliminar estados reproductivos', 'type' => 'estados reproductivos']);
+        // firstOrCreate admission types permissions
+        Permission::firstOrCreate(['name' => 'ver panel tipos de ingreso', 'type' => 'tipos de ingreso']);
+        Permission::firstOrCreate(['name' => 'crear tipos de ingreso', 'type' => 'tipos de ingreso']);
+        Permission::firstOrCreate(['name' => 'editar tipos de ingreso', 'type' => 'tipos de ingreso']);
+        Permission::firstOrCreate(['name' => 'eliminar tipos de ingreso', 'type' => 'tipos de ingreso']);
 
-        //create family classification permissions
-        Permission::create(['name' => 'ver panel clasificaciones familias', 'type' => 'clasificacion de familias']);
-        Permission::create(['name' => 'crear clasificaciones familias', 'type' => 'clasificacion de familias']);
-        Permission::create(['name' => 'editar clasificaciones familias', 'type' => 'clasificacion de familias']);
-        Permission::create(['name' => 'eliminar clasificaciones familias', 'type' => 'clasificacion de familias']);
+        //firstOrCreate family classification permissions
+        Permission::firstOrCreate(['name' => 'ver panel clasificaciones familias', 'type' => 'clasificacion de familias']);
+        Permission::firstOrCreate(['name' => 'crear clasificaciones familias', 'type' => 'clasificacion de familias']);
+        Permission::firstOrCreate(['name' => 'editar clasificaciones familias', 'type' => 'clasificacion de familias']);
+        Permission::firstOrCreate(['name' => 'eliminar clasificaciones familias', 'type' => 'clasificacion de familias']);
 
-        //create pet classificaion permissions
-        Permission::create(['name' => 'ver panel clasificacion mascotas', 'type' => 'clasificación de mascotas']);
-        Permission::create(['name' => 'crear clasificacion mascotas', 'type' => 'clasificación de mascotas']);
-        Permission::create(['name' => 'editar clasificacion mascotas', 'type' => 'clasificación de mascotas']);
-        Permission::create(['name' => 'eliminar clasificacion mascotas', 'type' => 'clasificación de mascotas']);
+        //firstOrCreate pet classificaion permissions
+        Permission::firstOrCreate(['name' => 'ver panel clasificacion mascotas', 'type' => 'clasificación de mascotas']);
+        Permission::firstOrCreate(['name' => 'crear clasificacion mascotas', 'type' => 'clasificación de mascotas']);
+        Permission::firstOrCreate(['name' => 'editar clasificacion mascotas', 'type' => 'clasificación de mascotas']);
+        Permission::firstOrCreate(['name' => 'eliminar clasificacion mascotas', 'type' => 'clasificación de mascotas']);
 
-        //create shifts permissions
-        Permission::create(['name' => 'ver panel turnos', 'type' => 'turnos']);
-        Permission::create(['name' => 'crear turnos', 'type' => 'turnos']);
-        Permission::create(['name' => 'editar turnos', 'type' => 'turnos']);
-        Permission::create(['name' => 'eliminar turnos', 'type' => 'turnos']);
+        //firstOrCreate shifts permissions
+        Permission::firstOrCreate(['name' => 'ver panel turnos', 'type' => 'turnos']);
+        Permission::firstOrCreate(['name' => 'crear turnos', 'type' => 'turnos']);
+        Permission::firstOrCreate(['name' => 'editar turnos', 'type' => 'turnos']);
+        Permission::firstOrCreate(['name' => 'eliminar turnos', 'type' => 'turnos']);
 
-        //create pets statuses permissions
-        Permission::create(['name' => 'ver panel estados mascotas', 'type' => 'estado de mascotas']);
-        Permission::create(['name' => 'crear estados mascotas', 'type' => 'estado de mascotas']);
-        Permission::create(['name' => 'editar estados mascotas', 'type' => 'estado de mascotas']);
-        Permission::create(['name' => 'eliminar estados mascotas', 'type' => 'estado de mascotas']);
+        //firstOrCreate pets statuses permissions
+        Permission::firstOrCreate(['name' => 'ver panel estados mascotas', 'type' => 'estado de mascotas']);
+        Permission::firstOrCreate(['name' => 'crear estados mascotas', 'type' => 'estado de mascotas']);
+        Permission::firstOrCreate(['name' => 'editar estados mascotas', 'type' => 'estado de mascotas']);
+        Permission::firstOrCreate(['name' => 'eliminar estados mascotas', 'type' => 'estado de mascotas']);
 
-        //create families permissions
-        Permission::create(['name' => 'ver panel familias', 'type' => 'familias']);
-        Permission::create(['name' => 'crear familias', 'type' => 'familias']);
-        Permission::create(['name' => 'editar familias', 'type' => 'familias']);
-        Permission::create(['name' => 'eliminar familias', 'type' => 'familias']);
+        //firstOrCreate families permissions
+        Permission::firstOrCreate(['name' => 'ver panel familias', 'type' => 'familias']);
+        Permission::firstOrCreate(['name' => 'crear familias', 'type' => 'familias']);
+        Permission::firstOrCreate(['name' => 'editar familias', 'type' => 'familias']);
+        Permission::firstOrCreate(['name' => 'eliminar familias', 'type' => 'familias']);
 
-        //create cover areas permissions
-        Permission::create(['name' => 'ver panel areas a cubrir', 'type' => 'áreas a cubrir']);
-        Permission::create(['name' => 'crear areas a cubrir', 'type' => 'áreas a cubrir']);
-        Permission::create(['name' => 'editar areas a cubrir', 'type' => 'áreas a cubrir']);
-        Permission::create(['name' => 'eliminar areas a cubrir', 'type' => 'áreas a cubrir']);
+        //firstOrCreate cover areas permissions
+        Permission::firstOrCreate(['name' => 'ver panel areas a cubrir', 'type' => 'áreas a cubrir']);
+        Permission::firstOrCreate(['name' => 'crear areas a cubrir', 'type' => 'áreas a cubrir']);
+        Permission::firstOrCreate(['name' => 'editar areas a cubrir', 'type' => 'áreas a cubrir']);
+        Permission::firstOrCreate(['name' => 'eliminar areas a cubrir', 'type' => 'áreas a cubrir']);
 
-        //create schedules permissions
-        Permission::create(['name' => 'ver panel horarios', 'type' => 'horarios']);
-        Permission::create(['name' => 'crear horarios', 'type' => 'horarios']);
-        Permission::create(['name' => 'editar horarios', 'type' => 'horarios']);
-        Permission::create(['name' => 'eliminar horarios', 'type' => 'horarios']);
-
-        //permisos recepcion 
-        Permission::create(['name' => 'ver panel recepciones', 'type' => 'recepciones']);
-        Permission::create(['name' => 'crear recepciones', 'type' => 'recepciones']);
-        Permission::create(['name' => 'editar recepciones', 'type' => 'recepciones']);
-        Permission::create(['name' => 'eliminar recepciones', 'type' => 'recepciones']);
+        //firstOrCreate schedules permissions
+        Permission::firstOrCreate(['name' => 'ver panel horarios', 'type' => 'horarios']);
+        Permission::firstOrCreate(['name' => 'crear horarios', 'type' => 'horarios']);
+        Permission::firstOrCreate(['name' => 'editar horarios', 'type' => 'horarios']);
+        Permission::firstOrCreate(['name' => 'eliminar horarios', 'type' => 'horarios']);
 
         //permisos recepcion 
-        Permission::create(['name' => 'ver panel consultas', 'type' => 'consultas']);
-        Permission::create(['name' => 'crear consultas', 'type' => 'consultas']);
-        Permission::create(['name' => 'editar consultas', 'type' => 'consultas']);
-        Permission::create(['name' => 'eliminar consultas', 'type' => 'consultas']);
+        Permission::firstOrCreate(['name' => 'ver panel recepciones', 'type' => 'recepciones']);
+        Permission::firstOrCreate(['name' => 'crear recepciones', 'type' => 'recepciones']);
+        Permission::firstOrCreate(['name' => 'editar recepciones', 'type' => 'recepciones']);
+        Permission::firstOrCreate(['name' => 'eliminar recepciones', 'type' => 'recepciones']);
+
+        //permisos recepcion 
+        Permission::firstOrCreate(['name' => 'ver panel consultas', 'type' => 'consultas']);
+        Permission::firstOrCreate(['name' => 'crear consultas', 'type' => 'consultas']);
+        Permission::firstOrCreate(['name' => 'editar consultas', 'type' => 'consultas']);
+        Permission::firstOrCreate(['name' => 'eliminar consultas', 'type' => 'consultas']);
 
         //assignments permissions
-        Permission::create(['name' => 'ver panel asignaciones', 'type' => 'asignaciones']);
+        Permission::firstOrCreate(['name' => 'ver panel asignaciones', 'type' => 'asignaciones']);
 
         //prescriptions permissions
-        Permission::create(['name' => 'ver panel recetas', 'type' => 'recetas']);
-        Permission::create(['name' => 'crear recetas', 'type' => 'recetas']);
-        Permission::create(['name' => 'editar recetas', 'type' => 'recetas']);
-        Permission::create(['name' => 'eliminar recetas', 'type' => 'recetas']);
+        Permission::firstOrCreate(['name' => 'ver panel recetas', 'type' => 'recetas']);
+        Permission::firstOrCreate(['name' => 'crear recetas', 'type' => 'recetas']);
+        Permission::firstOrCreate(['name' => 'editar recetas', 'type' => 'recetas']);
+        Permission::firstOrCreate(['name' => 'eliminar recetas', 'type' => 'recetas']);
 
         //services
-        Permission::create(['name' => 'ver panel servicios', 'type' => 'servicios']);
-        Permission::create(['name' => 'crear servicios', 'type' => 'servicios']);
-        Permission::create(['name' => 'editar servicios', 'type' => 'servicios']);
-        Permission::create(['name' => 'eliminar servicios', 'type' => 'servicios']);
+        Permission::firstOrCreate(['name' => 'ver panel servicios', 'type' => 'servicios']);
+        Permission::firstOrCreate(['name' => 'crear servicios', 'type' => 'servicios']);
+        Permission::firstOrCreate(['name' => 'editar servicios', 'type' => 'servicios']);
+        Permission::firstOrCreate(['name' => 'eliminar servicios', 'type' => 'servicios']);
 
         //services
-        Permission::create(['name' => 'ver panel cartilla vacunación', 'type' => 'cartilla vacunación']);
-        Permission::create(['name' => 'crear cartilla vacunación', 'type' => 'cartilla vacunación']);
-        Permission::create(['name' => 'editar cartilla vacunación', 'type' => 'cartilla vacunación']);
-        Permission::create(['name' => 'eliminar cartilla vacunación', 'type' => 'cartilla vacunación']);
+        Permission::firstOrCreate(['name' => 'ver panel cartilla vacunación', 'type' => 'cartilla vacunación']);
+        Permission::firstOrCreate(['name' => 'crear cartilla vacunación', 'type' => 'cartilla vacunación']);
+        Permission::firstOrCreate(['name' => 'editar cartilla vacunación', 'type' => 'cartilla vacunación']);
+        Permission::firstOrCreate(['name' => 'eliminar cartilla vacunación', 'type' => 'cartilla vacunación']);
 
         //hospitalizations
-        Permission::create(['name' => 'ver panel hospitalizaciones', 'type' => 'hospitalizaciones']);
-        Permission::create(['name' => 'crear hospitalizaciones', 'type' => 'hospitalizaciones']);
-        Permission::create(['name' => 'editar hospitalizaciones', 'type' => 'hospitalizaciones']);
-        Permission::create(['name' => 'eliminar hospitalizaciones', 'type' => 'hospitalizaciones']);
+        Permission::firstOrCreate(['name' => 'ver panel hospitalizaciones', 'type' => 'hospitalizaciones']);
+        Permission::firstOrCreate(['name' => 'crear hospitalizaciones', 'type' => 'hospitalizaciones']);
+        Permission::firstOrCreate(['name' => 'editar hospitalizaciones', 'type' => 'hospitalizaciones']);
+        Permission::firstOrCreate(['name' => 'eliminar hospitalizaciones', 'type' => 'hospitalizaciones']);
 
         //red sheets
-        Permission::create(['name' => 'ver panel hoja roja', 'type' => 'hoja roja']);
-        Permission::create(['name' => 'crear hoja roja', 'type' => 'hoja roja']);
-        Permission::create(['name' => 'editar hoja roja', 'type' => 'hoja roja']);
-        Permission::create(['name' => 'eliminar hoja roja', 'type' => 'hoja roja']);
+        Permission::firstOrCreate(['name' => 'ver panel hoja roja', 'type' => 'hoja roja']);
+        Permission::firstOrCreate(['name' => 'crear hoja roja', 'type' => 'hoja roja']);
+        Permission::firstOrCreate(['name' => 'editar hoja roja', 'type' => 'hoja roja']);
+        Permission::firstOrCreate(['name' => 'eliminar hoja roja', 'type' => 'hoja roja']);
 
         //Surgery
-        Permission::create(['name' => 'ver panel cirugías', 'type' => 'cirugías']);
-        Permission::create(['name' => 'crear cirugía', 'type' => 'cirugías']);
-        Permission::create(['name' => 'editar cirugía', 'type' => 'cirugías']);
-        Permission::create(['name' => 'eliminar cirugía', 'type' => 'cirugías']);
+        Permission::firstOrCreate(['name' => 'ver panel cirugías', 'type' => 'cirugías']);
+        Permission::firstOrCreate(['name' => 'crear cirugía', 'type' => 'cirugías']);
+        Permission::firstOrCreate(['name' => 'editar cirugía', 'type' => 'cirugías']);
+        Permission::firstOrCreate(['name' => 'eliminar cirugía', 'type' => 'cirugías']);
 
         //Surgery schedules
-        Permission::create(['name' => 'ver panel horario de cirugías', 'type' => 'cirugías']);
-        Permission::create(['name' => 'crear asignación de cirugía', 'type' => 'cirugías']);
-        Permission::create(['name' => 'editar asignación de cirugía', 'type' => 'cirugías']);
-        Permission::create(['name' => 'eliminar asignación de cirugía', 'type' => 'cirugías']);
+        Permission::firstOrCreate(['name' => 'ver panel horario de cirugías', 'type' => 'cirugías']);
+        Permission::firstOrCreate(['name' => 'crear asignación de cirugía', 'type' => 'cirugías']);
+        Permission::firstOrCreate(['name' => 'editar asignación de cirugía', 'type' => 'cirugías']);
+        Permission::firstOrCreate(['name' => 'eliminar asignación de cirugía', 'type' => 'cirugías']);
 
         //follow ups
-        Permission::create(['name' => 'ver panel seguimientos', 'type' => 'seguimientos']);
-        Permission::create(['name' => 'crear seguimientos', 'type' => 'seguimientos']);
-        Permission::create(['name' => 'editar seguimientos', 'type' => 'seguimientos']);
-        Permission::create(['name' => 'eliminar seguimientos', 'type' => 'seguimientos']);
+        Permission::firstOrCreate(['name' => 'ver panel seguimientos', 'type' => 'seguimientos']);
+        Permission::firstOrCreate(['name' => 'crear seguimientos', 'type' => 'seguimientos']);
+        Permission::firstOrCreate(['name' => 'editar seguimientos', 'type' => 'seguimientos']);
+        Permission::firstOrCreate(['name' => 'eliminar seguimientos', 'type' => 'seguimientos']);
 
         //FORMAT TYPES
-        Permission::create(['name' => 'Ver panel Tipo de Formatos', 'type' => 'formatos']);
-        Permission::create(['name' => 'Crear tipo de formato', 'type' => 'formatos']);
-        Permission::create(['name' => 'Editar tipo de formato', 'type' => 'formatos']);
-        Permission::create(['name' => 'Eliminar tipo de formato', 'type' => 'formatos']);
+        Permission::firstOrCreate(['name' => 'Ver panel Tipo de Formatos', 'type' => 'formatos']);
+        Permission::firstOrCreate(['name' => 'Crear tipo de formato', 'type' => 'formatos']);
+        Permission::firstOrCreate(['name' => 'Editar tipo de formato', 'type' => 'formatos']);
+        Permission::firstOrCreate(['name' => 'Eliminar tipo de formato', 'type' => 'formatos']);
 
         //FORMATS
-        Permission::create(['name' => 'Ver panel de Formatos', 'type' => 'formatos']);
-        Permission::create(['name' => 'Crear formato', 'type' => 'formatos']);
-        Permission::create(['name' => 'Editar formato', 'type' => 'formatos']);
-        Permission::create(['name' => 'Eliminar formato', 'type' => 'formatos']);
+        Permission::firstOrCreate(['name' => 'Ver panel de Formatos', 'type' => 'formatos']);
+        Permission::firstOrCreate(['name' => 'Crear formato', 'type' => 'formatos']);
+        Permission::firstOrCreate(['name' => 'Editar formato', 'type' => 'formatos']);
+        Permission::firstOrCreate(['name' => 'Eliminar formato', 'type' => 'formatos']);
 
         //red sheets
-        Permission::create(['name' => 'ver panel servicios consultas', 'type' => 'sevicios consultas']);
-        Permission::create(['name' => 'crear servicios consultas', 'type' => 'sevicios consultas']);
-        Permission::create(['name' => 'editar servicios consultas', 'type' => 'sevicios consultas']);
-        Permission::create(['name' => 'eliminar servicios consultas', 'type' => 'sevicios consultas']);
+        Permission::firstOrCreate(['name' => 'ver panel servicios consultas', 'type' => 'sevicios consultas']);
+        Permission::firstOrCreate(['name' => 'crear servicios consultas', 'type' => 'sevicios consultas']);
+        Permission::firstOrCreate(['name' => 'editar servicios consultas', 'type' => 'sevicios consultas']);
+        Permission::firstOrCreate(['name' => 'eliminar servicios consultas', 'type' => 'sevicios consultas']);
 
         // surgery budgets permissions
-        Permission::create(['name' => 'ver panel presupuestos', 'type' => 'presupuestos']);
-        Permission::create(['name' => 'crear presupuestos', 'type' => 'presupuestos']);
-        Permission::create(['name' => 'editar presupuestos', 'type' => 'presupuestos']);
-        Permission::create(['name' => 'eliminar presupuestos', 'type' => 'presupuestos']);
+        Permission::firstOrCreate(['name' => 'ver panel presupuestos', 'type' => 'presupuestos']);
+        Permission::firstOrCreate(['name' => 'crear presupuestos', 'type' => 'presupuestos']);
+        Permission::firstOrCreate(['name' => 'editar presupuestos', 'type' => 'presupuestos']);
+        Permission::firstOrCreate(['name' => 'eliminar presupuestos', 'type' => 'presupuestos']);
 
         //follow ups critics
-        Permission::create(['name' => 'ver panel seguimientos de criticos', 'type' => 'seguimientos de criticos']);
-        Permission::create(['name' => 'crear seguimientos de criticos', 'type' => 'seguimientos de criticos']);
-        Permission::create(['name' => 'editar seguimientos de criticos', 'type' => 'seguimientos de criticos']);
-        Permission::create(['name' => 'eliminar seguimientos de criticos', 'type' => 'seguimientos de criticos']);
+        Permission::firstOrCreate(['name' => 'ver panel seguimientos de criticos', 'type' => 'seguimientos de criticos']);
+        Permission::firstOrCreate(['name' => 'crear seguimientos de criticos', 'type' => 'seguimientos de criticos']);
+        Permission::firstOrCreate(['name' => 'editar seguimientos de criticos', 'type' => 'seguimientos de criticos']);
+        Permission::firstOrCreate(['name' => 'eliminar seguimientos de criticos', 'type' => 'seguimientos de criticos']);
         //FOLLOWUP INTERN
-        Permission::create(['name' => 'Ver panel pase de guardia internos', 'type' => 'pase de guardia']);
-        Permission::create(['name' => 'Crear pase de guardia interno', 'type' => 'pase de guardia']);
-        Permission::create(['name' => 'Editar pase de guardia interno', 'type' => 'pase de guardia']);
-        Permission::create(['name' => 'Eliminar pase de guardia interno', 'type' => 'pase de guardia']);
+        Permission::firstOrCreate(['name' => 'Ver panel pase de guardia internos', 'type' => 'pase de guardia']);
+        Permission::firstOrCreate(['name' => 'Crear pase de guardia interno', 'type' => 'pase de guardia']);
+        Permission::firstOrCreate(['name' => 'Editar pase de guardia interno', 'type' => 'pase de guardia']);
+        Permission::firstOrCreate(['name' => 'Eliminar pase de guardia interno', 'type' => 'pase de guardia']);
 
         //FOLLOWUP SURGICAL
-        Permission::create(['name' => 'Ver panel pase de guardia quirúrgicos', 'type' => 'pase de guardia']);
-        Permission::create(['name' => 'Crear pase de guardia quirúrgico', 'type' => 'pase de guardia']);
-        Permission::create(['name' => 'Editar pase de guardia quirúrgico', 'type' => 'pase de guardia']);
-        Permission::create(['name' => 'Eliminar pase de guardia quirúrgico', 'type' => 'pase de guardia']);
+        Permission::firstOrCreate(['name' => 'Ver panel pase de guardia quirúrgicos', 'type' => 'pase de guardia']);
+        Permission::firstOrCreate(['name' => 'Crear pase de guardia quirúrgico', 'type' => 'pase de guardia']);
+        Permission::firstOrCreate(['name' => 'Editar pase de guardia quirúrgico', 'type' => 'pase de guardia']);
+        Permission::firstOrCreate(['name' => 'Eliminar pase de guardia quirúrgico', 'type' => 'pase de guardia']);
 
         //Grooming Services Permissions
-        Permission::create(['name' => 'ver panel grooming', 'type' => 'Grooming']);
-        Permission::create(['name' => 'crear grooming', 'type' => 'Grooming']);
-        Permission::create(['name' => 'editar grooming', 'type' => 'Grooming']);
-        Permission::create(['name' => 'eliminar grooming', 'type' => 'Grooming']);
+        Permission::firstOrCreate(['name' => 'ver panel grooming', 'type' => 'Grooming']);
+        Permission::firstOrCreate(['name' => 'crear grooming', 'type' => 'Grooming']);
+        Permission::firstOrCreate(['name' => 'editar grooming', 'type' => 'Grooming']);
+        Permission::firstOrCreate(['name' => 'eliminar grooming', 'type' => 'Grooming']);
 
         //Delivery Services
-        Permission::create(['name' => 'ver panel servicios domicilio', 'type' => 'Domicilios']);
+        Permission::firstOrCreate(['name' => 'ver panel servicios domicilio', 'type' => 'Domicilios']);
 
         //TAG TYPES
-        Permission::create(['name' => 'ver panel tipo de placas para cremación', 'type' => 'cremaciones']);
-        Permission::create(['name' => 'crear tipo de placas para cremación', 'type' => 'cremaciones']);
-        Permission::create(['name' => 'editar tipo de placas para cremación', 'type' => 'cremaciones']);
-        Permission::create(['name' => 'eliminar tipo de placas para cremación', 'type' => 'cremaciones']);
+        Permission::firstOrCreate(['name' => 'ver panel tipo de placas para cremación', 'type' => 'cremaciones']);
+        Permission::firstOrCreate(['name' => 'crear tipo de placas para cremación', 'type' => 'cremaciones']);
+        Permission::firstOrCreate(['name' => 'editar tipo de placas para cremación', 'type' => 'cremaciones']);
+        Permission::firstOrCreate(['name' => 'eliminar tipo de placas para cremación', 'type' => 'cremaciones']);
 
         //CM TYPES
-        Permission::create(['name' => 'ver panel C.M', 'type' => 'cremaciones']);
-        Permission::create(['name' => 'crear C.M', 'type' => 'cremaciones']);
-        Permission::create(['name' => 'editar C.M', 'type' => 'cremaciones']);
-        Permission::create(['name' => 'eliminar C.M', 'type' => 'cremaciones']);
+        Permission::firstOrCreate(['name' => 'ver panel C.M', 'type' => 'cremaciones']);
+        Permission::firstOrCreate(['name' => 'crear C.M', 'type' => 'cremaciones']);
+        Permission::firstOrCreate(['name' => 'editar C.M', 'type' => 'cremaciones']);
+        Permission::firstOrCreate(['name' => 'eliminar C.M', 'type' => 'cremaciones']);
 
         //CREMATIONS
-        Permission::create(['name' => 'ver panel cremaciones', 'type' => 'cremaciones']);
-        Permission::create(['name' => 'crear cremaciones', 'type' => 'cremaciones']);
-        Permission::create(['name' => 'editar cremaciones', 'type' => 'cremaciones']);
-        Permission::create(['name' => 'eliminar cremaciones', 'type' => 'cremaciones']);
+        Permission::firstOrCreate(['name' => 'ver panel cremaciones', 'type' => 'cremaciones']);
+        Permission::firstOrCreate(['name' => 'crear cremaciones', 'type' => 'cremaciones']);
+        Permission::firstOrCreate(['name' => 'editar cremaciones', 'type' => 'cremaciones']);
+        Permission::firstOrCreate(['name' => 'eliminar cremaciones', 'type' => 'cremaciones']);
 
         //HOTEL
-        Permission::create(['name' => 'ver panel hotel', 'type' => 'Hotel']);
-        Permission::create(['name' => 'crear pensiones', 'type' => 'Hotel']);
-        Permission::create(['name' => 'editar pensiones', 'type' => 'Hotel']);
-        Permission::create(['name' => 'eliminar pensiones', 'type' => 'Hotel']);
+        Permission::firstOrCreate(['name' => 'ver panel hotel', 'type' => 'Hotel']);
+        Permission::firstOrCreate(['name' => 'crear pensiones', 'type' => 'Hotel']);
+        Permission::firstOrCreate(['name' => 'editar pensiones', 'type' => 'Hotel']);
+        Permission::firstOrCreate(['name' => 'eliminar pensiones', 'type' => 'Hotel']);
 
         //Advance Payments
-        Permission::create(['name' => 'ver panel anticipos', 'type' => 'Anticipos']);
-        Permission::create(['name' => 'crear anticipos', 'type' => 'Anticipos']);
-        Permission::create(['name' => 'editar anticipos', 'type' => 'Anticipos']);
-        Permission::create(['name' => 'eliminar anticipos', 'type' => 'Anticipos']);
+        Permission::firstOrCreate(['name' => 'ver panel anticipos', 'type' => 'Anticipos']);
+        Permission::firstOrCreate(['name' => 'crear anticipos', 'type' => 'Anticipos']);
+        Permission::firstOrCreate(['name' => 'editar anticipos', 'type' => 'Anticipos']);
+        Permission::firstOrCreate(['name' => 'eliminar anticipos', 'type' => 'Anticipos']);
 
         //CONTROL DATES
-        Permission::create(['name' => 'ver panel citas', 'type' => 'Citas']);
-        Permission::create(['name' => 'crear citas', 'type' => 'Citas']);
-        Permission::create(['name' => 'editar citas', 'type' => 'Citas']);
-        Permission::create(['name' => 'eliminar citas', 'type' => 'Citas']);
+        Permission::firstOrCreate(['name' => 'ver panel citas', 'type' => 'Citas']);
+        Permission::firstOrCreate(['name' => 'crear citas', 'type' => 'Citas']);
+        Permission::firstOrCreate(['name' => 'editar citas', 'type' => 'Citas']);
+        Permission::firstOrCreate(['name' => 'eliminar citas', 'type' => 'Citas']);
 
+        //VOUCHERS
+        Permission::firstOrCreate(['name' => 'ver panel vales', 'type' => 'Vales']);
+        Permission::firstOrCreate(['name' => 'ver vales', 'type' => 'Vales']);
+        Permission::firstOrCreate(['name' => 'crear vales', 'type' => 'Vales']);
+        Permission::firstOrCreate(['name' => 'surtir vales', 'type' => 'Vales']);
+        Permission::firstOrCreate(['name' => 'rechazar vales', 'type' => 'Vales']);
+        Permission::firstOrCreate(['name' => 'cancelar vales', 'type' => 'Vales']);
 
         // roles and assign each one their respective permisions 
         //Admin
-        $role = Role::create(['name' => 'administrador']);
+        $role = Role::firstOrCreate(['name' => 'administrador']);
         $role->givePermissionTo(Permission::all());
 
         //Recepcionist
-        $role = Role::create(['name' => 'recepcionista']);
+        $role = Role::firstOrCreate(['name' => 'recepcionista']);
         $permissionsReceptionist = [
             'ver panel usuarios',
             'ver panel consultorios',
@@ -381,7 +388,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $role->givePermissionTo($permissionsReceptionist);
 
         //MVZ
-        $role = Role::create(['name' => 'medico']);
+        $role = Role::firstOrCreate(['name' => 'medico']);
         $permissionsMVZ = [
             'ver panel usuarios',
             'ver panel consultorios',
@@ -457,12 +464,15 @@ class RolesAndPermissionsSeeder extends Seeder
             'Eliminar pase de guardia quirúrgico',
             'ver panel grooming',
             'ver panel citas',
+            'ver vales',
+            'crear vales',
+            'cancelar vales',
         ];
         $role->givePermissionTo($permissionsMVZ);
 
 
         //Colaborator
-        $role = Role::create(['name' => 'colaborador']);
+        $role = Role::firstOrCreate(['name' => 'colaborador']);
         $permissionsCollab = [
             'ver panel estados de atención',
             'ver panel estados de grooming',
@@ -479,5 +489,15 @@ class RolesAndPermissionsSeeder extends Seeder
             'ver panel citas',
         ];
         $role->givePermissionTo($permissionsCollab);
+
+        //Almacenista
+        $role = Role::firstOrCreate(['name' => 'almacenista']);
+        $permissionsStorekeeper = [
+            'ver panel vales',
+            'ver vales',
+            'surtir vales',
+            'rechazar vales',
+        ];
+        $role->givePermissionTo($permissionsStorekeeper);
     }
 }

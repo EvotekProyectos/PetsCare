@@ -4,6 +4,8 @@
     Control Date
 @endsection
 
+@section('control-dates', 'active border-start border-3 border-primary')
+
 @section('content')
 <div class="container-fluid">
     <div class="row">
@@ -23,8 +25,20 @@
                             <a href="{{ route('control-dates.create') }}" class="btn btn-primary btn-sm rounded-4">
                                 <i class="fas fa-plus"></i> AGENDAR NUEVA CITA
                             </a>
+                               {{-- <form action="{{ route('whatsapp.enviar') }}" method="POST" style="display:inline-block;" onsubmit="return confirm('¿Enviar mensajes de WhatsApp para confirmar citas?')">
+        @csrf
+        <button type="submit" class="btn btn-success btn-sm rounded-4">
+            <i class="fas fa-paper-plane"></i> Enviar WhatsApp
+        </button>
+    </form> --}}
+                                    <a href="{{ route('citas.exportar') }}" class="btn btn-success">
+                                       <i class="vscode-icons--file-type-excel2"></i> Exportar
+                                    </a>
+
+                                
+    
                           </div>
-                       
+ 
                     </div>
 
                     {{-- <div class="col d-flex justify-content-between align-items-center my-2">

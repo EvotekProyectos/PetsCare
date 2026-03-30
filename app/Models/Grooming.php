@@ -55,5 +55,9 @@ class Grooming extends Model
         return $this->belongsTo(\App\Models\Producto::class, 'service_id', 'ARTICULO_ID');
     }
     
+    public function statusHistories()
+{
+    return $this->hasMany(GroomingStatusHistory::class, 'id');
+}
 
 }

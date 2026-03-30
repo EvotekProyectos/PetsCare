@@ -73,6 +73,8 @@ use App\Http\Controllers\RedSheetController;
 use App\Http\Controllers\StatusSurgeryController;
 use App\Http\Controllers\SurgeryScheduleController;
 use App\Http\Controllers\TagTypeController;
+use App\Http\Controllers\VoucherController;
+use App\Http\Controllers\VoucherProductController;
 use App\Models\ControlDate;
 use App\Models\Dashboard;
 use App\Models\FollowUp;
@@ -197,14 +199,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('pets', PetController::class);
 
     //RECEPTIONS
-    Route::put('/receptions/update/{id}',[ReceptionController::class, 'transfer'])->name('reception.transfer');
+    Route::put('/receptions/update/{id}', [ReceptionController::class, 'transfer'])->name('reception.transfer');
     Route::get('/receptions/list/{reception_type_id}', [ReceptionController::class, 'list'])->name('reception.list');
     Route::get('/receptions/{id}/area', [ReceptionController::class, 'getReceptionArea'])->name('receptions.getArea');
     Route::get('/receptions/historial/{id}', [ReceptionController::class, 'historial'])->name('reception.historial');
     Route::get('/receptions/hospital/{id}', [ReceptionController::class, 'hospital_authorization'])->name('hospital.list');
     Route::post('/receptions/hospital/pdf/{id}', [ReceptionController::class, 'hospital_authorizationpdf'])->name('hospital.pdf');
     Route::get('/receptions/grooming/{id}', [ReceptionController::class, 'groomingservice'])->name('receptions.grooming');
-    
     Route::resource('receptions', ReceptionController::class);
 
 
@@ -222,7 +223,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/assignment/appointments/list', [AssignmentController::class, 'appointments'])->name('assignment.appointments');
     Route::get('/assignment/hospitaizations', [AssignmentController::class, 'hospital'])->name('assignment.hospital');
     Route::get('/assignment/hospitaizations/list', [AssignmentController::class, 'hospitalizations'])->name('assignment.hospitalizations');
-    
     Route::get('/assignment/hospitalizations/altas', [AssignmentController::class, 'hospital_altas'])->name('hospitalization.altas');
     Route::get('/assignment/altas/list', [AssignmentController::class, 'altas'])->name('assignment.altas');
     Route::get('/assignment/groomings', [AssignmentController::class, 'groomings'])->name('assignment.groomings');
@@ -262,7 +262,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/discharge-death', [HospitalizationController::class, 'dischargeDeath'])->name('discharge-death');
     Route::get('/alta-voluntaria/{id}', [HospitalizationController::class, 'altaVoluntaria'])->name('alta.voluntaria');
     Route::post('/alta-voluntaria/pdf/{id}', [HospitalizationController::class, 'altaVoluntariapdf'])->name('altaVoluntaria.pdf');
-    Route::get('/hospitalizations/historic/{id}', [HospitalizationController::class, 'historic'])->name('hospitalization.historic');   
+    Route::get('/hospitalizations/historic/{id}', [HospitalizationController::class, 'historic'])->name('hospitalization.historic');
     Route::resource('hospitalizations', HospitalizationController::class);
 
 
@@ -284,10 +284,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/surgeries/entries/{id}', [SurgeryController::class, 'entry'])->name("surgeries.entry");
     Route::get("/surgeries/create/{id}", [SurgeryController::class, 'create'])->name('surgeries.creater');
     Route::get('/check-surgeries-requirements/{id}', [SurgeryController::class, 'checkRequirements'])->name("surgery.checkRequirements");
-    Route::get('/surgeries/authorization/{id}',[SurgeryController::class, 'surgery_authorization'])->name("surgery.auth");
-    Route::post('/surgeries/authorization/pdf/{id}',[SurgeryController::class, 'surgery_authorizationpdf'])->name("surgery_authorization.pdf");
+    Route::get('/surgeries/authorization/{id}', [SurgeryController::class, 'surgery_authorization'])->name("surgery.auth");
+    Route::post('/surgeries/authorization/pdf/{id}', [SurgeryController::class, 'surgery_authorizationpdf'])->name("surgery_authorization.pdf");
     Route::resource('surgeries', SurgeryController::class);
-   
+
     //FOLLOW UPS 
     Route::get('/follow-ups/entries/{id}', [FollowUpController::class, 'entry'])->name("followup.entry");
     Route::resource('follow-ups', FollowUpController::class);
@@ -301,9 +301,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get("/formats/created/{id}", [FormatController::class, 'format_list'])->name('formats.created');
     Route::get("/formats/create/{id}", [FormatController::class, 'add'])->name('formats.add');
     Route::get('/formats/hospital/{id}', [FormatController::class, 'hospital_authorization'])->name('format.hospital');
-    Route::post('/formats/hospital/pdf/{id}', [FormatController::class, 'generateHospitalAuthorizationPdf'])->name('format-hospital.pdf'); 
+    Route::post('/formats/hospital/pdf/{id}', [FormatController::class, 'generateHospitalAuthorizationPdf'])->name('format-hospital.pdf');
     Route::get('/formats/alta/{id}', [FormatController::class, 'altaVoluntaria'])->name('format.alta');
-    Route::post('/formats/alta/pdf/{id}', [FormatController::class, 'altaVoluntariapdf'])->name('format-alta.pdf'); 
+    Route::post('/formats/alta/pdf/{id}', [FormatController::class, 'altaVoluntariapdf'])->name('format-alta.pdf');
     Route::get('/formats/surgery/{id}', [FormatController::class, 'surgery_authorization'])->name('format.surgery');
     Route::post('/formats/surgery/pdf/{id}', [FormatController::class, 'surgery_authorizationpdf'])->name('format-surgery.pdf');
     Route::get('/reporte', [FormatController::class, 'reporte']);
@@ -319,7 +319,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('appointment-services/imgs/{id}', [AppointmentServiceController::class, 'getImgs'])->name("appointment-services.imgs");
     Route::resource('appointment-services', AppointmentServiceController::class);
 
-    
 
     //Budgets
     Route::get('/budgets/list', [BudgetController::class, 'list'])->name('budgets.list');
@@ -337,7 +336,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Follow Ups Type Critics
     Route::get('/followups-critics/list/{id}', [FollowupsCriticController::class, 'list'])->name('followups-critics.list');
     Route::resource('followups-critics', FollowupsCriticController::class);
-    
+
     //HOSPITAL DISCHARGE
     Route::resource('hospital-discharges', HospitalDischargeController::class);
 
@@ -389,14 +388,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get("/cremations/responsiva/{id}", [CremationController::class, "responsiva"])->name("cremation.responsiva");
     Route::post("/cremations/responsiva/pdf/{id}", [CremationController::class, "responsivaPdf"])->name("responsivaPdf.cremation");
     Route::resource('cremations', CremationController::class);
-    
+
     //Status surgery
     Route::resource('status-surgeries', StatusSurgeryController::class);
 
     //SURGERY SCHEDULES
     Route::get('/surgery-schedules/list', [SurgeryScheduleController::class, 'list'])->name('schedules-surgery.list');
-    Route::get('/surgery-schedules/get-events', [ SurgeryScheduleController::class, 'getEvents'])->name('surgery-schedules.getEvents');
-    Route::get('assignment/surgeries', [ SurgeryScheduleController::class, 'assignament'])->name('assignament.surgery');
+    Route::get('/surgery-schedules/get-events', [SurgeryScheduleController::class, 'getEvents'])->name('surgery-schedules.getEvents');
+    Route::get('assignment/surgeries', [SurgeryScheduleController::class, 'assignament'])->name('assignament.surgery');
     Route::post('/surgery/{id}/update/', [SurgeryScheduleController::class, 'updateStatus'])->name("surgery.status");
     Route::get('surgery-schedules/add/{id}', [SurgeryScheduleController::class, 'add'])->name("surgery-schedule.new");
     Route::resource('surgery-schedules', SurgeryScheduleController::class);
@@ -421,7 +420,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/hotel/pv/{id}', [HotelController::class, 'ordenventa'])->name("hotel.pay");
     Route::get('/pension/inf/{id}', [HotelController::class, 'serviceDetails'])->name('pension.inf');
     Route::post('/hotel/exit/{id}', [HotelController::class, 'finishDate'])->name('hotel-exit');
-    
+
     Route::get('/hotel/unavailable', [HotelController::class, 'unavailableCubicles'])->name('hotel.unavailable');
     Route::post('/hotels/extend', [HotelController::class, 'storeExtension'])->name('hotels.storeExtension');
     Route::get('/hotel/cubicle', [HotelController::class, 'cubicle'])->name('hotel.calendar');
@@ -433,13 +432,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/hotel/video-sent/{id}', [HotelController::class, 'sendVideo'])->name('video-send');
     Route::get('/hotel/cubicle/{id}', [HotelController::class, 'CubiclesByArticle'])->name('cubicles.article');
     Route::get('/hotel/get-events', [HotelController::class, 'getEvents'])->name('hotel.getEvents');
-    
+
     Route::resource('hotels', HotelController::class);
 
     //Notificacions
-    Route::get('/notifications',[NotificationController::class, 'index'])->name('notifications.index');
-    Route::get('/notifications/list',[NotificationController::class, 'list'])->name('notifications.list');
-    Route::get('/notifications/list/unread',[NotificationController::class, 'unreadList'])->name('notifications.unreadList');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/list', [NotificationController::class, 'list'])->name('notifications.list');
+    Route::get('/notifications/list/unread', [NotificationController::class, 'unreadList'])->name('notifications.unreadList');
     Route::post('/notifications/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
 
 
@@ -465,6 +464,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/validate-schedule', [ControlDateController::class, 'validateSchedule'])->name('validate.schedule');
     Route::post('control-dates/updateAttend/{id}', [ControlDateController::class, 'updateAttend'])->name('control-dates.attend');
     Route::get('/showDate/{id}', [ControlDateController::class, 'showDate'])->name('validate.date');
+    Route::post('/enviar-citas-whatsapp', [\App\Http\Controllers\WhatsappController::class, 'enviar'])->name('whatsapp.enviar');
+    Route::get('/exportar-citas', [ControlDateController::class, 'exportarExcel'])->name('citas.exportar');
 
 
     Route::resource('control-dates', ControlDateController::class);
@@ -475,9 +476,22 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/advance-payments/list', [AdvancePaymentController::class, 'list'])->name('advance-payments.list');
     Route::get('/advance-payments/add/{id}', [AdvancePaymentController::class, 'add'])->name('advance-payments.add');
     Route::resource('advance-payments', AdvancePaymentController::class);
+
+    //vouchers
+    Route::get('/vouchers/list', [VoucherController::class, 'list'])->name('vouchers.list');
+    Route::get('/vouchers/list-reception/{id}', [VoucherController::class, 'listForReception'])->name('vouchers.listForReception');
+    Route::post('/vouchers/store-products', [VoucherController::class, 'storeProducts'])->name('vouchers.store-products');
+    Route::get('/vouchers/siganture/{id}', [VoucherController::class, 'format'])->name('vouchers.format');
+    Route::post('/vouchers/generate/{voucher}', [VoucherController::class, 'generate'])->name('vouchers.generate');
+    Route::get('/vouchers/cancel/{voucher}', [VoucherController::class, 'cancelFormat'])->name('vouchers.cancelFormat');
+    Route::post('/vouchers/cancel-vouchers/{voucher}', [VoucherController::class, 'cancel'])->name('vouchers.cancel');
+    Route::get('/vouchers/issue/{voucher}', [VoucherController::class, 'issueFormat'])->name('vouchers.issueFormat');
+    Route::post('/vouchers/issue-vouchers/{voucher}', [VoucherController::class, 'issue'])->name('vouchers.issue');
+    Route::get('/vouchers/reject/{voucher}', [VoucherController::class, 'rejectFormat'])->name('vouchers.rejectFormat');
+    Route::post('/vouchers/reject-vouchers/{voucher}', [VoucherController::class, 'reject'])->name('vouchers.reject');
+    Route::get('/vouchers/lastUpdate', [VoucherController::class, 'lastUpdate'])->name('vouchers.lastUpdate');
+    Route::get('/vouchers/lastUpdateGlobal', [VoucherController::class, 'lastUpdateGlobal'])->name('vouchers.lastUpdateGlobal');
+    Route::resource('vouchers', VoucherController::class);
+
+    Route::resource('voucher-products', VoucherProductController::class);
 });
-
-
-
-
- 

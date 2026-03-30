@@ -27,7 +27,7 @@ class AppointmentRequest extends FormRequest
 			'exam_details' => 'nullable|string',
 			'diagnosis' => 'required|string',
 			'observations' => 'nullable|string',
-			'day_next_check' => 'required|date',
+			'day_next_check' => 'nullable|date',
             'time_next_check' => 'nullable',
             'reason_next_check_id' => 'nullable|integer|exists:reasons,id',
         ];

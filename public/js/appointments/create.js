@@ -34,6 +34,32 @@ $(document).ready(function () {
     // });
 });
 
+
+document.addEventListener('DOMContentLoaded', function () {
+    const date1 = document.getElementById('application_date1');
+    const date2 = document.getElementById('application_date2');
+    const date3 = document.getElementById('application_date3');
+   
+
+    const diagnosis_appointment = document.getElementById('diagnosis');
+    const diagnosis_prescrition = document.getElementById('diagnosis_prescription');
+    if (date1 && date2 && date3 ) {
+        date1.addEventListener('change', function () {
+            date2.value = date1.value;
+            date3.value = date1.value;
+           
+        });
+    }
+    if (diagnosis_appointment && diagnosis_prescrition) {
+        diagnosis_appointment.addEventListener('change', function () {
+            diagnosis_prescrition.value = diagnosis_appointment.value;
+        });
+    }
+});
+
+
+
+
 async function AddPrescription() {
     event.preventDefault();
     let url = route('prescriptions.store');
@@ -61,14 +87,50 @@ async function AddPrescription() {
 
 async function EndAppointment() {
     event.preventDefault();
+
     const dayNextCheck = document.getElementById("day_next_check").value;
+    const interpretation = document.getElementById("diagnosis").value;
+    const prescription = document.getElementById("medicine").value;
+
+    const REQUIREMENTS_LIST = {
+        1: { dayNextCheck: true, prescription: true },
+        2: { dayNextCheck: false, prescription: false },
+        3: { dayNextCheck: false, prescription: false },
+        4: { dayNextCheck: true, prescription: true },
+        5: { dayNextCheck: false, prescription: false },
+        6: { dayNextCheck: false, prescription: false },
+        7: { dayNextCheck: false, prescription: false },
+        8: { dayNextCheck: false, prescription: false },
+    };
+
+    const requirements = REQUIREMENTS_LIST[Reason_Id] || { dayNextCheck: false, prescription: false };
 
 
-    if (!dayNextCheck) {
+    console.log(interpretation);
+
+    if (!interpretation.trim()) {
         Swal.fire({
             icon: 'warning',
-            title: 'Campo obligatorio',
-            text: 'Por favor, selecciona el próximo control antes de finalizar la consulta.'
+            title: 'Dato Obligatorio',
+            text: 'Por favor, en interpretación registra cómo fue la consulta.'
+        });
+        return;
+    }
+
+    if (requirements.dayNextCheck && !dayNextCheck) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Dato obligatorio',
+            text: 'Esta consulta requiere seleccionar el próximo control.'
+        });
+        return;
+    }
+
+    if (requirements.prescription && !prescription.trim()) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Dato obligatorio',
+            text: 'Esta consulta requiere una receta médica.'
         });
         return;
     }
@@ -119,16 +181,23 @@ async function EndAppointment() {
                 throw new Error('Error al guardar la cita');
             }
 
+            if (requirements.prescription || prescription.trim()) {
+                let url2 = route('prescriptions.store');
+                let form2 = new FormData(document.getElementById("NewPrescription"));
+                const dateInput = document.getElementById('day_next_check');
+                form2.append('day_next_check', dateInput.value);
 
-            let url2 = route('prescriptions.store');
-            let form2 = new FormData(document.getElementById("NewPrescription"));
-            const dateInput = document.getElementById('day_next_check');
-            form2.append('day_next_check', dateInput.value);
+                let pet2 = await fetch(url2, { method: "POST", body: form2 });
+                let resp2 = await pet2.json();
 
-            let pet2 = await fetch(url2, { method: "POST", body: form2 });
-            let resp2 = await pet2.json();
+                if (!pet2.ok) throw new Error('Error al guardar la prescripción');
+                // Abre la receta si se creó
+                if (resp2?.id) {
+                    let prescription = resp2.id;
+                    window.open(route('prescription.imprimir', prescription), '_blank');
+                }
+            }
 
-            if (!pet2.ok) throw new Error('Error al guardar la prescripción');
 
             let url3 = route('appointment.pay', { id: Reception_Id, concepto: result.value });
             let pet3 = await fetch(url3, {
@@ -152,8 +221,6 @@ async function EndAppointment() {
                 text: 'El Folio para pagar en caja es ' + resp3,
                 timer: 27000
             }).then(() => {
-                let prescription = resp2.id;
-                window.open(route('prescription.imprimir', prescription), '_blank');
                 window.location.href = route('assignment.index');
             });
 
@@ -254,6 +321,8 @@ async function OpenCarnet() {
     $('#ModalCertificate').modal('show');
 }
 
+
+//Envio de formularios ara cartilla tomandolos como tres indeoendientes
 async function Register() {
     event.preventDefault();
     let product1 = document.getElementById("product1").value;
@@ -345,6 +414,87 @@ async function Register() {
     }
 
 }
+
+//Envío de formularios para cartilla tomandolos como uno solo obligatorio
+// async function Register() {
+//     event.preventDefault();
+//     let product1 = document.getElementById("product1").value;
+//     let product2 = document.getElementById("product2").value;
+//     let product3 = document.getElementById("product3").value;
+
+//     let vaccine_date = document.getElementById("next_application_date1").value;
+//     let intern_date = document.getElementById("next_application_date2").value;
+//     let extern_date = document.getElementById("next_application_date3").value;
+
+//     if (!product1 || !vaccine_date) {
+//         Swal.fire({
+//             icon: 'warning',
+//             title: 'Faltan datos',
+//             text: 'Faltan registrar datos de la vacuna.'
+//         });
+//         return;
+//     }
+
+//     if (!product2 || !intern_date) {
+//         Swal.fire({
+//             icon: 'warning',
+//             title: 'Faltan datos',
+//             text: 'Faltan registrar datos de la desparacitación interna.'
+//         });
+//         return;
+//     }
+
+//     if (!product3 || !extern_date) {
+//         Swal.fire({
+//             icon: 'warning',
+//             title: 'Faltan datos',
+//             text: 'Faltan registrar datos de la desparacitación externa.'
+//         });
+//         return;
+//     }
+
+//     try {
+//         let url = route('vaccine-certificates.store');
+
+//         const forms = [
+//             { id: "NewVaccine", name: "vacuna" },
+//             { id: "NewInterDeworming", name: "desparasitación interna" },
+//             { id: "NewExternDeworming", name: "desparasitación externa" }
+//         ];
+
+//         for (const f of forms) {
+//             let form = new FormData(document.getElementById(f.id));
+//             form.append('reception_id', Reception_Id);
+
+//             let response = await fetch(url, {
+//                 method: "POST",
+//                 body: form
+//             });
+
+//             if (!response.ok) {
+//                 throw new Error(`Error al guardar ${f.name}`);
+//             }
+//         }
+
+//         Swal.fire({
+//             icon: "success",
+//             title: "¡Éxito!",
+//             text: "Se guardaron los regsitros en la cartilla virtual.",
+//             timer: 3000,
+//             showConfirmButton: false
+//         }).then(() => {
+//             closeModal();
+//         });
+
+//     } catch (error) {
+//         Swal.fire({
+//             icon: "error",
+//             title: "Error al guardar",
+//             text: error.message
+//         });
+//     }
+
+// }
 
 function closeModal() {
     document.getElementById("application_date1").value = "";

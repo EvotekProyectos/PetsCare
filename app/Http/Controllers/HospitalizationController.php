@@ -11,6 +11,7 @@ use App\Models\Producto;
 use App\Models\Format;
 use App\Models\Pet;
 use App\Models\Reception;
+use App\Models\Voucher;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf  as Pdf;
 use Illuminate\Support\Facades\Storage;
@@ -115,7 +116,7 @@ class HospitalizationController extends Controller
 
     public function altaVoluntaria($id)
     {
-        $reception = Reception::find($id);//encuentra la recepcion
+        $reception = Reception::find($id); //encuentra la recepcion
         return view('hospital-discharge.alta_voluntaria', compact("reception")); //regresa vista del pdf con la recedpcion para llenado y firma
     }
 
@@ -139,7 +140,7 @@ class HospitalizationController extends Controller
             'isPdf' => true
         ]);
 
-         // Guardar el PDF en el almacenamiento público
+        // Guardar el PDF en el almacenamiento público
         $pdfPath = 'public/hospitalizations/voluntary_discharge_' . $id . '.pdf';
         Storage::put($pdfPath, $pdf->output());
 
@@ -170,6 +171,15 @@ class HospitalizationController extends Controller
         $hospitalization->hospital_discharges_id = 3;
         $hospitalization->save();
 
+        // Actualizar vouchers pendientes a cancelados
+        Voucher::where('reception_id', $request->receptionId)
+            ->where('status', 'Pendiente')
+            ->update([
+                'status' => 'Cancelado',
+                'cancellation_reason' => 'El paciente falleció'
+            ]);
+
+
         return response()->json([
             'message' => 'Paciente dado de alta por fallecimiento.',
         ], 200); //regresamos mensaje 
@@ -181,10 +191,18 @@ class HospitalizationController extends Controller
         $reception->exit_date = now(); //marcamos la fecha y hora de salida 
         $reception->save();
 
+        // Actualizar vouchers pendientes a cancelados
+        Voucher::where('reception_id', $request->reception_id)
+            ->where('status', 'Pendiente')
+            ->update([
+                'status' => 'Cancelado',
+                'cancellation_reason' => 'El paciente fue dado de alta'
+            ]);
+
         $data = $request->all();
         $data['exit_date'] = now();
         $new = Hospitalization::create($data); //registreamos el tipo de sdalida 
 
-        return response()->json($new);//regresamos el nuevo registro
+        return response()->json($new); //regresamos el nuevo registro
     }
 }

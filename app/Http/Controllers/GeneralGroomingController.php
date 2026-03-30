@@ -53,7 +53,7 @@ class GeneralGroomingController extends Controller
 
         $reception = Reception::find($request->reception_id);
 
-        ControlDate::create([
+        ControlDate::createIfNotDuplicate([
             'reception_id' => $request->reception_id,
             'pet_id' => $reception ? $reception->pet_id : null,
             'family_id' => $reception ? $reception->family_id : null,
