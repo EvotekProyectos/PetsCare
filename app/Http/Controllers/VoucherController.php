@@ -99,7 +99,7 @@ class VoucherController extends Controller
 
     public function listForReception($id)
     {
-        $this->authorize("view", Voucher::class);
+        $this->authorize("viewAny", Voucher::class);
         $vouchers = Voucher::with('reception', 'vet', 'voucherProducts', 'voucherProducts.product', 'reception.pet')
             ->where('reception_id', $id);
 

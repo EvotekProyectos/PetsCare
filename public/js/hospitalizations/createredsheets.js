@@ -717,7 +717,13 @@ var tableVoucher = undefined;
 $(document).ready(function () {
   tableVoucher = $("#tableVoucher").DataTable({
     ajax: route("vouchers.listForReception", Reception_Id),
+    order: [[0, "desc"]],
     columns: [
+      {
+        data: "id",
+        visible: false, // no se muestra
+        searchable: false, // no afecta búsquedas
+      },
       {
         data: "folio",
       },

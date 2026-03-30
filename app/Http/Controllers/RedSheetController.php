@@ -122,7 +122,7 @@ class RedSheetController extends Controller
         $admissions = AdmissionType::all();
         $discharges = HospitalDischarge::all();
         $this->authorize("create", RedSheet::class); //verificamos los permisos 
-        return view('red-sheet.create', compact('redSheet', 'discharges', 'reception', 'products', 'followUp', 'surgery', 'admissions', 'productVouchers')); //regresdamos la vista con al info
+        return view('red-sheet.create', compact('redSheet', 'discharges', 'reception', 'products', 'followUp', 'surgery', 'admissions')); //regresdamos la vista con al info
     }
 
 

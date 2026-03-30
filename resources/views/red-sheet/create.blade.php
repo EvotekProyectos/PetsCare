@@ -232,6 +232,7 @@
                         <table class="table table-striped table-hover responsive w-100" id="tableVoucher">
                             <thead class="thead table-primary text-uppercase">
                                 <tr>
+                                    <th></th>
                                     <th>Folio</th>
                                     <th>Fecha</th>
                                     <th>Solicitante</th>

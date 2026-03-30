@@ -2,12 +2,30 @@ var table = undefined;
 $(document).ready(function () {
   table = $("#table").DataTable({
     ajax: route("vouchers.list"),
+    order: [[0, "desc"]],
     columns: [
+      {
+        data: "id",
+        visible: false, // no se muestra
+        searchable: false, // no afecta búsquedas
+      },
       {
         data: "folio",
       },
       {
         data: "created_at",
+        render: function (data) {
+          if (data) {
+            let date = new Date(data);
+            let formattedDate = date.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            });
+            return `${formattedDate} `;
+          }
+          return "";
+        },
       },
       {
         data: null,
