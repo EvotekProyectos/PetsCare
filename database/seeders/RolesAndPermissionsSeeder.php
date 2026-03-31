@@ -467,6 +467,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'ver vales',
             'crear vales',
             'cancelar vales',
+            'ver panel vales',
         ];
         $role->givePermissionTo($permissionsMVZ);
 
