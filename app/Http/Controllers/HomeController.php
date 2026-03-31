@@ -29,8 +29,20 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+
+    /**
+     * @method bool hasRole(string|array $roles)
+     */
     public function index()
     {
+        $user = auth()->user();
+
+        //dd($user->getRoleNames());
+        // Redirección por rol
+        if ($user->hasRole('almacenista')) {
+            return redirect()->route('vouchers.index');
+        }
+
         $reception = new Reception();
         $admissions = AdmissionType::all();
         $areas = Area::all();
@@ -38,7 +50,7 @@ class HomeController extends Controller
         $reasons = Reason::all();
         $users = User::all();
         $rooms = Room::all();
-        $pets = Pet::where("deceased", 0)->get(); 
+        $pets = Pet::where("deceased", 0)->get();
 
         $this->authorize("create", Reception::class);
         return view('reception.create', compact('reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms', 'pets'));
@@ -102,7 +114,7 @@ class HomeController extends Controller
                 'description' => 'Administra información sobre áreas.',
                 'icon' => 'fas fa-list'
             ],
-             [
+            [
                 'route' => route('attention-statuses.index'),
                 'title' => 'Estados de atención',
                 'description' => 'Administra información sobre estados de atención.',
@@ -157,7 +169,7 @@ class HomeController extends Controller
                 'icon' => 'fas fa-list'
             ],
 
-           
+
         ];
 
 
