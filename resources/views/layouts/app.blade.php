@@ -66,64 +66,84 @@
 
                 <ul class="list-unstyled components ps-4 pe-3">
 
-                    <li class="@yield('home')">
-                        <a href="{{ route('receptions.create') }}" class="ms-2">
-                            <i class="fas fa-home"></i>
-                            Inicio
-                        </a>
-                    </li>
-                    <li class="@yield('receptions')">
-                        <a href="{{ route('receptions.index') }}" class="ms-2">
-                            <i class="fas fa-list"></i>
-                            Recepciones
-                        </a>
-                    </li>
+                    @if (auth()->user()->hasPermissionTo('crear recepciones'))
+                        <li class="@yield('home')">
+                            <a href="{{ route('receptions.create') }}" class="ms-2">
+                                <i class="fas fa-home"></i>
+                                Inicio
+                            </a>
+                        </li>
+                    @endif
 
-                    <li class="@yield('control-dates')">
-                        <a href="{{ route('control-dates.index') }}" class="ms-2">
-                            <i class="ep--calendar"></i>
-                            Citas
-                        </a>
-                    </li>
+                    @if (auth()->user()->hasPermissionTo('ver panel recepciones'))
+                        <li class="@yield('receptions')">
+                            <a href="{{ route('receptions.index') }}" class="ms-2">
+                                <i class="fas fa-list"></i>
+                                Recepciones
+                            </a>
+                        </li>
+                    @endif
 
-                    <li>
-                        <a data-bs-toggle="collapse" href="#asignacionesMenu" role="button"
-                            aria-expanded="{{ request()->routeIs('assignment.*', 'assignament.*') ? 'true' : 'false' }}"
-                            class="ms-2">
-                            <i class="fas fa-hand-holding-heart"></i>
-                            Asignaciones
-                            <i class="fas fa-chevron-down float-end"></i>
-                        </a>
+                    @if (auth()->user()->hasPermissionTo('ver panel citas'))
+                        <li class="@yield('control-dates')">
+                            <a href="{{ route('control-dates.index') }}" class="ms-2">
+                                <i class="ep--calendar"></i>
+                                Citas
+                            </a>
+                        </li>
+                    @endif
 
-                        <ul class="collapse list-unstyled ms-3 {{ request()->routeIs('assignment.*', 'assignament.*') ? 'show' : '' }}"
-                            id="asignacionesMenu">
+                    @if (auth()->user()->can('ver panel asignaciones') ||
+                            auth()->user()->can('ver panel hospitalizaciones') ||
+                            auth()->user()->can('ver panel grooming') ||
+                            auth()->user()->can('ver panel cirugías'))
+                        <li>
+                            <a data-bs-toggle="collapse" href="#asignacionesMenu" role="button"
+                                aria-expanded="{{ request()->routeIs('assignment.*', 'assignament.*') ? 'true' : 'false' }}"
+                                class="ms-2">
+                                <i class="fas fa-hand-holding-heart"></i>
+                                Asignaciones
+                                <i class="fas fa-chevron-down float-end"></i>
+                            </a>
 
-                            <li class="@yield('assignments')">
-                                <a href="{{ route('assignment.index') }}">
-                                    Consultas
-                                </a>
-                            </li>
+                            <ul class="collapse list-unstyled ms-3 {{ request()->routeIs('assignment.*', 'assignament.*') ? 'show' : '' }}"
+                                id="asignacionesMenu">
 
-                            <li class="@yield('hospitalizations')">
-                                <a href="{{ route('assignment.hospital') }}">
-                                    Hospital
-                                </a>
-                            </li>
+                                @can('ver panel asignaciones')
+                                    <li class="@yield('assignments')">
+                                        <a href="{{ route('assignment.index') }}">
+                                            Consultas
+                                        </a>
+                                    </li>
+                                @endcan
 
-                            <li class="@yield('assignmentsgrooming')">
-                                <a href="{{ route('assignment.groomings') }}">
-                                    Grooming
-                                </a>
-                            </li>
+                                @can('ver panel hospitalizaciones')
+                                    <li class="@yield('hospitalizations')">
+                                        <a href="{{ route('assignment.hospital') }}">
+                                            Hospital
+                                        </a>
+                                    </li>
+                                @endcan
 
-                            <li class="@yield('assignmentssurgery')">
-                                <a href="{{ route('assignament.surgery') }}">
-                                    Cirugía
-                                </a>
-                            </li>
+                                @can('ver panel grooming')
+                                    <li class="@yield('assignmentsgrooming')">
+                                        <a href="{{ route('assignment.groomings') }}">
+                                            Grooming
+                                        </a>
+                                    </li>
+                                @endcan
 
-                        </ul>
-                    </li>
+                                @can('ver panel cirugías')
+                                    <li class="@yield('assignmentssurgery')">
+                                        <a href="{{ route('assignament.surgery') }}">
+                                            Cirugía
+                                        </a>
+                                    </li>
+                                @endcan
+
+                            </ul>
+                        </li>
+                    @endif
 
 
                     {{-- <li class="@yield('assignments')">
@@ -151,82 +171,100 @@
                         </a>
                     </li> --}}
 
-                    <li class="@yield('hospitalization.recap')">
-                        <a href="{{ route('hospitalization.altas') }}" class=" ms-2">
-                            <span class="ri--hospital-line"></span>
-                            Hospital
-                        </a>
-                    </li>
+                    @if (auth()->user()->hasPermissionTo('ver panel hospitalizaciones'))
+                        <li class="@yield('hospitalization.recap')">
+                            <a href="{{ route('hospitalization.altas') }}" class=" ms-2">
+                                <span class="ri--hospital-line"></span>
+                                Hospital
+                            </a>
+                        </li>
+                    @endif
 
-                    <li class="@yield('surgery.schedule')">
-                        <a href="{{ route('surgery-schedules.index') }}" class=" ms-2">
-                            <span class="healthicons--surgical-sterilization-outlineblack"></span>
-                            Cirugías
-                        </a>
-                    </li>
+                    @if (auth()->user()->hasPermissionTo('ver panel horario de cirugías'))
+                        <li class="@yield('surgery.schedule')">
+                            <a href="{{ route('surgery-schedules.index') }}" class=" ms-2">
+                                <span class="healthicons--surgical-sterilization-outlineblack"></span>
+                                Cirugías
+                            </a>
+                        </li>
+                    @endif
 
-                    <li class="@yield('budgets')">
-                        <a href="{{ route('budgets.index') }}" class=" ms-2">
-                            <span class="fluent--receipt-money-16-regular"></span>
-                            Presupuestos
-                        </a>
-                    </li>
-                    <li class="@yield('advance-payments')">
-                        <a href="{{ route('advance-payments.index') }}" class=" ms-2">
-                            <span class="lets-icons--paper-fill-black"></span>
-                            Anticipos
-                        </a>
-                    </li>
+                    @if (auth()->user()->hasPermissionTo('ver panel presupuestos'))
+                        <li class="@yield('budgets')">
+                            <a href="{{ route('budgets.index') }}" class=" ms-2">
+                                <span class="fluent--receipt-money-16-regular"></span>
+                                Presupuestos
+                            </a>
+                        </li>
+                    @endif
 
-                    <li class="@yield('hotel')">
-                        <a href="{{ route('hotels.index') }}" class=" ms-2">
-                            <span class="icon-park-solid--hotelBlack "></span>
-                            Hotel
-                        </a>
-                    </li>
+                    @if (auth()->user()->hasPermissionTo('ver panel anticipos'))
+                        <li class="@yield('advance-payments')">
+                            <a href="{{ route('advance-payments.index') }}" class=" ms-2">
+                                <span class="lets-icons--paper-fill-black"></span>
+                                Anticipos
+                            </a>
+                        </li>
+                    @endif
 
-                    <li class="@yield('cremations')">
-                        <a href="{{ route('cremations.index') }}" class=" ms-2">
-                            <span class="emojione-monotone--funeral-urn1"></span>
-                            Cremaciones
-                        </a>
-                    </li>
+                    @if (auth()->user()->hasPermissionTo('ver panel hotel'))
+                        <li class="@yield('hotel')">
+                            <a href="{{ route('hotels.index') }}" class=" ms-2">
+                                <span class="icon-park-solid--hotelBlack "></span>
+                                Hotel
+                            </a>
+                        </li>
+                    @endif
 
+                    @if (auth()->user()->hasPermissionTo('ver panel cremaciones'))
+                        <li class="@yield('cremations')">
+                            <a href="{{ route('cremations.index') }}" class=" ms-2">
+                                <span class="emojione-monotone--funeral-urn1"></span>
+                                Cremaciones
+                            </a>
+                        </li>
+                    @endif
 
-                    <li>
-                        <a data-bs-toggle="collapse" href="#almacenMenu" role="button"
-                            aria-expanded="{{ request()->routeIs('vouchers.*') ? 'true' : 'false' }}" class="ms-2">
-                            <span class="streamline-sharp--warehouse-1"></span>
-                            Almacén
-                            <i class="fas fa-chevron-down float-end"></i>
-                        </a>
+                    @if (auth()->user()->hasPermissionTo('ver panel vales'))
+                        <li>
+                            <a data-bs-toggle="collapse" href="#almacenMenu" role="button"
+                                aria-expanded="{{ request()->routeIs('vouchers.*') ? 'true' : 'false' }}" class="ms-2">
+                                <span class="streamline-sharp--warehouse-1"></span>
+                                Almacén
+                                <i class="fas fa-chevron-down float-end"></i>
+                            </a>
 
-                        <ul class="collapse list-unstyled ms-3 {{ request()->routeIs('vouchers.*') ? 'show' : '' }}"
-                            id="almacenMenu">
+                            <ul class="collapse list-unstyled ms-3 {{ request()->routeIs('vouchers.*') ? 'show' : '' }}"
+                                id="almacenMenu">
 
-                            <li class="@yield('vouchers')">
-                                <a href="{{ route('vouchers.index') }}" class="ms-2">
-                                    Vales
-                                </a>
-                            </li>
+                                <li class="@yield('vouchers')">
+                                    <a href="{{ route('vouchers.index') }}" class="ms-2">
+                                        Vales
+                                    </a>
+                                </li>
 
-                        </ul>
-                    </li>
+                            </ul>
+                        </li>
+                    @endif
 
+                    @if (auth()->user()->hasPermissionTo('ver panel servicios domicilio'))
+                        <li class="@yield('assignmentsdelivery')">
+                            <a href="{{ route('assignment.delivery') }}" class=" ms-2">
+                                <span class="mdi--house-export-outline-black"></span>
+                                Domicilio
+                            </a>
+                        </li>
+                    @endif
 
-                    <li class="@yield('assignmentsdelivery')">
-                        <a href="{{ route('assignment.delivery') }}" class=" ms-2">
-                            <span class="mdi--house-export-outline-black"></span>
-                            Domicilio
-                        </a>
-                    </li>
+                    @if (auth()->user()->hasPermissionTo('ver panel familias'))
+                        <li class="@yield('families')">
+                            <a href="{{ route('families.index') }}" class=" ms-2">
+                                <span class="fluent-mdl2--family"></span>
+                                Familias
+                            </a>
+                        </li>
+                    @endif
 
-                    <li class="@yield('families')">
-                        <a href="{{ route('families.index') }}" class=" ms-2">
-                            <span class="fluent-mdl2--family"></span>
-                            Familias
-                        </a>
-                    </li>
                     {{-- <li>
                         <a href="{{ route('families.index') }}" class=" ms-2">
                             <span class="fluent--document-28-filled"></span>
@@ -234,13 +272,14 @@
                         </a>
                     </li> --}}
 
-                    <li class="@yield('megamenu')">
+                    @if (auth()->user()->hasRole('administrador'))
+                        <li class="@yield('megamenu')">
 
-                        <a href="{{ route('megamenu') }}" class=" ms-2">
-                            <i class="fas fa-cogs"></i>
-                            Configuración
-                        </a>
-                        {{-- <a href="#pageSubmenu" data-bs-toggle="collapse" aria-expanded="false"
+                            <a href="{{ route('megamenu') }}" class=" ms-2">
+                                <i class="fas fa-cogs"></i>
+                                Configuración
+                            </a>
+                            {{-- <a href="#pageSubmenu" data-bs-toggle="collapse" aria-expanded="false"
                             class="dropdown dropdown-toggle  ms-2">
                             <i class="fas fa-cogs"></i>
                             Configuración
@@ -311,8 +350,11 @@
                                     Estados de Mascotas</a>
                             </li>
                         </ul> --}}
-                    </li>
+                        </li>
+
+
                 </ul>
+                @endif
 
                 {{-- <ul class="list-unstyled CTAs">
                     <li>
