@@ -479,14 +479,12 @@ class RolesAndPermissionsSeeder extends Seeder
             'ver panel estados de grooming',
             'ver panel clasificacion mascotas',
             'ver panel horarios',
-            'ver panel asignaciones',
             'ver panel cartilla vacunación',
             'Ver panel de Formatos',
             'ver panel grooming',
             'ver panel servicios domicilio',
             'ver panel C.M',
             'ver panel cremaciones',
-            'ver panel hotel',
             'ver panel citas',
         ];
         $role->givePermissionTo($permissionsCollab);

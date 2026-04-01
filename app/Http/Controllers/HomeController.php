@@ -43,6 +43,14 @@ class HomeController extends Controller
             return redirect()->route('vouchers.index');
         }
 
+        if ($user->hasRole('medico')) {
+            return redirect()->route('receptions.index');
+        }
+
+        if ($user->hasRole('colaborador')) {
+            return redirect()->route('assignment.groomings');
+        }
+
         $reception = new Reception();
         $admissions = AdmissionType::all();
         $areas = Area::all();
