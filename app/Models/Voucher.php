@@ -44,6 +44,7 @@ class Voucher extends Model
      */
     protected $fillable = ['folio', 'status', 'reception_id', 'vet_id', 'issuer_id', 'issued_at', 'vet_signature', 'warehouse_signature', 'generated_document', 'warehouse_observations', 'cancellation_reason', 'rejection_reason', 'cancellation_signature', 'cancelled_by'];
 
+    protected $appends = ['generated_document_url'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -98,5 +99,14 @@ class Voucher extends Model
         $count = $query->count() + 1;
 
         return "VAL-{$year}-" . str_pad($count, 5, '0', STR_PAD_LEFT);
+    }
+
+    public function getGeneratedDocumentUrlAttribute()
+    {
+        if (!$this->generated_document) {
+            return null;
+        }
+
+        return asset('storage/' . str_replace('public/', '', $this->generated_document));
     }
 }

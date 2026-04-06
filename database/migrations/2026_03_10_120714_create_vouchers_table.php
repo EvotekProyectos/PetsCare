@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('generated_document')->nullable();
             $table->string('vet_signature')->nullable();
             $table->string('cancellation_signature')->nullable();
-            $table->foreignId('cancelled_by')->references('id')->on('users');
+            $table->foreignId('cancelled_by')->nullable()->references('id')->on('users');
             $table->string('warehouse_signature')->nullable();
             $table->text('warehouse_observations')->nullable();
             $table->text('cancellation_reason')->nullable();

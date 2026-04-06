@@ -89,18 +89,23 @@ $(document).ready(function () {
       {
         data: null,
         render: function (data) {
-          let botones = `
-            <a href="/storage/${data.generated_document}" target="_blank" 
-               class="btn btn-sm text-primary" title="Ver vale">
-                <span class="mdi--eye"></span>
-            </a>`;
+          let botones = "";
+
+          //si existe el documento
+          if (data.generated_document_url) {
+            botones += `
+                <a href="${data.generated_document_url}" target="_blank" 
+                   class="btn btn-sm text-primary" title="Ver vale">
+                    <span class="mdi--eye"></span>
+                </a>`;
+          }
 
           if (data.status === "Pendiente") {
             botones += `
-          <button type="button" class="btn btn-sm text-success btnAccionVale"
-              data-id="${data.id}" title="Surtir o rechazar vale">
-             <span class="icon-park--check-correct"></span>
-          </button>`;
+                <button type="button" class="btn btn-sm text-success btnAccionVale"
+                    data-id="${data.id}" title="Surtir o rechazar vale">
+                    <span class="icon-park--check-correct"></span>
+                </button>`;
           }
 
           return botones;
