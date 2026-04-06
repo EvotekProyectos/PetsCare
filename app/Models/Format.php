@@ -34,8 +34,8 @@ class Format extends Model
      *
      * @var array
      */
-    protected $fillable = ['format_type_id', 'reception_id', 'format_pdf' ,'pet_id'];
-
+    protected $fillable = ['format_type_id', 'reception_id', 'format_pdf', 'pet_id'];
+    protected $appends = ['format_pdf_url'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -44,7 +44,7 @@ class Format extends Model
     {
         return $this->belongsTo(\App\Models\FormatType::class, 'format_type_id', 'id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -52,19 +52,21 @@ class Format extends Model
     {
         return $this->belongsTo(\App\Models\Reception::class, 'reception_id', 'id');
     }
-    
+
     public function pet()
     {
         return $this->belongsTo(\App\Models\Pet::class, 'pet_id', 'id');
     }
 
-    
+
     public function price()
     {
         return $this->belongsTo(\App\Models\Producto::class, 'ARTICULO_ID');
     }
 
+    //Obtener url
+    public function getFormatPdfUrlAttribute()
+    {
+        return asset('storage/' . str_replace('public/', '', $this->format_pdf));
+    }
 }
-
-
-
