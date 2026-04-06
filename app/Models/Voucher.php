@@ -46,6 +46,10 @@ class Voucher extends Model
 
     protected $appends = ['generated_document_url'];
 
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i:s',
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

@@ -728,19 +728,7 @@ $(document).ready(function () {
         data: "folio",
       },
       {
-        data: "created_at",
-        render: function (data) {
-          if (data) {
-            let date = new Date(data);
-            let formattedDate = date.toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            });
-            return `${formattedDate} `;
-          }
-          return "";
-        },
+        data: "created_at"
       },
       {
         data: null,
@@ -798,17 +786,22 @@ $(document).ready(function () {
       {
         data: null,
         render: function (data) {
-          let botones = `
-            <a type="button" href="/storage/${data.generated_document}" target="_blank" 
-               class="btn btn-sm text-primary" title="Ver vale">
-                <span class="mdi--eye"></span>
-            </a>`;
+          let botones = "";
+
+          //si existe el documento
+          if (data.generated_document_url) {
+            botones += `
+                <a href="${data.generated_document_url}" target="_blank" 
+                   class="btn btn-sm text-primary" title="Ver vale">
+                    <span class="mdi--eye"></span>
+                </a>`;
+          }
 
           if (data.status === "Pendiente") {
             botones += `
-                <button type="button" class="btn btn-sm text-danger btnCancelarVale" 
-                    data-id="${data.id}" title="Cancelar vale">
-                    <span class="ic--baseline-cancel"></span>
+                <button type="button" class="btn btn-sm text-success btnAccionVale"
+                    data-id="${data.id}" title="Surtir o rechazar vale">
+                    <span class="icon-park--check-correct"></span>
                 </button>`;
           }
 

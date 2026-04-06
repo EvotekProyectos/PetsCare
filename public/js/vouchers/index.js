@@ -13,19 +13,7 @@ $(document).ready(function () {
         data: "folio",
       },
       {
-        data: "created_at",
-        render: function (data) {
-          if (data) {
-            let date = new Date(data);
-            let formattedDate = date.toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            });
-            return `${formattedDate} `;
-          }
-          return "";
-        },
+        data: "created_at"
       },
       {
         data: null,
