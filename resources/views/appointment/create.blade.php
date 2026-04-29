@@ -355,6 +355,7 @@
         var Reception_Id = {{ $reception->id }};
         var Reason_Id = {{ $reception->reason_id }};
         var Pet_Id = {{ $reception->pet_id }};
+        var vet_id={{ $reception->veterinarian_id }};
         var Pic_id = {{ $reception->pet->picture_id ?? 'null' }};
         var Pic_route = "{{ $reception->pet->file->route ?? '' }}";
         var services = @json($products);

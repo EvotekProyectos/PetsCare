@@ -125,6 +125,31 @@ class ControlDateController extends Controller
         return view('control-date.calendar', compact('dates'));
     }
 
+    public function calendarIndividual($id)
+    {
+        $dates = ControlDate::with(['reception', 'schedule'])
+            ->whereHas('schedule', function ($query) use ($id) {
+                $query->where('user_id', $id);
+            })
+            ->get();
+
+        return view('control-date.calendarIndividual', compact('dates'));
+    }
+
+    public function listConfirmedIndividual($id)
+    {
+        $allEvents = ControlDate::with('family', 'pet', 'dateType', 'reception', 'schedule', 'schedule.user')
+            ->whereHas('statusDate', function ($query) {
+                $query->where('id', 3);
+            })
+            ->whereHas('schedule', function ($query) use ($id) {
+                $query->where('user_id', $id);
+            })
+            ->get();
+
+        return response()->json($allEvents);
+    }
+
     public function listConfirmed()
     {
         $allEvents = ControlDate::with('family', 'pet', 'dateType', 'reception', 'schedule', 'schedule.user')

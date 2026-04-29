@@ -7,9 +7,8 @@
                     <span class="vaadin--lines-list"></span>
                 </span>
                 <input type="text" name="reception_id"
-                    class="form-control @error('reception_id') is-invalid @enderror"
-                    value="{{ $reception->id }}" id="reception_id"
-                    placeholder="Reception Id">
+                    class="form-control @error('reception_id') is-invalid @enderror" value="{{ $reception->id }}"
+                    id="reception_id" placeholder="Reception Id">
             </div>
             {!! $errors->first('reception_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
@@ -22,8 +21,7 @@
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="healthicons--surgical-sterilization-outline"></span>
                         </span>
-                        <textarea rows="2" name="anamnesis" class="form-control @error('anamnesis') is-invalid @enderror"
-                           id="anamnesis">{{ old('anamnesis', $appointment?->anamnesis) }} </textarea>
+                        <textarea rows="2" name="anamnesis" class="form-control @error('anamnesis') is-invalid @enderror" id="anamnesis">{{ old('anamnesis', $appointment?->anamnesis) }} </textarea>
                     </div>
                     {!! $errors->first('anamnesis', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                 </div>
@@ -53,9 +51,7 @@
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="vaadin--lines-list"></span>
                         </span>
-                        <textarea name="diagnosis" rows="3"
-                            class="form-control @error('diagnosis') is-invalid @enderror"
-                            id="diagnosis">{{ old('diagnosis', $appointment?->diagnosis) }} </textarea>
+                        <textarea name="diagnosis" rows="3" class="form-control @error('diagnosis') is-invalid @enderror" id="diagnosis">{{ old('diagnosis', $appointment?->diagnosis) }} </textarea>
                     </div>
                     {!! $errors->first('diagnosis', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                 </div>
@@ -70,17 +66,16 @@
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="vaadin--lines-list"></span>
                         </span>
-                        <textarea name="observations" rows="3"
-                            class="form-control @error('observations') is-invalid @enderror"
-                             id="observations">{{ old('observations', $appointment?->observations) }}</textarea>
+                        <textarea name="observations" rows="3" class="form-control @error('observations') is-invalid @enderror"
+                            id="observations">{{ old('observations', $appointment?->observations) }}</textarea>
                     </div>
                     {!! $errors->first('observations', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                 </div>
             </div>
         </div>
 
-        <div class="row">
-              <div class="col-md-3">
+        <div class="row align-items-end">
+            <div class="col-md-3">
                 <div class="form-group mb-2 mb20">
                     <label for="day_next_check" class="form-label">PRÓXIMO CONTROL</label>
                     <div class="input-group mb-3">
@@ -98,6 +93,7 @@
                     ) !!}
                 </div>
             </div>
+
             <div class="col-md-3">
                 <div class="form-group mb-2 mb20">
                     <label for="time_next_check" class="form-label">HORA</label>
@@ -116,7 +112,8 @@
                     ) !!}
                 </div>
             </div>
-            <div class="col-md-6">
+
+            <div class="col-md-4">
                 <div class="form-group mb-2 mb20">
                     <label for="reason_next_check_id" class="form-label">Tipo de proxima consulta</label>
                     <div class="input-group mb-3">
@@ -139,6 +136,14 @@
                         '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>',
                     ) !!}
                 </div>
+            </div>
+
+            <div class="col-md-2 mb-3">
+                <a href="{{ route('dates.individual', $reception->veterinarian_id) }}" target="_blank"
+                    class="btn btn-primary text-uppercase rounded-4 w-100"
+                    title="Ver el horario del médico antes de agendar">
+                    <i class="fas fa-calendar-check me-1"></i> Ver mis citas
+                </a>
             </div>
         </div>
 
