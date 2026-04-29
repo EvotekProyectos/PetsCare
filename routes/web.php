@@ -456,10 +456,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('dates/list', [ControlDateController::class, 'list'])->name('dates.list');
     Route::post('/control-dates/update-date/{id}', [ControlDateController::class, 'updateDate'])->name('control-dates.updateDate');
     Route::get('dates/calendar', [ControlDateController::class, 'calendar'])->name('dates.calendar');
+    Route::get('dates/individual/{id}', [ControlDateController::class, 'calendarIndividual'])->name('dates.individual');
     Route::post('control-dates/updateStatus/{id}', [ControlDateController::class, 'updateStatus'])->name('control-dates.updateStatus');
     Route::get('/control-dates/get-events', [ControlDateController::class, 'getEvents'])->name('control-dates.getEvents');
     Route::get('/control-dates/schedules/{id}', [ControlDateController::class, 'schedules'])->name('schedules.date');
     Route::get('/control-dates/confirmed', [ControlDateController::class, 'listConfirmed'])->name('confirmed.date');
+        Route::get('/control-dates/confirmed', [ControlDateController::class, 'listConfirmed'])->name('confirmed.date');
     Route::post('control-dates/updateAttend/{id}', [ControlDateController::class, 'updateAttend'])->name('control-dates.attend');
     Route::post('/validate-schedule', [ControlDateController::class, 'validateSchedule'])->name('validate.schedule');
     Route::post('control-dates/updateAttend/{id}', [ControlDateController::class, 'updateAttend'])->name('control-dates.attend');
