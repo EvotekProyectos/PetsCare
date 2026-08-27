@@ -38,7 +38,7 @@ class AppointmentService extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_id', 'lab_type_id', 'imaging_type_id', 'observations', 'vet_id'];
+    protected $fillable = ['reception_id', 'lab_type_id', 'imaging_type_id', 'observations', 'vet_id', 'deleted_by', 'delete_reason'];
 
 
     /**
@@ -82,6 +82,13 @@ class AppointmentService extends Model
     {
         return $this->belongsTo(\App\Models\User::class, 'vet_id', 'id');
     }
-    
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function voucherProducts()
+    {
+        return $this->morphMany(\App\Models\VoucherProduct::class, 'sourceable');
+    }
 
 }

@@ -9,7 +9,8 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" id="csrf" content="{{ csrf_token() }}">
 
-    <title>PETS CARE</title>
+    {{-- <title>PETS CARE</title> --}}
+    <title>@yield('template_title', 'PETS CARE')</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
@@ -20,6 +21,8 @@
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <!-- Componentes compartidos (tarjetas, botones de acción, badges, tablas) -->
+    <link rel="stylesheet" href="{{ asset('css/shared-panels.css') }}">
     <!-- Our Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
     <!-- ICONIFY CSS -->
@@ -46,8 +49,9 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@3.10.2/dist/locale/es.js'></script>
 
 
-
+    @stack('modals')
     @stack('styles')
+    @yield('design')
 </head>
 
 <body class="bg-white">
@@ -66,14 +70,14 @@
 
                 <ul class="list-unstyled components ps-4 pe-3">
 
-                    @if (auth()->user()->hasPermissionTo('crear recepciones'))
+                    {{-- @if (auth()->user()->hasPermissionTo('crear recepciones'))
                         <li class="@yield('home')">
                             <a href="{{ route('receptions.create') }}" class="ms-2">
                                 <i class="fas fa-home"></i>
                                 Inicio
                             </a>
                         </li>
-                    @endif
+                    @endif --}}
 
                     @if (auth()->user()->hasPermissionTo('ver panel recepciones'))
                         <li class="@yield('receptions')">
@@ -84,6 +88,62 @@
                         </li>
                     @endif
 
+
+
+                    @if (auth()->user()->hasPermissionTo('ver panel asignaciones'))
+                        <li class="@yield('assignments')">
+                            <a href="{{ route('assignment.index') }}" class=" ms-2">
+                                <i class="fas fa-user-md"></i>
+                                Consultas
+                            </a>
+                        </li>
+                    @endif
+                                        @if (auth()->user()->hasPermissionTo('ver panel asignaciones'))
+                        <li class="@yield('hospitalizations')">
+                            <a href="{{ route('assignment.hospital') }}" class=" ms-2">
+                          <i class="fas fa-briefcase-medical"></i>
+                                Hospital
+                            </a>
+                        </li>
+                    @endif
+
+
+                    @if (auth()->user()->hasPermissionTo('ver panel recepciones'))
+                        <li class="@yield('assignmentsgrooming')">
+                            <a href="{{ route('assignment.groomings') }}" class=" ms-2">
+                            <i class="fas fa-cut"></i>
+                                Grooming
+                            </a>
+                        </li>
+                    @endif
+
+                    @if (auth()->user()->hasPermissionTo('ver panel hotel'))
+                        <li class="@yield('hotel')">
+                            <a href="{{ route('hotels.index') }}" class=" ms-2">
+                           <i class="fas fa-bed"></i>
+                                Hotel
+                            </a>
+                        </li>
+                    @endif
+
+                    @if (auth()->user()->hasPermissionTo('ver panel cremaciones'))
+                        <li class="@yield('cremations')">
+                            <a href="{{ route('cremations.index') }}" class=" ms-2">
+                                 <i class="fas fa-prescription-bottle-alt"></i>
+                                Cremaciones
+                            </a>
+                        </li>
+                    @endif
+
+                     @if (auth()->user()->hasPermissionTo('ver panel estados de cuenta'))
+                        <li class="@yield('accounts')">
+                            <a href="{{ route('accounts.index') }}" class="ms-2">
+                           <i class="fas fa-dollar-sign"></i>
+                                Estados de Cuenta
+                            </a>
+                        </li>
+                    @endif
+                    
                     @if (auth()->user()->hasPermissionTo('ver panel citas'))
                         <li class="@yield('control-dates')">
                             <a href="{{ route('control-dates.index') }}" class="ms-2">
@@ -93,10 +153,18 @@
                         </li>
                     @endif
 
-                    @if (auth()->user()->can('ver panel asignaciones') ||
-                            auth()->user()->can('ver panel hospitalizaciones') ||
-                            auth()->user()->can('ver panel grooming') ||
-                            auth()->user()->can('ver panel cirugías'))
+
+                    @if (auth()->user()->hasPermissionTo('ver panel asignaciones'))
+                        <li class="@yield('assignmentssurgery')">
+                            <a href="{{ route('assignament.surgery') }}" class=" ms-2">
+                                <i class="fas fa-hand-holding-heart"></i>
+                                Cirugías asignaciones
+                            </a>
+                        </li>
+                    @endif
+
+
+                    {{-- @if (auth()->user()->can('ver panel asignaciones') || auth()->user()->can('ver panel hospitalizaciones') || auth()->user()->can('ver panel grooming') || auth()->user()->can('ver panel cirugías'))
                         <li>
                             <a data-bs-toggle="collapse" href="#asignacionesMenu" role="button"
                                 aria-expanded="{{ request()->routeIs('assignment.*', 'assignament.*') ? 'true' : 'false' }}"
@@ -143,42 +211,9 @@
 
                             </ul>
                         </li>
-                    @endif
+                    @endif --}}
 
 
-                    {{-- <li class="@yield('assignments')">
-                        <a href="{{ route('assignment.index') }}" class=" ms-2">
-                            <i class="fas fa-hand-holding-heart"></i>
-                            Asignaciones de Consulta
-                        </a>
-                    </li>
-                    <li class="@yield('hospitalizations')">
-                        <a href="{{ route('assignment.hospital') }}" class=" ms-2">
-                            <i class="fas fa-hand-holding-heart"></i>
-                            Asignaciones de Hospital
-                        </a>
-                    </li>
-                    <li class="@yield('assignmentsgrooming')">
-                        <a href="{{ route('assignment.groomings') }}" class=" ms-2">
-                            <i class="fas fa-hand-holding-heart"></i>
-                            Asignaciones de Grooming
-                        </a>
-                    </li>
-                    <li class="@yield('assignmentssurgery')">
-                        <a href="{{ route('assignament.surgery') }}" class=" ms-2">
-                            <i class="fas fa-hand-holding-heart"></i>
-                            Asignaciones de Cirugía
-                        </a>
-                    </li> --}}
-
-                    @if (auth()->user()->hasPermissionTo('ver panel hospitalizaciones'))
-                        <li class="@yield('hospitalization.recap')">
-                            <a href="{{ route('hospitalization.altas') }}" class=" ms-2">
-                                <span class="ri--hospital-line"></span>
-                                Hospital
-                            </a>
-                        </li>
-                    @endif
 
                     @if (auth()->user()->hasPermissionTo('ver panel horario de cirugías'))
                         <li class="@yield('surgery.schedule')">
@@ -198,6 +233,8 @@
                         </li>
                     @endif
 
+                   
+
                     @if (auth()->user()->hasPermissionTo('ver panel anticipos'))
                         <li class="@yield('advance-payments')">
                             <a href="{{ route('advance-payments.index') }}" class=" ms-2">
@@ -207,23 +244,7 @@
                         </li>
                     @endif
 
-                    @if (auth()->user()->hasPermissionTo('ver panel hotel'))
-                        <li class="@yield('hotel')">
-                            <a href="{{ route('hotels.index') }}" class=" ms-2">
-                                <span class="icon-park-solid--hotelBlack "></span>
-                                Hotel
-                            </a>
-                        </li>
-                    @endif
 
-                    @if (auth()->user()->hasPermissionTo('ver panel cremaciones'))
-                        <li class="@yield('cremations')">
-                            <a href="{{ route('cremations.index') }}" class=" ms-2">
-                                <span class="emojione-monotone--funeral-urn1"></span>
-                                Cremaciones
-                            </a>
-                        </li>
-                    @endif
 
                     @if (auth()->user()->hasPermissionTo('ver panel vales'))
                         <li>
@@ -247,14 +268,14 @@
                         </li>
                     @endif
 
-                    @if (auth()->user()->hasPermissionTo('ver panel servicios domicilio'))
+                    {{-- @if (auth()->user()->hasPermissionTo('ver panel servicios domicilio'))
                         <li class="@yield('assignmentsdelivery')">
                             <a href="{{ route('assignment.delivery') }}" class=" ms-2">
                                 <span class="mdi--house-export-outline-black"></span>
                                 Domicilio
                             </a>
                         </li>
-                    @endif
+                    @endif --}}
 
                     @if (auth()->user()->hasPermissionTo('ver panel familias'))
                         <li class="@yield('families')">
@@ -279,77 +300,7 @@
                                 <i class="fas fa-cogs"></i>
                                 Configuración
                             </a>
-                            {{-- <a href="#pageSubmenu" data-bs-toggle="collapse" aria-expanded="false"
-                            class="dropdown dropdown-toggle  ms-2">
-                            <i class="fas fa-cogs"></i>
-                            Configuración
-                        </a>
-                         <ul class="collapse list-unstyled" id="pageSubmenu">
-                            <li>
-                                <a href="{{ route('logs.index') }}" class="ms-2"><i class="fa fa-calendar-check"></i>
-                                    Bitácora</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('role-has-permissions.index') }}" class="ms-2"><i class="fas fa-user"></i>
-                                    Roles y permisos</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('users.index') }}" class="ms-2"><i class="fas fa-user"></i>
-                                    Usuarios</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('rooms.index') }}" class="ms-2"><i class="fas fa-first-aid"></i>
-                                    Consultorios</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('shifts.index') }}" class="ms-2"><i class="fa fa-clock"></i> Turnos</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('cover-areas.index') }}" class="ms-2"><i class="fas fa-list"></i> Areas Horarios</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('schedules.index') }}" class="ms-2"><i class="fa fa-calendar-check"></i> Horarios</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('reasons.index') }}" class="ms-2"><i class="fas fa-list"></i>
-                                    Motivos</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('areas.index') }}" class="ms-2"><i class="fas fa-list"></i> Áreas</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('attention-statuses.index') }}" class="ms-2"><i
-                                        class="fas fa-list"></i> Estados de atención</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('reception-types.index') }}" class="ms-2"><i class="fas fa-list"></i>
-                                    Tipos de recepción</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('genres.index') }}" class="ms-2"><i class="fas fa-venus-mars"></i>
-                                    Géneros</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('admission-types.index') }}" class="ms-2"><i class="fas fa-list"></i>
-                                    Tipos de ingreso</a>
-                            </li>
-                            <li>
-                                <a href="{{route('reproductive-statuses.index')}}" class="ms-2"><i class="fas fa-list"></i> 
-                                    Estados Reproductivos</a>
-                            </li>
-                            <li>
-                                <a href="{{route('fam-classifications.index')}}" class="ms-2"><i class="fas fa-list"></i> 
-                                    Clasificación Familias</a>
-                            </li>
-                            <li>
-                                <a href="{{route('pet-classifications.index')}}" class="ms-2"><i class="fas fa-list"></i> 
-                                    Clasificación Mascotas</a>
-                            </li>
-                            <li>
-                                <a href="{{route('pets-statuses.index')}}" class="ms-2"><i class="fas fa-list"></i> 
-                                    Estados de Mascotas</a>
-                            </li>
-                        </ul> --}}
+
                         </li>
 
 
@@ -488,6 +439,7 @@
 
             $('#sidebarCollapse').on('click', function() {
                 $('#sidebar, #content').toggleClass('active');
+                $('body').toggleClass('sidebar-collapsed');
                 $('.collapse.in').toggleClass('in');
                 $('a[aria-expanded=true]').attr('aria-expanded', 'false');
             });
@@ -571,7 +523,6 @@
         fetchNotifications();
         setInterval(fetchNotifications, 60000);
     </script>
-
     @stack('scripts')
 </body>
 

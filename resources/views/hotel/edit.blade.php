@@ -157,7 +157,7 @@
                             <div class="col d-flex justify-content-between align-items-center my-2">
                                 <div class="col">
                                     <button class="btn btn-costum-services btn-sm text-uppercase rounded-4"
-                                    Onclick="window.open('{{ route('pet-history.index', $reception->pet_id) }}', '_blank')">
+                                    Onclick="window.open('{{ route('pet-history.index', ['id' => $reception->pet_id, 'type' => 4]) }}', '_blank')">
                                         <span class="badge custom-badge-pill"><span
                                             class="akar-icons--folder-add"></span></span> 
                                                 HISTORIAL MÉDICO

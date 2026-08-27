@@ -53,6 +53,49 @@ const deleteResource = async (url, table = null) => {
     }
 };
 
+function formatDate(fecha, incluirHora = false) {
+    if (!fecha) return '';
+
+    // Separa "2026-02-26 14:38:00" en fecha y hora
+    const [fechaParte, horaParte] = fecha.split(' ');
+    const [anio, mes, dia] = fechaParte.split('-');
+
+    let resultado = `${dia}/${mes}/${anio}`;
+
+    if (incluirHora && horaParte) {
+        const [hh, mm] = horaParte.split(':');
+        resultado += ` ${hh}:${mm}`;
+    }
+
+    return resultado;
+}
+
+// Deriva una versión clara del mismo tono de `hex`, mezclándolo con blanco.
+// Se usa para los badges "soft" (fondo claro + texto del color original),
+// ej. estatus de recepción o motivo de consulta, donde el color base viene
+// dinámico de un catálogo (reason.color, status.color) y no hay una versión
+// clara guardada en ningún lado.
+function lightenColor(hex, amount = 0.85) {
+    if (!hex) return '#F1F3F6';
+
+    let color = hex.replace('#', '');
+    if (color.length === 3) {
+        color = color.split('').map((c) => c + c).join('');
+    }
+
+    const num = parseInt(color, 16);
+    if (isNaN(num)) return '#F1F3F6';
+
+    const r = (num >> 16) & 255;
+    const g = (num >> 8) & 255;
+    const b = num & 255;
+
+    const lighten = (channel) => Math.round(channel + (255 - channel) * amount);
+    const toHex = (channel) => channel.toString(16).padStart(2, '0');
+
+    return `#${toHex(lighten(r))}${toHex(lighten(g))}${toHex(lighten(b))}`;
+}
+
 const deleteUser = (id, table) => {
     const url = route("users.destroy", id);
     deleteResource(url, table);

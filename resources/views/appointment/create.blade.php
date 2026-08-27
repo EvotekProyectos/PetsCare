@@ -1,7 +1,11 @@
 @extends('layouts.app')
 
 @section('template_title')
-    {{ __('Create') }} Appointment
+    CONSULTA
+@endsection
+
+@section('design')
+    <link rel="stylesheet" href="{{ asset('css/appointment.css') }}?v={{ filemtime(public_path('css/appointment.css')) }}">
 @endsection
 
 @section('content')
@@ -13,260 +17,228 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
+
             <div class="col-12">
-                <div class="card bg-primary-soft border-0 p-3">
-                    <div class="card-header bg-transparent border-0">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h4 id="card_title" class="text-primary text-uppercase">
-                                <span class="ic--twotone-pets"></span> CONSULTA
-                            </h4>
-                        </div>
-                    </div>
-                    <div class="row card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
-                                DATOS GENERALES
-                            </h5>
-                        </div>
-                        <div class="col-md-4 d-flex justify-content-left">
-                            <div class="form-group text-center">
-                                <img src="{{ asset('img/pet_pic.png') }}" alt="Foto Mascota" id="preview"
-                                    class="img-fixed"
-                                    style="width: 115px; height: 115px; object-fit: cover; border-radius: 70px; ">
-                                <h5>{{ $reception->pet->name }}</h5>
-                            </div>
-                        </div>
-                        <div class="row d-flex justify-content-center" style="margin-bottom: -11px;">
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Especie: <span style="font-weight: normal">
-                                        {{ $reception->pet->specie }} </span></p>
-                            </div>
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Raza: <span style="font-weight: normal">
-                                        {{ $reception->pet->raza }} </span></p>
-                            </div>
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Género: <span style="font-weight: normal">
-                                        {{ $reception->pet->genre->name }} </span></p>
-                            </div>
-                        </div>
-                        <div class="row d-flex justify-content-center" style="margin-bottom: -11px;">
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Descripción física: <span style="font-weight: normal">
-                                        {{ $reception->pet->physic_descrip }} </span></p>
-                            </div>
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Peso: <span style="font-weight: normal">
-                                        {{ $reception->pet->weight }} </span></p>
-                            </div>
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Clasificación: <span style="font-weight: normal">
-                                    {{ $reception->pet->petClassification?->name ?? ''}} </span></p>
-                            </div>
-                        </div>
-                        <div class="row d-flex justify-content-center">
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">E. Reproductivo: <span style="font-weight: normal">
-                                        {{ $reception->pet->reproductiveStatus->name }} </span></p>
-                            </div>
-                            @php
-                                $birthday = \Carbon\Carbon::parse($reception->pet->birthday);
-                                $now = \Carbon\Carbon::now();
 
-                                $years = $birthday->diffInYears($now);
-                                $months = $birthday->copy()->addYears($years)->diffInMonths($now);
-                                $days = $birthday->copy()->addYears($years)->addMonths($months)->diffInDays($now);
-                            @endphp
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Edad: <span style="font-weight: normal">
-                                        {{ $years }} años, {{ $months }} meses, y {{ $days }} días
-                                    </span></p>
-                            </div>
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Fallecido: <span style="font-weight: normal">
-                                        {{ $reception->pet->deceased == 1 ? 'Sí' : 'No' }}
-                                    </span></p>
-                            </div>
-                        </div>
-                        <div class="row d-flex justify-content-center mt-2" style="margin-bottom: -11px;">
-                            <div class="col-md-3">
-                            </div>
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Tipo: <span style="font-weight: normal">
-                                        {{ $reception->reason->name }} </span></p>
-                            </div>
-                            <div class="col-md-3">
-                            </div>
-                        </div>
-                        <div class="row d-flex justify-content-center ">
-                            <div class="col-md-3">
-                            </div>
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Fecha: <span style="font-weight: normal">
-                                        {{ $reception->entry_date }} </span></p>
-                            </div>
-                            <div class="col-md-3">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body ">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
-                                DATOS ESPECÍFICOS
-                            </h5>
-                        </div>
-                        <form method="POST" action="{{ route('appointments.store') }}" role="form" id="NewAppointment"
-                            enctype="multipart/form-data">
-                            @csrf
+                @php
+                    $birthday = \Carbon\Carbon::parse($reception->pet->birthday);
+                    $now = now();
 
-                            @include('appointment.form')
+                    $years = $birthday->diffInYears($now);
+                    $months = $birthday->copy()->addYears($years)->diffInMonths($now);
+                    $days = $birthday->copy()->addYears($years)->addMonths($months)->diffInDays($now);
 
-                        </form>
-                    </div>
-                    <div class="card-body ">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h4 id="card_title" class="text-primary text-uppercase">
-                                <span class="material-symbols--prescriptions-outline "></span> FÓRMULA MÉDICA
-                            </h4>
+                    $genreName = $reception->pet->genre?->name;
+                    $reproductiveStatusName = $reception->pet->reproductiveStatus?->name;
+                    $classificationName = $reception->pet->petClassification?->name;
+                @endphp
+
+                <div class="appointment-content-wrapper bg-primary-soft">
+
+                    <div class="card-panel card-panel--pet-info">
+                        <div class="reception-summary">
+                            <div class="reception-summary-item">
+                                <div class="reception-summary-label">
+                                    Tipo de consulta
+                                </div>
+
+                                <div class="reception-summary-value">
+                                    {{ $reception->reason->name }}
+                                </div>
+                            </div>
+
+                            <div class="reception-summary-item reception-summary-date">
+                                <div class="reception-summary-label">
+                                    <i class="fas fa-calendar-alt reception-calendar-icon"></i>
+                                    Fecha
+                                </div>
+
+                                <div class="reception-summary-value">
+                                    {{ \Carbon\Carbon::parse($reception->entry_date)->format('d/m/Y') }}
+                                </div>
+                            </div>
                         </div>
-                        <form method="POST" onsubmit="AddPrescription()" role="form" id="NewPrescription"
-                            enctype="multipart/form-data">
-                            @csrf
 
-                            @include('prescription.form')
+                        <x-pet-info :pet="$reception->pet" :years="$years" :months="$months" :days="$days"
+                            :genre-name="$genreName" :reproductive-status-name="$reproductiveStatusName" :classification-name="$classificationName" />
 
-                        </form>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 id="card_title" class=" text-uppercase" style="color: #0455A0">
-                                <span class="map--veterinary-care"></span> PRODUCTOS/SERVICIOS
-                            </h5>
-                        </div>
+                        {{-- Botones de acción: fila propia a ancho completo --}}
                         <div class="row">
-                            <div class="col d-flex justify-content-between align-items-center my-2">
-                                <div class="col">
-                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
-                                        onclick="OpenCarnet()">
-                                        <span class="badge custom-badge-pill"><span
-                                                class="healthicons--syringe-vaccine"></span></span> CARTILLA Virtual
+                            <div class="col-12">
+                                <div class="d-flex flex-wrap justify-content-center gap-3 action-buttons-divider">
+                                    <button type="button" class="action-link"
+                                        onclick="openTransferModal({{ $reception->id }}, 1)">
+                                        <i class="fas fa-exchange-alt"></i>
+                                        <span>Trasladar</span>
+                                    </button>
+                                    {{-- 
+                                    <button type="button" class="action-link" onclick="openBudgetModal()">
+                                        <i class="fas fa-money-check-alt"></i>
+                                        <span>Presupuestos</span>
+                                    </button> --}}
+
+                                    <button type="button" class="action-link"
+                                        onclick="window.open('{{ route('pet-history.index', ['id' => $reception->pet_id, 'type' => 1]) }}', '_blank')">
+                                        <i class="fas fa-notes-medical"></i>
+                                        <span>Historial médico</span>
                                     </button>
                                 </div>
                             </div>
-                            <div class="col d-flex justify-content-between align-items-center my-2">
-                                <div class="col">
-                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
-                                        onclick="OpenLabs()">
-                                        <span class="badge custom-badge-pill"><span
-                                                class="hugeicons--chemistry-02"></span></span> EXÁMENES DE GABINETE
+                        </div>
+                    </div>
+
+                    {{-- Registro clínico --}}
+                    <div class="card-panel">
+                        <div class="d-flex justify-content-between align-items-center chevron-toggle pb-2"
+                            style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#specificDataCollapse"
+                            aria-expanded="true" aria-controls="specificDataCollapse">
+                            <h5 id="card_title" class="text-uppercase mb-0" style="color: #0455A0; font-size: 1rem;">
+                                Registro clínico
+                            </h5>
+                            <i class="fas fa-chevron-down text-primary"></i>
+                        </div>
+
+                        <div class="collapse show" id="specificDataCollapse">
+                            <div class="mt-2">
+                                <form method="POST" action="{{ route('appointments.store') }}" role="form"
+                                    id="NewAppointment" enctype="multipart/form-data">
+                                    @csrf
+                                    @include('appointment.form')
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Servicios --}}
+                    <div class="card-panel">
+                        <div class="d-flex justify-content-between align-items-center chevron-toggle pb-2"
+                            style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#servicesCollapse"
+                            aria-expanded="true" aria-controls="servicesCollapse">
+                            <div class="d-flex align-items-center gap-2">
+                                <h5 id="card_title" class="text-uppercase mb-0" style="color: #0455A0; font-size: 1rem;">
+                                    SERVICIOS
+                                </h5>
+                            </div>
+                            <i class="fas fa-chevron-down text-primary"></i>
+                        </div>
+
+                        <div class="collapse show" id="servicesCollapse">
+                            <div class="mt-2">
+                                <div class="row g-3">
+                                    <div class="col-md-4 col-12">
+                                        <div class="service-card" onclick="OpenCarnet()">
+                                            <div class="service-card-icon"><span
+                                                    class="healthicons--syringe-vaccine"></span></div>
+                                            <div class="service-card-text">
+                                                <span class="fw-bold text-uppercase">CARTILLA Virtual</span>
+                                                <span class="service-card-desc">Registra vacunas y desparasitaciones</span>
+                                            </div>
+                                            <i class="fas fa-chevron-right"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-12">
+                                        <div class="service-card" onclick="OpenLabs()">
+                                            <div class="service-card-icon"><span class="hugeicons--chemistry-02"></span>
+                                            </div>
+                                            <div class="service-card-text">
+                                                <span class="fw-bold text-uppercase">EXÁMENES DE GABINETE</span>
+                                                <span class="service-card-desc">Solicita estudios de laboratorio</span>
+                                            </div>
+                                            <i class="fas fa-chevron-right"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-12">
+                                        <div class="service-card" onclick="OpenImgs()">
+                                            <div class="service-card-icon"><span class="hugeicons--x-ray"></span></div>
+                                            <div class="service-card-text">
+                                                <span class="fw-bold text-uppercase">IMÁGENES DIAGNÓSTICAS</span>
+                                                <span class="service-card-desc">Solicita estudios de imagen</span>
+                                            </div>
+                                            <i class="fas fa-chevron-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div class="table-responsive service-table-wrapper">
+                                            <table class="table table-hover table-flat-rows responsive w-100"
+                                                id="DataServices">
+                                                <thead class="text-uppercase">
+                                                    <tr>
+                                                        <th>Tipo</th>
+                                                        <th>Nombre</th>
+                                                        <th>Observaciones</th>
+                                                        <th>M.V.Z.</th>
+                                                        <th>Precio</th>
+                                                        <th>Vale</th>
+                                                        <th>Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-2 d-flex justify-content-end">
+                                    <button type="button" id="btnGenerarValeAppointment"
+                                        class="action-link action-link--success btn-icon-circle" style="display: none;"
+                                        title="Generar vale">
+                                        <span class="heroicons-outline--ticket"></span>
                                     </button>
                                 </div>
                             </div>
-                            <div class="col d-flex justify-content-between align-items-center my-2">
-                                <div class="col">
-                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
-                                        onclick="OpenImgs()">
-                                        <span class="badge custom-badge-pill"><span
-                                                class="hugeicons--x-ray"></span></span> IMÁGENES DIAGNÓSTICAS </button>
-                                </div>
-                            </div>
-                            <div class="col d-flex justify-content-between align-items-center my-2">
-                                <div class="col">
-                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
-                                        onclick="window.open('{{ route('budgets.create') }}', '_blank')">
-                                        <span class="badge custom-badge-pill"><span
-                                                class="ic--baseline-price-change"></span></span> PRESUPUESTOS </button>
-                                </div>
-                            </div>
                         </div>
                     </div>
-                    <div class="col-12 mt-2 d-flex justify-content-end">
-                        <button class="btn btn-primary btn-lg text-uppercase rounded-4" onclick="EndAppointment()">
-                            Finalizar Consulta <i class="fas fa-file-medical fa-lg"></i></button>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 id="card_title" class="text-primary text-uppercase">
-                                <span class="ic--twotone-pets"></span> Registros
+
+                    {{-- Fórmula médica --}}
+                    <div class="card-panel">
+                        <div class="d-flex justify-content-between align-items-center chevron-toggle pb-2"
+                            style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#prescriptionCollapse"
+                            aria-expanded="true" aria-controls="prescriptionCollapse">
+                            <h5 id="card_title" class="text-uppercase mb-0" style="color: #0455A0; font-size: 1rem;">
+                                FÓRMULA MÉDICA
                             </h5>
+                            <i class="fas fa-chevron-down text-primary"></i>
                         </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-hover responsive w-100" id="DataLabs">
-                                        <thead class="thead table-primary text-uppercase">
-                                            <tr>
-                                                <th>Nombre</th>
-                                                <th>Observaciones</th>
-                                                <th>M.V.Z.</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
 
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-hover responsive w-100" id="DataImgs">
-                                        <thead class="thead table-primary text-uppercase">
-                                            <tr>
-                                                <th>Nombre</th>
-                                                <th>Observaciones</th>
-                                                <th>M.V.Z.</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+                        <div class="collapse show" id="prescriptionCollapse">
+                            <div class="mt-2">
+                                <form method="POST" onsubmit="AddPrescription()" role="form" id="NewPrescription"
+                                    enctype="multipart/form-data">
+                                    @csrf
 
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 id="card_title" class="text-primary text-uppercase">
-                                <span class="ic--twotone-pets"></span> historial clínico
-                            </h5>
-                        </div>
-                        <div class="col-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover responsive w-100" id="table">
-                                    <thead class="thead table-primary text-uppercase">
-                                        <tr>
-                                            <th>Fecha</th>
-                                            <th>M.V.Z</th>
-                                            <th>Recepción</th>
-                                            <th>Tipo</th>
-                                            <th>Detalles</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                                    @include('prescription.form')
 
-                                    </tbody>
-                                </table>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <div class="modal" id="ModalLab" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content" style="background-color: #e9eced; border-radius: 20px;">
-                <div class="modal-header">
-                    <div class="col-11 d-flex justify-content-between align-items-center">
-                        <h5 id="card_title" class=" text-uppercase" style="color: #0455A0">
-                            <span class="hugeicons--chemistry-02"></span> Exámenes de Gabinete
-                        </h5>
-                    </div>
-                    <div class="col-1">
-                        <button type="button" class="btn-close" onclick="closeModalLabs()" aria-label="Close"></button>
-                    </div>
 
+    </section>
+
+    {{-- Finalizar Consulta: barra fija al fondo del viewport, siempre visible
+         sin importar el scroll ni el estado de colapso de ninguna card. --}}
+    <div class="finalize-sticky-bar">
+        <button type="button" class="btn btn-finalizar-consulta btn-sm text-uppercase rounded-4 px-3"
+            onclick="EndAppointment();">
+            Finalizar Consulta <i class="fas fa-file-medical ms-1"></i>
+        </button>
+    </div>
+
+    <div class="modal fade" id="ModalLab" tabindex="-1" aria-labelledby="ModalLabTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header py-3">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary rounded me-3" style="width:6px;height:28px;"></div>
+                        <div>
+                            <div class="fw-bold fs-4 text-dark" id="ModalLabTitle">Exámenes de Gabinete</div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" onclick="closeModalLabs()" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style="width: 100%;">
                     <div class="row">
@@ -279,23 +251,26 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                        onclick="closeModalLabs()">Cancelar</button>
+                    <button type="submit" form="NewLab" class="btn btn-primary btn-sm">Registrar</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="modal" id="ModalImg" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content" style="background-color: #e9eced; border-radius: 20px;">
-                <div class="modal-header">
-                    <div class="col-11 d-flex justify-content-between align-items-center">
-                        <h5 id="card_title" class=" text-uppercase" style="color: #0455A0">
-                            <span class="hugeicons--x-ray"></span> Imágenes Diagnósticas
-                        </h5>
+    <div class="modal fade" id="ModalImg" tabindex="-1" aria-labelledby="ModalImgTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header py-3">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary rounded me-3" style="width:6px;height:28px;"></div>
+                        <div>
+                            <div class="fw-bold fs-4 text-dark" id="ModalImgTitle">Imágenes Diagnósticas</div>
+                        </div>
                     </div>
-                    <div class="col-1">
-                        <button type="button" class="btn-close" onclick="closeModalImgs()" aria-label="Close"></button>
-                    </div>
-
+                    <button type="button" class="btn-close" onclick="closeModalImgs()" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style="width: 100%;">
                     <div class="row">
@@ -303,45 +278,54 @@
                             <form method="POST" onsubmit="AddImgs()" id="NewImg" role="form"
                                 enctype="multipart/form-data">
                                 @csrf
-                                @include('appointment-service.form')
+                                @include('appointment-service.form', ['hideSubmit' => true])
                             </form>
                         </div>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                        onclick="closeModalImgs()">Cancelar</button>
+                    <button type="submit" form="NewImg" class="btn btn-primary btn-sm">Registrar</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal" id="ModalCertificate" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-xl" role="document">
-            <div class="modal-content" style="background-color: #e9eced; border-radius: 20px;">
-                <div class="modal-header">
-                    <div class="col-11 d-flex justify-content-between align-items-center">
-                        <h5 id="card_title" class=" text-uppercase" style="color: #0455A0">
-                            <span class="map--veterinary-care"></span> VACUNAS Y DESPARACITACIONES
-                        </h5>
-                    </div>
-                    <div class="col-1">
-                        <button type="button" class="btn-close" onclick="closeModal()" aria-label="Close"></button>
+    <div class="modal fade" id="ModalCertificate" tabindex="-1" aria-labelledby="ModalCertificateTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 950px;">
+            <div class="modal-content">
+
+                <div class="modal-header py-3">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary rounded me-3" style="width:6px;height:28px;"></div>
+                        <div>
+                            <div class="fw-bold fs-4 text-dark" id="ModalCertificateTitle">
+                                Vacunas y Desparasitaciones
+                            </div>
+                        </div>
                     </div>
 
+                    <div class="d-flex align-items-center gap-2 ms-auto">
+
+                        <button type="button" class="btn btn-outline-primary btn-sm rounded-4 px-3 py-1"
+                            onclick="window.open('{{ route('vaccine-certificates.show', $reception->pet_id) }}', '_blank')">
+
+                            <i class="fas fa-file-medical"></i>
+                            Ver Cartilla
+
+                        </button>
+
+
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar">
+                        </button>
+
+                    </div>
                 </div>
+
                 <div class="modal-body" style="width: 100%;">
-                    <div class="row">
-                        <div class="col-8"></div>
-                        <div class="col-3">
-                            <button class="btn btn-costum-services btn-sm text-uppercase rounded-4"
-                                onclick="window.open('{{ route('vaccine-certificates.show', $reception->pet_id) }}', '_blank')">
-                                Ver Cartilla
-                            </button>
-                        </div>
-                        <div class="col-1"></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            @include('vaccine-certificate.form')
-                        </div>
-                    </div>
+                    @include('vaccine-certificate.form')
                 </div>
             </div>
         </div>
@@ -355,10 +339,54 @@
         var Reception_Id = {{ $reception->id }};
         var Reason_Id = {{ $reception->reason_id }};
         var Pet_Id = {{ $reception->pet_id }};
-        var vet_id={{ $reception->veterinarian_id }};
+        var vet_id = {{ $reception->veterinarian_id }};
         var Pic_id = {{ $reception->pet->picture_id ?? 'null' }};
         var Pic_route = "{{ $reception->pet->file->route ?? '' }}";
         var services = @json($products);
     </script>
     <script src="{{ asset('js/appointments/create.js') }}" defer></script>
+    <script src="{{ asset('js/appointments/draft.js') }}" defer></script>
+    <script src="{{ asset('js/receptions/transfer.js') }}" defer></script>
+    <script src="{{ asset('js/vouchers/detail-modal.js') }}" defer></script>
+    <script src="{{ asset('js/vouchers/sign-modal.js') }}" defer></script>
+    <script src="{{ asset('js/budgets/appointment-modal.js') }}" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            ['#specificDataCollapse', '#servicesCollapse', '#prescriptionCollapse'].forEach(function(selector) {
+                const collapseEl = document.querySelector(selector);
+                const cardPanel = collapseEl?.closest('.card-panel');
+                if (!collapseEl || !cardPanel) return;
+
+                collapseEl.addEventListener('shown.bs.collapse', function() {
+                    cardPanel.classList.add('no-shadow');
+                });
+                collapseEl.addEventListener('hidden.bs.collapse', function() {
+                    cardPanel.classList.remove('no-shadow');
+                });
+
+                if (collapseEl.classList.contains('show')) {
+                    cardPanel.classList.add('no-shadow');
+                }
+            });
+        });
+    </script>
+@endpush
+
+@push('modals')
+    @include('reception.partials.transfer-modal')
+    @include('voucher.partials.detail-modal')
+    @include('voucher.partials.sign-modal')
+    @include('budget.partials.modal')
+@endpush
+
+@push('styles')
+    <style>
+        .chevron-toggle i {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .chevron-toggle[aria-expanded="false"] i {
+            transform: rotate(180deg);
+        }
+    </style>
 @endpush

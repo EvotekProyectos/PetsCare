@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 
-{{-- @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/cubicles/view.css') }}">
-@endpush --}}
+@section('design')
+    <link rel="stylesheet" href="{{ asset('css/appointment.css') }}?v={{ filemtime(public_path('css/appointment.css')) }}">
+@endsection
 
 @section('content')
     <section class="container-fluid">

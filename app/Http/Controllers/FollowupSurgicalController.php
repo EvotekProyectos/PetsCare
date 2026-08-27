@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FollowupSurgical;
 use App\Http\Requests\FollowupSurgicalRequest;
+use App\Models\ReceptionEvent;
 use Yajra\DataTables\Facades\DataTables;
 
 /**
@@ -40,9 +41,19 @@ class FollowupSurgicalController extends Controller
     {
         $new = FollowupSurgical::create($request->validated());
         $this->authorize("create",FollowupSurgical::class);
+
+        if ($new->reception_id) {
+            ReceptionEvent::create([
+                'reception_id' => $new->reception_id,
+                'event_type' => 'followup_added',
+                'description' => 'Seguimiento quirúrgico agregado',
+                'followup_type' => 'followup_surgical',
+                'followup_id' => $new->id,
+                'created_by' => auth()->id(),
+            ]);
+        }
+
         return response()->json($new);
-        // return redirect()->route('followup-surgicals.index')
-        //     ->with('success', 'FollowupSurgical created successfully.');
     }
 
     /**

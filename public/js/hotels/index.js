@@ -9,6 +9,10 @@ $(document).ready(function () {
   table = $("#table").DataTable({
     ajax: {
       url: route("hotel.all"),
+      data: function (d) {
+        d.date = $("#filterHotelFecha").val();
+        d.status_id = $("#filterHotelEstado").val();
+      },
       dataSrc: function (json) {
         return json || [];
       },
@@ -83,17 +87,17 @@ $(document).ready(function () {
         data: null,
         render: function (data) {
           let eyeButton = `
-            <a type="button" href="${route("hotels.show", data.reception.id)}" 
-               class="btn btn-sm text-primary">
+            <a type="button" href="${route("hotels.show", data.reception.id)}"
+               class="btn btn-sm icon-btn-outline text-primary" title="Ver">
                 <span class="mdi--eye"></span>
             </a>`;
-          
+
             let exitButton = "";
-        
+
             // Solo mostrar el botón de salida si extension es 0
             if (data.extension === 0) {
                 exitButton = `
-                    <a type="button" class="btn btn-sm text-primary" onclick="exit(${data.id});">
+                    <a type="button" class="btn btn-sm icon-btn-outline text-danger" title="Registrar salida" onclick="exit(${data.id});">
                         <span class="mingcute--exit-fill"></span>
                     </a>`;
             }
@@ -102,7 +106,7 @@ $(document).ready(function () {
         },
       },
     ],
-  
+
      createdRow: function (row, data) {
        const today = new Date(); // Fecha actual
        const exitDate = new Date(data.reception.exit_date); // Convertir exit_date a fecha
@@ -114,6 +118,16 @@ $(document).ready(function () {
            $(row).addClass('table-danger'); // Rojo si exit_date es menor a hoy
        }
    }
+  });
+
+  $("#filterHotelFecha, #filterHotelEstado").on("change", function () {
+    table.ajax.reload(null, false);
+  });
+
+  $("#btnClearHotelFilters").on("click", function () {
+    $("#filterHotelFecha").val("");
+    $("#filterHotelEstado").val("");
+    table.ajax.reload(null, false);
   });
 });
 

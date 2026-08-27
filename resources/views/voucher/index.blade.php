@@ -58,4 +58,9 @@
 
 @push('scripts')
     <script src="{{ asset('js/vouchers/index.js') }}" defer></script>
+    <script src="{{ asset('js/vouchers/sign-modal.js') }}" defer></script>
+@endpush
+
+@push('modals')
+    @include('voucher.partials.sign-modal')
 @endpush

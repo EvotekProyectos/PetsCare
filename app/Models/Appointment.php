@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property $anamnesis
  * @property $exam_details
  * @property $diagnosis
+ * @property $service_id
  * @property $observations
  * @property $day_next_check
  * @property $time_next_check
@@ -39,7 +40,7 @@ class Appointment extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_id', 'anamnesis', 'exam_details', 'diagnosis', 'observations', 'day_next_check', 'time_next_check', 'reason_next_check_id'];
+    protected $fillable = ['reception_id', 'anamnesis', 'exam_details', 'diagnosis', 'service_id', 'observations', 'day_next_check', 'time_next_check', 'reason_next_check_id'];
 
 
     /**

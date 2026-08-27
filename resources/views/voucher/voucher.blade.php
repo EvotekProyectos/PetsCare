@@ -181,10 +181,14 @@
             font-weight: bold;
             width: 30%;
             color: #333;
+            text-align: left;
+            white-space: nowrap;
         }
 
         .info-table td.value {
             color: #111;
+            text-align: left !important;
+            padding-left: 0;
         }
 
         /* ── Tabla de insumos ── */
@@ -359,7 +363,7 @@
             <td class="label">Médico solicitante:</td>
             <td class="value"> MVZ. {{ $voucher->vet->name }}</td>
             <td class="label">Servicio vinculado:</td>
-            <td class="value" colspan="3">{{ $reception->receptionType->name }}</td>
+            <td class="value">{{ $reception->receptionType->name }}</td>
         </tr>
     </table>
 
@@ -389,7 +393,7 @@
 
                         <td>
                             @if (!isset($isPdf) || !$isPdf)
-                                <input type="number" name="cantidad[{{ $item->red_sheet_id }}]" min="1"
+                                <input type="number" name="cantidad[{{ $item->id }}]" min="1"
                                     step="1" class="form-control cantidad-insumo"
                                     value="{{ $item->requested_quantity ?? '' }}" required>
                             @else

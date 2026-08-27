@@ -67,38 +67,84 @@ class VaccineCertificateController extends Controller
     //      return response()->json($vaccine);
     //  }
 
-     public function store(VaccineCertificateRequest $request)
- {
-     $this->authorize("create", VaccineCertificate::class);
-     $vaccine = VaccineCertificate::create($request->validated());
+//      public function store(VaccineCertificateRequest $request)
+//  {
+//      $this->authorize("create", VaccineCertificate::class);
+//      $vaccine = VaccineCertificate::create($request->validated());
 
-     $reception = Reception::find($request->reception_id);
-     $next_application_date = $request->next_application_date;
-     $time_next_check = '08:00:00';
-     $datetime = $next_application_date . ' ' . $time_next_check;
-     // tipo de cita en base al seeder
-     $dateTypeMap = [
-         1 => 3,
-         2 => 10,
-         3 => 11,
-     ];
+//      $reception = Reception::find($request->reception_id);
+//      $next_application_date = $request->next_application_date;
+//      $time_next_check = '08:00:00';
+//      $datetime = $next_application_date . ' ' . $time_next_check;
+//      // tipo de cita en base al seeder
+//      $dateTypeMap = [
+//          1 => 3,
+//          2 => 10,
+//          3 => 11,
+//      ];
 
-     $date_type_id = $dateTypeMap[$vaccine->service_id] ?? null;
+//      $date_type_id = $dateTypeMap[$vaccine->service_id] ?? null;
  
-     if ($date_type_id !== null) {
-         ControlDate::createIfNotDuplicate([
-             'reception_id' => $request->reception_id,
-             'pet_id' => $reception ? $reception->pet_id : null,
-             'family_id' => $reception ? $reception->family_id : null,
-             'date_type_id' => $date_type_id,
-             'status_date_id' => 1,
-             'user_id' => $request->vet_id,
-             'date' => $datetime,
-         ]);
-     }
+//      if ($date_type_id !== null) {
+//          ControlDate::createIfNotDuplicate([
+//              'reception_id' => $request->reception_id,
+//              'pet_id' => $reception ? $reception->pet_id : null,
+//              'family_id' => $reception ? $reception->family_id : null,
+//              'date_type_id' => $date_type_id,
+//              'status_date_id' => 1,
+//              'user_id' => $request->vet_id,
+//              'date' => $datetime,
+//          ]);
+//      }
 
-     return response()->json($vaccine);
- }
+//      return response()->json($vaccine);
+//  }
+ public function store(VaccineCertificateRequest $request)
+{
+    $this->authorize("create", VaccineCertificate::class);
+
+    $reception = Reception::find($request->reception_id);
+
+    // tipo de cita en base al seeder
+    $dateTypeMap = [
+        1 => 3,
+        2 => 10,
+        3 => 11,
+    ];
+
+    $time_next_check = '08:00:00';
+
+    $vaccines = collect();
+
+    foreach ($request->aplicaciones as $aplicacion) {
+        $data = array_merge($aplicacion, [
+            'pet_id'        => $request->pet_id,
+            'vet_id'        => $request->vet_id,
+            'reception_id'  => $request->reception_id,
+        ]);
+
+        $vaccine = VaccineCertificate::create($data);
+        $vaccines->push($vaccine);
+
+        $date_type_id = $dateTypeMap[$vaccine->service_id] ?? null;
+
+        if ($date_type_id !== null && $vaccine->next_application_date) {
+            $datetime = $vaccine->next_application_date . ' ' . $time_next_check;
+
+            ControlDate::createIfNotDuplicate([
+                'reception_id'   => $request->reception_id,
+                'pet_id'         => $reception?->pet_id,
+                'family_id'      => $reception?->family_id,
+                'date_type_id'   => $date_type_id,
+                'status_date_id' => 1,
+                'user_id'        => $request->vet_id,
+                'date'           => $datetime,
+            ]);
+        }
+    }
+
+    return response()->json($vaccines);
+}
 
 
     /**

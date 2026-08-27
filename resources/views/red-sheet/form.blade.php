@@ -7,9 +7,49 @@
         border-radius: 0.25rem;
     }
 
+    /* IMPORTANTE: evitar que el icono se vaya arriba */
+    .input-group {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    /* El bloque azul crece con el Select2 */
+    .input-group .input-group-text {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        flex: 0 0 auto;
+    }
+
+    /* Select2 ocupa todo el espacio restante */
     .input-group .select2-container {
         width: auto !important;
         flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    /* Select2 múltiple */
+    .input-group .select2-selection--multiple {
+        min-height: 2rem;
+        height: auto;
+        border: 1px solid #ced4da;
+        border-radius: 0 0.25rem 0.25rem 0;
+    }
+
+    /* Elementos seleccionados */
+    .input-group .select2-selection--multiple .select2-selection__rendered {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.2rem;
+        margin: 0;
+        padding: 0.2rem 0.4rem;
+    }
+
+    .input-group .select2-selection--multiple .select2-selection__choice {
+        margin: 0;
     }
 </style>
 <div class="row padding-1 p-1">
@@ -27,7 +67,7 @@
             {!! $errors->first('reception_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="form-group mb-2 mb20" hidden>
-            
+
             <label for="day_count" class="form-label">DÍA:</label>
             <div class="input-group mb-3">
                 <span class="input-group-text bg-primary-subtle" id="basic-addon1">
@@ -37,79 +77,67 @@
             </div>
             {!! $errors->first('day_count', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-        <div class="form-group mb-2 mb20">
-            <label for="service_type_id" class="form-label">SERVICIOS</label>
-            <div class="input-group mb-3">
-                <span class="input-group-text bg-primary-subtle" id="basic-addon1">
-                    <span class="vaadin--lines-list"></span></span>
-                <select name="service_type_id" class="form-control @error('service_type_id') is-invalid @enderror"
-                    id="service_type_id">
-                    <option value=""> Selecciona el servico a registrar</option>
-                    @foreach ($products as $product)
-                        {{-- @if ($product->product_classification_id == 4) --}}
-                            <option value="{{ $product->ARTICULO_ID}}" name="service_type_id"
-                                {{ old('service_type_id', $redSheet?->service_type_id) == $product->ARTICULO_ID ? 'selected' : '' }}>
-                                {{ $product->NOMBRE }}</option>
-                        {{-- @endif  --}}
-                    @endforeach
-                </select>
-            </div>
-            {!! $errors->first(
-                'service_type_id',
-                '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>',
-            ) !!}
-        </div>
-        <div class="form-group mb-2 mb20">
-            <label for="lab_type_id" class="form-label">LABORATORIO</label>
-            <div class="input-group mb-3">
-                <span class="input-group-text bg-primary-subtle" id="basic-addon1">
-                    <span class="vaadin--lines-list"></span></span>
-                <select name="lab_type_id" class="form-control @error('lab_type_id') is-invalid @enderror"
-                    id="lab_type_id">
-                    <option value=""> Selecciona el laboratorio a registrar</option>
-                    @foreach ($products as $product)
-                        {{-- @if ($product->product_classification_id == 2) --}}
-                            <option value="{{ $product->ARTICULO_ID }}" name="lab_type_id"
-                                {{ old('lab_type_id', $redSheet?->lab_type_id) == $product->ARTICULO_ID ? 'selected' : '' }}>
-                                {{ $product->NOMBRE }}</option>
-                        {{-- @endif --}}
-                    @endforeach
-                </select>
-            </div>
-            {!! $errors->first('lab_type_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-        </div>
-        <div class="form-group mb-2 mb20">
-            <label for="imaging_type_id" class="form-label">IMAGENOLOGIA</label>
-            <div class="input-group mb-3">
-                <span class="input-group-text bg-primary-subtle" id="basic-addon1">
-                    <span class="vaadin--lines-list"></span></span>
-                <select name="imaging_type_id" class="form-control @error('imaging_type_id') is-invalid @enderror"
-                    id="imaging_type_id">
-                    <option value=""> Selecciona la imagenologia a registrar</option>
-                    @foreach ($products as $product)
-                        {{-- @if ($product->product_classification_id == 3) --}}
-                            <option value="{{ $product->ARTICULO_ID }}" name="imaging_type_id"
-                                {{ old('imaging_type_id', $redSheet?->lab_type_id) == $product->ARTICULO_ID ? 'selected' : '' }}>
-                                {{ $product->NOMBRE }}</option>
-                        {{-- @endif --}}
-                    @endforeach
-                </select>
-            </div>
-            {!! $errors->first(
-                'imaging_type_id',
-                '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>',
-            ) !!}
-        </div>
 
-        <div class="form-group mb-2 mb20">
-            <label for="observations" class="form-label">OBSERVACIONES</label>
-            <div class="input-group mb-3">
-                <span class="input-group-text bg-primary-subtle" id="basic-addon1">
-                    <span class="vaadin--lines-list"></span></span>
-                <textarea name="observations" class="form-control @error('observations') is-invalid @enderror" rows="3"
-                    id="observations">{{ old('observations', $redSheet?->observations) }}</textarea>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    <label for="service_type_id" class="form-label">SERVICIOS</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-primary-subtle">
+                            <span class="vaadin--lines-list"></span>
+                        </span>
+                        <select name="service_type_id[]" multiple
+                            class="form-control @error('service_type_id') is-invalid @enderror" id="service_type_id">
+                            @foreach ($products as $product)
+                                <option value="{{ $product->ARTICULO_ID }}">
+                                    {{ $product->NOMBRE }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    {!! $errors->first('service_type_id', '<div class="invalid-feedback"><strong>:message</strong></div>') !!}
+                </div>
             </div>
-            {!! $errors->first('observations', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    <label for="lab_type_id" class="form-label">LABORATORIO</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-primary-subtle">
+                            <span class="vaadin--lines-list"></span>
+                        </span>
+                        <select name="lab_type_id[]" multiple
+                            class="form-control @error('lab_type_id') is-invalid @enderror" id="lab_type_id">
+                            @foreach ($products as $product)
+                                <option value="{{ $product->ARTICULO_ID }}">
+                                    {{ $product->NOMBRE }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    {!! $errors->first('lab_type_id', '<div class="invalid-feedback"><strong>:message</strong></div>') !!}
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    <label for="imaging_type_id" class="form-label">IMAGENOLOGÍA</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-primary-subtle">
+                            <span class="vaadin--lines-list"></span>
+                        </span>
+                        <select name="imaging_type_id[]" multiple
+                            class="form-control @error('imaging_type_id') is-invalid @enderror" id="imaging_type_id">
+                            @foreach ($products as $product)
+                                <option value="{{ $product->ARTICULO_ID }}">
+                                    {{ $product->NOMBRE }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    {!! $errors->first('imaging_type_id', '<div class="invalid-feedback"><strong>:message</strong></div>') !!}
+                </div>
+            </div>
         </div>
 
         <div class="form-group mb-2 mb20" hidden>

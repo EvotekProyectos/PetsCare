@@ -21,7 +21,7 @@ class FollowupSurgicalPolicy
      */
     public function view(User $user, FollowupSurgical $followupSurgical): bool
     {
-        return false;
+        return $user->can("Ver panel pase de guardia quirúrgicos");
     }
 
     /**

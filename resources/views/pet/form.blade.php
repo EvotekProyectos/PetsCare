@@ -54,15 +54,22 @@
 
             <div class="col-md-4">
                 <div class="form-group mb-2 mb20">
-                    <label for="specie" class="form-label">Especie</label>
+                    <label for="species_id" class="form-label">Especie</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text " style="background-color: #d3f0f3" id="basic-addon1">
                             <span class="mdi--pets"></span>
                         </span>
-                        <input type="text" name="specie" class="form-control @error('specie') is-invalid @enderror"
-                            value="{{ old('specie', $pet?->specie) }}" id="specie"
-                            placeholder="Indique especie de la mascota">
-                        {!! $errors->first('specie', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+                        <select name="species_id" id="species_id"
+                            class="form-control @error('species_id') is-invalid @enderror">
+                            <option value="">Seleccione la especie de la mascota</option>
+                            @foreach ($Species as $specie)
+                                <option value="{{ $specie->id }}"
+                                    {{ old('species_id', $pet?->species_id) == $specie->id ? 'selected' : '' }}>
+                                    {{ $specie->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        {!! $errors->first('species_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                     </div>
                 </div>
             </div>
@@ -72,19 +79,30 @@
                 <!-- Third Row -->
             <div class="col-md-4">
                 <div class="form-group mb-2 mb20">
-                    <label for="raza" class="form-label">{{ __('Raza') }}</label>
+                    <label for="breed_id" class="form-label">{{ __('Raza') }}</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text " style="background-color: #d3f0f3" id="basic-addon1">
                             <span class="mdi--pets"></span>
                         </span>
-                        <input type="text" name="raza" class="form-control @error('raza') is-invalid @enderror"
-                            value="{{ old('raza', $pet?->raza) }}" id="raza"
-                            placeholder="Indique raza de la mascota">
-                        {!! $errors->first('raza', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+                        {{-- Poblado server-side con las razas de la especie ya
+                             guardada (ver PetController::edit()/create()), y
+                             re-poblado por JS (breedSelectCascade.js) cuando
+                             el usuario cambia de especie. --}}
+                        <select name="breed_id" id="breed_id"
+                            class="form-control @error('breed_id') is-invalid @enderror">
+                            <option value="">Seleccione la raza de la mascota</option>
+                            @foreach ($Breeds as $breed)
+                                <option value="{{ $breed->id }}"
+                                    {{ old('breed_id', $pet?->breed_id) == $breed->id ? 'selected' : '' }}>
+                                    {{ $breed->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        {!! $errors->first('breed_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                     </div>
                 </div>
             </div>
-        
+
 
        
             <div class="col-md-4">
@@ -248,10 +266,10 @@
 
             </div> --}}
         </div>
+        <div class="col-12 mt-2 d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary btn-sm text-uppercase rounded-4">
+                <i class="fas fa-plus"></i>
+                Guardar mascota</button>
+        </div>
     </div>
-    <div class="col-12 mt-2 d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary btn-sm text-uppercase rounded-4">
-            <i class="fas fa-plus"></i>
-            Guardar mascota</button>
-    </div>
-</div>
+

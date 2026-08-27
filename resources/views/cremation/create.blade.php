@@ -1,159 +1,96 @@
 @extends('layouts.app')
 
 @section('template_title')
-    {{ __('Create') }} Cremation
+   CREAR CREMACIÓN
+@endsection
+
+@section('design')
+    <link rel="stylesheet" href="{{ asset('css/appointment.css') }}">
 @endsection
 
 @section('content')
     <section class="container-fluid">
         <div class="row">
+            @if ($message = Session::get('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <p>{{ $message }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
 
             <div class="col-12">
-                <div class="card bg-primary-soft border-0 p-3">
-                    <div class="card-header bg-transparent border-0">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h4 id="card_title" class="text-primary text-uppercase">
-                                <span class="emojione-monotone--funeral-urn" style="font-size: 20px;"></span>
-                                 CREMACIÓN
-                            </h4>
+                @php
+                    $birthday = \Carbon\Carbon::parse($reception->pet->birthday);
+                    $now = now();
+
+                    $years = $birthday->diffInYears($now);
+                    $months = $birthday->copy()->addYears($years)->diffInMonths($now);
+                    $days = $birthday->copy()->addYears($years)->addMonths($months)->diffInDays($now);
+
+                    $genreName = $reception->pet->genre?->name;
+                    $reproductiveStatusName = $reception->pet->reproductiveStatus?->name;
+                    $classificationName = $reception->pet->petClassification?->name;
+                @endphp
+
+                <div class="appointment-content-wrapper bg-primary-soft">
+                    <div class="card-panel card-panel--pet-info">
+                        <div class="d-flex justify-content-between align-items-center pb-3 mb-2 ">
+                            <div style="font-size: 0.95rem;">
+                                <small class="text-uppercase fw-semibold" style="font-size: 0.75rem; color: #000000;">
+                                    Tipo de recepción -
+                                </small>
+                                <span class="fw-bold" style="color: #0455A0">{{ $reception->receptionType->name }}</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2 text-secondary">
+                                <i class="fas fa-calendar-alt" style="font-size: 12px;"></i>
+                                <small class="text-uppercase fw-semibold" style="font-size: 0.75rem; color: #000000;">
+                                    Fecha -
+                                </small>
+
+                                <span style="font-size: 13px;">
+                                    {{ \Carbon\Carbon::parse($reception->entry_date)->format('d/m/Y') }}
+                                </span>
+                            </div>
                         </div>
+
+                       <x-pet-info :pet="$reception->pet" :years="$years" :months="$months" :days="$days"
+                            :genre-name="$genreName" :reproductive-status-name="$reproductiveStatusName" :classification-name="$classificationName" />
+
                     </div>
 
-                    <div class="row card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
-                                DATOS GENERALES MASCOTA
-                            </h5>
-                        </div>
-                        <div class="col-md-4 d-flex justify-content-left">
-                            <div class="form-group text-center">
-                                <img src="{{ asset('img/pet_pic.png') }}" alt="Foto Mascota" id="preview"
-                                    class="img-fixed"
-                                    style="width: 115px; height: 115px; object-fit: cover; border-radius: 70px; ">
-                                <h5>{{ $reception->pet->name }}</h5>
-                            </div>
+                    <div class="card-panel">
+                        <div class="d-flex justify-content-between align-items-center chevron-toggle pb-2"
+                            style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#specificDataCollapse"
+                            aria-expanded="true" aria-controls="specificDataCollapse">
+                            <h5 id="card_title" class="text-uppercase mb-0" style="color: #0455A0; font-size: 1rem;">
+                                DETALLES DEL SERVICIO
+                                {{-- <i class="fas fa-chevron-down text-primary"></i> --}}
                         </div>
 
-                        <div class="row d-flex justify-content-center" style="margin-bottom: -11px;">
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Especie: <span style="font-weight: normal">
-                                        {{ $reception->pet->specie }} </span></p>
-                            </div>
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Raza: <span style="font-weight: normal">
-                                        {{ $reception->pet->raza }} </span></p>
-                            </div>
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Género: <span style="font-weight: normal">
-                                        {{ $reception->pet->genre->name }} </span></p>
+                        <div class="collapse show" id="specificDataCollapse">
+                            <div class="mt-2">
+                                <form method="POST" onsubmit="Cremation(event)" role="form" id="newCremation"
+                                    enctype="multipart/form-data">
+                                    @csrf
+                                    @include('cremation.form')
+                                </form>
                             </div>
                         </div>
-
-                        <div class="row d-flex justify-content-center" style="margin-bottom: -11px;">
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Peso: <span style="font-weight: normal">
-                                        {{ $reception->pet->weight }} </span></p>
-                            </div>
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">E. Reproductivo: <span style="font-weight: normal">
-                                    {{ $reception->pet->reproductiveStatus->name }} </span></p>
-                            </div>
-                            @php
-                            $birthday = \Carbon\Carbon::parse($reception->pet->birthday);
-                            $now = \Carbon\Carbon::now();
-
-                            $years = $birthday->diffInYears($now);
-                            $months = $birthday->copy()->addYears($years)->diffInMonths($now);
-                            $days = $birthday->copy()->addYears($years)->addMonths($months)->diffInDays($now);
-                        @endphp
-                        <div class="col-md-3">
-                            <p style="font-weight: bold">Edad: <span style="font-weight: normal">
-                                    {{ $years }} años, {{ $months }} meses, y {{ $days }} días
-                                </span></p>
-                            </div>
                     </div>
-
-                        <div class="card-body ">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
-                                    DATOS GENERALES FAMILIA
-                                </h5>
-                            </div>
-                           
-                            <div class="row d-flex justify-content-center" style="margin-bottom: -11px;">
-                                <div class="col-md-3">
-                                    <p style="font-weight: bold">Nombre: <span style="font-weight: normal">
-                                            {{ $reception->family->name }} </span></p>
-                                </div>
-
-                                <div class="col-md-3">
-                                    <p> </p>
-                                </div>
-                                
-                                <div class="col-md-3">
-                                    <p style="font-weight: bold">Recepcionista: <span style="font-weight: normal">
-                                            {{$reception->receptionist->name }} </span></p>
-                                </div>
-
-                                
-
-                            </div>
-                            
-                            <div class="row d-flex justify-content-center" style="margin-bottom: -11px;">
-                                <div class="col-md-3">
-                                    <p style="font-weight: bold">Teléfono: <span style="font-weight: normal">
-                                        {{ $reception->family->phone }} </span></p>
-                                </div>
-
-                                <div class="col-md-3">
-                                    <p> </p>
-                                </div>
-
-                                <div class="col-md-3">
-                                    {{-- <p style="font-weight: bold">Médico responsable: <span style="font-weight: normal"> --}}
-                                            {{-- {{ $reception->vet->name }} </span></p> --}}
-                                </div>
-
-                                
-                            </div>
-                          
-                        </div>
-
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
-                                    DETALLES DEL SERVICIO
-                                </h5>
-                            </div>
-                            {{-- <form method="POST" onsubmit="Cremation()" role="form" id="newCremation"
-                            enctype="multipart/form-data">
-                                @csrf
-    
-                                @include('cremation.form')
-    
-                            </form> --}}
-
-                            <form method="POST" onsubmit="Cremation(event)" role="form" id="newCremation" enctype="multipart/form-data">
-                                @csrf
-                                @include('cremation.form')
-                            </form>
-                            
-                        </div>
-
-
+                </div>
+                
             </div>
-        </div>
     </section>
 @endsection
 
 @push('scripts')
-<script>
-    var ruta = "{{ asset('') }}";
-    var imgDefault = "{{ asset('img/pet_pic.png') }}";
-    var Reception_Id = {{ $reception->id }};
-    var Pet_Id = {{ $reception->pet_id }};
-    var Pic_id = {{ $reception->pet->picture_id ?? 'null' }};
-    var Pic_route = "{{ $reception->pet->file->route ?? '' }}";
-</script>
-<script src="{{ asset('js/cremations/create.js') }}" defer></script>
+    <script>
+        var ruta = "{{ asset('') }}";
+        var imgDefault = "{{ asset('img/pet_pic.png') }}";
+        var Reception_Id = {{ $reception->id }};
+        var Pet_Id = {{ $reception->pet_id }};
+        var Pic_id = {{ $reception->pet->picture_id ?? 'null' }};
+        var Pic_route = "{{ $reception->pet->file->route ?? '' }}";
+    </script>
+    <script src="{{ asset('js/cremations/create.js') }}" defer></script>
 @endpush

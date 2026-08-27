@@ -5,19 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\RedSheet;
 use App\Http\Requests\RedSheetRequest;
 use App\Models\AdmissionType;
+use App\Models\Area;
 use App\Models\Cremation;
 use App\Models\Folio;
 use App\Models\FollowUp;
+use App\Models\FollowupSurgical;
 use App\Models\GenericModel;
 use App\Models\Producto;
 use App\Models\HospitalDischarge;
 use App\Models\Hospitalization;
+use App\Models\ReceptionEvent;
+use App\Models\VoucherProduct;
 use App\Models\Log;
 use App\Models\PaymentOrder;
 use App\Models\Prescription;
 use App\Models\ProductType;
+use App\Models\Reason;
 use App\Models\Reception;
 use App\Models\Surgery;
+use App\Services\AccountStatementService;
+use App\Services\VoucherService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -52,17 +60,40 @@ class RedSheetController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * se crea UN RedSheet por cada valor seleccionado en cada categoría, cada
+     * uno con esa sola categoría poblada y las otras dos en null, igual que ya
+     * funcionaba para un registro individual.
      */
     public function store(RedSheetRequest $request)
     {
-        $new = RedSheet::create($request->validated());
         $this->authorize("create", RedSheet::class);
+        $this->guardReceptionNotTransferred(Reception::findOrFail($request->reception_id));
 
-        return response()->json($new);
+        $common = [
+            'reception_id' => $request->reception_id,
+            'day_count' => $request->day_count,
+            'vet_id' => $request->vet_id,
+        ];
 
-        // return redirect()->route('red-sheets.index')
-        //     ->with('success', 'RedSheet created successfully.');
+        $categories = [
+            'service_type_id' => $request->input('service_type_id', []),
+            'lab_type_id' => $request->input('lab_type_id', []),
+            'imaging_type_id' => $request->input('imaging_type_id', []),
+        ];
+
+        $created = DB::transaction(function () use ($common, $categories) {
+            $records = [];
+
+            foreach ($categories as $field => $values) {
+                foreach (array_filter($values) as $value) {
+                    $records[] = RedSheet::create($common + [$field => $value]);
+                }
+            }
+
+            return $records;
+        });
+
+        return response()->json($created);
     }
 
     /**
@@ -109,6 +140,59 @@ class RedSheetController extends Controller
     }
 
     /**
+     * Elimina un servicio de la pantalla de hospitalización no
+     * borra el registro: lo marca como eliminado 
+     * Reglas:
+     * solo el día actual (day_count más alto de la recepción), y un
+     * consumible (ES_ALMACENABLE "S") con vale Surtido no se puede eliminar.
+     */
+    public function removeService(Request $request, $id, VoucherService $voucherService)
+    {
+        $redSheet = RedSheet::with('lab', 'imaging', 'serv', 'laboratory', 'img')->findOrFail($id);
+        $this->authorize("delete", $redSheet);
+
+        $request->validate(['reason' => 'required|string|max:1000']);
+
+        $maxDayCount = RedSheet::where('reception_id', $redSheet->reception_id)->max('day_count');
+        if ((int) $redSheet->day_count !== (int) $maxDayCount) {
+            return response()->json([
+                'message' => 'Solo se puede eliminar un servicio del día actual.'
+            ], 422);
+        }
+
+        $producto = $redSheet->lab_type_id
+            ? $redSheet->laboratory
+            : ($redSheet->imaging_type_id ? $redSheet->img : $redSheet->serv);
+        $esAlmacenable = $producto->ES_ALMACENABLE ?? null;
+
+        if ($esAlmacenable === 'S') {
+            $activeVoucherProduct = VoucherProduct::where('sourceable_id', $redSheet->id)
+                ->where('sourceable_type', RedSheet::class)
+                ->whereHas('voucher', fn ($q) => $q->whereNotIn('status', ['Cancelado', 'Rechazado']))
+                ->with('voucher')
+                ->first();
+
+            if ($activeVoucherProduct && $activeVoucherProduct->voucher->status === 'Surtido') {
+                return response()->json([
+                    'message' => 'Este servicio ya tiene un vale Surtido y no puede eliminarse.'
+                ], 422);
+            }
+
+            if ($activeVoucherProduct) {
+                $voucherService->removeVoucherProductAndKeepConsistent($activeVoucherProduct, 'Eliminación de servicio');
+            }
+        }
+
+        $redSheet->update([
+            'removed_at' => now(),
+            'removed_by' => auth()->id(),
+            'removal_reason' => $request->reason,
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
      * Muestra la vista general de una mascota hospitalizada y le agrega servicios
      * */
     public function entry($id)
@@ -118,11 +202,26 @@ class RedSheetController extends Controller
         $reception = Reception::with('pet', 'admissionType', 'area')->findorfail($id);
         $products = Producto::where("ESTATUS",  "A")->get();
         $followUp = new FollowUp();
+        $followupSurgical = new FollowupSurgical();
         $surgery = new Surgery();
         $admissions = AdmissionType::all();
+        $areas= Area::all();
+        $reasons= Reason::all();
         $discharges = HospitalDischarge::all();
-        $this->authorize("create", RedSheet::class); //verificamos los permisos 
-        return view('red-sheet.create', compact('redSheet', 'discharges', 'reception', 'products', 'followUp', 'surgery', 'admissions')); //regresdamos la vista con al info
+        $this->authorize("create", RedSheet::class); //verificamos los permisos
+        return view('red-sheet.create', compact('redSheet', 'discharges', 'reception', 'products', 'followUp', 'followupSurgical', 'surgery', 'admissions', 'areas', 'reasons')); //regresdamos la vista con al info
+    }
+
+    /**
+     * Versión de solo lectura de entry() — revisar una hospitalización ya
+     * registrada sin poder capturar nada
+     */
+    public function showReception(int $id)
+    {
+        $this->authorize('viewAny', RedSheet::class);
+        $reception = Reception::with('pet', 'admissionType', 'area')->findOrFail($id);
+
+        return view('red-sheet.show-reception', compact('reception'));
     }
 
 
@@ -132,8 +231,24 @@ class RedSheetController extends Controller
     public function recap(int $id)
     {
         // Obtener las hojas rojas y cirugias asociadas a la recepción, incluyendo relaciones con otros modelos.
-        $redsheets = RedSheet::with('vet', 'imaging', 'img', 'lab', 'laboratory', 'service', 'serv' , 'voucherProduct','voucherProduct.voucher')->where('reception_id', $id)->get();
+        $redsheets = RedSheet::with('vet', 'imaging', 'img', 'lab', 'laboratory', 'service', 'serv', 'removedByUser')->where('reception_id', $id)->get();
         $surgeries = Surgery::with('surgery', 'vet', 'surg',)->where('reception_id', $id)->get();
+
+        $redsheetIds = $redsheets->pluck('id')->all();
+        $activeVouchers = VoucherProduct::activeMapFor(RedSheet::class, $redsheetIds);
+        $voucherHistory = VoucherProduct::historyMapFor(RedSheet::class, $redsheetIds);
+        $redsheets = $redsheets->map(function ($redsheet) use ($activeVouchers, $voucherHistory) {
+            $active = $activeVouchers->get($redsheet->id);
+            $redsheet->setAttribute('active_voucher_folio', $active?->voucher?->folio);
+            $redsheet->setAttribute('active_voucher_id', $active?->voucher_id);
+            $redsheet->setAttribute('active_voucher_status', $active?->voucher?->status);
+
+            $hasCancelledHistory = ($voucherHistory->get($redsheet->id) ?? collect())
+                ->contains(fn ($vp) => in_array($vp->voucher?->status, ['Cancelado', 'Rechazado']));
+            $redsheet->setAttribute('has_cancelled_history', $hasCancelledHistory);
+
+            return $redsheet;
+        });
 
         // Mapear los datos de las cirugías y relacionarlas con hojas rojas del mismo día.
         $combinedData = $surgeries->map(function ($surgery) use ($redsheets) {
@@ -165,6 +280,36 @@ class RedSheetController extends Controller
         ];
         // Devolver los datos en formato compatible con DataTables
         return DataTables::of($allData)->make(true);
+    }
+
+    /**
+     * Bitácora de eventos (reception_events) de una recepción
+     */
+    public function events(int $id)
+    {
+        $reception = Reception::findOrFail($id);
+        $entryDate = Carbon::parse($reception->entry_date)->startOfDay();
+
+        $events = ReceptionEvent::with('createdBy')
+            ->where('reception_id', $id)
+            ->orderBy('created_at')
+            ->get()
+            ->map(function ($event) use ($entryDate) {
+                $eventDate = Carbon::parse($event->created_at)->startOfDay();
+                $dayCount = $entryDate->diffInDays($eventDate) + 1;
+
+                return [
+                    'day_count' => $dayCount,
+                    'event_type' => $event->event_type,
+                    'description' => $event->description,
+                    'followup_type' => $event->followup_type,
+                    'followup_id' => $event->followup_id,
+                    'created_at' => $event->created_at,
+                    'created_by' => $event->createdBy->name ?? 'Desconocido',
+                ];
+            });
+
+        return response()->json($events);
     }
 
     // public function discharge(Request $request)
@@ -347,5 +492,46 @@ class RedSheetController extends Controller
 
         //Regresamos el Folio de la ODV con el que pueden pasar a pagar a caja
         return response()->json($newFolio);
+    }
+
+    /**
+     * Previsualización del estado de cuenta de una recepción de hospitalización:
+     * NO crea ningún Charge, solo muestra lo que se cobraría si se cierra la cuenta.
+     */
+    public function accountStatement(int $reception, AccountStatementService $statementService)
+    {
+        $receptionModel = Reception::with(['pet.family', 'episode.account'])->findOrFail($reception);
+        $this->authorize('update', $receptionModel);
+
+        return response()->json($statementService->preview($receptionModel));
+    }
+
+    /**
+     * PDF informativo del estado de cuenta (NO es la ODV de Microsip).
+     */
+    public function accountStatementPdf(int $reception, AccountStatementService $statementService)
+    {
+        $receptionModel = Reception::with('pet.family')->findOrFail($reception);
+        $this->authorize('update', $receptionModel);
+
+        $pdf = Pdf::loadView('account-statement.pdf', $statementService->pdfData($receptionModel));
+
+        return $pdf->stream('estado-de-cuenta-' . $reception . '.pdf');
+    }
+
+    /**
+     * Cierra la cuenta de la recepción: persiste los Charge, genera la ODV
+     * en Microsip y marca la Account como CLOSED.
+     */
+    public function closeAccount(int $reception, AccountStatementService $statementService)
+    {
+        $receptionModel = Reception::with('episode.account')->findOrFail($reception);
+        $this->authorize('update', $receptionModel);
+
+        try {
+            return response()->json($statementService->close($receptionModel));
+        } catch (\InvalidArgumentException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
     }
 }

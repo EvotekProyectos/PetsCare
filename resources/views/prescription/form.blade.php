@@ -39,7 +39,7 @@
                 </div>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-6" hidden>
                 <div class="form-group mb-2">
                     <label for="name" class="form-label">FECHA</label>
                     <div class="input-group mb-2">
@@ -50,16 +50,18 @@
                             $now = \Carbon\Carbon::now();
                         @endphp
                         <input type="datetime-local" name="date"
-                            class="form-control @error('date') is-invalid @enderror"
-                            value="{{ $now }}" id="date" placeholder="Date">
+                            class="form-control @error('date') is-invalid @enderror" value="{{ $now }}"
+                            id="date" placeholder="Date">
                         {!! $errors->first('date', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="form-group mb-2">
-                    <label for="name" class="form-label">DIAGNOSTICO</label>
+                    <label for="name" class="form-label">DIAGNOSTICO
+                        
+                    </label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <img src="{{ asset('img/consulta.png') }}" alt="Foto Mascota" id="preview"
@@ -86,12 +88,13 @@
             <div class="col-md-12">
                 <div class="form-group mb-2">
                     <label for="name" class="form-label">NOMBRE , PRESENTACIÓN, CANTIDAD Y FORMA DE
-                        ADMINISTRACIÓN</label>
+                        ADMINISTRACIÓN
+                    </label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="icon-park-twotone--medicine-bottle-one"></span>
                         </span>
-                        <textarea name="medicine"  class="form-control @error('medicine') is-invalid @enderror" id="medicine"
+                        <textarea name="medicine" class="form-control @error('medicine') is-invalid @enderror" id="medicine"
                             placeholder="Nombres de los medicamentos, la presentación, cantidad y forma de administración." rows="4">{{ old('medicine', $prescription?->medicine) }}</textarea>
                         {!! $errors->first('medicine', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                     </div>
@@ -107,7 +110,7 @@
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="icon-park-twotone--medicine-bottle-one"></span>
                         </span>
-                        <textarea name="observations"  class="form-control @error('observations') is-invalid @enderror" id="observations"
+                        <textarea name="observations" class="form-control @error('observations') is-invalid @enderror" id="observations"
                             placeholder="Observaciones del emisor" rows="4">{{ old('observations', $prescription?->observations) }}</textarea>
                         {!! $errors->first('observations', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                     </div>
@@ -115,12 +118,77 @@
             </div>
         </div>
 
+        <div class="row align-items-end">
+            <div class="col-md-3">
+                <div class="form-group mb-2 mb20">
+                    <label for="day_next_check" class="form-label">PRÓXIMO CONTROL</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-primary-subtle" id="basic-addon1">
+                            <i class="fas fa-calendar text-primary"></i>
+                        </span>
+                        <input type="date" name="day_next_check"
+                            class="form-control @error('day_next_check') is-invalid @enderror"
+                            value="{{ old('day_next_check', $appointment?->day_next_check) }}" id="day_next_check"
+                            placeholder="Day Next Check">
+                    </div>
+                    {!! $errors->first(
+                        'day_next_check',
+                        '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>',
+                    ) !!}
+                </div>
+            </div>
 
+            <div class="col-md-3">
+                <div class="form-group mb-2 mb20">
+                    <label for="time_next_check" class="form-label">HORA</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-primary-subtle" id="basic-addon1">
+                            <i class="fa fa-clock text-primary"></i>
+                        </span>
+                        <input type="time" name="time_next_check"
+                            class="form-control @error('time_next_check') is-invalid @enderror"
+                            value="{{ old('time_next_check', $appointment?->time_next_check) }}" id="time_next_check"
+                            placeholder="Time Next Check">
+                    </div>
+                    {!! $errors->first(
+                        'time_next_check',
+                        '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>',
+                    ) !!}
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group mb-2 mb20">
+                    <label for="reason_next_check_id" class="form-label">TIPO DE PRÓXIMA CONSULTA</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-primary-subtle" id="basic-addon1">
+                            <span class="vaadin--lines-list"></span>
+                        </span>
+                        <select name="reason_next_check_id"
+                            class="form-control @error('reason_next_check_id') is-invalid @enderror"
+                            id="reason_next_check_id">
+                            <option value=""> Selecciona el tipo</option>
+                            @foreach ($reasons as $reason)
+                                <option value="{{ $reason->id }}" name="reason_next_check_id"
+                                    {{ old('reason_next_check_id', $appointment?->reason_next_check_id) == $reason->id ? 'selected' : '' }}>
+                                    {{ $reason->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    {!! $errors->first(
+                        'reason_next_check_id',
+                        '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>',
+                    ) !!}
+                </div>
+            </div>
+
+            <div class="col-md-2 mb-3">
+                <a href="{{ route('dates.individual', $reception->veterinarian_id) }}" target="_blank"
+                    class="btn btn-primary text-uppercase rounded-4 w-100"
+                    title="Ver el horario del médico antes de agendar">
+                    <i class="fas fa-calendar-check me-1"></i> Ver mis citas
+                </a>
+            </div>
+        </div>
     </div>
-
-    {{-- <div class="col-12 mt-2 d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary btn-sm text-uppercase rounded-4">
-            <i class="fas fa-plus"></i>
-            Guardar receta</button>
-    </div>--}}
 </div>

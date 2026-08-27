@@ -214,6 +214,9 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'editar presupuestos', 'type' => 'presupuestos']);
         Permission::firstOrCreate(['name' => 'eliminar presupuestos', 'type' => 'presupuestos']);
 
+        // estados de cuenta permissions (pantalla nueva de solo lectura, sin CRUD)
+        Permission::firstOrCreate(['name' => 'ver panel estados de cuenta', 'type' => 'estados de cuenta']);
+
         //follow ups critics
         Permission::firstOrCreate(['name' => 'ver panel seguimientos de criticos', 'type' => 'seguimientos de criticos']);
         Permission::firstOrCreate(['name' => 'crear seguimientos de criticos', 'type' => 'seguimientos de criticos']);
@@ -401,6 +404,11 @@ class RolesAndPermissionsSeeder extends Seeder
             'ver panel familias',
             'ver panel horarios',
             'ver panel recepciones',
+            // El médico es quien traslada recepciones (Consulta -> Hospitalización,
+            // Hospitalización -> Cremación al dar de alta por fallecimiento, etc.)
+            // — ver ReceptionTransferController::store(), que exige
+            // authorize('update', $origin).
+            'editar recepciones',
             'ver panel consultas',
             'crear consultas',
             'editar consultas',
@@ -426,6 +434,11 @@ class RolesAndPermissionsSeeder extends Seeder
             'crear hoja roja',
             'editar hoja roja',
             'eliminar hoja roja',
+            // El único camino a Cremación es el traslado desde Hospitalización
+            // (ver ReceptionTransferController::store()), que redirige al
+            // médico al formulario de creación de Cremación —
+            // CremationController::store() exige authorize('create', ...).
+            'crear cremaciones',
             'ver panel cirugías',
             'crear cirugía',
             'editar cirugía',

@@ -106,7 +106,9 @@ $.ajax({
                 if (res.area_id === 1) {
                     window.location.href = route('surgery.auth', RECEPTION_ID);
                 } else {
-                    window.location.href = route('receptions.index');
+                    window.location.href = CAME_FROM_TRANSFER
+                        ? route('assignment.hospital')
+                        : route('receptions.index');
                 }
             },
             error: function (error) {

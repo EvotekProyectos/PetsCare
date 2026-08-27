@@ -54,7 +54,4 @@
         </div>
 
     </div>
-    <div class="col-12 mt-2 d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary">Registrar</button>
-    </div>
 </div>

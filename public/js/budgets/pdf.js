@@ -125,7 +125,7 @@ $("form").on("submit", function (e) {
         data: formData,
         success: function (response) {
             window.open(response.url, '_blank');
-            window.location.href = route('budgets.index');
+            window.location.href = route('appointment.consultation', RECEPTION_ID);
         },
         error: function (error) {
             console.error("Error:", error);

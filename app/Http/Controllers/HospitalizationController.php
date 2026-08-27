@@ -9,9 +9,11 @@ use App\Models\FollowupIntern;
 use App\Models\FollowupSurgical;
 use App\Models\Producto;
 use App\Models\Format;
+use App\Models\HospitalizationStatus;
+use App\Models\HospitalizationStatusHistory;
 use App\Models\Pet;
 use App\Models\Reception;
-use App\Models\Voucher;
+use App\Services\VoucherService;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf  as Pdf;
 use Illuminate\Support\Facades\Storage;
@@ -158,50 +160,74 @@ class HospitalizationController extends Controller
         return response()->json(['url' => asset($pdfUrl), 'format_id' => $format->id]);
     }
 
-    public function dischargeDeath(Request $request)
+    public function dischargeDeath(Request $request, VoucherService $voucherService)
     {
-        $reception = Reception::findOrFail($request->receptionId); //buscaos la recepcion
+        $this->registerDeathDischarge($request->receptionId, $voucherService);
+
+        return response()->json([
+            'message' => 'Paciente dado de alta por fallecimiento.',
+        ], 200); //regresamos mensaje
+    }
+
+    /**
+     * Registro de alta por fallecimiento
+     */
+    public function registerDeathDischarge(int $receptionId, VoucherService $voucherService): Hospitalization
+    {
+        $reception = Reception::findOrFail($receptionId); //buscaos la recepcion
         $reception->exit_date = now(); //marcamos la fecha y hora de salida
         $reception->save();
 
+        HospitalizationStatusHistory::create([
+            'reception_id' => $receptionId,
+            'hospitalization_status_id' => HospitalizationStatus::where('name', 'Dado de alta')->value('id'),
+            'changed_by' => auth()->id(),
+            'changed_at' => now(),
+        ]);
+
         //creamos registro en hospitlizacion para registrar el tipo de salida
         $hospitalization = new Hospitalization();
-        $hospitalization->reception_id = $request->receptionId;
+        $hospitalization->reception_id = $receptionId;
         $hospitalization->exit_date = now();
         $hospitalization->hospital_discharges_id = 3;
         $hospitalization->save();
 
-        // Actualizar vouchers pendientes a cancelados
-        Voucher::where('reception_id', $request->receptionId)
-            ->where('status', 'Pendiente')
-            ->update([
-                'status' => 'Cancelado',
-                'cancellation_reason' => 'El paciente falleció'
-            ]);
+        // Un consumible cuyo vale nunca se surtió no se cobra: se cancela
+        // cualquier vale que se haya quedado Pendiente al dar de alta.
+        $voucherService->cancelPendingForReception($receptionId, 'El paciente falleció');
 
-
-        return response()->json([
-            'message' => 'Paciente dado de alta por fallecimiento.',
-        ], 200); //regresamos mensaje 
+        return $hospitalization;
     }
 
-    public function discharge(Request $request)
+    public function discharge(Request $request, VoucherService $voucherService)
     {
+        // Alta por fallecimiento (hospital_discharges_id=3): misma lógica
+        // reutilizada desde ReceptionTransferController::store() — ver
+        // registerDeathDischarge().
+        if ((int) $request->hospital_discharges_id === 3) {
+            $new = $this->registerDeathDischarge($request->reception_id, $voucherService);
+
+            return response()->json($new);
+        }
+
         $reception = Reception::findOrFail($request->reception_id); //buscaos la recepcion
-        $reception->exit_date = now(); //marcamos la fecha y hora de salida 
+        $reception->exit_date = now(); //marcamos la fecha y hora de salida
         $reception->save();
 
-        // Actualizar vouchers pendientes a cancelados
-        Voucher::where('reception_id', $request->reception_id)
-            ->where('status', 'Pendiente')
-            ->update([
-                'status' => 'Cancelado',
-                'cancellation_reason' => 'El paciente fue dado de alta'
-            ]);
+        HospitalizationStatusHistory::create([
+            'reception_id' => $request->reception_id,
+            'hospitalization_status_id' => HospitalizationStatus::where('name', 'Dado de alta')->value('id'),
+            'changed_by' => auth()->id(),
+            'changed_at' => now(),
+        ]);
+
+        // Un consumible cuyo vale nunca se surtió no se cobra: se cancela
+        // cualquier vale que se haya quedado Pendiente al dar de alta.
+        $voucherService->cancelPendingForReception($request->reception_id, 'El paciente fue dado de alta');
 
         $data = $request->all();
         $data['exit_date'] = now();
-        $new = Hospitalization::create($data); //registreamos el tipo de sdalida 
+        $new = Hospitalization::create($data); //registreamos el tipo de sdalida
 
         return response()->json($new); //regresamos el nuevo registro
     }

@@ -26,3 +26,12 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('js/pets/breed-cascade.js') }}" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            bindSpeciesBreedCascade('species_id', 'breed_id');
+        });
+    </script>
+@endpush

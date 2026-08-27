@@ -21,7 +21,7 @@ class AppointmentPolicy
      */
     public function view(User $user, Appointment $appointment): bool
     {
-        return false;
+        return $user->can("ver panel consultas");
     }
 
     /**

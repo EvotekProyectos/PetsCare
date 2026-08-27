@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FollowupsCritic;
 use App\Http\Requests\FollowupsCriticRequest;
+use App\Models\ReceptionEvent;
 use Yajra\DataTables\Facades\DataTables;
 
 /**
@@ -42,9 +43,18 @@ class FollowupsCriticController extends Controller
         $new = FollowupsCritic::create($request->validated());
         $this->authorize("create", FollowupsCritic::class);
 
-        return response()->json($new); 
-        // return redirect()->route('followups-critics.index')
-        //     ->with('success', 'FollowupsCritic created successfully.');
+        if ($new->reception_id) {
+            ReceptionEvent::create([
+                'reception_id' => $new->reception_id,
+                'event_type' => 'followup_added',
+                'description' => 'Seguimiento crítico agregado',
+                'followup_type' => 'followups_critic',
+                'followup_id' => $new->id,
+                'created_by' => auth()->id(),
+            ]);
+        }
+
+        return response()->json($new);
     }
 
     /**

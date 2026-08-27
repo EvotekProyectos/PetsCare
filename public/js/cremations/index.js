@@ -8,6 +8,10 @@ var table = undefined;
 $(document).ready(function () {
     table = $('#table').DataTable({
         ajax: { url: route('cremation.list'),
+            data: function (d) {
+                d.date = $('#filterCremacionFecha').val();
+                d.status_id = $('#filterCremacionEstado').val();
+            },
             dataSrc: function (json) {return json || [];}
         },
         responsive: true,
@@ -67,22 +71,32 @@ $(document).ready(function () {
                 data: null,
                 render: function (data) {
                     return `
-                           <a type="button" class="btn btn-sm text-primary" onclick="Attend(${data.id}, '${data.status}', '${data.updated_at}');">
-                           <span class="icon-park-twotone--correct"></span> 
+                           <a type="button" class="btn btn-sm icon-btn-outline text-primary" title="Avanzar estado" onclick="Attend(${data.id}, '${data.status}', '${data.updated_at}');">
+                           <span class="icon-park-twotone--correct"></span>
                         </a>
-                           <a type="button" href="${route('cremation.comprobante', data.id)}" class="btn btn-sm text-primary">
+                           <a type="button" href="${route('cremation.comprobante', data.id)}" class="btn btn-sm icon-btn-outline text-primary" title="Ver comprobante">
                             <span class="mdi--eye"></span>
                         </a>
                          `;
-                        // <a type="button" href="${route('cremations.edit', data.id)}" class="btn btn-sm text-primary">
+                        // <a type="button" href="${route('cremations.edit', data.id)}" class="btn btn-sm icon-btn-outline text-primary">
                         //     <i class="fas fa-edit"></i>
                         // </a>
-                        
-                        
-                    
+
+
+
                 }
             },
         ]
+    });
+
+    $('#filterCremacionFecha, #filterCremacionEstado').on('change', function () {
+        table.ajax.reload(null, false);
+    });
+
+    $('#btnClearCremacionFilters').on('click', function () {
+        $('#filterCremacionFecha').val('');
+        $('#filterCremacionEstado').val('');
+        table.ajax.reload(null, false);
     });
 });
 

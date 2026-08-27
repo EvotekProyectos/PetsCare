@@ -38,4 +38,21 @@ class HotelRequest extends FormRequest
             
         ];
     }
+
+    public function messages(): array
+{
+    return [
+        'food.required' => 'El campo tipo de alimentación es obligatorio.',
+        'objects.required' => 'El campo tipo de objetos es obligatorio.',
+        'observations.required' => 'El campo observaciones es obligatorio.',
+        'service_type_id.required' => 'El tipo de servicio es obligatorio.',
+
+        'reception_id.integer' => 'La recepción seleccionada no es válida.',
+        'reception_id.exists' => 'La recepción seleccionada no existe.',
+
+        'folio.integer' => 'El folio debe ser un número entero.',
+        'cubicle_id.integer' => 'El cubículo seleccionado no es válido.',
+        'cubicle_id.exists' => 'El cubículo seleccionado no existe.',
+    ];
+}
 }

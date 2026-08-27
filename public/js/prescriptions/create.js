@@ -61,7 +61,9 @@ async function EndAppointment(event) {
     }
 }
 
-//Función Para Guardar Receta y Generar Folio de Orden de Venta para los casos de alta de Hospital
+//Función para guardar la receta médica en los casos de alta de Hospital.
+//La ODV ya no se genera aquí: la Recepcionista la genera después desde
+//"Cerrar cuenta" (AccountStatementService::close()).
 async function DischargePrescription() {
     event.preventDefault();
     Swal.fire({
@@ -80,20 +82,12 @@ async function DischargePrescription() {
         let resp = await pet.json();
 
         if (pet.ok) {
-            let url3 = route('redsheet.pay', Reception_Id);
-            let pet3 = await fetch(url3, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            let resp3 = await pet3.json();
-
             Swal.close();
 
             Swal.fire({
                 icon: "success",
-                title: "El folio para pagar el servicio es " + resp3,
+                title: "Alta registrada correctamente",
+                text: "La receta médica quedó guardada.",
                 timer: 27000,
                 showConfirmButton: true
             }).then(() => {

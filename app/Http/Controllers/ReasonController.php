@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reason;
+use App\Models\Producto;
 use App\Http\Requests\ReasonRequest;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -31,8 +32,9 @@ class ReasonController extends Controller
     public function create()
     {
         $reason = new Reason();
+        $products = Producto::where("ESTATUS", "A")->get();
         $this->authorize("create", Reason::class);
-        return view('reason.create', compact('reason'));
+        return view('reason.create', compact('reason', 'products'));
     }
 
     /**
@@ -61,10 +63,11 @@ class ReasonController extends Controller
      */
     public function edit($id)
     {
-       
-        $reason = Reason::find($id); 
+
+        $reason = Reason::find($id);
+        $products = Producto::where("ESTATUS", "A")->get();
         $this->authorize("update", Reason::class);
-        return view('reason.edit', compact('reason'));
+        return view('reason.edit', compact('reason', 'products'));
     }
 
     /**

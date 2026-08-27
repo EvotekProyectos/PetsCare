@@ -5,14 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Cremation;
 use App\Http\Requests\CremationRequest;
 use App\Models\CmType;
+use App\Models\CremationStatus;
+use App\Models\CremationStatusHistory;
 use App\Models\Folio;
 use App\Models\Format;
+use App\Models\FormatType;
 use App\Models\GenericModel;
 use App\Models\PaymentOrder;
 use App\Models\Pet;
 use App\Models\Producto;
 use App\Models\Reception;
 use App\Models\User;
+use App\Services\AccountStatementService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -60,8 +64,16 @@ class CremationController extends Controller
         $new = Cremation::create($request->validated());
 
         Pet::where('id', $request->pet_id)->update(['deceased' => 1]);
-        //return redirect()->route('cremations.index')
-        // ->with('success', 'Cremation created successfully.');
+
+        // "Creado": pendiente de pago, todavía no se puede empezar a
+        // trabajar el servicio.
+        CremationStatusHistory::create([
+            'reception_id' => $new->reception_id,
+            'cremation_status_id' => CremationStatus::where('name', 'Creado')->value('id'),
+            'changed_by' => auth()->id(),
+            'changed_at' => now(),
+        ]);
+
         return response()->json($new);
     }
 
@@ -136,10 +148,18 @@ class CremationController extends Controller
     }
 
 
-    public function list()
+    public function list(Request $request)
     {
-        $cremations = Cremation::with('reception', 'reception.receptionist', 'reception.family', 'pet', 'cm', 'tag', 'serv', 'vet')->get();
-        //return DataTables::of($cremations)->make(true);
+        $cremations = Cremation::with('reception', 'reception.receptionist', 'reception.family', 'pet', 'cm', 'tag', 'serv', 'vet')
+            ->when($request->filled('date'), function ($query) use ($request) {
+                $query->whereHas('reception', function ($q) use ($request) {
+                    $q->whereDate('entry_date', $request->date);
+                });
+            })
+            ->when($request->filled('status_id'), function ($query) use ($request) {
+                $query->where('status', $request->status_id);
+            })
+            ->get();
         return response()->json($cremations);
     }
 
@@ -152,49 +172,100 @@ class CremationController extends Controller
         return response()->json(['success' => true, 'status' => $cremation->status]);
     }
 
-    public function responsiva(int $id) {
+    public function responsiva(int $id)
+    {
 
         $reception = Reception::with('family', 'pet')->find($id);
         $cremation = Cremation::where('reception_id', $id)->first();
 
         return view('cremation.responsiva', compact("cremation", "reception"));
-        
     }
 
-   public function responsivaPdf(Request $request, $id)
-   {
+    public function responsivaPdf(Request $request, $id)
+    {
         $reception = Reception::with('family', 'pet')->find($id);
         $cremation = Cremation::where('reception_id', $id)->first();
         // $pet=$reception->pet;
 
-         $signatureDataUrl = $request->input('signature');
-         $nameFamily = $request->input('name_family');
-       
-         $pdf = PDF::loadView('cremation.responsiva', [
-             'reception' => $reception,
+        $signatureDataUrl = $request->input('signature');
+        $nameFamily = $request->input('name_family');
+
+        $pdf = PDF::loadView('cremation.responsiva', [
+            'reception' => $reception,
             //   'pet' => $pet,
-             'signatureDataUrl' => $signatureDataUrl,
-             'nameFamily' => $nameFamily,
-             'isPdf' => true
-         ]);
+            'signatureDataUrl' => $signatureDataUrl,
+            'nameFamily' => $nameFamily,
+            'isPdf' => true
+        ]);
 
-         $pdfPath = 'public/cremations/responsiva_' . $id . '.pdf';
-         Storage::put($pdfPath, $pdf->output());
+        $pdfPath = 'public/cremations/responsiva_' . $id . '.pdf';
+        Storage::put($pdfPath, $pdf->output());
 
-         $pdfUrl = Storage::url($pdfPath);
+        $pdfUrl = Storage::url($pdfPath);
 
-          $format = new Format();
-          $format->format_type_id = 7;
-          $format->reception_id = $id;
+        $format = new Format();
+        $format->format_type_id = 7;
+        $format->reception_id = $id;
         //   $format->pet_id = $pet->id;
-          $format->format_pdf = $pdfPath;
-          $format->save();
+        $format->format_pdf = $pdfPath;
+        $format->save();
 
 
-         return response()->json(['url' => asset($pdfUrl), 'format_id' => $format->id]);
-         //return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
-    //     //return response()->json(['url' => asset('storage/'.$pdfPath), 'format_id' => $format->id]);
-     }
+        return response()->json(['url' => asset($pdfUrl), 'format_id' => $format->id]);
+        //return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
+        //     //return response()->json(['url' => asset('storage/'.$pdfPath), 'format_id' => $format->id]);
+    }
+
+    /**
+     * Responsiva de entrega de cenizas. Firmarla es
+     * lo único que avanza el estatus (CremationStatusHistory) a "Entregado".
+     */
+    public function entregaCenizas(int $id)
+    {
+        $reception = Reception::with('family', 'pet')->find($id);
+        $cremation = Cremation::where('reception_id', $id)->first();
+
+        return view('cremation.entrega_cenizas', compact('cremation', 'reception'));
+    }
+
+    public function entregaCenizasPdf(Request $request, $id)
+    {
+        $reception = Reception::with('family', 'pet')->find($id);
+        $cremation = Cremation::where('reception_id', $id)->first();
+
+        $signatureDataUrl = $request->input('signature');
+        $nameFamily = $request->input('name_family');
+
+        $pdf = PDF::loadView('cremation.entrega_cenizas', [
+            'reception' => $reception,
+            'cremation' => $cremation,
+            'signatureDataUrl' => $signatureDataUrl,
+            'nameFamily' => $nameFamily,
+            'isPdf' => true,
+        ]);
+
+        $pdfPath = 'public/cremations/entrega_cenizas_' . $id . '.pdf';
+        Storage::put($pdfPath, $pdf->output());
+
+        $pdfUrl = Storage::url($pdfPath);
+
+        $format = new Format();
+        $format->format_type_id = FormatType::where('name', 'Entrega de cenizas')->value('id');
+        $format->reception_id = $id;
+        $format->pet_id = $reception->pet_id;
+        $format->format_pdf = $pdfPath;
+        $format->save();
+
+        $entregadoStatusId = CremationStatus::where('name', 'Entregado')->value('id');
+        CremationStatusHistory::create([
+            'reception_id' => $id,
+            'cremation_status_id' => $entregadoStatusId,
+            'changed_by' => auth()->id(),
+            'changed_at' => now(),
+        ]);
+
+        return response()->json(['url' => asset($pdfUrl), 'format_id' => $format->id]);
+    }
 
     public function ordenventa(int $reception)
     {
@@ -313,6 +384,47 @@ class CremationController extends Controller
 
         //Regresamos el Folio de la ODV con el que pueden pasar a pagar a caja
         return response()->json($newFolio);
+    }
+
+    /**
+     * Previsualización del estado de cuenta de una recepción de cremación:
+     * NO crea ningún Charge, solo muestra lo que se cobraría si se cierra la cuenta.
+     */
+    public function accountStatement(int $reception, AccountStatementService $statementService)
+    {
+        $receptionModel = Reception::with(['pet.family', 'episode.account'])->findOrFail($reception);
+        $this->authorize('update', $receptionModel);
+
+        return response()->json($statementService->preview($receptionModel));
+    }
+
+    /**
+     * PDF informativo del estado de cuenta (NO es la ODV de Microsip).
+     */
+    public function accountStatementPdf(int $reception, AccountStatementService $statementService)
+    {
+        $receptionModel = Reception::with('pet.family')->findOrFail($reception);
+        $this->authorize('update', $receptionModel);
+
+        $pdf = Pdf::loadView('account-statement.pdf', $statementService->pdfData($receptionModel));
+
+        return $pdf->stream('estado-de-cuenta-' . $reception . '.pdf');
+    }
+
+    /**
+     * Cierra la cuenta de la recepción: persiste los Charge, genera la ODV
+     * en Microsip y marca la Account como CLOSED.
+     */
+    public function closeAccount(int $reception, AccountStatementService $statementService)
+    {
+        $receptionModel = Reception::with('episode.account')->findOrFail($reception);
+        $this->authorize('update', $receptionModel);
+
+        try {
+            return response()->json($statementService->close($receptionModel));
+        } catch (\InvalidArgumentException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
     }
 
     public function history(int $id)

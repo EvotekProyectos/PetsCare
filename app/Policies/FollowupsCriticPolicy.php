@@ -21,7 +21,7 @@ class FollowupsCriticPolicy
      */
     public function view(User $user, FollowupsCritic $followupsCritic): bool
     {
-        return false;
+        return $user->can("ver panel seguimientos de criticos");
     }
 
     /**

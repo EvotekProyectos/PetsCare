@@ -4,11 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\AdmissionType;
 use App\Models\Area;
+use App\Models\AttentionStatus;
+use App\Models\CremationStatus;
+use App\Models\FamClassification;
 use App\Models\Family;
+use App\Models\Genre;
+use App\Models\GroomingStatus;
+use App\Models\HospitalizationStatus;
+use App\Models\HotelStatus;
 use App\Models\Pet;
+use App\Models\PetClassification;
 use App\Models\Reason;
 use App\Models\Reception;
+use App\Models\ReproductiveStatus;
 use App\Models\Room;
+use App\Models\Species;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -37,20 +47,11 @@ class HomeController extends Controller
     {
         $user = auth()->user();
 
-        //dd($user->getRoleNames());
-        // Redirección por rol
-        if ($user->hasRole('almacenista')) {
-            return redirect()->route('vouchers.index');
+        foreach (config('role_routes') as $role => $routeName) {
+            if ($user->hasRole($role)) {
+                return redirect()->route($routeName);
+            }
         }
-
-        if ($user->hasRole('medico')) {
-            return redirect()->route('receptions.index');
-        }
-
-        if ($user->hasRole('colaborador')) {
-            return redirect()->route('assignment.groomings');
-        }
-
         $reception = new Reception();
         $admissions = AdmissionType::all();
         $areas = Area::all();
@@ -60,8 +61,57 @@ class HomeController extends Controller
         $rooms = Room::all();
         $pets = Pet::where("deceased", 0)->get();
 
+        //catalogos necesarios para el modal rápido de nueva mascota/familia
+        $family = new Family();
+        $genders = Genre::all();
+        $ReproductiveStatuses = ReproductiveStatus::all();
+        $PetClassifications = PetClassification::all();
+        $FamClassifications = FamClassification::all();
+        $veterinarians = User::role('medico')->get();      // rol id 3
+        $collaborators = User::role('colaborador')->get();
+        $Species = Species::where('active', true)->orderBy('name')->get();
+
+        //catalogos de estatus para los filtros de las 5 tablas de recepciones
+        $attentionStatuses = AttentionStatus::all();
+        $hospitalizationStatuses = HospitalizationStatus::all();
+        $groomingStatuses = GroomingStatus::all();
+        $hotelStatuses = HotelStatus::all();
+        $cremationStatuses = CremationStatus::all();
+
+        // Defaults de los filtros de estatus
+        $defaultHospitalizationStatusId = HospitalizationStatus::where('name', 'Hospitalizado')->value('id');
+        $defaultHotelStatusId = HotelStatus::where('name', 'En estancia')->value('id');
+        $enEsperaAttentionStatusId = AttentionStatus::where('name', 'En espera')->value('id');
+
+
         $this->authorize("create", Reception::class);
-        return view('reception.create', compact('reception', 'admissions', 'areas', 'families', 'reasons', 'users', 'rooms', 'pets'));
+        return view('reception.index', compact(
+            'reception',
+            'admissions',
+            'areas',
+            'families',
+            'reasons',
+            'users',
+            'rooms',
+            'pets',
+            'family',
+            'genders',
+            'ReproductiveStatuses',
+            'PetClassifications',
+            'FamClassifications',
+            'veterinarians',
+            'collaborators',
+            'Species',
+            'attentionStatuses',
+            'hospitalizationStatuses',
+            'groomingStatuses',
+            'hotelStatuses',
+            'cremationStatuses',
+            'defaultHospitalizationStatusId',
+            'defaultHotelStatusId'
+            ,
+            'enEsperaAttentionStatusId'
+        ));
     }
 
     public function megamenu()

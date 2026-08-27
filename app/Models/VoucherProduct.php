@@ -33,7 +33,7 @@ class VoucherProduct extends Model
      *
      * @var array
      */
-    protected $fillable = ['voucher_id', 'product_id', 'requested_quantity', 'unit_of_measure', 'red_sheet_id'];
+    protected $fillable = ['voucher_id', 'product_id', 'requested_quantity', 'unit_of_measure', 'sourceable_id', 'sourceable_type'];
 
 
     /**
@@ -49,8 +49,55 @@ class VoucherProduct extends Model
         return $this->belongsTo(\App\Models\Producto::class, 'product_id', 'ARTICULO_ID');
     }
 
-    public function redSheet()
+    /**
+     * Origen del producto vale: RedSheet (Hospitalización), AppointmentService
+     * (Consulta) o, a futuro, Grooming.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function sourceable()
     {
-        return $this->belongsTo(\App\Models\redSheet::class, 'red_sheet_id', 'id');
+        return $this->morphTo();
+    }
+
+    /**
+     * Mapa sourceable_id => VoucherProduct (con su voucher cargado) para todo
+     * un lote de ids de un mismo origen, en una sola query — pensado para
+     * listados completos (ej. tabla de servicios de una recepción), no para
+     * llamarse fila por fila. "Activo" = el voucher no está Cancelado ni
+     * Rechazado; un voucher recién creado (status NULL, antes de firmarse en
+     * generate()) no cuenta como activo, igual que el flag que reemplaza.
+     */
+    public static function activeMapFor(string $sourceableType, array $sourceableIds): \Illuminate\Support\Collection
+    {
+        if (empty($sourceableIds)) {
+            return collect();
+        }
+
+        return static::whereIn('sourceable_id', $sourceableIds)
+            ->where('sourceable_type', $sourceableType)
+            ->whereHas('voucher', fn ($q) => $q->whereNotIn('status', ['Cancelado', 'Rechazado']))
+            ->with('voucher:id,folio,status')
+            ->get()
+            ->keyBy('sourceable_id');
+    }
+
+    /**
+     * Mapa sourceable_id => Collection<VoucherProduct> con TODOS los vales de
+     * cada fila (activos e históricos: cancelados/rechazados incluidos), en
+     * una sola query para todo el lote — mismo cuidado de N+1 que activeMapFor().
+     * Puede haber más de un vale por fila (uno cancelado, luego uno nuevo).
+     */
+    public static function historyMapFor(string $sourceableType, array $sourceableIds): \Illuminate\Support\Collection
+    {
+        if (empty($sourceableIds)) {
+            return collect();
+        }
+
+        return static::whereIn('sourceable_id', $sourceableIds)
+            ->where('sourceable_type', $sourceableType)
+            ->with('voucher:id,folio,status,cancellation_reason,rejection_reason')
+            ->get()
+            ->groupBy('sourceable_id');
     }
 }

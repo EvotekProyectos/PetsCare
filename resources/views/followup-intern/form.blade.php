@@ -265,14 +265,13 @@
         </div>
         {!! $errors->first('vet_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
     </div>
-    
 
-            
-        <div class="col-12 mt-2 d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary btn-sm text-uppercase rounded-4">
-                <i class="fas fa-plus"></i>
-                Registrar</button>
-        </div>
+        @unless ($hideSubmit ?? false)
+            <div class="col-12 mt-2 d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary btn-sm text-uppercase rounded-4">
+                    <i class="fas fa-plus"></i>
+                    Registrar</button>
+            </div>
+        @endunless
 
     </div>
-</div>

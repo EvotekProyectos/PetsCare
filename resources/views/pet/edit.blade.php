@@ -45,4 +45,10 @@
         var Pic_route = "{{ $pet->file->route ?? '' }}";
     </script>
     <script src="{{ asset('js/pets/edit.js') }}" defer></script>
+    <script src="{{ asset('js/pets/breed-cascade.js') }}" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            bindSpeciesBreedCascade('species_id', 'breed_id');
+        });
+    </script>
 @endpush

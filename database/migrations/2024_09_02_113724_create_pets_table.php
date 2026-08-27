@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('family_id')->nullable()->references('id')->on('families');
             $table->string("name");
             $table->foreignId('picture_id')->nullable()->references('id')->on('files');
-            $table->string("specie");
+            $table->string("specie")->nullable();
             $table->string("raza")->nullable();
             $table->foreignId('gender_id')->nullable()->references('id')->on('genres');
             $table->date('birthday')->nullable();

@@ -14,23 +14,24 @@
         </div>
 
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <div class="form-group mb-2 mb20">
                     <label for="date" class="form-label">FECHA DE REALIZACIÓN</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="lucide--calendar-clock "></span>
                         </span>
-                        <input type="datetime-local" name="date"
-                            class="form-control @error('date') is-invalid @enderror"
-                            value="{{ old('date', $surgery?->date) }}" id="date"
-                            placeholder="Surgery Date">
+                      <input type="datetime-local" name="date"
+    class="form-control @error('date') is-invalid @enderror"
+    value="{{ old('date', $surgery?->date ? \Carbon\Carbon::parse($surgery->date)->format('Y-m-d\TH:i') : now()->format('Y-m-d\TH:i')) }}"
+    id="date"
+    placeholder="Surgery Date">
                         {!! $errors->first('date', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-7">
                 <div class="form-group mb-2 mb20">
                     <label for="product_type_id" class="form-label">TIPO DE CIRUGÍA</label>
                     <div class="input-group mb-3">
@@ -42,9 +43,9 @@
                             <option value="">Selecciona el tipo de cirugía</option>
                             @foreach ($products as $product)
                                 {{-- @if ($product->product_classification_id == 1) --}}
-                                    <option value="{{ $product->ARTICULO_ID}}" name="product_type_id"
-                                        {{ old('product_type_id', $surgery?->surgery_type_id) == $product->ARTICULO_ID ? 'selected' : '' }}>
-                                        {{ $product->NOMBRE }}</option>
+                                <option value="{{ $product->ARTICULO_ID }}" name="product_type_id"
+                                    {{ old('product_type_id', $surgery?->surgery_type_id) == $product->ARTICULO_ID ? 'selected' : '' }}>
+                                    {{ $product->NOMBRE }}</option>
                                 {{-- @endif --}}
                             @endforeach
                         </select>
@@ -57,7 +58,16 @@
             </div>
         </div>
 
-        {{-- <div class="row">
+        {{-- Sección comentada: descripción quirúrgica, preanestésico/anestésico/
+             otros medicamentos, y tratamiento. Se deja fuera del HTML real
+             (el <div class="row"> que envolvía "TRATAMIENTO" quedó movido
+             dentro de este mismo comentario para no dejar una fila sin
+             cerrar en el HTML activo — antes ese <div class="row"> abría
+             aquí adentro pero su cierre estaba fuera del comentario,
+             mezclado con la fila de OBSERVACIONES). Descomentar junto con
+             su fila si se reactivan estos campos.
+
+        <div class="row">
             <div class="col-md-12">
                 <div class="form-group mb-2 mb20">
                     <label for="surgery_description" class="form-label">DESCRIPCIÓN QUIRURGÍCA</label>
@@ -67,7 +77,7 @@
                         </span>
                         <textarea name="surgery_description"class="form-control @error('surgery_description') is-invalid @enderror"
                             id="surgery_description" placeholder="Descripción de la cirugía realizada"  rows="3" >{{ old('surgery_description', $surgery?->surgery_description) }} </textarea>
-                    
+
                     {!! $errors->first(
                         'surgery_description',
                         '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>',
@@ -136,7 +146,6 @@
             </div>
         </div>
 
-
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group mb-2 mb20">
@@ -149,25 +158,29 @@
                     </div>
                     {!! $errors->first('treatment', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                 </div>
-            </div> --}}
+            </div>
+        </div>
+        --}}
 
-            <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-12">
                 <div class="form-group mb-2 mb20">
                     <label for="observations" class="form-label">OBSERVACIONES</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="vaadin--lines-list"></span>
                         </span>
-                        <textarea name="observations"class="form-control @error('observations') is-invalid @enderror"
-                         rows="2" id="observations_surgery"> {{ old('observations', $surgery?->observations) }} </textarea>
+                        <textarea name="observations"class="form-control @error('observations') is-invalid @enderror" rows="4"
+                            id="observations_surgery"> {{ old('observations', $surgery?->observations) }} </textarea>
                     </div>
                     {!! $errors->first('observations', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                 </div>
             </div>
-
         </div>
 
-        {{-- <div class="row">
+        {{-- Sección comentada: complicaciones. Descomentar si se reactiva.
+
+        <div class="row">
             <div class="col-md-12">
                 <div class="form-group mb-2 mb20">
                     <label for="complications" class="form-label">COMPLICACIONES</label>
@@ -184,21 +197,19 @@
                     ) !!}
                 </div>
             </div>
-        </div> --}}
+        </div>
+        --}}
 
-            <div class="form-group mb-2 mb20" hidden>
-                <label for="vet_id" class="form-label">{{ __('Vet Id') }}</label>
-                <input type="text" name="vet_id" class="form-control @error('vet_id') is-invalid @enderror"
-                    value="{{ old('vet_id', $surgery?->vet_id) }}" id="vet_id" placeholder="Vet Id">
-                {!! $errors->first('vet_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-            </div>
+        <div class="form-group mb-2 mb20" hidden>
+            <label for="vet_id" class="form-label">{{ __('Vet Id') }}</label>
+            <input type="text" name="vet_id" class="form-control @error('vet_id') is-invalid @enderror"
+                value="{{ old('vet_id', $surgery?->vet_id) }}" id="vet_id" placeholder="Vet Id">
+            {!! $errors->first('vet_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
 
     </div>
-
-    <div class="col-12 mt-2 d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary  btn-sm text-uppercase rounded-4">
-            <i class="fas fa-plus"></i>
-            Registrar Cirugía</button>
-    </div>
 </div>
+{{-- Botón "Registrar Cirugía" quitado de aquí: ya vive en el modal-footer
+     de ModalSurgeries (id="ModalSurgeries"), usando form="NewSurgery" para
+     seguir disparando el submit de este formulario desde fuera del <form>.
+     No duplicar el botón aquí. --}}
