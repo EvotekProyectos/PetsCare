@@ -32,7 +32,7 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form-group mb-2">
-                <label for="food" class="form-label">TIPO DE ALIMENTACIÓN</label>
+                <label for="food" class="form-label">TIPO DE ALIMENTACIÓN <span class="text-danger">*</span></label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="game-icons--dog-bowl"></span>
@@ -47,7 +47,7 @@
         
         <div class="col-md-6">
             <div class="form-group mb-2">
-                 <label for="objects" class="form-label">TIPO DE OBJETOS</label>
+                 <label for="objects" class="form-label">TIPO DE OBJETOS  <span class="text-danger">*</span></label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="game-icons--dog-bowl"></span>
@@ -62,7 +62,7 @@
     
         <div class="col-md-6">
             <div class="form-group mb-2">
-                <label for="observations" class="form-label">OBSERVACIONES</label>
+                <label for="observations" class="form-label">OBSERVACIONES <span class="text-danger">*</span></label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="vaadin--lines-list"></span>
@@ -168,6 +168,6 @@
     <div class="col-12 mt-2 d-flex justify-content-end">
         <button type="submit" id="addServiceButton" class="btn btn-primary btn-sm text-uppercase rounded-4">
             <i class="fas fa-plus"></i>
-            Agregar servicio</button>
+            Agregar</button>
     </div> 
 

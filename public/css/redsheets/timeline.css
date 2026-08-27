@@ -1,0 +1,123 @@
+/* Reutiliza el mismo patrón de chevron rotable que ya usan las .card-panel
+   colapsables (Registro clínico, Servicios, etc. en appointment/create.blade.php),
+   duplicado aquí porque ese estilo vive inline por vista y no hay un lugar
+   compartido todavía. */
+.chevron-toggle i {
+    transition: transform 0.2s ease-in-out;
+}
+
+.chevron-toggle[aria-expanded="false"] i {
+    transform: rotate(180deg);
+}
+
+/* Tarjeta de acordeón por día dentro de "Resumen días hospitalizado" */
+.day-accordion-card {
+    padding: 14px 20px;
+}
+
+.day-accordion-toggle {
+    user-select: none;
+}
+
+.day-pill {
+    background: #0455a0;
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.95rem;
+    padding: 6px 22px;
+    border-radius: 999px;
+    letter-spacing: .06em;
+    white-space: nowrap;
+}
+
+.day-accordion-summary {
+    color: #6c757d;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.day-collapse-body {
+    padding-top: 10px;
+}
+
+/* Bitácora del día — timeline */
+.timeline-wrapper {
+    height: 100%;
+      background: #F8FAFC;
+}
+
+.timeline-heading {
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #6c757d;
+    margin-bottom: 10px;
+}
+
+.timeline-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.timeline-item {
+    display: flex;
+    gap: 12px;
+    position: relative;
+    padding-bottom: 18px;
+}
+
+/* Línea vertical conectando los íconos, salvo en el último elemento */
+.timeline-item:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    left: 15px;
+    top: 32px;
+    bottom: -4px;
+    width: 2px;
+    background: #e2e8f0;
+}
+
+.timeline-icon {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    z-index: 1;
+}
+
+.timeline-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.timeline-title {
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.timeline-desc {
+    font-size: 0.85rem;
+    color: #333;
+    word-break: break-word;
+}
+
+.timeline-meta {
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin-top: 2px;
+}
+
+.timeline-detail-link {
+    color: #0455a0;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.timeline-detail-link:hover {
+    text-decoration: underline;
+}

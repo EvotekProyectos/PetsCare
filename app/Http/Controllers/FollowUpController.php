@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FollowUp;
+use App\Models\ReceptionEvent;
 use App\Http\Requests\FollowUpRequest;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -42,6 +43,17 @@ class FollowUpController extends Controller
     {
         $new = FollowUp::create($request->validated());
         $this->authorize("create", FollowUp::class);
+
+        if ($new->reception_id) {
+            ReceptionEvent::create([
+                'reception_id' => $new->reception_id,
+                'event_type' => 'followup_added',
+                'description' => 'Seguimiento agregado',
+                'followup_type' => 'follow_up',
+                'followup_id' => $new->id,
+                'created_by' => auth()->id(),
+            ]);
+        }
 
         return response()->json($new);
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Voucher;
 use App\Http\Requests\VoucherRequest;
+use App\Models\AppointmentService;
 use App\Models\Reception;
 use App\Models\RedSheet;
 use App\Models\VoucherProduct;
@@ -51,11 +52,17 @@ class VoucherController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified resource. Devuelve JSON cuando el caller lo pide
+     * (usado por el modal compartido de detalle, ver voucher/partials/detail-modal.blade.php),
+     * o la vista de siempre para acceso directo por URL.
      */
     public function show($id)
     {
-        $voucher = Voucher::find($id);
+        $voucher = Voucher::with('voucherProducts.product')->findOrFail($id);
+
+        if (request()->wantsJson()) {
+            return response()->json($voucher);
+        }
 
         return view('voucher.show', compact('voucher'));
     }
@@ -108,30 +115,76 @@ class VoucherController extends Controller
 
 
 
+    /**
+     * Mapa de source_type (payload del frontend) -> modelo Eloquent origen
+     * del producto a facturar. Extender aquí cuando se agregue Grooming.
+     */
+    private const SOURCE_MODELS = [
+        'red_sheet' => RedSheet::class,
+        'appointment_service' => AppointmentService::class,
+    ];
+
+    /**
+     * Historial completo de vales de una fila puntual
+     * (un RedSheet o AppointmentService), para el modal compartido de
+     * detalle/historial (ver public/js/vouchers/detail-modal.js)
+     */
+    public function historyFor(Request $request)
+    {
+        $request->validate([
+            'source_type' => 'required|in:' . implode(',', array_keys(self::SOURCE_MODELS)),
+            'source_id' => 'required|integer',
+        ]);
+
+        $sourceModelClass = self::SOURCE_MODELS[$request->source_type];
+
+        $vouchers = VoucherProduct::where('sourceable_id', $request->source_id)
+            ->where('sourceable_type', $sourceModelClass)
+            ->with('voucher:id,folio,status,cancellation_reason,rejection_reason,created_at')
+            ->get()
+            ->pluck('voucher')
+            ->filter()
+            ->values();
+
+        return response()->json($vouchers);
+    }
+
     public function storeProducts(Request $request)
     {
+        $this->authorize("create", Voucher::class);
 
-        $this->create("create", Voucher::class);
+        $request->validate([
+            'reception_id' => 'required|integer|exists:receptions,id',
+            'source_type' => 'required|in:' . implode(',', array_keys(self::SOURCE_MODELS)),
+            'source_ids' => 'required|array|min:1',
+            'source_ids.*' => 'integer',
+        ]);
+
         $voucher = Voucher::create([
             'reception_id' => $request->reception_id,
             'vet_id' => auth()->id(),
             'folio' => Voucher::buildFolio($request->reception_id)
         ]);
 
+        $sourceModelClass = self::SOURCE_MODELS[$request->source_type];
 
-        foreach ($request->redsheets as $redsheetId) {
+        foreach ($request->source_ids as $sourceId) {
+            $source = $sourceModelClass::find($sourceId);
+            if (!$source) {
+                continue;
+            }
 
-            $redsheet = RedSheet::find($redsheetId);
+            $productId = $this->resolveProductId($request->source_type, $source);
+            if (!$productId) {
+                continue;
+            }
 
             VoucherProduct::create([
                 'voucher_id' => $voucher->id,
-                'red_sheet_id' => $redsheetId,
-                'product_id' => $redsheet->service_type_id
+                'sourceable_id' => $sourceId,
+                'sourceable_type' => $sourceModelClass,
+                'product_id' => $productId,
             ]);
-
-            // $redsheet->update([
-            //     'add_voucher' => 1
-            // ]);
         }
 
         return response()->json([
@@ -140,9 +193,48 @@ class VoucherController extends Controller
         ]);
     }
 
+    /**
+     * El ARTICULO_ID a facturar vive en una columna distinta según el origen
+     * (son mutuamente excluyentes por fila: solo una está poblada).
+     */
+    private function resolveProductId(string $sourceType, $source): ?int
+    {
+        return match ($sourceType) {
+            'red_sheet' => $source->service_type_id ?? $source->imaging_type_id ?? $source->lab_type_id,
+            'appointment_service' => $source->imaging_type_id ?? $source->lab_type_id,
+            default => null,
+        };
+    }
+
+    /**
+     * Payload común para el modal de firma
+     */
+    private function voucherPayload(Voucher $voucher): array
+    {
+        $reception = $voucher->reception;
+
+        return [
+            'id' => $voucher->id,
+            'folio' => $voucher->folio,
+            'status' => $voucher->status,
+            'vet' => $voucher->vet ? ['name' => $voucher->vet->name] : null,
+            'reception' => $reception ? [
+                'id' => $reception->id,
+                'type' => $reception->receptionType->name ?? null,
+            ] : null,
+            'pet' => ['name' => $reception->pet->name ?? null],
+            'family' => ['name' => $reception->family->name ?? null],
+            'products' => $voucher->voucherProducts->map(fn ($vp) => [
+                'id' => $vp->id,
+                'name' => $vp->product->NOMBRE ?? '',
+                'requested_quantity' => $vp->requested_quantity,
+            ])->values(),
+        ];
+    }
+
     public function format(int $voucherId)
     {
-        $this->create("create", Voucher::class);
+        $this->authorize("create", Voucher::class);
         $voucher = Voucher::with(
             'reception',
             'vet',
@@ -153,14 +245,12 @@ class VoucherController extends Controller
             'reception.receptionType'
         )->findOrFail($voucherId);
 
-        $reception = $voucher->reception;
-
-        return view('voucher.voucher', compact("voucher", "reception"));
+        return response()->json($this->voucherPayload($voucher));
     }
 
     public function generate(Request $request, $voucherId)
     {
-        $this->create("create", Voucher::class);
+        $this->authorize("create", Voucher::class);
         $voucher = Voucher::with(
             'reception',
             'vet',
@@ -171,9 +261,9 @@ class VoucherController extends Controller
         )->findOrFail($voucherId);
 
         // Guardar cantidades
-        foreach ($request->cantidad as $redsheetId => $cantidad) {
+        foreach ($request->cantidad as $voucherProductId => $cantidad) {
             VoucherProduct::where('voucher_id', $voucher->id)
-                ->where('red_sheet_id', $redsheetId)
+                ->where('id', $voucherProductId)
                 ->update(['requested_quantity' => $cantidad]);
         }
 
@@ -195,12 +285,6 @@ class VoucherController extends Controller
         Storage::disk('public')->put('vouchers/' . $pdfName, $pdf->output());
 
 
-        //Actualizar add_voucher cuando ya se haya firmado
-        foreach ($voucher->voucherProducts as $voucherProduct) {
-            RedSheet::where('id', $voucherProduct->red_sheet_id)
-                ->update(['add_voucher' => 1]);
-        }
-
         // Actualizar voucher
         $voucher->update([
             'generated_document' => 'vouchers/' . $pdfName,
@@ -216,7 +300,6 @@ class VoucherController extends Controller
 
     public function cancelFormat(int $voucherId)
     {
-        $this->create("cancel", Voucher::class);
         $voucher = Voucher::with(
             'vet',
             'voucherProducts.product',
@@ -226,20 +309,22 @@ class VoucherController extends Controller
             'reception.family'
         )->findOrFail($voucherId);
 
+        $this->authorize("cancel", $voucher);
+
         //solo se puede cancelar si está Pendiente
         if ($voucher->status !== 'Pendiente') {
-            abort(403, 'Este vale no puede ser cancelado.');
+            return response()->json([
+                'message' => 'Este vale no puede ser cancelado.'
+            ], 403);
         }
 
-        $reception = $voucher->reception;
-
-        return view('voucher.cancel', compact('voucher', 'reception'));
+        return response()->json($this->voucherPayload($voucher));
     }
 
     public function cancel(Request $request, int $voucherId)
     {
-        $this->create("cancel", Voucher::class);
         $voucher = Voucher::with('voucherProducts')->findOrFail($voucherId);
+        $this->authorize("cancel", $voucher);
 
         if ($voucher->status !== 'Pendiente') {
             return response()->json([
@@ -280,11 +365,6 @@ class VoucherController extends Controller
             'generated_document' => 'vouchers/' . $pdfName
         ]);
 
-        foreach ($voucher->voucherProducts as $voucherProduct) {
-            RedSheet::where('id', $voucherProduct->red_sheet_id)
-                ->update(['add_voucher' => 0]);
-        }
-
         return response()->json([
             'success' => true,
             'pdf_url' => asset('storage/vouchers/' . $pdfName)
@@ -293,8 +373,6 @@ class VoucherController extends Controller
 
     public function issueFormat(int $voucherId)
     {
-        $this->create("issue", Voucher::class);
-
         $voucher = Voucher::with(
             'vet',
             'voucherProducts.product',
@@ -304,19 +382,21 @@ class VoucherController extends Controller
             'reception.family'
         )->findOrFail($voucherId);
 
+        $this->authorize("issue", $voucher);
+
         if ($voucher->status !== 'Pendiente') {
-            abort(403, 'Este vale no puede ser surtido.');
+            return response()->json([
+                'message' => 'Este vale no puede ser surtido.'
+            ], 403);
         }
 
-        $reception = $voucher->reception;
-
-        return view('voucher.issue', compact('voucher', 'reception'));
+        return response()->json($this->voucherPayload($voucher));
     }
 
     public function issue(Request $request, int $voucherId)
     {
-        $this->create("issue", Voucher::class);
         $voucher = Voucher::with('voucherProducts')->findOrFail($voucherId);
+        $this->authorize("issue", $voucher);
 
         if ($voucher->status !== 'Pendiente') {
             return response()->json([
@@ -367,7 +447,6 @@ class VoucherController extends Controller
 
     public function rejectFormat(int $voucherId)
     {
-        $this->create("reject", Voucher::class);
         $voucher = Voucher::with(
             'vet',
             'voucherProducts.product',
@@ -377,19 +456,21 @@ class VoucherController extends Controller
             'reception.family'
         )->findOrFail($voucherId);
 
+        $this->authorize("reject", $voucher);
+
         if ($voucher->status !== 'Pendiente') {
-            abort(403, 'Este vale no puede ser rechazado.');
+            return response()->json([
+                'message' => 'Este vale no puede ser rechazado.'
+            ], 403);
         }
 
-        $reception = $voucher->reception;
-
-        return view('voucher.reject', compact('voucher', 'reception'));
+        return response()->json($this->voucherPayload($voucher));
     }
 
     public function reject(Request $request, int $voucherId)
     {
-        $this->create("reject", Voucher::class);
         $voucher = Voucher::with('voucherProducts')->findOrFail($voucherId);
+        $this->authorize("reject", $voucher);
 
         if ($voucher->status !== 'Pendiente') {
             return response()->json([
@@ -409,11 +490,6 @@ class VoucherController extends Controller
             'issuer_id'        => auth()->id(),
             'issued_at'               => now(),
         ]);
-
-        foreach ($voucher->voucherProducts as $voucherProduct) {
-            RedSheet::where('id', $voucherProduct->red_sheet_id)
-                ->update(['add_voucher' => 0]);
-        }
 
         $voucher->load(
             'vet',

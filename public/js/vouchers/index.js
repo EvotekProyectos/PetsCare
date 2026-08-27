@@ -125,9 +125,9 @@ $(document).on("click", ".btnAccionVale", function () {
     reverseButtons: true,
   }).then((result) => {
     if (result.isConfirmed) {
-      window.open(route("vouchers.issueFormat", voucherId));
+      openVoucherSignModal("surtir", voucherId);
     } else if (result.isDenied) {
-      window.open(route("vouchers.rejectFormat", voucherId));
+      openVoucherSignModal("rechazar", voucherId);
     }
   });
 });

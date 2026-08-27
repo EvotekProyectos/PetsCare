@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property $veterinarian_id
  * @property $recepcionist_id
  * @property $room_id
+ * @property $episode_id
  * @property $entry_date
  * @property $exit_date
  * @property $created_at
@@ -34,6 +35,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property ReceptionType $receptionType
  * @property Room $room
  * @property User $user
+ * @property Episode $episode
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
@@ -50,7 +52,7 @@ class Reception extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_type_id', 'admission_type_id', 'area_id', 'family_id', 'pet_id', 'reason_id', 'veterinarian_id', 'recepcionist_id', 'room_id', 'entry_date', 'exit_date', 'num'];
+    protected $fillable = ['reception_type_id', 'admission_type_id', 'area_id', 'family_id', 'pet_id', 'reason_id', 'veterinarian_id', 'recepcionist_id', 'room_id', 'episode_id', 'entry_date', 'exit_date', 'num'];
 
 
     /**
@@ -146,16 +148,97 @@ class Reception extends Model
         return $this->hasMany(Hospitalization::class, 'reception_id');
     }
 
-    public function statusGrooming() {
+    public function statusGrooming()
+    {
         return $this->hasMany(GroomingStatusHistory::class, 'reception_id', 'id');
-   }
+    }
 
-   public function payment() {
+    public function payment()
+    {
         return $this->belongsTo(\App\Models\PaymentOrder::class, 'id', 'reception_id');
-   }
+    }
 
-   public function grooming()
-   {
+    public function grooming()
+    {
         return $this->belongsTo(GeneralGrooming::class, 'id', 'reception_id');
-   }
+    }
+
+    //ultimo estatus de la recepcion
+    public function currentStatusAppointment()
+    {
+        return $this->hasOne(ReceptionStatusHistory::class, 'reception_id', 'id')
+            ->latestOfMany();
+    }
+
+    //ultimo estatus de la recepcion
+    public function currentStatusGrooming()
+    {
+        return $this->hasOne(GroomingStatusHistory::class, 'reception_id', 'id')
+            ->latestOfMany();
+    }
+
+    //ultimo estatus de la recepcion
+    public function currentStatusCremation()
+    {
+        return $this->hasOne(CremationStatusHistory::class, 'reception_id', 'id')
+            ->latestOfMany();
+    }
+
+    public function episode()
+    {
+        return $this->belongsTo(\App\Models\Episode::class, 'episode_id', 'id');
+    }
+
+    public function transfersFrom()
+    {
+        return $this->hasMany(\App\Models\ReceptionTransfer::class, 'from_reception_id', 'id');
+    }
+
+   
+    public function cremation()
+    {
+        return $this->hasOne(\App\Models\Cremation::class, 'reception_id', 'id');
+    }
+
+    public function transfersTo()
+    {
+        return $this->hasMany(\App\Models\ReceptionTransfer::class, 'to_reception_id', 'id');
+    }
+
+    public function currentHospitalizationStatus()
+    {
+        return $this->hasOne(HospitalizationStatusHistory::class, 'reception_id')
+            ->latestOfMany('changed_at');
+    }
+
+    public function currentHotelStatus()
+    {
+        return $this->hasOne(HotelStatusHistory::class, 'reception_id')
+            ->latestOfMany('changed_at');
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(Format::class, 'reception_id');
+    }
+
+    /**
+     * Indica si esta recepción ya fue trasladada a otra (es origen de un ReceptionTransfer).
+     * Es la única fuente de verdad para bloquear registro de servicios y cierre de cuenta
+     * independiente; el estatus "Trasladado" de cada catálogo es solo cosmético para el badge.
+     */
+    public function isTransferred(): bool
+    {
+        return $this->transfersFrom()->exists();
+    }
+
+    /**
+     * Recepción vigente de un episodio: la única que no ha sido trasladada a otra.
+     */
+    public static function currentForEpisode(int $episodeId): ?self
+    {
+        return static::where('episode_id', $episodeId)
+            ->whereDoesntHave('transfersFrom')
+            ->first();
+    }
 }

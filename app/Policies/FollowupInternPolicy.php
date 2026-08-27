@@ -21,7 +21,7 @@ class FollowupInternPolicy
      */
     public function view(User $user, FollowupIntern $followupIntern): bool
     {
-        return false;
+        return $user->can("Ver panel pase de guardia internos");
     }
 
     /**

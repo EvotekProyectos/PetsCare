@@ -104,30 +104,22 @@ $("form").on("submit", async function (e) {
             data: formData,
         });
 
-        const url3 = route('cremation.pay', RECEPTION_ID);
-        const pet3 = await fetch(url3, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+        Swal.close();
+
+        // El cobro/folio de pago ya no se genera aquí — todo se hace desde
+        // el flujo de "Estado de cuenta" en Recepciones (AccountStatementService::close()),
+        // igual que ya se hizo para Hospitalización (ver death() en
+        // createredsheets.js). Firmar la responsiva solo registra la firma.
+        Swal.fire({
+            icon: "success",
+            title: "Responsiva firmada correctamente",
+            timer: 1500,
+            showConfirmButton: false,
+            timerProgressBar: true,
+        }).then(() => {
+            window.open(response.url, '_blank');
+            window.location.href = route('receptions.index');
         });
-
-         if (!pet3.ok) {
-             throw new Error('Error al obtener el folio de pago.');
-         }
-
-         const resp3 = await pet3.json();
-         Swal.close();
-        
-         Swal.fire({
-             icon: "success",
-             title: "El folio para pagar el servicio es " + resp3,
-             timer: 27000,
-             showConfirmButton: true,
-         }).then(() => {
-             window.open(response.url, '_blank');
-             window.location.href = route('cremations.index');
-         });
 
     } catch (error) {
         console.error("Error:", error);

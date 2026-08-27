@@ -106,24 +106,11 @@ $("form").on("submit", async function (e) {
             data: formData,
         });
 
-        const url3 = route('redsheet.pay', RECEPTION_ID);
-        const pet3 = await fetch(url3, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (!pet3.ok) {
-            throw new Error('Error al obtener el folio de pago.');
-        }
-
-        const resp3 = await pet3.json();
         Swal.close();
-        
+
         Swal.fire({
             icon: "success",
-            title: "El folio para pagar el servicio es " + resp3,
+            title: "Alta registrada correctamente",
             timer: 27000,
             showConfirmButton: true,
         }).then(() => {

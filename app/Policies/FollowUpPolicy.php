@@ -21,7 +21,7 @@ class FollowUpPolicy
      */
     public function view(User $user, FollowUp $followUp): bool
     {
-        return false;
+        return $user->can("ver panel seguimientos");
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pet;
+use App\Models\Breed;
 use App\Http\Requests\PetRequest;
 use App\Models\FamClassification;
 use App\Models\Family;
@@ -10,6 +11,7 @@ use App\Models\File;
 use App\Models\Genre;
 use App\Models\PetClassification;
 use App\Models\ReproductiveStatus;
+use App\Models\Species;
 use PhpParser\Node\Expr\FuncCall;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -36,7 +38,14 @@ class PetController extends Controller
     public function create()
     {
         $pet = new Pet();
-        return view('pet.create', compact('pet'));
+        $family = new Family();
+        $genders = Genre::all();
+        $ReproductiveStatuses = ReproductiveStatus::all();
+        $PetClassifications = PetClassification::all();
+        $Species = Species::where('active', true)->orderBy('name')->get();
+        $Breeds = collect();
+
+        return view('pet.create', compact('pet', 'family', 'genders', 'ReproductiveStatuses', 'PetClassifications', 'Species', 'Breeds'));
     }
 
     /**
@@ -56,6 +65,16 @@ class PetController extends Controller
         $validatedData['picture_id'] = $picture_id;
 
         $pet = Pet::create($validatedData);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'id' => $pet->id,
+                'name' => $pet->name,
+                'number_chip' => $pet->number_chip,
+                'family_id' => $pet->family_id,
+            ]);
+        }
 
         $id = $pet->family_id;
 
@@ -84,8 +103,13 @@ class PetController extends Controller
         $genders = Genre::all();
         $ReproductiveStatuses = ReproductiveStatus::all();
         $PetClassifications = PetClassification::all();
+        $Species = Species::where('active', true)->orderBy('name')->get();
+        // Razas de la especie actual del pet
+        $Breeds = $pet->species_id
+            ? Breed::where('species_id', $pet->species_id)->where('active', true)->orderBy('name')->get()
+            : collect();
 
-        return view('pet.edit', compact('pet', 'family', 'genders', 'ReproductiveStatuses', 'PetClassifications'));
+        return view('pet.edit', compact('pet', 'family', 'genders', 'ReproductiveStatuses', 'PetClassifications', 'Species', 'Breeds'));
     }
 
     /**

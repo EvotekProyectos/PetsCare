@@ -1,220 +1,103 @@
 @extends('layouts.app')
 
 @section('template_title')
-    {{ __('Create') }} Hotel
+    CREAR HOTEL
 @endsection
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/hotel/create.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/appointment.css') }}">
 @endpush
 
 @section('content')
-
-<input type="hidden" id="reception_id_followup" value="{{ $reception->id }}">
-<meta name="csrf-token" content="{{ csrf_token() }}">
+    <input type="hidden" id="reception_id_followup" value="{{ $reception->id }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <section class="container-fluid">
         <div class="row">
+            @if ($message = Session::get('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <p>{{ $message }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
             <div class="col-12">
+                @php
+                    $birthday = \Carbon\Carbon::parse($reception->pet->birthday);
+                    $now = now();
 
-                <div class="card bg-primary-soft border-0 p-3">
-                    <div class="card-header bg-transparent border-0">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h4 id="card_title" class="text-primary text-uppercase">
-                                <span class="icon-park-outline--hotel" style="font-size: 20px; text-align:center;"></span>PENSIÓN
-                            </h4>
-                        </div>
-                    </div>
-                    <div class="row card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
-                                DATOS GENERALES MASCOTA
-                            </h5>
-                        </div>
-                        <div class="col-md-4 d-flex justify-content-left">
-                            <div class="form-group text-center">
-                                <img src="{{ asset('img/pet_pic.png') }}" alt="Foto Mascota" id="preview"
-                                    class="img-fixed"
-                                    style="width: 115px; height: 115px; object-fit: cover; border-radius: 70px; ">
-                                <h5>{{ $reception->pet->name }}</h5>
-                            </div>
-                        </div>
-                        <div class="row d-flex justify-content-center" style="margin-bottom: -11px;">
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Especie: <span style="font-weight: normal">
-                                        {{ $reception->pet->specie }} </span></p>
-                            </div>
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Raza: <span style="font-weight: normal">
-                                        {{ $reception->pet->raza }} </span></p>
-                            </div>
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Género: <span style="font-weight: normal">
-                                        {{ $reception->pet->genre->name }} </span></p>
-                            </div>
-                        </div>
-                        <div class="row d-flex justify-content-center" style="margin-bottom: -11px;">
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Descripción física: <span style="font-weight: normal">
-                                        {{ $reception->pet->physic_descrip }} </span></p>
-                            </div>
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Peso: <span style="font-weight: normal">
-                                        {{ $reception->pet->weight }} </span></p>
-                            </div>
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Clasificación: <span style="font-weight: normal">
-                                    {{ $reception->pet->petClassification?->name ?? ''}} </span>
-                                    </p>
-                            </div>
-                        </div>
-                        <div class="row d-flex justify-content-center">
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">E. Reproductivo: <span style="font-weight: normal">
-                                        {{ $reception->pet->reproductiveStatus->name }} </span></p>
-                            </div>
-                            @php
-                                $birthday = \Carbon\Carbon::parse($reception->pet->birthday);
-                                $now = \Carbon\Carbon::now();
+                    $years = $birthday->diffInYears($now);
+                    $months = $birthday->copy()->addYears($years)->diffInMonths($now);
+                      $days = $birthday->copy()->addYears($years)->addMonths($months)->diffInDays($now);
 
-                                $years = $birthday->diffInYears($now);
-                                $months = $birthday->copy()->addYears($years)->diffInMonths($now);
-                                $days = $birthday->copy()->addYears($years)->addMonths($months)->diffInDays($now);
-                            @endphp
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Edad: <span style="font-weight: normal">
-                                        {{ $years }} años, {{ $months }} meses, y {{ $days }} días
-                                    </span></p>
+                    $genreName = $reception->pet->genre?->name;
+                    $reproductiveStatusName = $reception->pet->reproductiveStatus?->name;
+                    $classificationName = $reception->pet->petClassification?->name;
+                @endphp
+
+                <div class="appointment-content-wrapper bg-primary-soft">
+                    <div class="card-panel card-panel--pet-info">
+                        <div class="d-flex justify-content-between align-items-center pb-3 mb-2 ">
+                            <div style="font-size: 0.95rem;">
+                                <small class="text-uppercase fw-semibold" style="font-size: 0.75rem; color: #000000;">
+                                    Tipo de recepción -
+                                </small>
+                                <span class="fw-bold" style="color: #0455A0">{{ $reception->receptionType->name }}</span>
                             </div>
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">No. de collar: <span style="font-weight: normal">
-                                        {{ $reception->num }}
-                                    </span></p>
+                            <div class="d-flex align-items-center gap-2 text-secondary">
+                                <i class="fas fa-calendar-alt" style="font-size: 12px;"></i>
+                                <small class="text-uppercase fw-semibold" style="font-size: 0.75rem; color: #000000;">
+                                    Fecha entrada-
+                                </small>
+
+                                <span style="font-size: 13px;">
+                                    {{ \Carbon\Carbon::parse($reception->entry_date)->format('d/m/Y') }}
+                                </span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2 text-secondary">
+                                <i class="fas fa-calendar-alt" style="font-size: 12px;"></i>
+                                <small class="text-uppercase fw-semibold" style="font-size: 0.75rem; color: #000000;">
+                                    Fecha salida-
+                                </small>
+
+                                <span style="font-size: 13px;">
+                                    {{ \Carbon\Carbon::parse($reception->exit_date)->format('d/m/Y') }}
+                                </span>
                             </div>
                         </div>
+
+                        <x-pet-info :pet="$reception->pet" :years="$years" :months="$months" :days="$days"
+                            :genre-name="$genreName" :reproductive-status-name="$reproductiveStatusName" :classification-name="$classificationName" />
+
                     </div>
 
-                    <div class="row card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
-                                DATOS GENERALES FAMILIA
-                            </h5>
-                        </div>
-                        <div class="row d-flex justify-content-center" style="margin-bottom: -11px;">
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Familia: <span style="font-weight: normal">
-                                        {{ $reception->family->name }} </span></p>
-                            </div>
-                            <div class="col-md-3">
-                                <p> 
-                                {{-- style="font-weight: bold">Raza: <span style="font-weight: normal">
-                                        {{ $reception->pet->raza }} </span> --}}
-                                    </p>
-                            </div>
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">M.V.Z: <span style="font-weight: normal">
-                                        {{ $reception->vet->name }} </span></p>
-                            </div>
-                        </div>
-                        <div class="row d-flex justify-content-center" style="margin-bottom: -11px;">
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Teléfono: <span style="font-weight: normal">
-                                        {{ $reception->family->phone }} </span></p>
-                            </div>
-                            <div class="col-md-3">
-                                <p> 
-                                {{-- style="font-weight: bold">Peso: <span style="font-weight: normal">
-                                        {{ $reception->pet->weight }} </span> --}}
-                                    </p>
-                            </div>
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Fecha de entrada: <span style="font-weight: normal">
-                                        {{-- {{ $reception->entry_date format('dddd DD-MM-YYYY'); }} </span> --}}
-                                        {{ \Carbon\Carbon::parse($reception->entry_date)->translatedFormat('d-M-Y ') }} </span>
-                                    </p>
-                            </div>
-                        </div>
-                        <div class="row d-flex justify-content-center" style="margin-bottom: -11px;">
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Contacto emergencia: <span style="font-weight: normal">
-                                        {{ $reception->family->contact_name}}-{{$reception->family->contact_number  }}
-                                     </span></p>
-                            </div>
-                            <div class="col-md-3">
-                                <p> 
-                                {{-- style="font-weight: bold">Peso: <span style="font-weight: normal">
-                                        {{ $reception->pet->weight }} </span> --}}
-                                    </p>
-                            </div>
-                            <div class="col-md-3">
-                                <p style="font-weight: bold">Fecha de salida: <span style="font-weight: normal">
-                                        {{-- {{ $reception->exit_date }}  --}}
-                                        {{ \Carbon\Carbon::parse($reception->exit_date)->translatedFormat('d-M-Y ') }}
-                                    </span>
-                                    </p>
-                            </div>
-                        </div>
 
 
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col d-flex justify-content-between align-items-center my-2">
-                                <div class="col">
-                                     <button class="btn btn-costum-services btn-sm text-uppercase rounded-5 shadow "
-                                    onclick="window.open('{{ route('vaccine-certificates.show', $reception->pet->id) }}', '_blank')">
-                                    <span class="badge custom-badge-pill"><span
-                                            class="fluent-mdl2--vaccination"></span></span> CARTILLA VIRTUAL
-                                </button>
-                                </div>
-                            </div>
 
-                            <div class="col d-flex justify-content-between align-items-center my-2">
-                                <div class="col">
-                                    <button class="btn btn-costum-services btn-sm text-uppercase rounded-5 shadow"
-                                    onclick="window.open('{{ route('pet-history.index', $reception->pet_id) }}', '_blank')">
-                                        <span class="badge custom-badge-pill"><span
-                                            class="akar-icons--folder-add"></span></span> 
-                                                HISTORIAL MÉDICO
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="col d-flex justify-content-between align-items-center my-2">
-                                <div class="col">
-                                    <button 
-                                        class="btn btn-costum-services btn-sm text-uppercase rounded-5 shadow" 
-                                        onclick="window.open('{{ route('hotel.view') }}', '_blank')">
-                                        <span class="badge custom-badge-pill">
-                                            <span class="game-icons--dog-house"></span>
-                                        </span>
-                                       DISPONIBILIDAD CUBÍCULOS
-                                    </button>
-                                </div>
-                            </div>
-                            
-                        </div>
-                    </div>
-                   
-                  
-    
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
+                    <div class="card-panel">
+                        <div class="d-flex justify-content-between align-items-center chevron-toggle pb-2"
+                            style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#specificDataCollapse"
+                            aria-expanded="true" aria-controls="specificDataCollapse">
+                            <h5 id="card_title" class="text-uppercase mb-0" style="color: #0455A0; font-size: 1rem;">
                                 DETALLES DEL SERVICIO
-                            </h5>
+                                {{-- <i class="fas fa-chevron-down text-primary"></i> --}}
                         </div>
 
-                        
-                        <form method="POST" onsubmit="NewEntry()"  role="form" 
-                        enctype="multipart/form-data" id="NewService">
-                            @csrf
+                        <div class="collapse show" id="specificDataCollapse">
+                            <div class="mt-2">
+                                <form method="POST" onsubmit="NewEntry()" role="form" enctype="multipart/form-data"
+                                    id="NewService">
+                                    @csrf
 
-                            @include('hotel.form')
+                                    @include('hotel.form')
 
-                        </form>
+                                </form>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="card-body">
+                    <div class="card-panel">
                         <div class="row">
                             <div class="col-12 col-lg-12">
                                 <div class="table-responsive">
@@ -229,24 +112,25 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                           
+
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 mt-2 d-flex justify-content-end">
-                        <h5 id="total-price">Total  Final: $0.00</h5>
+
+                    <div class="card-panel">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <h5 id="total-price" class="mb-0" style="color: #0455A0;">Total Final: $0.00</h5>
+                            <button type="button" onclick="generate(event)"
+                                class="btn btn-primary btn-sm text-uppercase rounded-4">
+                                <i class="fas fa-arrow-right"></i> Finalizar
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="col-12 mt-2 d-flex justify-content-end">
-            <button type="button" onclick="generate(event)" 
-                            class="btn btn-primary">
-                FINALIZAR  <i class="fas fa-arrow-right"></i></button>
         </div>
     </section>
 @endsection
@@ -258,4 +142,9 @@
     </script>
 
     <script src="{{ asset('js/hotels/create.js') }}" defer></script>
+    <script src="{{ asset('js/receptions/transfer.js') }}" defer></script>
+@endpush
+
+@push('modals')
+    @include('reception.partials.transfer-modal')
 @endpush

@@ -10,6 +10,7 @@ use App\Models\Pet;
 use App\Models\PetClassification;
 use App\Models\ReproductiveStatus;
 use App\Models\Room;
+use App\Models\Species;
 use Yajra\DataTables\Facades\DataTables;
 
 /**
@@ -49,6 +50,16 @@ class FamilyController extends Controller
     {
         $family = Family::create($request->validated());
         $this->authorize("create", Family::class);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'id' => $family->id,
+                'name' => $family->name,
+                'phone' => $family->phone,
+            ]);
+        }
+
         $id = $family->id;
 
         return redirect()->route('families.edit', $id)
@@ -77,9 +88,11 @@ class FamilyController extends Controller
         $genders = Genre::all();
         $ReproductiveStatuses = ReproductiveStatus::all();
         $PetClassifications = PetClassification::all();
+        $Species = Species::where('active', true)->orderBy('name')->get();
+        $Breeds = collect();
         $this->authorize("update", $family);
 
-        return view('family.edit', compact('family', 'FamClassifications', 'pet', 'genders', 'ReproductiveStatuses', 'PetClassifications'));
+        return view('family.edit', compact('family', 'FamClassifications', 'pet', 'genders', 'ReproductiveStatuses', 'PetClassifications', 'Species', 'Breeds'));
     }
 
     /**

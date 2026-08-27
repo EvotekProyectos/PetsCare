@@ -41,7 +41,7 @@ class RedSheet extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_id', 'lab_type_id', 'imaging_type_id', 'service_type_id', 'observations', 'day_count', 'vet_id', 'add_voucher'];
+    protected $fillable = ['reception_id', 'lab_type_id', 'imaging_type_id', 'service_type_id', 'observations', 'day_count', 'vet_id', 'removed_at', 'removed_by', 'removal_reason'];
 
 
     /**
@@ -104,8 +104,23 @@ class RedSheet extends Model
         return $this->hasMany(Surgery::class, 'reception_id', 'reception_id');
     }
 
-    public function voucherProduct()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function voucherProducts()
     {
-        return $this->hasMany(voucherProduct::class, 'red_sheet_id', 'id');
+        return $this->morphMany(\App\Models\VoucherProduct::class, 'sourceable');
+    }
+
+    /**
+     * Quién marcó este servicio como eliminado (ver RedSheetController::removeService()).
+     * No se llama removedBy() a secas para no chocar con el nombre de la
+     * columna removed_by en la serialización JSON del front.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function removedByUser()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'removed_by', 'id');
     }
 }

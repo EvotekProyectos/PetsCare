@@ -60,10 +60,11 @@
         box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3); 
     }
     </style>
+    <meta charset="UTF-8">
 </head>
 
 <body>
-    <input type="hidden" value="{{ route('altaVoluntaria.pdf', $reception->id) }}" id="reception">
+    <input type="hidden" value="{{ route('responsivaPdf.cremation', $reception->id) }}" id="reception">
     <div>
         <table style="width: 100%; text-align: center;">
             <tr>

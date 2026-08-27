@@ -15,6 +15,7 @@ use App\Models\Reception;
 use App\Models\User;
 use App\Models\VaccineCertificate;
 use App\Notifications\GroomingStatus;
+use App\Services\AccountStatementService;
 use Barryvdh\DomPDF\Facade\Pdf  as Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -47,9 +48,12 @@ class GroomingController extends Controller
     {
         $grooming = new Grooming();
         $products = Producto::where("ESTATUS",  "A")->get();
+        $veterinarians = User::role('medico')->get();      // rol id 3
+        $collaborators = User::role('colaborador')->get();
 
         $this->authorize("create", Grooming::class);
-        return view('grooming.create', compact('grooming', 'products'));
+        return view('grooming.create', compact('grooming', 'products',   'veterinarians',
+            'collaborators'));
     }
 
     /**
@@ -58,12 +62,19 @@ class GroomingController extends Controller
     public function store(GroomingRequest $request)
     {
         $this->authorize("create", Grooming::class);
-        $new = Grooming::create($request->validated());
+        $this->guardReceptionNotTransferred(Reception::findOrFail($request->reception_id));
 
-        return response()->json($new);
+        $created = DB::transaction(function () use ($request) {
+            return collect($request->service_id)
+                ->map(fn ($serviceId) => Grooming::create([
+                    'reception_id' => $request->reception_id,
+                    'service_id' => $serviceId,
+                    'notes' => $request->notes,
+                ]))
+                ->all();
+        });
 
-        // return redirect()->route('groomings.index')
-        //     ->with('success', 'Grooming created successfully.');
+        return response()->json($created);
     }
 
     /**
@@ -113,7 +124,7 @@ class GroomingController extends Controller
 
     public function list(int $id)
     {
-        
+
         $groomings = Grooming::with('service', 'serv')->where('reception_id', $id)->get();
 
         return DataTables::of($groomings)->make(true);
@@ -268,7 +279,7 @@ class GroomingController extends Controller
             $importeNeto += $totalNetoProducto;
         }
 
-         //Campos para el insert de DOCTOS_PV
+        //Campos para el insert de DOCTOS_PV
         $ordenFields['CAJA_ID'] = 170159;
         $ordenFields['TIPO_DOCTO'] = 'O';
         $ordenFields['SUCURSAL_ID'] = 54057;
@@ -317,12 +328,51 @@ class GroomingController extends Controller
         return response()->json($newFolio);
     }
 
+    /**
+     * Previsualización del estado de cuenta de una recepción de grooming:
+     * NO crea ningún Charge, solo muestra lo que se cobraría si se cierra la cuenta.
+     */
+    public function accountStatement(int $reception, AccountStatementService $statementService)
+    {
+        $receptionModel = Reception::with(['pet.family', 'currentStatusGrooming.groomingStatus', 'episode.account'])
+            ->findOrFail($reception);
+        $this->authorize('update', $receptionModel);
+
+        return response()->json($statementService->preview($receptionModel));
+    }
+
+    /**
+     * PDF informativo del estado de cuenta (NO es la ODV de Microsip).
+     */
+    public function accountStatementPdf(int $reception, AccountStatementService $statementService)
+    {
+        $receptionModel = Reception::with('pet.family')->findOrFail($reception);
+        $this->authorize('update', $receptionModel);
+
+        $pdf = Pdf::loadView('account-statement.pdf', $statementService->pdfData($receptionModel));
+
+        return $pdf->stream('estado-de-cuenta-' . $reception . '.pdf');
+    }
+
+    /**
+     * Cierra la cuenta de la recepción: persiste los Charge, genera la ODV
+     * en Microsip y marca la Account como CLOSED.
+     */
+    public function closeAccount(int $reception, AccountStatementService $statementService)
+    {
+        $receptionModel = Reception::with('episode.account')->findOrFail($reception);
+        $this->authorize('update', $receptionModel);
+
+        try {
+            return response()->json($statementService->close($receptionModel));
+        } catch (\InvalidArgumentException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
+    }
+
     public function history($id)
     {
         $reception = Reception::with('pet', 'admissionType', 'area', 'statusGrooming.groomingStatus', 'grooming')->findorfail($id);
         return view('grooming.history', compact('reception'));
     }
-
-    
-
 }

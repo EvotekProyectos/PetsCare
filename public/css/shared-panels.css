@@ -1,0 +1,279 @@
+/* ==========================================================================
+   shared-panels.css
+   Lenguaje visual compartido, extraído de appointment.css (pantalla de
+   Consulta, ya validada) para reutilizarse en el resto del módulo de
+   Recepciones (y cualquier otra pantalla que lo necesite, ya que se carga
+   globalmente — ver layouts/app.blade.php).
+
+   No se usan variables CSS (custom properties) a propósito, para mantener
+   el mismo enfoque de valores hex directos que ya usa el resto del proyecto.
+   ========================================================================== */
+
+/* Tarjeta blanca redondeada con sombra suave */
+.card-panel {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .06);
+    padding: 16px 20px;
+    margin-bottom: 8px;
+}
+
+/* Sección expandida: sin sombra, para sentirse continua con el contenido de arriba */
+.card-panel.no-shadow {
+    box-shadow: none;
+}
+
+/* Variante sin sombra/borde fijos (ej. card de info que no tiene collapse propio) */
+.card-panel--pet-info {
+    box-shadow: none;
+    border: none;
+}
+
+/* Botón de acción tipo texto + ícono, con fondo suave */
+.action-link {
+    border: none;
+    background: #E6F1FB;
+    border-radius: 20px;
+    padding: 6px 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #0455A0;
+    cursor: pointer;
+    text-decoration: none;
+}
+.action-link:hover {
+    background: #BFDDF6;
+    text-decoration: none;
+}
+
+/* Variante verde de .action-link (ej. Generar Vale) — mismo criterio de
+   contraste que .btn-quick-action--success (fondo suave + texto oscuro del
+   mismo tono), aplicado sobre el patrón simple de .action-link en vez del
+   de círculo de ícono separado. No se aplica a los .action-link existentes
+   (Trasladar, Historial médico, etc. se quedan en azul). */
+.action-link--success {
+    background: #cdfcde;
+    color: #00722a;
+}
+.action-link--success:hover {
+    background: #9CF3BD;
+}
+
+/* Variante teal — usada por "Ver Cartilla" (appointment/create.blade.php)
+   para diferenciarse del azul de "Agregar" y del verde de "Generar Vale". */
+.action-link--teal {
+    background: #DFF7F5;
+    color: #0F766E;
+}
+.action-link--teal:hover {
+    background: #C3EEEA;
+}
+
+/* Botón de acción con círculo de ícono a color */
+.btn-quick-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 24px;
+    padding: 6px 16px 6px 6px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+.btn-quick-action:hover {
+    transform: translateY(-1px);
+}
+.btn-quick-action .icon-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.btn-quick-action .icon-circle i {
+    font-size: 0.7rem;
+    color: #fff !important;
+}
+.btn-quick-action span {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Variante: warning (ej. Trasladar) */
+.btn-quick-action--warning {
+    background-color: #FAEEDA;
+    border: 0.5px solid #EF9F27;
+}
+.btn-quick-action--warning .icon-circle { background-color: #EF9F27; }
+.btn-quick-action--warning span { color: #854F0B; }
+.btn-quick-action--warning:hover {
+    background-color: #F3D9A8;
+    border-color: #C97F0E;
+}
+
+/* Variante: info (ej. Presupuestos) */
+.btn-quick-action--info {
+    background-color: #E6F1FB;
+    border: 0.5px solid #378ADD;
+}
+.btn-quick-action--info .icon-circle { background-color: #378ADD; }
+.btn-quick-action--info span { color: #0C447C; }
+.btn-quick-action--info:hover {
+    background-color: #BFDDF6;
+    border-color: #1E5F9E;
+}
+
+/* Variante: success (ej. Historial médico) */
+.btn-quick-action--success {
+    background-color: #cdfcde;
+    border: 0.5px solid #27ef70;
+}
+.btn-quick-action--success .icon-circle { background-color: #27ef70; }
+.btn-quick-action--success span { color: #00722a; }
+.btn-quick-action--success:hover {
+    background-color: #9CF3BD;
+    border-color: #14A34E;
+}
+
+/* Botón de servicio (Cartilla / Labs / Imágenes en Consulta, y equivalentes
+   en otras pantallas: hoy lo usan 14 vistas). Antes el tamaño vivía en
+   hotel/create.css (aplicado solo en hotel/create y hotel/createExtension,
+   así que esas 2 pantallas se veían distinto al resto) y el color en
+   bootstrap.min.css. Se fusionan aquí en una sola definición completa —
+   el tamaño de hotel/create.css queda como el estándar para las 14 vistas,
+   no se descarta. */
+.btn-costum-services {
+    --bs-btn-color: #000000;
+    --bs-btn-bg: #ffffff;
+    --bs-btn-border-color: #dee2e6;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #0455A0;
+    --bs-btn-hover-border-color: #0a58ca;
+    --bs-btn-focus-shadow-rgb: 49, 132, 253;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #0a58ca;
+    --bs-btn-active-border-color: #ffffff;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #0455A0;
+    --bs-btn-disabled-border-color: #0455A0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 220px;
+    max-width: 220px;
+    height: 45px;
+    min-height: 48px;
+    margin: 0 auto;
+    padding: 8px 12px;
+    font-size: 13px;
+    white-space: normal;
+    line-height: 1.15;
+    text-align: center;
+}
+.btn-costum-services:hover .custom-badge-pill {
+    background-color: #ffffff !important;
+    color: #000000;
+}
+
+/* Badge circular de ícono usado dentro de .btn-costum-services */
+.custom-badge-pill {
+    background-color: #D3F0F3 !important;
+    color: #000000;
+    border-radius: 50rem;
+    padding: 0.5em 1em;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    width: 35px;
+    height: 35px;
+}
+.custom-badge-pill span {
+    font-size: 20px !important;
+}
+.custom-badge-pill:hover {
+    background-color: #ffffff !important;
+    color: #000000;
+}
+
+/* Header de tabla azul sólido, generalizado (antes atado a #DataServices).
+   Selector genérico "th" en vez de "thead th" para que funcione tanto si la
+   clase se pone en el <table> como si se pone directo en el <thead>. */
+.table-header-solid th {
+    background-color: #0455A0;
+    color: #fff;
+}
+
+/* Ícono junto al label de un dato (ej. grid de info de mascota, eyebrows
+   de header). Antes solo vivía en appointment.css, que no se carga en el
+   resto de las pantallas de Recepciones. */
+.pet-info-icon {
+    color: #0455A0;
+    font-size: 14px;
+    margin-right: 4px;
+}
+
+/* Línea vertical divisoria entre columnas de un grid de datos (ej. grid de
+   info de mascota). Nunca en la 1ra columna. Solo desde md hacia arriba:
+   en mobile (2 por fila) el corte quedaría mal alineado entre filas. */
+@media (min-width: 768px) {
+    .pet-info-col {
+        border-left: 1px solid #E5E7EB;
+    }
+}
+
+/* Línea horizontal entre un bloque de contenido y la fila de action-links
+   que va debajo (ej. grid de info de mascota → botones de acción). */
+.action-buttons-divider {
+    border-top: 1px solid #E5E7EB;
+    padding-top: 12px;
+    margin-top: 8px;
+}
+
+/* Línea vertical divisoria entre datos en línea tipo eyebrow (ej. Admisión /
+   Área / Fecha en el header de Hospitalización). Nunca en el 1er dato. */
+.eyebrow-col {
+    border-left: 1px solid #E5E7EB;
+    padding-left: 14px;
+}
+
+/* Chip neutro para destacar un valor de tabla sin color dinámico (ej. columna
+   Mascota en el índice de Recepciones vía .pet-chip, columna Nombre de
+   servicio en Consulta vía .neutral-chip). Selector amplio a propósito: no
+   solo <a>, para que también sirva envolviendo texto plano en un <span>. */
+.pet-chip,
+.neutral-chip {
+    background-color: #F8FAFC;
+    border-radius: 20px;
+    padding: 4px 12px;
+}
+
+/* Botón/ícono circular con contorno gris tenue (ej. columna Acciones del
+   índice de Recepciones, ícono de historial de vale en Consulta). */
+.icon-btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid #E5E7EB;
+    background: transparent;
+}
+.icon-btn-outline:hover {
+    background-color: #F8FAFC;
+    border-color: #adb5bd;
+}
+
+/* Filas de tabla sin alternancia de color (sin table-striped): separadas
+   solo por una línea inferior sutil. */
+.table-flat-rows > :not(caption) > * > * {
+    border-bottom-color: #E5E7EB;
+}

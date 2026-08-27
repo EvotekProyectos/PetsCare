@@ -23,8 +23,9 @@ class GroomingRequest extends FormRequest
     {
         return [
             'reception_id' => 'nullable|integer|exists:receptions,id',
-			'service_id' => 'required',
-			'notes' => 'nullable|string',
+            'service_id' => 'required|array',
+            'service_id.*' => 'integer',
+            'notes' => 'nullable|string',
         ];
     }
 }

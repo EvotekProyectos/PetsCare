@@ -3,31 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Appointment;
-use App\Models\Format;
 use App\Models\Pet;
 use App\Models\PetHistory;
-use App\Models\Prescription;
 use App\Models\Reception;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PetHistoryController extends Controller
 {
-    public function index($id)
+    public function index($id, Request $request)
     {
-        //pe$this->authorize("viewAny", PetHistory::class);
-        $pet = Pet::find($id);
-        $petHistory = $pet->family;
-        $petHistory = $pet->genre;
-        $petHistory = $pet->petClassification;
-        $petHistory = $pet->file;
-        $petHistory = $pet->reproductiveStatus;
+        //$this->authorize("viewAny", PetHistory::class);
+        $pet = Pet::with(['genre', 'reproductiveStatus', 'petClassification', 'file'])->find($id);
 
-        $reception = $pet->reception;
+        $typeFilter = $request->query('type');
 
+        $vetIds = Reception::where('pet_id', $id)
+            ->whereNotNull('veterinarian_id')
+            ->distinct()
+            ->pluck('veterinarian_id');
+        $vets = User::whereIn('id', $vetIds)->orderBy('name')->get();
 
-        return view('pet_history.view' , compact('pet', 'petHistory', 'reception'));
+        $hasTransfers = Reception::where('pet_id', $id)->whereHas('transfersFrom')->exists();
 
+        return view('pet_history.view', compact('pet', 'typeFilter', 'vets', 'hasTransfers'));
     }
 
 }

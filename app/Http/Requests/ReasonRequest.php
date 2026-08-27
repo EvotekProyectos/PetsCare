@@ -23,6 +23,7 @@ class ReasonRequest extends FormRequest
     {
         return [
 			'name' => 'required|string',
+			'articulo_id' => 'nullable|integer',
         ];
     }
 }

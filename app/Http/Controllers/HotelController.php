@@ -4,14 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Hotel;
 use App\Http\Requests\HotelRequest;
+use App\Models\AdmissionType;
+use App\Models\Area;
 use App\Models\Cubicle;
 use App\Models\Folio;
 use App\Models\Format;
 use App\Models\GenericModel;
+use App\Models\HotelStatus;
 use App\Models\PaymentOrder;
 use App\Models\Producto;
+use App\Models\Reason;
 use App\Models\Reception;
 use App\Models\Video;
+use App\Services\AccountStatementService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -33,8 +38,9 @@ class HotelController extends Controller
     public function index()
     {
         $hotels = Hotel::paginate();
+        $hotelStatuses = HotelStatus::all();
         $this->authorize("viewAny", Hotel::class);
-        return view('hotel.index', compact('hotels'))
+        return view('hotel.index', compact('hotels', 'hotelStatuses'))
             ->with('i', (request()->input('page', 1) - 1) * $hotels->perPage());
     }
 
@@ -61,7 +67,13 @@ class HotelController extends Controller
         $reception = Reception::with('pet', 'family', 'vet')->findorfail($id);
         $products = Producto::where("ESTATUS",  "A")->get();
         $cubicles = Cubicle::where("state", "0")->get();
-        return view('hotel.create', compact('hotel', 'reception', 'products', 'cubicles'));
+        $admissions = AdmissionType::all();
+        $areas = Area::all();
+        $reasons = Reason::all();
+
+
+        return view('hotel.create', compact('hotel', 'reception', 'products', 'cubicles',
+    'admissions', 'areas', 'reasons'));
     }
 
 
@@ -136,6 +148,8 @@ class HotelController extends Controller
 
         // Obtener la recepción asociada
         $reception = Reception::findOrFail($validatedData['reception_id']);
+        $this->guardReceptionNotTransferred($reception);
+
         // Calcular el número de días entre la fecha de entrada y salida
         $entryDate = Carbon::parse($reception->entry_date);
         $exitDate = Carbon::parse($reception->exit_date);
@@ -160,7 +174,7 @@ class HotelController extends Controller
         //Obtener folio consecutivo correspondiente y asignarlo en el form 
         $newFolio = $this->folio()->getData()->folio;
         $validatedData['folio'] = $newFolio;
-        
+
 
         // Asignar el número de días calculado antes de crear el registro en la base de datos
         $validatedData['number_days'] = $days;
@@ -174,6 +188,7 @@ class HotelController extends Controller
         $this->authorize("create", Hotel::class);
         $validatedData = $request->validated();
 
+        $this->guardReceptionNotTransferred(Reception::findOrFail($validatedData['reception_id']));
 
         // Obtener el cubículo
         $cubicle = Cubicle::findOrFail($validatedData['cubicle_id']);
@@ -400,6 +415,22 @@ class HotelController extends Controller
         return response()->json(['url' => asset('storage' . $pdfPath)]);
     }
 
+    /**
+     * Resumen agregado de disponibilidad de cubículos por tipo de pensión —
+     * widget informativo en el tab Hotel del Index de Recepciones
+     */
+    public function availabilitySummary()
+    {
+        $this->authorize('viewAny', Reception::class);
+
+        $summary = Cubicle::selectRaw('cubicle_type_id, COUNT(*) as total, SUM(CASE WHEN state = 0 THEN 1 ELSE 0 END) as available')
+            ->groupBy('cubicle_type_id')
+            ->with('cubicleType:id,name')
+            ->get();
+
+        return response()->json($summary);
+    }
+
     //Vista de todos los cubiculos con sus recepciones
     public function viewCubicles()
     {
@@ -414,10 +445,20 @@ class HotelController extends Controller
     }
 
     //Index del modulo
-    public function totalIndex()
+    public function totalIndex(Request $request)
     {
-        $hotels = Hotel::with('reception', 'reception.pet', 'reception.family', 'cubicle', 'serv', 'servicie')->get();
-        // ->whereNull('finish_date')
+        $hotels = Hotel::with('reception', 'reception.pet', 'reception.family', 'cubicle', 'serv', 'servicie')
+            ->when($request->filled('date'), function ($query) use ($request) {
+                $query->whereHas('reception', function ($q) use ($request) {
+                    $q->whereDate('entry_date', $request->date);
+                });
+            })
+            ->when($request->filled('status_id'), function ($query) use ($request) {
+                $query->whereHas('reception.currentHotelStatus', function ($q) use ($request) {
+                    $q->where('hotel_status_id', $request->status_id);
+                });
+            })
+            ->get();
 
         // Verificamos la existencia del video para cada hotel
         $hotels = $hotels->map(function ($hotel) {
@@ -692,6 +733,47 @@ class HotelController extends Controller
 
         //Regresamos el Folio de la ODV con el que pueden pasar a pagar a caja
         return response()->json($newFolio);
+    }
+
+    /**
+     * Previsualización del estado de cuenta de una recepción de hotel/pensión:
+     * NO crea ningún Charge, solo muestra lo que se cobraría si se cierra la cuenta.
+     */
+    public function accountStatement(int $reception, AccountStatementService $statementService)
+    {
+        $receptionModel = Reception::with(['pet.family', 'episode.account'])->findOrFail($reception);
+        $this->authorize('update', $receptionModel);
+
+        return response()->json($statementService->preview($receptionModel));
+    }
+
+    /**
+     * PDF informativo del estado de cuenta (NO es la ODV de Microsip).
+     */
+    public function accountStatementPdf(int $reception, AccountStatementService $statementService)
+    {
+        $receptionModel = Reception::with('pet.family')->findOrFail($reception);
+        $this->authorize('update', $receptionModel);
+
+        $pdf = Pdf::loadView('account-statement.pdf', $statementService->pdfData($receptionModel));
+
+        return $pdf->stream('estado-de-cuenta-' . $reception . '.pdf');
+    }
+
+    /**
+     * Cierra la cuenta de la recepción: persiste los Charge, genera la ODV
+     * en Microsip y marca la Account como CLOSED.
+     */
+    public function closeAccount(int $reception, AccountStatementService $statementService)
+    {
+        $receptionModel = Reception::with('episode.account')->findOrFail($reception);
+        $this->authorize('update', $receptionModel);
+
+        try {
+            return response()->json($statementService->close($receptionModel));
+        } catch (\InvalidArgumentException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
     }
 
 

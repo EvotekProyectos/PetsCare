@@ -14,13 +14,14 @@ class AttentionStatusSeeder extends Seeder
     public function run(): void
     {
         $attentionStatuses = [
-            ["name" => 'Atendido', "color" => "#56BF2F"],
+            ["name" => 'Finalizada', "color" => "#5cb85c"],
             ["name" => 'En espera', "color" => "#FF2C2C"],
             ["name" => 'En consulta', "color" => "#FFBE33"],
+            ["name" => 'Trasladado', "color" => "#6c757d"],
         ];
 
         foreach ($attentionStatuses as $as) {
-            AttentionStatus::Create($as);
+            AttentionStatus::firstOrCreate(['name' => $as['name']], $as);
         }
     }
 }

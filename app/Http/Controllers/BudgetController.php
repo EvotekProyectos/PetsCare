@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Budget;
 use App\Http\Requests\BudgetRequest;
 use App\Models\BudgetDetail;
+use App\Models\Format;
+use App\Models\FormatType;
 use App\Models\Pet;
 use App\Models\Producto;
 use App\Models\User;
@@ -108,6 +110,44 @@ class BudgetController extends Controller
         return DataTables::of($budgets)->make(true);
     }
 
+    /**
+     * Presupuesto ya existente para una recepción,
+     * dado que el Budget de ese flujo se crea de forma diferida (ver storeBatch()).
+     */
+    public function forReception(int $receptionId)
+    {
+        $this->authorize("create", Budget::class);
+
+        $budget = Budget::where('reception_id', $receptionId)->latest('id')->first();
+
+        return response()->json($budget ? ['id' => $budget->id] : null);
+    }
+
+    /**
+     * Presupuestos ya generados (firmados) para una recepción, para el bloque
+     * "Presupuestos de esta consulta" del modal de Consulta. 
+     */
+    public function receptionHistory(int $receptionId)
+    {
+        $this->authorize("create", Budget::class);
+
+        $budget = Budget::where('reception_id', $receptionId)->first();
+
+        $formats = Format::whereHas('formatType', fn ($query) => $query->where('name', 'Presupuesto'))
+            ->where('reception_id', $receptionId)
+            ->orderByDesc('created_at')
+            ->get();
+
+        $items = $formats->map(fn ($format) => [
+            'id' => $format->id,
+            'created_at' => $format->created_at,
+            'total' => $budget->total ?? 0,
+            'pdf_url' => $format->format_pdf_url,
+        ]);
+
+        return response()->json($items);
+    }
+
     public function generatePdf(int $id)
     {
         $budget = Budget::with('pet', 'vet')->find($id);
@@ -150,6 +190,13 @@ class BudgetController extends Controller
 
         $pdfPath = '/budgets/budget_' . $id . '.pdf';
         Storage::put('public' . $pdfPath, $pdf->output());
+
+        $format = new Format();
+        $format->format_type_id = FormatType::where('name', 'Presupuesto')->value('id');
+        $format->reception_id = $budget->reception_id;
+        $format->pet_id = $budget->pet_id;
+        $format->format_pdf = $pdfPath;
+        $format->save();
 
         $pdfUrl = Storage::url($pdfPath);
 

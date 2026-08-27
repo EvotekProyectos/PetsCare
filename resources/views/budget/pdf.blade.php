@@ -522,6 +522,7 @@
     <script src="{{ asset('js/budgets/pdf.js') }}" defer></script>
     <script>
         const BUDGET_ID = "{{ $budget->id }}";
+        const RECEPTION_ID = "{{ $budget->reception_id }}";
     </script>
 </body>
 

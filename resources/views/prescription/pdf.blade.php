@@ -200,7 +200,7 @@
                                 </p>
                             </td>
                             <td>
-                                <p style="font-size: 10pt;font-family:sans-serif;">{{ $prescription->date }}</p>
+                                <p style="font-size: 10pt;font-family:sans-serif;">  {{ \Carbon\Carbon::parse($prescription->date)->format('d/m/Y H:i:s') }}</p>
                             </td>
                             <td>
                                 <p style="font-size: 10pt; font-weight: bold;font-family:sans-serif;">
@@ -275,7 +275,7 @@
                         </td>
 
                         <td>
-                            <p style="font-size: 10pt;font-family:sans-serif;">{{ $next->day_next_check ?? $prescription->day_next_check }}
+                            <p style="font-size: 10pt;font-family:sans-serif;"> {{ \Carbon\Carbon::parse($next?->day_next_check ?? $prescription?->day_next_check)->format('d/m/Y') }}
                             </p>
                         </td>
 
@@ -287,7 +287,7 @@
 
                         <td>
                             <p style="font-size: 10pt;font-family:sans-serif;">
-                                {{ $next->time_next_check  ?? $prescription->time_next_check }}</p>
+                               {{ $next?->time_next_check ?? $prescription?->time_next_check ?? 'Sin definir' }}</p>
                         </td>
                         
                         <td>
@@ -298,7 +298,7 @@
 
                         <td>
                             <p style="font-size: 10pt;font-family:sans-serif;">
-                                {{ $next->reason->name ?? $prescription->reason->name }}</p>
+                                {{ $next?->reason?->name ?? $prescription?->reason?->name ?? 'Sin definir' }}</p>
                         </td>
                     </tr>
                 </table>

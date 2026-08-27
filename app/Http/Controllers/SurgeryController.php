@@ -11,11 +11,13 @@ use App\Models\ProductClassification;
 use App\Models\Producto;
 use App\Models\ProductType;
 use App\Models\Reception;
+use App\Models\ReceptionTransfer;
 use App\Models\RedSheet;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf  as Pdf;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -41,7 +43,7 @@ class SurgeryController extends Controller
     public function create($id)
     {
         $surgery = new Surgery();
-        $products= ProductType::all();
+        $products = ProductType::all();
         $reception = Reception::find($id);
         $this->authorize("create", Surgery::class);
 
@@ -54,6 +56,8 @@ class SurgeryController extends Controller
     public function store(SurgeryRequest $request)
     {
         $this->authorize("create", Surgery::class);
+        $this->guardReceptionNotTransferred(Reception::findOrFail($request->reception_id));
+
         $surgery = new Surgery($request->validated());
         $surgery->vet_id = auth()->id();
         $surgery->save();
@@ -62,7 +66,7 @@ class SurgeryController extends Controller
         // return redirect()->route('surgeries.index')
         //     ->with('success', 'Surgery created successfully.');
     }
-    
+
     /**
      * Display the specified resource.
      */
@@ -77,16 +81,16 @@ class SurgeryController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit($id)
-{
-    $surgery = Surgery::find($id);
-    $reception = $surgery->reception;
-    $vets= $surgery->user;
-    $products = ProductType::all(); 
+    {
+        $surgery = Surgery::find($id);
+        $reception = $surgery->reception;
+        $vets = $surgery->user;
+        $products = ProductType::all();
 
-    $this->authorize("update", $surgery);
+        $this->authorize("update", $surgery);
 
-    return view('surgery.edit', compact('surgery', 'reception', 'products', 'vets'));
-}
+        return view('surgery.edit', compact('surgery', 'reception', 'products', 'vets'));
+    }
 
 
     /**
@@ -112,7 +116,7 @@ class SurgeryController extends Controller
     {
         $surgery = Surgery::with('vet', 'surgery')->where('reception_id', $id)->get();
 
-        return DataTables::of($surgery) ->make(true);
+        return DataTables::of($surgery)->make(true);
     }
 
     public function checkRequirements($id)
@@ -120,45 +124,55 @@ class SurgeryController extends Controller
         $hasLab = RedSheet::where('reception_id', $id)
             ->whereNotNull('lab_type_id')
             ->exists();
-    
+
         $hasImaging = RedSheet::where('reception_id', $id)
             ->whereNotNull('imaging_type_id')
             ->exists();
-    
+
         if ($hasLab && $hasImaging) {
             return response()->json(['status' => 'ok']);
         } else {
             return response()->json(['status' => 'error', 'message' => 'Se requiere al menos un registro de laboratorio y uno de imagenología.']);
         }
     }
-    
+
 
     public function surgery_authorization($id)
     {
         $reception = Reception::find($id);
-        $products = Producto::where("ESTATUS",  "A")->get();
+
+        $products = DB::connection('firebird')
+            ->table('ARTICULOS AS a')
+            ->leftJoin('PRECIOS_ARTICULOS AS pa', 'a.ARTICULO_ID', '=', 'pa.ARTICULO_ID')
+            ->where('a.ESTATUS', 'A')
+            ->select('a.ARTICULO_ID', 'a.NOMBRE', 'pa.PRECIO')
+            ->get();
+
         $pet = Pet::with('family', 'genre')->find($id);
-        return view('surgery.aut_quirurgica', compact("reception", "pet", "products"));
+
+        $cameFromTransfer = ReceptionTransfer::where('to_reception_id', $id)->exists();
+
+        return view('surgery.aut_quirurgica', compact("reception", "pet", "products", "cameFromTransfer"));
     }
 
     public function surgery_authorizationpdf(Request $request, $id)
     {
         $reception = Reception::with('pet')->find($id);
         $pet = $reception->pet;
-        
+
 
         $signatureDataUrl = $request->input('signature');
-         $procedure = $request->input('procedure');
-          $total= $request->input('total');
-          $include = $request->input('include');
-    
+        $procedure = $request->input('procedure');
+        $total = $request->input('total');
+        $include = $request->input('include');
+
         $pdf = PDF::loadView('surgery.aut_quirurgica', [
             'reception' => $reception,
             'pet' => $pet,
             'signatureDataUrl' => $signatureDataUrl,
-          'procedure' => $procedure,
-          'total' => $total,
-          'include' => $include,
+            'procedure' => $procedure,
+            'total' => $total,
+            'include' => $include,
             'isPdf' => true
         ]);
 
@@ -168,15 +182,14 @@ class SurgeryController extends Controller
         $pdfUrl = Storage::url($pdfPath);
 
         $format = new Format();
-        $format->format_type_id = 3; 
+        $format->format_type_id = 3;
         $format->reception_id = $id;
-        $format->pet_id= $pet->id;
-        $format->format_pdf = $pdfPath; 
+        $format->pet_id = $pet->id;
+        $format->format_pdf = $pdfPath;
         $format->save();
 
-        return response()->json([ 'url' => asset($pdfUrl), 'format_id' => $format->id]);
+        return response()->json(['url' => asset($pdfUrl), 'format_id' => $format->id]);
         //return response()->json(['url' => $pdfUrl, 'format_id' => $format->id]);
         //return response()->json(['url' => asset('storage'.$pdfPath), 'format_id' => $format->id]);
     }
-
 }

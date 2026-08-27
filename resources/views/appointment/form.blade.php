@@ -19,7 +19,7 @@
                     <label for="anamnesis" class="form-label">SUBJETIVO (ANAMNESIS)</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
-                            <span class="healthicons--surgical-sterilization-outline"></span>
+                            <span class="vaadin--lines-list"></span>
                         </span>
                         <textarea rows="2" name="anamnesis" class="form-control @error('anamnesis') is-invalid @enderror" id="anamnesis">{{ old('anamnesis', $appointment?->anamnesis) }} </textarea>
                     </div>
@@ -44,9 +44,11 @@
         </div>
 
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <div class="form-group mb-2 mb20">
-                    <label for="diagnosis" class="form-label">INTERPRETACIÓN (DIAGNÓSTICO PRESUNTIVO/FINAL)</label>
+                    <label for="diagnosis" class="form-label">INTERPRETACIÓN (DIAGNÓSTICO PRESUNTIVO/FINAL)
+                          <span class="text-danger">*</span>
+                    </label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="vaadin--lines-list"></span>
@@ -56,10 +58,8 @@
                     {!! $errors->first('diagnosis', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <div class="form-group mb-2 mb20">
                     <label for="observations" class="form-label">OBSERVACIONES</label>
                     <div class="input-group mb-3">
@@ -74,7 +74,7 @@
             </div>
         </div>
 
-        <div class="row align-items-end">
+        {{-- <div class="row align-items-end">
             <div class="col-md-3">
                 <div class="form-group mb-2 mb20">
                     <label for="day_next_check" class="form-label">PRÓXIMO CONTROL</label>
@@ -115,7 +115,7 @@
 
             <div class="col-md-4">
                 <div class="form-group mb-2 mb20">
-                    <label for="reason_next_check_id" class="form-label">Tipo de proxima consulta</label>
+                    <label for="reason_next_check_id" class="form-label">TIPO DE PRÓXIMA CONSULTA</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="vaadin--lines-list"></span>
@@ -145,7 +145,7 @@
                     <i class="fas fa-calendar-check me-1"></i> Ver mis citas
                 </a>
             </div>
-        </div>
+        </div> --}}
 
     </div>
     {{-- <div class="col-12 mt-2 d-flex justify-content-end">

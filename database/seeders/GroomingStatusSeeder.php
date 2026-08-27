@@ -14,12 +14,15 @@ class GroomingStatusSeeder extends Seeder
     public function run(): void
     {
         $groomingStatuses = [
-            ["name" => 'Atendiendo', "color" => "#F3E586"],
-            ["name" => 'Listo', "color" => "#84E78A"],
+            ["name" => 'Atendiendo', "color" => "#FFBE33"],
+            ["name" => 'Listo', "color" => "#5cb85c"],
+            ["name" => 'En espera', "color" => "#FF2C2C"],
+            ["name" => 'Trasladado', "color" => "#6c757d"],
+            ["name" => 'Creado', "color" => "#0dcaf0"],
         ];
 
         foreach ($groomingStatuses as $as) {
-            GroomingStatus::Create($as);
+            GroomingStatus::firstOrCreate(['name' => $as['name']], $as);
         }
     }
 }

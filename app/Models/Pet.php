@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property $picture_id
  * @property $specie
  * @property $raza
+ * @property $species_id
+ * @property $breed_id
  * @property $gender_id
  * @property $birthday
  * @property $reproductive_status_id
@@ -48,7 +50,7 @@ class Pet extends Model
      *
      * @var array
      */
-    protected $fillable = ['number_chip','family_id', 'name', 'picture_id', 'specie', 'raza', 'gender_id', 'birthday', 'reproductive_status_id', 'weight', 'physic_descrip', 'notes', 'pet_classification_id', 'deceased'];
+    protected $fillable = ['number_chip','family_id', 'name', 'picture_id', 'specie', 'raza', 'species_id', 'breed_id', 'gender_id', 'birthday', 'reproductive_status_id', 'weight', 'physic_descrip', 'notes', 'pet_classification_id', 'deceased'];
 
 
     /**
@@ -59,6 +61,22 @@ class Pet extends Model
         return $this->belongsTo(\App\Models\Family::class, 'family_id', 'id');
     }
     
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function species()
+    {
+        return $this->belongsTo(\App\Models\Species::class, 'species_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function breed()
+    {
+        return $this->belongsTo(\App\Models\Breed::class, 'breed_id', 'id');
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -104,6 +122,11 @@ class Pet extends Model
 public function prescriptions()
 {
     return $this->hasMany(Prescription::class);
+}
+
+public function episodes()
+{
+    return $this->hasMany(Episode::class, 'pet_id', 'id');
 }
 
 }

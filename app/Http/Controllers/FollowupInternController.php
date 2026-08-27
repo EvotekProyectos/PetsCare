@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FollowupIntern;
 use App\Http\Requests\FollowupInternRequest;
+use App\Models\ReceptionEvent;
 use Yajra\DataTables\Facades\DataTables;
 
 /**
@@ -42,9 +43,18 @@ class FollowupInternController extends Controller
         $new = FollowupIntern::create($request->validated());
         $this->authorize("create",FollowupIntern::class);
 
+        if ($new->reception_id) {
+            ReceptionEvent::create([
+                'reception_id' => $new->reception_id,
+                'event_type' => 'followup_added',
+                'description' => 'Seguimiento interno agregado',
+                'followup_type' => 'followup_intern',
+                'followup_id' => $new->id,
+                'created_by' => auth()->id(),
+            ]);
+        }
+
         return response()->json($new);
-        // return redirect()->route('followup-interns.index')
-        //     ->with('success', 'FollowupIntern created successfully.');
     }
 
     /**

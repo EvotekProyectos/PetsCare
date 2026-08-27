@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property $id
  * @property $name
+ * @property $articulo_id
  * @property $created_at
  * @property $updated_at
  * @property $deleted_at
@@ -31,7 +32,7 @@ class AdmissionType extends Model
      *
      * @var array
      */
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'articulo_id'];
 
 
 

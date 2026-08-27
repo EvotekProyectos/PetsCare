@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\BudgetDetail;
+use App\Http\Requests\BudgetDetailBatchRequest;
 use App\Http\Requests\BudgetDetailRequest;
 use App\Models\Budget;
+use App\Models\Reception;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -43,6 +45,48 @@ class BudgetDetailController extends Controller
         $new = BudgetDetail::create($request->validated());
 
         return response()->json($new);
+    }
+
+    /**
+     * Guarda en una sola petición todas las líneas (servicio/lab/img) agregadas
+     * en el modal de presupuesto de Consulta.
+     */
+    public function storeBatch(BudgetDetailBatchRequest $request)
+    {
+        $this->authorize("create", Budget::class);
+
+        $reception = Reception::findOrFail($request->reception_id);
+
+        $budget = DB::transaction(function () use ($request, $reception) {
+            $budget = Budget::firstOrCreate(
+                ['reception_id' => $reception->id],
+                [
+                    'pet_id' => $reception->pet_id,
+                    'vet_id' => $reception->veterinarian_id,
+                    'date' => now(),
+                ]
+            );
+
+            foreach ($request->lines as $line) {
+                $data = [
+                    'budget_id' => $budget->id,
+                    'price' => $line['price'],
+                    'notes' => $line['notes'] ?? null,
+                ];
+
+                $data[match ($line['type']) {
+                    'service' => 'service_id',
+                    'lab' => 'lab_id',
+                    'img' => 'img_id',
+                }] = $line['product_id'];
+
+                BudgetDetail::create($data);
+            }
+
+            return $budget;
+        });
+
+        return response()->json(['budget_id' => $budget->id]);
     }
 
     /**

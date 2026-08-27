@@ -21,6 +21,28 @@ class VaccineCertificateRequest extends FormRequest
      */
     public function rules(): array
     {
+        // store() (POST, desde el modal de Consulta): vaccine-certificate/form.blade.php
+        // manda un lote de aplicaciones (vacuna + desparasitaciones) en un array
+        // aplicaciones[], una fila por cada una.
+        if ($this->isMethod('post')) {
+            return [
+                'pet_id' => 'nullable|integer|exists:pets,id',
+                'reception_id' => 'nullable|integer|exists:receptions,id',
+                'vet_id' => 'nullable|integer|exists:users,id',
+                'aplicaciones' => 'required|array|min:1',
+                'aplicaciones.*.service_id' => 'nullable|integer|exists:services,id',
+                'aplicaciones.*.product' => 'nullable|string',
+                'aplicaciones.*.lab' => 'nullable|string',
+                'aplicaciones.*.lote' => 'nullable|string',
+                'aplicaciones.*.dose' => 'nullable|string',
+                'aplicaciones.*.application_date' => 'nullable|date',
+                'aplicaciones.*.last_deworming_date' => 'nullable|date',
+                'aplicaciones.*.next_application_date' => 'required|date',
+                'aplicaciones.*.observations' => 'nullable|string',
+            ];
+        }
+
+        // update() (PUT/PATCH): edición de un único registro existente, formato plano.
         return [
             'pet_id' => 'nullable|integer|exists:pets,id',
             'service_id' => 'nullable|integer|exists:services,id',
@@ -34,7 +56,6 @@ class VaccineCertificateRequest extends FormRequest
             'observations' => 'nullable|string',
             'reception_id' => 'nullable|integer|exists:receptions,id',
             'vet_id' => 'nullable|integer|exists:users,id',
-            
         ];
     }
 }

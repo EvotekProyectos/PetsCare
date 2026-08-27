@@ -42,7 +42,7 @@ class Cremation extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_id', 'pet_id', 'date_death', 'date_finish', 'servicie', 'CM_id', 'type_urn', 'vet_id','urn_model', 'observations','text_placa', 'placa_type_id', 'price','status'];
+    protected $fillable = ['reception_id', 'pet_id', 'date_death', 'date_finish', 'servicie', 'CM_id', 'type_urn', 'vet_id', 'urn_model', 'observations', 'text_placa', 'placa_type_id', 'price', 'status'];
 
 
     /**
@@ -52,7 +52,7 @@ class Cremation extends Model
     {
         return $this->belongsTo(\App\Models\Pet::class, 'pet_id', 'id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -61,23 +61,23 @@ class Cremation extends Model
         return $this->belongsTo(\App\Models\Reception::class, 'reception_id', 'id');
     }
 
-       /**
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function cm()
     {
         return $this->belongsTo(\App\Models\CmType::class, 'CM_id', 'id');
     }
-    
 
-       /**
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function tag()
     {
         return $this->belongsTo(\App\Models\TagType::class, 'placa_type_id', 'id');
     }
-    
+
     public function service()
     {
         return $this->belongsTo(\App\Models\Precios::class, 'servicie', 'ARTICULO_ID');
@@ -87,14 +87,17 @@ class Cremation extends Model
     {
         return $this->belongsTo(\App\Models\Producto::class, 'servicie', 'ARTICULO_ID');
     }
-    
-       /**
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function vet()
     {
         return $this->belongsTo(\App\Models\User::class, 'vet_id', 'id');
     }
-    
 
+    public function cremationStatus()
+    {
+        return $this->belongsTo(CremationStatus::class);
+    }
 }

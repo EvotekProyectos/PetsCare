@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AdmissionTypeSeeder::class);
         $this->call(FamClassificationSeeder::class);
         $this->call(PetClassificationSeeder::class);
+        $this->call(SpeciesSeeder::class);
         $this->call(ShiftSeeder::class);
         $this->call(PetStatusesSeeder::class);
         $this->call(FamiliesSeeder::class);
@@ -51,5 +52,8 @@ class DatabaseSeeder extends Seeder
         $this->call(CubiclesSeeder::class);
         $this->call(dateTypesSeeder::class);
         $this->call(statusDatesSeeder::class);
+        $this->call(CremationStatusSeeder::class);
+        $this->call(HospitalizationStatusSeeder::class);
+        $this->call(HotelStatusSeeder::class);
     }
 }

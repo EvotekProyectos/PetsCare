@@ -36,8 +36,11 @@ async function Cremation(event) {
         let data = await response.json();
 
         if (response.ok) {
-            let cremationId = data.id;
-            window.location.href = route('cremation.responsiva', cremationId);  
+            // cremation.responsiva/{id} espera el id de la Reception, no el
+            // del registro Cremation recién creado (CremationController::responsiva()
+            // hace Reception::find($id) — con data.id, siempre null).
+            let receptionId = data.reception_id;
+            window.location.href = route('cremation.responsiva', receptionId);
         }
             // let url3 = route('redsheet.pay', Reception_Id);
             // let pet3 = await fetch(url3, {

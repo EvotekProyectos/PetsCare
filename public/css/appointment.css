@@ -1,0 +1,472 @@
+.btn-quick-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 24px;
+    padding: 6px 16px 6px 6px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+.btn-quick-action:hover {
+    transform: translateY(-1px);
+}
+
+.btn-quick-action .icon-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.btn-quick-action .icon-circle i {
+    font-size: 0.7rem;
+    color: #fff !important;
+}
+
+.btn-quick-action span {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Variante: Trasladar */
+.btn-quick-action--warning {
+    background-color: #FAEEDA;
+    border: 0.5px solid #EF9F27;
+}
+.btn-quick-action--warning .icon-circle { background-color: #EF9F27; }
+.btn-quick-action--warning span { color: #854F0B; }
+.btn-quick-action--warning:hover {
+    background-color: #F3D9A8;
+    border-color: #C97F0E;
+}
+
+/* Variante: Presupuestos */
+.btn-quick-action--info {
+    background-color: #E6F1FB;
+    border: 0.5px solid #378ADD;
+}
+.btn-quick-action--info .icon-circle { background-color: #378ADD; }
+.btn-quick-action--info span { color: #0C447C; }
+.btn-quick-action--info:hover {
+    background-color: #BFDDF6;
+    border-color: #1E5F9E;
+}
+
+/* Variante: Historial médico */
+.btn-quick-action--success {
+    background-color: #cdfcde;
+    border: 0.5px solid #27ef70;
+}
+.btn-quick-action--success .icon-circle { background-color: #27ef70; }
+.btn-quick-action--success span { color: #00722a; }
+.btn-quick-action--success:hover {
+    background-color: #9CF3BD;
+    border-color: #14A34E;
+}
+
+.btn-icon-circle {
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
+    max-width: 30px;
+    max-height: 30px;
+    padding: 0 !important;
+    margin: 0;
+    border-radius: 50% !important;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0 !important;
+    flex: 0 0 30px;
+}
+
+.btn-icon-circle .heroicons-outline--ticket {
+    font-size: 14px;
+    line-height: 1;
+}
+
+/* Contenedor general: envuelve header + todas las .card-panel. El fondo lo
+   da la clase bg-primary-soft (bootstrap.min.css) aplicada junto a esta en
+   el blade, para no hardcodear un color que ya existe como estándar del
+   proyecto. */
+.appointment-content-wrapper {
+    border-radius: 16px;
+    padding: 20px 24px;
+    /* Espacio extra al fondo para que el último elemento no quede tapado
+       detrás de la barra fija de acción (.finalize-sticky-bar). */
+    padding-bottom: 90px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .06);
+}
+
+/* Barra fija al fondo del viewport para el botón de acción final de una
+   pantalla (Finalizar Consulta en Consulta, Dar alta en Hospitalización):
+   visible siempre, sin importar el scroll ni el estado de colapso de ninguna
+   card. Un solo componente reutilizado por ambas pantallas (appointment.css
+   se carga en las dos, ver @section('design') de cada una).
+   left seguido de la MISMA lógica de #sidebar/#content (ver sidebar.css):
+   el sidebar mide 220px y su visibilidad se invierte en el breakpoint
+   mobile de 768px, así que el body.sidebar-collapsed que togglea
+   layouts/app.blade.php junto con #sidebar/#content también se refleja
+   aquí para que la barra nunca se monte sobre el sidebar. */
+.finalize-sticky-bar {
+    position: fixed;
+    bottom: 0;
+    left: 220px;
+    right: 0;
+    z-index: 1030;
+
+    display: flex;
+    justify-content: flex-end;
+
+    padding: 12px 24px;
+    background: #fff;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, .08);
+
+    transition: left 0.3s ease;
+}
+
+/* Sidebar colapsado */
+body.sidebar-collapsed .finalize-sticky-bar {
+    left: 70px; /* usa aquí el ancho REAL del sidebar colapsado */
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .finalize-sticky-bar {
+        left: 0;
+    }
+
+    body.sidebar-collapsed .finalize-sticky-bar {
+        left: 0;
+    }
+}
+
+/* Tarjeta blanca genérica dentro del wrapper. Padding lateral reducido
+   respecto al original (20px 24px) para no duplicar el aire que ya da
+   el padding del .appointment-content-wrapper que la contiene. */
+.card-panel {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .06);
+    padding: 16px 20px;
+    margin-bottom: 8px;
+}
+
+/* Sección expandida: se quita la sombra para que se sienta continua con
+   el contenido de arriba (ver script que la activa/desactiva por collapse). */
+.card-panel.no-shadow {
+    box-shadow: none;
+}
+
+/* Card de mascota: no tiene collapse/chevron propio, así que se mantiene
+   siempre sin sombra ni borde. Mismo margin-bottom que el resto de las
+   .card-panel (heredado), para que la separación con Registro clínico
+   sea igual que entre las demás cards. */
+.card-panel--pet-info {
+    box-shadow: none;
+    border: none;
+}
+
+.reception-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 14px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.reception-summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.reception-summary-date {
+    align-items: flex-end;
+}
+
+.reception-summary-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    color: #64748B;
+}
+
+.reception-summary-label i {
+    color: #0455A0;
+    font-size: 11px;
+    transform: translateY(-1px);
+}
+
+.reception-calendar-icon {
+    color: #0455A0;
+    font-size: 11px;
+    transform: translateY(-1px);
+}
+
+.reception-summary-date .reception-summary-value {
+    color: #1F2937;
+}
+
+.reception-summary-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0455A0;
+}
+
+/* Botones de acción rápida (Trasladar / Presupuestos / Historial médico) como links de texto */
+.action-link {
+    border: none;
+    background: #E6F1FB;
+    border-radius: 24px;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    font-size: 14px;
+    font-weight: 600;
+    min-width: 150px;
+    min-height: 44px;
+    color: #0455A0;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.action-link i {
+    font-size: 16px;
+}
+
+.action-link:hover {
+    background: #BFDDF6;
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+/* Icono junto al label de cada campo del grid de info de mascota */
+.pet-info-icon {
+    color: #0455A0;
+    font-size: 14px;
+    margin-right: 4px;
+}
+
+/* Líneas verticales entre columnas del grid de info de mascota (2da, 3ra y
+   4ta de cada fila, nunca la 1ra). Solo desde md hacia arriba: en mobile
+   (col-6, 2 por fila) el corte quedaría mal alineado entre filas. */
+@media (min-width: 768px) {
+    .pet-info-col {
+        border-left: 1px solid #E5E7EB;
+    }
+}
+
+/* Línea horizontal entre el grid de info y la fila de action-links */
+.action-buttons-divider {
+    border-top: 1px solid #E5E7EB;
+    padding-top: 12px;
+    margin-top: 8px;
+}
+
+/* Tarjetas clicables de Servicios (Cartilla / Labs / Imágenes) */
+.service-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    border-radius: 14px;
+    background: #F8FAFC;
+    cursor: pointer;
+    transition: background .15s;
+}
+.service-card:hover {
+    background: #EFF3F8;
+}
+.service-card .service-card-icon {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #E6F1FB;
+    color: #0455A0;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+.service-card .service-card-text {
+    display: flex;
+    flex-direction: column;
+}
+.service-card .service-card-desc {
+    font-size: 12px;
+    color: #6c757d;
+}
+.service-card .fa-chevron-right {
+    margin-left: auto;
+    color: #adb5bd;
+}
+
+/* Tabla de servicios: header azul sólido + esquinas redondeadas en el contenedor */
+.service-table-wrapper {
+    border-radius: 14px;
+    overflow: hidden;
+}
+#DataServices thead th {
+    background-color: #0455A0;
+    color: #fff;
+}
+
+/* ===== Reskin FullCalendar - PetsCare ===== */
+#calendar{
+  --fc-border-color: #dfe6ee;
+  --fc-page-bg-color: #ffffff;
+  --fc-neutral-bg-color: #f8fafc;
+  --fc-today-bg-color: #eaf3fb;
+
+  --fc-button-bg-color: #0455A0;
+  --fc-button-border-color: #0455A0;
+  --fc-button-hover-bg-color: #033f7d;
+  --fc-button-hover-border-color: #033f7d;
+  --fc-button-active-bg-color: #023a6e;
+
+  --fc-event-bg-color: #0455A0;
+  --fc-event-border-color: #0455A0;
+
+  font-size: .85rem;
+}
+
+#calendar .fc-toolbar{
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+#calendar .fc-toolbar-title{
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1f2937;
+  text-transform: capitalize;
+}
+
+#calendar .fc-button{
+  border-radius: 6px;
+  text-transform: none;
+  font-size: .8rem;
+  padding: .4rem .85rem;
+  box-shadow: none !important;
+}
+
+#calendar .fc-button-primary:not(:disabled).fc-button-active,
+#calendar .fc-button-primary:not(:disabled):active{
+  background: #023a6e;
+  border-color: #023a6e;
+}
+
+#calendar .fc-col-header-cell{
+  background: #0455A0;
+}
+
+#calendar .fc-col-header-cell-cushion{
+  color: #fff;
+  font-weight: 600;
+  padding: 8px 4px;
+  text-decoration: none;
+  text-transform: capitalize;
+  font-size: .78rem;
+}
+
+#calendar .fc-timegrid-slot-label-cushion,
+#calendar .fc-timegrid-axis-cushion{
+  color: #64748b;
+  font-size: .72rem;
+}
+
+/* Eventos como badge suave por tipo de cita */
+.fc-custom-event{
+  padding: 2px 5px 3px;
+  overflow: hidden;
+}
+.fc-custom-event .badge-soft{
+  display: block;
+  width: fit-content;
+  margin-bottom: 2px;
+}
+.fc-event-mvz{
+  font-size: .68rem;
+  color: #eef4fb;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fc-daygrid-event .fc-event-mvz{ color: #475569; }
+
+/* Badges por tipo — ajusta las keys al valor real que uses en tu BD (citas.tipo o similar) */
+.badge-soft{
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 20px;
+  font-size: .68rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.badge-consulta{ background: #e7f1fb; color: #0455A0; }
+.badge-vacuna{   background: #e4f6ea; color: #1a8a4c; }
+.badge-cirugia{  background: #fdeaea; color: #c0392b; }
+.badge-estudio{  background: #fef3e0; color: #b5750a; }
+
+/* Separación superior de la información */
+#petInfoCollapse {
+   padding-top: 25px !important;
+}
+
+/* Descripción física */
+.pet-description-card {
+    min-height: 145px;
+    height: 100%;
+    padding: 12px 14px 5px;
+    border-radius: 14px;
+    background: #F8FAFC;
+    border-left: 1px solid #E5E7EB;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.pet-description-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: #E6F1FB;
+    color: #0455A0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    margin-bottom: 7px;
+}
+
+.pet-description-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 3px;
+}
+
+.pet-description-text {
+    font-size: 11px;
+    line-height: 1.45;
+    color: #64748b;
+}

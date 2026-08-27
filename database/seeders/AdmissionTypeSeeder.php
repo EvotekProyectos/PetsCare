@@ -14,10 +14,10 @@ class AdmissionTypeSeeder extends Seeder
     public function run(): void
     {
         $admissionTypes = [
-            ["name" => "Hospital normal"],
-            ["name" => "Terapia intensiva"],
-            ["name" => "Ambulatorio"],
-            ["name" => "Pensión médica"],
+            ["name" => "Hospital normal", "articulo_id"=>"104674"],
+            ["name" => "Terapia intensiva", "articulo_id"=>"29641"],
+            ["name" => "Ambulatorio", "articulo_id"=>"104681"],
+            ["name" => "Pensión médica",  "articulo_id"=>"136085"],
         ];
 
         foreach ($admissionTypes as $admissionType) {
