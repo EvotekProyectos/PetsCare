@@ -321,7 +321,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'editar recepciones',
             'eliminar recepciones',
             'ver panel consultas',
-            'ver panel asignaciones',
+            // 'ver panel asignaciones',
             'ver panel recetas',
             'crear recetas',
             'editar recetas',
@@ -401,9 +401,9 @@ class RolesAndPermissionsSeeder extends Seeder
             'ver panel clasificaciones familias',
             'ver panel clasificacion mascotas',
             'ver panel estados mascotas',
-            'ver panel familias',
+            // 'ver panel familias',
             'ver panel horarios',
-            'ver panel recepciones',
+            // 'ver panel recepciones',
             // El médico es quien traslada recepciones (Consulta -> Hospitalización,
             // Hospitalización -> Cremación al dar de alta por fallecimiento, etc.)
             // — ver ReceptionTransferController::store(), que exige
@@ -480,7 +480,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'ver vales',
             'crear vales',
             'cancelar vales',
-            'ver panel vales',
+            // 'ver panel vales',
         ];
         $role->givePermissionTo($permissionsMVZ);
 

@@ -102,6 +102,22 @@ $(document).ready(function () {
       {
         data: null,
         render: function (data) {
+          if (
+            data &&
+            data.current_hospitalization_status &&
+            data.current_hospitalization_status.hospitalization_status
+          ) {
+            const status = data.current_hospitalization_status.hospitalization_status;
+            return `<span style="background-color: ${lightenColor(status.color)}; padding: 5px 10px; color: ${status.color}; border-radius: 5px; font-weight: 600;">
+                ${status.name}
+              </span>`;
+          }
+          return "Sin estatus";
+        },
+      },
+      {
+        data: null,
+        render: function (data) {
           // Solo mientras está Hospitalizado se puede seguir atendiendo.
           // Trasladado o Dado de alta: ya no, solo verla en modo lectura
           // (ver ReceptionTransferController::markOriginAsTransferred(),
