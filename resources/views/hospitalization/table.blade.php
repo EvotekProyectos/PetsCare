@@ -78,6 +78,7 @@
                                                             <th>Mascota</th>
                                                             <th>Area</th>
                                                             <th>M.V.Z</th>
+                                                            <th>Estatus</th>
                                                             <th>Acciones</th>
 
                                                         </tr>
