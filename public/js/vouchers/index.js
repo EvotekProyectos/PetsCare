@@ -79,10 +79,6 @@ $(document).ready(function () {
         render: function (data) {
           let botones = "";
 
-          if (!esAlmacenista) {
-            return botones;
-          }
-
           if (data.generated_document_url) {
             botones += `
                 <a href="${data.generated_document_url}" 

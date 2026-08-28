@@ -79,8 +79,9 @@ class AssignmentController extends Controller
         $this->authorize("viewAny", Assignment::class);
 
         $hospitalizationStatuses = HospitalizationStatus::all();
+        $hospitalizadoStatusId = HospitalizationStatus::where('name', 'Hospitalizado')->value('id');
 
-        return view('hospitalization.table', compact('hospitalizationStatuses'));
+        return view('hospitalization.table', compact('hospitalizationStatuses', 'hospitalizadoStatusId'));
     }
 
     public function hospitalizations(Request $request)
