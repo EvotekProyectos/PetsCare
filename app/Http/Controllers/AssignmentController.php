@@ -21,7 +21,7 @@ class AssignmentController extends Controller
 
     public function index()
     {
-        $this->authorize("viewAny", Reception::class);
+        $this->authorize("viewAny", Assignment::class);
 
         $attentionStatuses = AttentionStatus::all();
         $enEsperaStatusId = AttentionStatus::where('name', 'En espera')->value('id');
@@ -76,7 +76,7 @@ class AssignmentController extends Controller
 
     public function hospital()
     {
-        // $this->authorize("viewAny", Reception::class);
+        $this->authorize("viewAny", Assignment::class);
 
         $hospitalizationStatuses = HospitalizationStatus::all();
 

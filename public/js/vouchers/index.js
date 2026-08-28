@@ -13,7 +13,7 @@ $(document).ready(function () {
         data: "folio",
       },
       {
-        data: "created_at"
+        data: "created_at",
       },
       {
         data: null,
@@ -79,19 +79,26 @@ $(document).ready(function () {
         render: function (data) {
           let botones = "";
 
-          //si existe el documento
+          if (!esAlmacenista) {
+            return botones;
+          }
+
           if (data.generated_document_url) {
             botones += `
-                <a href="${data.generated_document_url}" target="_blank" 
-                   class="btn btn-sm text-primary" title="Ver vale">
+                <a href="${data.generated_document_url}" 
+                   target="_blank"
+                   class="btn btn-sm text-primary" 
+                   title="Ver vale">
                     <span class="mdi--eye"></span>
                 </a>`;
           }
 
           if (data.status === "Pendiente") {
             botones += `
-                <button type="button" class="btn btn-sm text-success btnAccionVale"
-                    data-id="${data.id}" title="Surtir o rechazar vale">
+                <button type="button" 
+                        class="btn btn-sm text-success btnAccionVale"
+                        data-id="${data.id}" 
+                        title="Surtir o rechazar vale">
                     <span class="icon-park--check-correct"></span>
                 </button>`;
           }

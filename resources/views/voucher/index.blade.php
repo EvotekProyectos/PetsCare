@@ -15,7 +15,7 @@
                     <div class="card-header bg-transparent border-0">
                         <div class="d-flex justify-content-between align-items-center">
                             <h4 id="card_title" class="text-primary text-uppercase">
-                              <span class="heroicons-outline--ticket"></span> Vales
+                                <span class="heroicons-outline--ticket"></span> Vales
                             </h4>
 
                         </div>
@@ -57,6 +57,9 @@
 @endsection
 
 @push('scripts')
+    <script>
+        const esAlmacenista = @json(auth()->user()->user === 'almacenista');
+    </script>
     <script src="{{ asset('js/vouchers/index.js') }}" defer></script>
     <script src="{{ asset('js/vouchers/sign-modal.js') }}" defer></script>
 @endpush
