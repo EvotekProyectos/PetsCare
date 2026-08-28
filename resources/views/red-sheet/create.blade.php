@@ -203,9 +203,9 @@
 
 
                 <div class="card-body" id="DisplayRedSheet">
-                    <h5 id="card_title" class="text-primary text-uppercase">
+                    {{-- <h5 id="card_title" class="text-primary text-uppercase">
                         <span class="ic--twotone-pets"></span> CONSUMIBLES CON VALES
-                    </h5>
+                    </h5> --}}
                     <div id="table-container"></div>
                 </div>
             </div>

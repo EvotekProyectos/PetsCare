@@ -102,8 +102,22 @@ $(document).ready(function () {
       {
         data: null,
         render: function (data) {
+          // Solo mientras está Hospitalizado se puede seguir atendiendo.
+          // Trasladado o Dado de alta: ya no, solo verla en modo lectura
+          // (ver ReceptionTransferController::markOriginAsTransferred(),
+          // HospitalizationController::discharge()/registerDeathDischarge()
+          // y RedSheetController::entry()).
+          if (data.status_id !== HOSPITALIZATION_STATUS_HOSPITALIZADO_ID) {
+            return `
+                          <a type="button" href="${route("redsheet.show", data.id)}" class="btn btn-sm icon-btn-outline text-primary" title="Ver">
+                            <i class="fas fa-eye"></i>
+                        </a>
+
+                       `;
+          }
+
           return `
-                          <a type="button" href="${route("redsheet.entry", data.id)}" class="btn btn-sm icon-btn-outline text-primary">
+                          <a type="button" href="${route("redsheet.entry", data.id)}" class="btn btn-sm icon-btn-outline text-primary" title="Atender">
                             <span class="mage--hospital-shield-fill"></span>
                         </a>
 

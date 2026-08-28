@@ -197,9 +197,19 @@ class RedSheetController extends Controller
      * */
     public function entry($id)
     {
+        $reception = Reception::with('pet', 'admissionType', 'area', 'currentHospitalizationStatus.hospitalizationStatus')->findorfail($id);
+
+        // Una hospitalización ya trasladada o dada de alta no se puede
+        // seguir atendiendo, solo consultar en modo lectura (ver
+        // ReceptionTransferController::markOriginAsTransferred() y
+        // HospitalizationController::discharge()/registerDeathDischarge()).
+        $currentStatusName = $reception->currentHospitalizationStatus?->hospitalizationStatus?->name;
+        if ($currentStatusName && $currentStatusName !== 'Hospitalizado') {
+            return redirect()->route('redsheet.show', $id);
+        }
+
         //Instanceamos el nuevo registros y todos los catalogos de la pantalla
         $redSheet = new RedSheet();
-        $reception = Reception::with('pet', 'admissionType', 'area')->findorfail($id);
         $products = Producto::where("ESTATUS",  "A")->get();
         $followUp = new FollowUp();
         $followupSurgical = new FollowupSurgical();

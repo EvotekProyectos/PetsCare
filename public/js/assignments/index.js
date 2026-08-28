@@ -133,7 +133,7 @@ $(document).ready(function () {
           }
 
           return `
-                        <a href="${route("appointments.show", data.id)}" class="btn btn-sm icon-btn-outline text-primary" title="Ver">
+                        <a href="${route("appointment.show", data.id)}" class="btn btn-sm icon-btn-outline text-primary" title="Ver">
                             <i class="fas fa-eye"></i>
                         </a>`;
         },

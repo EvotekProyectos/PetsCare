@@ -67,33 +67,40 @@ class PrescriptionController extends Controller
 
         $new = Prescription::create($request->validated());
 
+        $this->createNextControlDate($new, $request);
+
         return response()->json($new);
     }
 
 
     public function storeControlDate(PrescriptionRequest $request)
     {
-        $this->authorize("create", Prescription::class);
+        return $this->store($request);
+    }
 
-        $new = Prescription::create($request->validated());
-
-        $reception = $new->reception;
-        $pet = Pet::find($request->pet_id);
-
-        $day_next_check = $request->day_next_check;
-        $time_next_check = $request->time_next_check;
-
-        // Si no se define time_next_check, se asigna las 8:00 am
-        if (empty($time_next_check)) {
-            $time_next_check = '08:00:00';
+    /**
+     * Si la fórmula médica trae day_next_check, agenda el próximo control
+     * correspondiente. Se llama desde store() para que aplique en todos los
+     * flujos que la usan (Finalizar Consulta en appointments, Alta normal
+     * en red-sheet, y el botón "Guardar receta" del formulario standalone).
+     */
+    private function createNextControlDate(Prescription $prescription, PrescriptionRequest $request): void
+    {
+        if (empty($request->day_next_check)) {
+            return;
         }
 
-        // Concatenar la fecha y la hora para lograr el formato de tipo datetime
-        $datetime = $day_next_check . ' ' . $time_next_check;
+        $reception = $prescription->reception;
+        $pet = Pet::find($request->pet_id);
 
+        // Si no se define time_next_check, se asigna las 8:00 am
+        $time_next_check = $request->time_next_check ?: '08:00:00';
+
+        // Concatenar la fecha y la hora para lograr el formato de tipo datetime
+        $datetime = $request->day_next_check . ' ' . $time_next_check;
 
         ControlDate::createIfNotDuplicate([
-            'reception' => $reception ? $reception->id : null,
+            'reception_id' => $reception ? $reception->id : null,
             'pet_id' => $request->pet_id,
             'family_id' => $pet ? $pet->family_id : null,
             'date_type_id' => $request->reason_next_check_id,
@@ -101,8 +108,6 @@ class PrescriptionController extends Controller
             'user_id' => auth()->id(),
             'date' => $datetime,
         ]);
-
-        return response()->json($new);
     }
     /**
      * Display the specified resource.

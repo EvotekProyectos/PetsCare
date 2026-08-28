@@ -107,6 +107,7 @@ class ReceptionTransferController extends Controller
         // completa los datos del servicio desde el botón "Crear" en la
         // tabla de Cremaciones (ver receptions/index.js).
         $redirect = match (true) {
+            $destinationTypeId === 1 && (int) $origin->reception_type_id === 2 => route('assignment.index'),
             $destinationTypeId === 2 => route('hospital.list', ['id' => $destination->id]),
             $destinationTypeId === 3 => route('receptions.grooming', $destination->id),
             $destinationTypeId === 4 => route('hotel.create', ['id' => $destination->id]),
