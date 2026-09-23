@@ -54,7 +54,8 @@
                         </div>
 
                        <x-pet-info :pet="$reception->pet" :years="$years" :months="$months" :days="$days"
-                            :genre-name="$genreName" :reproductive-status-name="$reproductiveStatusName" :classification-name="$classificationName" />
+                            :genre-name="$genreName" :reproductive-status-name="$reproductiveStatusName" :classification-name="$classificationName"
+                            :show-weight-actions="true" :reception="$reception" />
 
                     </div>
 
@@ -93,4 +94,10 @@
         var Pic_route = "{{ $reception->pet->file->route ?? '' }}";
     </script>
     <script src="{{ asset('js/cremations/create.js') }}" defer></script>
+    <script src="{{ asset('js/pet-weights/index.js') }}" defer></script>
+@endpush
+
+@push('modals')
+    @include('pet-weights.partials.register-modal')
+    @include('pet-weights.partials.history-modal')
 @endpush

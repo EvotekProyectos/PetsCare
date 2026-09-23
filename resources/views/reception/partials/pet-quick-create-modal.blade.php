@@ -9,10 +9,17 @@
                         <div class="fw-bold fs-4 text-dark text-uppercase" id="petQuickCreateModalTitle">Nueva mascota</div>
                     </div>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                {{-- Sin data-bs-dismiss="modal": ese atributo dispara el hide()
+                     NATIVO de Bootstrap en paralelo al de cancelPetQuickCreate()
+                     (que ya llama a bootstrap.Modal...hide() por su cuenta,
+                     encadenado con receptionModal vía hideThenShow) — dos
+                     disparadores de hide() sobre el mismo modal en el mismo
+                     click, redundante e innecesario. Con solo el onclick el
+                     cierre sigue funcionando igual, sin el segundo camino. --}}
+                <button type="button" class="btn-close" aria-label="Close"
                     onclick="cancelPetQuickCreate()"></button>
             </div>
-            <form id="petQuickCreateForm">
+            <form id="petQuickCreateForm" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
 
@@ -64,17 +71,25 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-2">
-                                    <label for="qc_family_phone" class="form-label">Teléfono <span
+                                    <label for="qc_family_phone" class="form-label">Teléfono principal<span
                                             class="text-danger">*</span></label>
-                                    <input type="text" id="qc_family_phone" class="form-control"
-                                        placeholder="Teléfono identificador">
+                                    <input type="tel" id="qc_family_phone" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-2">
                                     <label for="qc_family_email" class="form-label">Correo electrónico <span
                                             class="text-danger">*</span></label>
-                                    <input type="text" id="qc_family_email" class="form-control" placeholder="Email">
+                                    <input type="email" id="qc_family_email" class="form-control" placeholder="Email">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-2">
+                                    <label for="qc_family_email_confirmation" class="form-label">Confirmar correo
+                                        electrónico <span class="text-danger">*</span></label>
+                                    <input type="email" id="qc_family_email_confirmation" class="form-control"
+                                        placeholder="Confirmar email" onpaste="return false;" ondrop="return false;"
+                                        autocomplete="off" title="Vuelve a escribir el correo, no se puede pegar">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -97,8 +112,7 @@
                                 <div class="form-group mb-2">
                                     <label for="qc_family_contact_number" class="form-label">Teléfono Contacto
                                         Autorizado <span class="text-danger">*</span></label>
-                                    <input type="text" id="qc_family_contact_number" class="form-control"
-                                        placeholder="Teléfono Contacto Autorizado">
+                                    <input type="tel" id="qc_family_contact_number" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -116,6 +130,25 @@
                         </div>
 
                         <hr>
+                    </div>
+
+                    {{-- Foto: mismo campo/comportamiento que pet/form.blade.php (input
+                         file oculto, se activa al clic sobre la imagen; sin accept/capture
+                         extra, así que el picker nativo ya ofrece cámara igual que ahí).
+                         name="file" a propósito: es el nombre que espera File::uploadFile(),
+                         reutilizado tal cual por PetController::quickCreate(). --}}
+                    <div class="row">
+                        <div class="col-md-12 d-flex justify-content-center mb-2">
+                            <div class="form-group text-center">
+                                <label for="qc_pet_photo_file" class="form-label d-block">Foto</label>
+                                <label for="qc_pet_photo_file">
+                                    <img src="{{ asset('img/pet_pic.png') }}" alt="Foto Mascota"
+                                        id="qc_pet_photo_preview" class="img-fixed"
+                                        style="width: 90px; height: 90px; object-fit: cover; border-radius: 50px;">
+                                </label>
+                                <input type="file" id="qc_pet_photo_file" name="file" style="display: none">
+                            </div>
+                        </div>
                     </div>
 
                     {{-- Datos de la mascota: siempre visibles --}}
@@ -151,8 +184,10 @@
                             <div class="form-group mb-2">
                                 <label for="qc_pet_breed_id" class="form-label">Raza</label>
                                 {{-- Poblado por JS (breedSelectCascade.js) al elegir especie;
-                                     mismo endpoint que usa Form Pet. --}}
-                                <select id="qc_pet_breed_id" class="form-control" disabled>
+                                     mismo endpoint que usa Form Pet. select2 (buscador) se
+                                     inicializa en ensureQcSelect2Init(), igual que
+                                     qc_existing_family_id. --}}
+                                <select id="qc_pet_breed_id" class="form-control select2" disabled>
                                     <option value="">Selecciona primero una especie</option>
                                 </select>
                             </div>
@@ -215,6 +250,13 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-2">
+                                <label for="qc_pet_notes" class="form-label">Notas</label>
+                                <input type="text" id="qc_pet_notes" class="form-control"
+                                    placeholder="Notas acerca de la mascota (opcional)">
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -229,3 +271,12 @@
         </div>
     </div>
 </div>
+
+@push('styles')
+    <link href="{{ asset('vendor/intl-tel-input/css/intlTelInput.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/intl-tel-input-bootstrap.css') }}" rel="stylesheet">
+@endpush
+
+@push('scripts')
+    <script src="{{ asset('vendor/intl-tel-input/js/intlTelInputWithUtils.min.js') }}" defer></script>
+@endpush

@@ -1,20 +1,29 @@
 <div class="row padding-1 p-1">
     <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group mb-2">
-                    <label for="diagnosis_prescription" class="form-label">DIAGNOSTICO</label>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text bg-primary-subtle" id="basic-addon1">
-                            <img src="{{ asset('img/consulta.png') }}" alt="Foto Mascota" class="img-fixed"
-                                style="width: 20px; height: 20px; object-fit: cover; ">
-                        </span>
-                        <input type="text" class="form-control" value="{{ $prescription?->diagnosis }}"
-                            id="diagnosis_prescription" readonly>
+        {{-- $hideDiagnosis: usado únicamente por el modal de detalle de
+             Consulta en el Historial de la mascota (ver
+             AppointmentController::detailsModal()), donde el diagnóstico ya
+             se muestra en Registro clínico justo arriba — es el mismo dato
+             (la Fórmula Médica lo copia automáticamente del Appointment, ver
+             PrescriptionController::store()). appointment/show.blade.php no
+             pasa esta variable, así que sigue mostrándolo igual que hoy. --}}
+        @unless($hideDiagnosis ?? false)
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group mb-2">
+                        <label for="diagnosis_prescription" class="form-label">DIAGNOSTICO</label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-primary-subtle" id="basic-addon1">
+                                <img src="{{ asset('img/consulta.png') }}" alt="Foto Mascota" class="img-fixed"
+                                    style="width: 20px; height: 20px; object-fit: cover; ">
+                            </span>
+                            <input type="text" class="form-control" value="{{ $prescription?->diagnosis }}"
+                                id="diagnosis_prescription" readonly>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endunless
 
         <div class="d-flex justify-content-between align-items-center">
             <h5 class="text-uppercase">

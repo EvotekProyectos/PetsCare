@@ -67,7 +67,9 @@ class RedSheetController extends Controller
     public function store(RedSheetRequest $request)
     {
         $this->authorize("create", RedSheet::class);
-        $this->guardReceptionNotTransferred(Reception::findOrFail($request->reception_id));
+        $reception = Reception::findOrFail($request->reception_id);
+        $this->guardReceptionNotTransferred($reception);
+        $this->guardReceptionNotDischarged($reception);
 
         $common = [
             'reception_id' => $request->reception_id,
@@ -199,12 +201,24 @@ class RedSheetController extends Controller
     {
         $reception = Reception::with('pet', 'admissionType', 'area', 'currentHospitalizationStatus.hospitalizationStatus')->findorfail($id);
 
-        // Una hospitalización ya trasladada o dada de alta no se puede
-        // seguir atendiendo, solo consultar en modo lectura (ver
-        // ReceptionTransferController::markOriginAsTransferred() y
-        // HospitalizationController::discharge()/registerDeathDischarge()).
+        // Editable en "Trasladado" (recién creada por un traslado desde
+        // Consulta, todavía sin firmar la responsiva de Hospital — ver
+        // ReceptionTransferController::seedInitialStatusHistory() y
+        // ::store(), que ahora manda al médico aquí directo) y en
+        // "Hospitalizado" (ya firmada, o creada directamente sin traslado).
+        // Cualquier otro estatus con nombre (ej. "Dado de alta") deja de ser
+        // editable, igual que si ESTA MISMA recepción ya fue trasladada a
+        // otra (isTransferred(), ej. Hospitalización -> Cremación) — ese
+        // caso no se distingue por nombre de estatus porque
+        // markOriginAsTransferred() reutiliza el mismo nombre "Trasladado"
+        // para "se trasladó hacia afuera", así que isTransferred() es la
+        // única señal confiable para excluirlo (ver
+        // HospitalizationController::discharge()/registerDeathDischarge()
+        // para "Dado de alta").
         $currentStatusName = $reception->currentHospitalizationStatus?->hospitalizationStatus?->name;
-        if ($currentStatusName && $currentStatusName !== 'Hospitalizado') {
+        $editableHospitalizationStatuses = ['Trasladado', 'Hospitalizado'];
+
+        if ($reception->isTransferred() || ($currentStatusName && !in_array($currentStatusName, $editableHospitalizationStatuses, true))) {
             return redirect()->route('redsheet.show', $id);
         }
 

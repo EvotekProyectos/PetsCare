@@ -4,232 +4,234 @@
     CARTILLA VIRTUAL
 @endsection
 
+@section('design')
+    <link rel="stylesheet" href="{{ asset('css/appointment.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/receptions/index.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/redsheets/timeline.css') }}">
+@endsection
+
+
 @section('content')
     <section class="content container-fluid">
         <div class="row">
-            <div class="col-md-12">
-                <div class="card bg-primary-soft border-0 p-3">
-                    <div class="card-header bg-transparent border-0"
-                        style="display: flex; justify-content: space-between; align-items: center;">
-                        <div class="float-left">
-                            <div class=" d-flex justify-content-between align-items-center">
-                                <h4 id="card_title" class=" text-uppercase" style="color: #0445A0">
-                                    <span class="healthicons--syringe-vaccine"></span> CARTILLA VIRTUAL
-                                    </h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body ">
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
-                                        datos de tu mascota
-                                    </h5>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="text-center">
-                                            <img src="{{ asset('img/pic.png') }}" alt="Foto Mascota" id="preview"
-                                                class="img-fixed" style="width: 115px; height: 115px; object-fit: cover;  ">
+            @if ($message = Session::get('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <p>{{ $message }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
 
-                                        </div>
-                                    </div>
-                                    <div class="col-9">
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <p style="font-weight: bold">Nombre: <span style="font-weight: normal">
-                                                        {{ $pet->name }} </span></p>
-                                            </div>
-                                            <div class="col-6">
-                                                <p style="font-weight: bold">Especie: <span style="font-weight: normal">
-                                                        {{ $pet->specie }} </span></p>
-                                            </div>
-                                            <div class="col-6">
-                                                <p style="font-weight: bold">Raza: <span style="font-weight: normal">
-                                                        {{ $pet->raza }} </span></p>
-                                            </div>
-                                            <div class="col-6">
-                                                <p style="font-weight: bold">Género: <span style="font-weight: normal">
-                                                        {{ $pet->genre->name }} </span></p>
-                                            </div>
-                                            <div class="col-6">
-                                                <p style="font-weight: bold">E. Reproductivo: <span
-                                                        style="font-weight: normal">
-                                                        {{ $pet->reproductiveStatus->name }} </span></p>
-                                            </div>
-                                            <div class="col-6">
-                                                @php
-                                                    $birthday = \Carbon\Carbon::parse($pet->birthday);
-                                                    $now = \Carbon\Carbon::now();
+            <div class="col-12">
+                @php
+                    $birthday = \Carbon\Carbon::parse($pet->birthday);
+                    $now = now();
 
-                                                    $years = $birthday->diffInYears($now);
-                                                    $months = $birthday->copy()->addYears($years)->diffInMonths($now);
-                                                    $days = $birthday
-                                                        ->copy()
-                                                        ->addYears($years)
-                                                        ->addMonths($months)
-                                                        ->diffInDays($now);
-                                                @endphp
-                                                <p style="font-weight: bold">Edad: <span style="font-weight: normal">
-                                                        {{ $years }} años, {{ $months }} meses, y
-                                                        {{ $days }}
-                                                        días
-                                                    </span></p>
-                                            </div>
-                                            <div class="col-6">
-                                                <p style="font-weight: bold">Peso: <span style="font-weight: normal">
-                                                        {{ $pet->weight }} </span></p>
-                                            </div>
-                                            <div class="col-6">
-                                                <p style="font-weight: bold">Descripción física: <span
-                                                        style="font-weight: normal">
-                                                        {{ $pet->physic_descrip }} </span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    $years = $birthday->diffInYears($now);
+                    $months = $birthday->copy()->addYears($years)->diffInMonths($now);
+                    $days = $birthday->copy()->addYears($years)->addMonths($months)->diffInDays($now);
 
-                            <div class="col-6">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h5 id="card_title" class=" text-uppercase" style="color: #BEBEBE">
-                                        datos de la veterinaria
-                                    </h5>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="text-center">
-                                            <img src="{{ asset('img/logo-petscare.png') }}" alt="Foto Mascota"
-                                                id="preview" class="img-fixed"
-                                                style="width: 115px; height: 115px; object-fit: cover;  ">
+                    $genreName = $pet->genre?->name;
+                    $reproductiveStatusName = $pet->reproductiveStatus?->name;
+                    $classificationName = $pet->petClassification?->name;
+                @endphp
 
-                                        </div>
-                                    </div>
-                                    <div class="col-9">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <p style="font-family: sans-serif; font-size: 10pt;">
-                                                    Hospital Veterinario Pets Care <br>
-                                                    SMV160511UY0 <br>
-                                                    Blvd. Luis Donaldo Colosio 764, <br>
-                                                    25205 Saltillo, Coahuila.<br>
-                                                    8444851999 admpetscare@gmail.com</p>
-                                            </div>
-                                        </div>
-                                    </div>
+
+                <div class="appointment-content-wrapper bg-primary-soft">
+
+                    <div class="card-panel card-panel--pet-info">
+                        <div class="reception-summary">
+                            <div class="reception-summary-item">
+                                <div class="reception-summary-label">
+                                    Cartilla virtual
                                 </div>
                             </div>
                         </div>
+
+                        <x-pet-info :pet="$pet" :years="$years" :months="$months" :days="$days"
+                            :genre-name="$genreName" :reproductive-status-name="$reproductiveStatusName" :classification-name="$classificationName" :show-weight-actions="true" />
+
+                        {{-- Botones de acción: fila propia a ancho completo --}}
                         <div class="row">
-                            <div class="col d-flex justify-content-between align-items-center my-2">
-                                <div class="col">
-                                    <button class="btn btn-costum-services btn-lg text-uppercase rounded-4"
-                                        onclick="OpenCarnet()">
+                            <div class="col-12">
+                                <div class="d-flex flex-wrap justify-content-center gap-3 action-buttons-divider">
+
+                                    <button type="button" class="action-link" onclick="OpenCarnet()">
                                         <span class="badge custom-badge-pill"><span
                                                 class="healthicons--syringe-vaccine"></span></span> Registrar
                                     </button>
+
+                                    <a href="{{ route('certificate.imprimir', $pet?->id) }}" target="blank"
+                                        class="action-link">
+                                        <i class="fas fa-pills"></i>
+                                        <span>Imprimir Cartilla</span>
+                                    </a>
+
+                                    {{--  
+                                    <button type="button" class="action-link"
+                                        onclick="window.location.href='{{ route('pets.edit', ['pet' => $pet->id, 'return_to' => 'medical_history']) }}'">
+                                        <i class="fas fa-edit"></i>
+                                        <span>Editar mascota</span>
+                                    </button> --}}
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="text-uppercase" style="color: #0445A0;">
-                                <span class="fluent-mdl2--vaccination"></span> registro de vacunaciones
+                    <div class="row">
+                        <div class="col d-flex justify-content-between align-items-center my-2">
+                            <div class="col">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    @php
+                        // Mismo filtro que ya usaba la vista (por service_id),
+                        // solo calculado una vez para reusarlo en el check de
+                        // "Sin información" y en el @foreach de cada tabla.
+                        $vaccinesRegisters = $vaccineCertificates->where('service_id', 1);
+                        $dewormingExternalRegisters = $vaccineCertificates->where('service_id', 3);
+                        $dewormingInternalRegisters = $vaccineCertificates->where('service_id', 2);
+                    @endphp
+
+                    <div class="card-panel">
+                        {{-- Vacunas --}}
+                        <div class="d-flex justify-content-between align-items-center chevron-toggle pb-2"
+                            style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#vaccinesCollapse"
+                            aria-expanded="true" aria-controls="vaccinesCollapse">
+                            <h5 class="text-uppercase mb-0" style="color: #0455A0; font-size: 1rem;">
+                                Vacunas
                             </h5>
+                            <i class="fas fa-chevron-down text-primary"></i>
                         </div>
-                        <table class="table table-striped table-hover responsive w-100" id="vaccines">
-                            <thead class="thead table-primary text-uppercase">
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>Vacuna</th>
-                                    <th>Próxima Vacunación</th>
-                                    <th>M.V.Z</th>
-                                    <th>Observaciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($vaccineCertificates->where('service_id', 1) as $register)
-                                        <tr>
-                                            <td>{{ $register->application_date }}</td>
-                                            <td>{{ $register->microsip->NOMBRE ?? $register->product }} {{ $register->lab }}
-                                                {{ $register->lote }}</td>
-                                            <td>{{ $register->next_application_date }}</td>
-                                            <td>{{ $register->vet->name }}</td>
-                                            <td>{{ $register->observations }}</td>
-                                        </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
 
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="text-uppercase" style="color: #0445A0;">
-                                <span class="fluent-mdl2--bug-block"></span> programa de desparacitación externa
+                        <div class="collapse show" id="vaccinesCollapse">
+                            <div class="mt-2">
+                                @if ($vaccinesRegisters->isEmpty())
+                                    <p class="text-muted text-center py-3 mb-0">Sin información</p>
+                                @else
+                                    <table class="table table-striped table-hover responsive w-100"
+                                        id="vaccinesTable">
+                                        <thead class="thead table-primary text-uppercase">
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Vacuna</th>
+                                                <th>Próxima Vacunación</th>
+                                                <th>M.V.Z</th>
+                                                <th>Observaciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($vaccinesRegisters as $register)
+                                                <tr>
+                                                    <td>{{ $register->application_date }}</td>
+                                                    <td>{{ $register->microsip->NOMBRE ?? $register->product }}
+                                                        {{ $register->lab }} {{ $register->lote }}</td>
+                                                    <td>{{ $register->next_application_date }}</td>
+                                                    <td>{{ $register->vet->name }}</td>
+                                                    <td>{{ $register->observations }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                @endif
+                            </div>
+                        </div>
+
+                        {{-- Desparacitación externa --}}
+                        <div class="d-flex justify-content-between align-items-center chevron-toggle pb-2 mt-3"
+                            style="cursor: pointer;" data-bs-toggle="collapse"
+                            data-bs-target="#dewormingExternalCollapse" aria-expanded="true"
+                            aria-controls="dewormingExternalCollapse">
+                            <h5 class="text-uppercase mb-0" style="color: #0455A0; font-size: 1rem;">
+                                Desparacitación externa
                             </h5>
+                            <i class="fas fa-chevron-down text-primary"></i>
                         </div>
-                        <table class="table table-striped table-hover responsive w-100" id="vaccines">
-                            <thead class="thead table-primary text-uppercase">
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>Producto</th>
-                                    <th>Próxima Aplicación</th>
-                                    <th>M.V.Z</th>
-                                    <th>Observaciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($vaccineCertificates->where('service_id', 3) as $register)
-                                        <tr>
-                                            <td>{{ $register->application_date }}</td>
-                                            <td>{{ $register->microsip->NOMBRE ?? $register->product }} {{ $register->dose }}</td>
-                                            <td>{{ $register->next_application_date }}</td>
-                                            <td>{{ $register->vet->name }}</td>
-                                            <td>{{ $register->observations }}</td>
-                                        </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
 
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="text-uppercase" style="color: #0445A0;">
-                                <span class="fluent-mdl2--bug-block"></span> programa de desparacitación interna
+                        <div class="collapse show" id="dewormingExternalCollapse">
+                            <div class="mt-2">
+                                @if ($dewormingExternalRegisters->isEmpty())
+                                    <p class="text-muted text-center py-3 mb-0">Sin información</p>
+                                @else
+                                    <table class="table table-striped table-hover responsive w-100"
+                                        id="dewormingExternalTable">
+                                        <thead class="thead table-primary text-uppercase">
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Producto</th>
+                                                <th>Próxima Aplicación</th>
+                                                <th>M.V.Z</th>
+                                                <th>Observaciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($dewormingExternalRegisters as $register)
+                                                <tr>
+                                                    <td>{{ $register->application_date }}</td>
+                                                    <td>{{ $register->microsip->NOMBRE ?? $register->product }}
+                                                        {{ $register->dose }}
+                                                    </td>
+                                                    <td>{{ $register->next_application_date }}</td>
+                                                    <td>{{ $register->vet->name }}</td>
+                                                    <td>{{ $register->observations }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                @endif
+                            </div>
+                        </div>
+
+                        {{-- Desparacitación interna --}}
+                        <div class="d-flex justify-content-between align-items-center chevron-toggle pb-2 mt-3"
+                            style="cursor: pointer;" data-bs-toggle="collapse"
+                            data-bs-target="#dewormingInternalCollapse" aria-expanded="true"
+                            aria-controls="dewormingInternalCollapse">
+                            <h5 class="text-uppercase mb-0" style="color: #0455A0; font-size: 1rem;">
+                                Desparacitación interna
                             </h5>
-                        </div>
-                        <table class="table table-striped table-hover responsive w-100" id="vaccines">
-                            <thead class="thead table-primary text-uppercase">
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>Producto</th>
-                                    <th>Próxima Aplicación</th>
-                                    <th>M.V.Z</th>
-                                    <th>Observaciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($vaccineCertificates->where('service_id', 2) as $register)
-                                        <tr>
-                                            <td>{{ $register->application_date }}</td>
-                                            <td>{{ $register->microsip->NOMBRE ?? $register->product }} {{ $register->dose }}</td>
-                                            <td>{{ $register->next_application_date }}</td>
-                                            <td>{{ $register->vet->name }}</td>
-                                            <td>{{ $register->observations }}</td>
-                                        </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                        <div class="row d-flex justify-content-between align-items-center">
-                            <a type="button" href="{{ route('certificate.imprimir', $pet?->id) }}" target="blank"
-                                class="btn btn-lg text-primary">
-                                <p>Imprimir Cartilla</p>
-                            </a>
+                            <i class="fas fa-chevron-down text-primary"></i>
                         </div>
 
+                        <div class="collapse show" id="dewormingInternalCollapse">
+                            <div class="mt-2">
+                                @if ($dewormingInternalRegisters->isEmpty())
+                                    <p class="text-muted text-center py-3 mb-0">Sin información</p>
+                                @else
+                                    <table class="table table-striped table-hover responsive w-100"
+                                        id="dewormingInternalTable">
+                                        <thead class="thead table-primary text-uppercase">
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Producto</th>
+                                                <th>Próxima Aplicación</th>
+                                                <th>M.V.Z</th>
+                                                <th>Observaciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($dewormingInternalRegisters as $register)
+                                                <tr>
+                                                    <td>{{ $register->application_date }}</td>
+                                                    <td>{{ $register->microsip->NOMBRE ?? $register->product }}
+                                                        {{ $register->dose }}
+                                                    </td>
+                                                    <td>{{ $register->next_application_date }}</td>
+                                                    <td>{{ $register->vet->name }}</td>
+                                                    <td>{{ $register->observations }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                @endif
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="modal" id="ModalCertificate" tabindex="-1" role="dialog" aria-hidden="true"
-            style="display: none;">
+        <div class="modal" id="ModalCertificate" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content" style="background-color: #e9eced; border-radius: 20px;">
                     <div class="modal-header">
@@ -267,4 +269,39 @@
     </script>
 
     <script src="{{ asset('js/vaccine-certificates/show.js') }}" defer></script>
+
+    {{-- Mismo comportamiento de "sombra al expandir" que ya usa
+         appointment/create.blade.php para sus secciones chevron-toggle. --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            ['#vaccinesCollapse', '#dewormingExternalCollapse', '#dewormingInternalCollapse'].forEach(function(selector) {
+                const collapseEl = document.querySelector(selector);
+                const cardPanel = collapseEl?.closest('.card-panel');
+                if (!collapseEl || !cardPanel) return;
+
+                collapseEl.addEventListener('shown.bs.collapse', function() {
+                    cardPanel.classList.add('no-shadow');
+                });
+                collapseEl.addEventListener('hidden.bs.collapse', function() {
+                    cardPanel.classList.remove('no-shadow');
+                });
+
+                if (collapseEl.classList.contains('show')) {
+                    cardPanel.classList.add('no-shadow');
+                }
+            });
+        });
+    </script>
+@endpush
+
+@push('styles')
+    <style>
+        .chevron-toggle i {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .chevron-toggle[aria-expanded="false"] i {
+            transform: rotate(180deg);
+        }
+    </style>
 @endpush

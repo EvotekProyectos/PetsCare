@@ -58,6 +58,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
 async function AddPrescription() {
   event.preventDefault();
+
+  // El diagnóstico de la Fórmula Médica ya no se captura en su propio campo
+  // (ver prescription/form.blade.php): siempre es el de la Consulta. El
+  // listener 'change' de #diagnosis (arriba) ya lo mantiene sincronizado,
+  // pero eso depende de que el campo pierda el foco; esto garantiza el
+  // valor exacto en el momento del envío sin depender de ese evento. El
+  // backend (PrescriptionController::store()) igual lo vuelve a resolver
+  // desde la Consulta como fuente de verdad.
+  const diagnosisAppointment = document.getElementById("diagnosis");
+  const diagnosisPrescription = document.getElementById(
+    "diagnosis_prescription",
+  );
+  if (diagnosisAppointment && diagnosisPrescription) {
+    diagnosisPrescription.value = diagnosisAppointment.value;
+  }
+
   let url = route("prescriptions.store");
   let form = new FormData(document.getElementById("NewPrescription"));
   let pet = await fetch(url, { method: "POST", body: form });
@@ -98,6 +114,21 @@ async function EndAppointment() {
     return;
   }
 
+  // Validación de UX (no autoritativa): el backend (AppointmentController::store())
+  // sigue siendo quien exige de verdad un PetWeight para esta recepción, por
+  // si esta bandera en memoria no refleja el estado real (recarga de página, etc.).
+  if (
+    typeof isWeightRegisteredForReception === "function" &&
+    !isWeightRegisteredForReception(Reception_Id)
+  ) {
+    Swal.fire({
+      icon: "warning",
+      title: "Peso no registrado",
+      text: "Debes registrar el peso actual de la mascota antes de finalizar la consulta.",
+    });
+    return;
+  }
+
   const result = await Swal.fire({
     title: "¿Finalizar consulta?",
     text: "Los datos de la consulta y fórmula médica serán guardados.",
@@ -123,10 +154,18 @@ async function EndAppointment() {
       let url = route("appointments.store");
       let form = new FormData(document.getElementById("NewAppointment"));
 
-      let pet = await fetch(url, { method: "POST", body: form });
+      let pet = await fetch(url, {
+        method: "POST",
+        body: form,
+        headers: { Accept: "application/json" },
+      });
 
       if (!pet.ok) {
-        throw new Error("Error al guardar la cita");
+        // Cubre, entre otros, el caso en que el backend rechaza por falta de
+        // peso (AppointmentController::store()) aunque la validación de UX
+        // de arriba no lo haya detectado.
+        const errorData = await pet.json().catch(() => null);
+        throw new Error(errorData?.message || "Error al guardar la cita");
       }
 
       // La cita ya quedó guardada en BD, el borrador local ya no sirve.
@@ -135,6 +174,16 @@ async function EndAppointment() {
       }
 
       if (prescription.trim()) {
+        // Mismo criterio que AddPrescription(): garantiza el diagnóstico de
+        // la Fórmula Médica en el momento del envío, sin depender del
+        // evento 'change' de #diagnosis.
+        const diagnosisPrescriptionInput = document.getElementById(
+          "diagnosis_prescription",
+        );
+        if (diagnosisPrescriptionInput) {
+          diagnosisPrescriptionInput.value = interpretation;
+        }
+
         let url2 = route("prescriptions.store");
         let form2 = new FormData(document.getElementById("NewPrescription"));
         const dateInput = document.getElementById("day_next_check");
@@ -168,7 +217,7 @@ async function EndAppointment() {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Ocurrió un problema al procesar la solicitud.",
+        text: error?.message || "Ocurrió un problema al procesar la solicitud.",
       });
     }
   }
@@ -607,41 +656,14 @@ $(document).on("click", "#btnGenerarValeAppointment", function () {
     serviceIds.push($(this).data("service-id"));
   });
 
-  if (serviceIds.length === 0) {
-    Swal.fire({
-      icon: "warning",
-      title: "Selecciona al menos un insumo",
-    });
-    return;
-  }
-
-  Swal.fire({
-    title: "¿Generar vale?",
-    text: "Se generará el documento para firma del médico",
-    icon: "question",
-    showCancelButton: true,
-    confirmButtonText: "Sí, generar",
-    cancelButtonText: "Cancelar",
-  }).then((result) => {
-    if (!result.isConfirmed) return;
-
-    fetch(route("vouchers.store-products"), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-      },
-      body: JSON.stringify({
-        reception_id: Reception_Id,
-        source_type: "appointment_service",
-        source_ids: serviceIds,
-      }),
-    })
-      .then((res) => res.json())
-      .then((resp) => {
-        if (resp.success) {
-          openVoucherSignModal("generar", resp.voucher_id);
-        }
-      });
-  });
+  // Definida en vouchers/sign-modal.js: un solo SweetAlert de confirmación,
+  // luego encadena store-products + generate (el médico ya no captura
+  // cantidad ni firma, ver VoucherController::generate()).
+  generateVoucherWithoutReview(
+    "appointment_service",
+    Reception_Id,
+    serviceIds,
+    $(this),
+    () => ServicesTable.ajax.reload()
+  );
 });

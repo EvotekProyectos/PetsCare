@@ -425,7 +425,7 @@
 
         <button type="submit" class="btn btn-primary btn-sm text-uppercase rounded-4">
             Guardar
-            <i class="fas fa-check-circle"></i>
+            
         </button>
 
     </div>

@@ -31,6 +31,24 @@ use Illuminate\Support\Collection;
  */
 class AccountStatementService
 {
+    /**
+     * Memoización por episode_id, con vida solo mientras dure esta instancia
+     * (una petición HTTP típica resuelve un AccountStatementService nuevo,
+     * así que esto nunca sobrevive entre requests ni sirve datos obsoletos).
+     * Antes, una sola llamada a ReceptionController::paymentSummary()
+     * terminaba recalculando hospitalizacionServiciosPreview() desde cero
+     * 4 veces (directo + vía hospitalizacionServiciosTotal() +
+     * hospitalizacionAnticipoRequerido() + paymentMinimumRequired()) — cada
+     * una re-consultando RedSheet/Surgery/Cremation/AdmissionType/
+     * VoucherProduct otra vez. Memoizar aquí, no en cada método por
+     * separado, hace que ese recómputo desaparezca sin tocar ninguna regla
+     * de negocio: cada método sigue haciendo exactamente el mismo cálculo,
+     * solo una vez por episodio en vez de una vez por llamada.
+     */
+    private array $consultaServiciosCache = [];
+    private array $hospitalizacionServiciosCache = [];
+    private array $currentReceptionCache = [];
+
     public function __construct(private OrdenVentaService $ordenVentaService)
     {
     }
@@ -50,12 +68,19 @@ class AccountStatementService
 
         $account = $reception->episode->account ?? null;
         $salesOrder = $account ? $account->salesOrders()->latest('id')->first() : null;
+        $advancePayments = $this->advancePaymentsFor($account);
 
         return [
             'reception' => [
                 'id' => $reception->id,
                 'pet_name' => $reception->pet->name ?? null,
                 'family_name' => $reception->pet->family->name ?? null,
+                // Mismo campo/relación que ya usa ReceptionController::
+                // documents() para el botón "Enviar por WhatsApp" del modal
+                // de Documentos — se agrega aquí para que el modal de Estado
+                // de Cuenta pueda ofrecer el mismo botón sin una consulta
+                // aparte ni asumir un teléfono.
+                'family_phone' => $reception->pet->family->phone ?? null,
             ],
             'groups' => $groups,
             'total' => $total,
@@ -64,25 +89,227 @@ class AccountStatementService
                 'folio' => $salesOrder->folio,
                 'status' => $salesOrder->status,
             ] : null,
+            'advance_payments' => $this->advancePaymentsSummary($advancePayments),
+            'advance_payments_total' => $this->advancePaymentsTotal($advancePayments),
             'can_close' => $this->canClose($reception),
             'close_requirement' => $this->cannotCloseMessage($reception),
         ];
     }
 
     /**
-     * Datos para el PDF informativo 
+     * Datos para el PDF informativo
      */
     public function pdfData(Reception $reception): array
     {
-        $reception->loadMissing(['pet.family', 'family', 'vet', 'receptionType']);
+        $reception->loadMissing(['pet.family', 'family', 'vet', 'receptionType', 'episode.account']);
 
         $items = $this->ordenVentaService->previsualizar($this->articulosFor($reception));
+        $advancePayments = $this->advancePaymentsFor($reception->episode->account ?? null);
 
         return [
             'reception' => $reception,
             'items' => $items,
             'total' => $items->sum('total'),
+            'advance_payments' => $this->advancePaymentsSummary($advancePayments),
+            'advance_payments_total' => $this->advancePaymentsTotal($advancePayments),
         ];
+    }
+
+    /**
+     * Anticipos ya ligados a la cuenta de esta recepción (ver
+     * AdvancePaymentController::store() / advance-payments:backfill-accounts).
+     * Puramente informativo por ahora: no se restan del total ni se filtran
+     * por status, porque status=1 ("pagado") todavía no lo pone nada en el
+     * sistema — cuando exista ese flujo, esto deberá filtrar por status=1.
+     */
+    private function advancePaymentsFor(?Account $account): Collection
+    {
+        if (!$account) {
+            return collect();
+        }
+
+        return $account->advancePayments()->orderBy('date')->get();
+    }
+
+    private function advancePaymentsSummary(Collection $advancePayments): Collection
+    {
+        return $advancePayments->map(fn ($advancePayment) => [
+            'id' => $advancePayment->id,
+            'reference' => $advancePayment->reference,
+            'concept' => $advancePayment->concept,
+            'date' => $advancePayment->date,
+            'amount' => (float) $advancePayment->amount,
+        ])->values();
+    }
+
+    private function advancePaymentsTotal(Collection $advancePayments): float
+    {
+        return (float) $advancePayments->sum(fn ($advancePayment) => (float) $advancePayment->amount);
+    }
+
+    /**
+     * Saldo pendiente de la porción de Consulta del episodio de $reception:
+     * total cobrable de las Reception tipo Consulta (1) del episodio, menos
+     * los anticipos ya registrados en la cuenta (Episode hasOne Account: es
+     * la MISMA cuenta que seguirá usando la Hospitalización si hubo un
+     * traslado, así que cualquier anticipo ya pagado cuenta aquí sin
+     * importar en qué recepción del episodio se haya capturado).
+     *
+     * Usado para exigir el pago de la consulta antes de admitir la
+     * hospitalización (ver ReceptionController::hospital_authorization() y
+     * AdvancePaymentController::payConsulta()). Si el episodio no tiene
+     * ninguna Reception de Consulta (ej. hospitalización sin traslado
+     * previo), el total es 0 y no bloquea nada.
+     */
+    public function consultaBalance(Reception $reception): float
+    {
+        $account = $reception->episode->account ?? null;
+        if (!$account) {
+            return 0.0;
+        }
+
+        $pagado = $this->advancePaymentsTotal($this->advancePaymentsFor($account));
+
+        return max(0.0, $this->consultaTotal($reception) - $pagado);
+    }
+
+    /**
+     * Líneas (nombre/cantidad/precio/total, vía OrdenVentaService::previsualizar())
+     * de TODOS los servicios de Consulta actualmente registrados en el
+     * episodio de $reception — mismo criterio/estructura que
+     * hospitalizacionServiciosPreview(), para poder representar la Consulta
+     * como un concepto real (no un mensaje aparte) en el Modal de Pago (ver
+     * ReceptionController::paymentSummary()). Memoizado por episode_id: ver
+     * comentario en las propiedades de la clase.
+     */
+    public function consultaServiciosPreview(Reception $reception): Collection
+    {
+        $episodeId = $reception->episode_id;
+
+        if (array_key_exists($episodeId, $this->consultaServiciosCache)) {
+            return $this->consultaServiciosCache[$episodeId];
+        }
+
+        $consultaReceptionIds = Reception::where('episode_id', $episodeId)
+            ->where('reception_type_id', 1)
+            ->pluck('id');
+
+        return $this->consultaServiciosCache[$episodeId] = $this->ordenVentaService->previsualizar(
+            $this->consolidarCantidades($this->consultaArticulos($consultaReceptionIds))
+        );
+    }
+
+    /**
+     * Total cobrable (sin restar anticipos) de la porción de Consulta del
+     * episodio de $reception. 0.0 si el episodio no tiene ninguna Reception
+     * de Consulta (ej. hospitalización sin traslado previo).
+     */
+    private function consultaTotal(Reception $reception): float
+    {
+        return (float) $this->consultaServiciosPreview($reception)->sum('total');
+    }
+
+    /**
+     * Líneas (nombre/cantidad/precio/total, vía OrdenVentaService::previsualizar())
+     * de TODOS los servicios hospitalarios actualmente agregados al episodio
+     * de $reception -mismos artículos que hospitalizacionArticulos()/close(),
+     * evaluados en el momento en que se llama, nunca un valor guardado: si el
+     * médico agrega un servicio nuevo, la siguiente llamada ya lo incluye-.
+     * Vacía si el episodio no tiene ninguna Reception de Hospitalización.
+     */
+    public function hospitalizacionServiciosPreview(Reception $reception): Collection
+    {
+        $episodeId = $reception->episode_id;
+
+        if (array_key_exists($episodeId, $this->hospitalizacionServiciosCache)) {
+            return $this->hospitalizacionServiciosCache[$episodeId];
+        }
+
+        $hospitalizacionReceptionIds = Reception::where('episode_id', $episodeId)
+            ->where('reception_type_id', 2)
+            ->pluck('id');
+
+        $result = $hospitalizacionReceptionIds->isEmpty()
+            ? collect()
+            : $this->ordenVentaService->previsualizar(
+                $this->consolidarCantidades($this->hospitalizacionArticulos($hospitalizacionReceptionIds))
+            );
+
+        return $this->hospitalizacionServiciosCache[$episodeId] = $result;
+    }
+
+    /**
+     * Total cobrable (sin restar anticipos) de TODOS los servicios
+     * hospitalarios actuales del episodio de $reception. 0.0 si no hay
+     * ninguno agregado todavía (o no hay ninguna Reception de Hospitalización).
+     */
+    public function hospitalizacionServiciosTotal(Reception $reception): float
+    {
+        return (float) $this->hospitalizacionServiciosPreview($reception)->sum('total');
+    }
+
+    /**
+     * Anticipo requerido sobre los servicios hospitalarios actuales.
+     *
+     * TODO(negocio): la regla de anticipo (porcentaje, monto fijo, tabla por
+     * tipo de servicio, etc.) todavía NO está definida — no se debe asumir
+     * ningún valor. Mientras tanto se devuelve 0.0: no se exige ningún
+     * anticipo, así que paymentMinimumRequired() de abajo se reduce al
+     * saldo de consulta de siempre (sin cambio de comportamiento). Este es
+     * el ÚNICO lugar que hay que tocar para incorporar la regla real —
+     * AdvancePaymentController::payHospitalizacion() y el modal de
+     * Recepción ya la consumen desde aquí, no hace falta tocarlos.
+     */
+    public function hospitalizacionAnticipoRequerido(Reception $reception): float
+    {
+        $serviciosTotal = $this->hospitalizacionServiciosTotal($reception);
+
+        // TODO(negocio): aplicar aquí la regla real, ej.:
+        //   return round($serviciosTotal * 0.5, 2);
+        // Por ahora, sin regla definida, no se exige anticipo.
+        return 0.0;
+    }
+
+    /**
+     * Monto mínimo que Recepción debe cobrar para considerar "resuelto" el
+     * caso de una hospitalización (trasladada o directa): saldo pendiente
+     * de la consulta + anticipo de servicios hospitalarios. Ya NO es una
+     * condición de acceso a Red Sheet (ver RedSheetController::entry(), que
+     * dejó de depender del pago) — es puramente informativo/de cobro para
+     * Recepción (ver AdvancePaymentController::payHospitalizacion()).
+     */
+    public function paymentMinimumRequired(Reception $reception): float
+    {
+        return $this->consultaBalance($reception) + $this->hospitalizacionAnticipoRequerido($reception);
+    }
+
+    /**
+     * Para el botón "Documentos" del Index de Hospitalización: si la
+     * hospitalización viene de una Consulta trasladada, ese botón debe
+     * quedar oculto hasta que exista un anticipo CONFIRMADO (status=1, ver
+     * AdvancePaymentController::payConsulta()) cuyo monto sea exactamente el
+     * total de esa consulta — no basta con que el saldo llegue a 0 sumando
+     * varios anticipos parciales. Si no hay ninguna Consulta en el episodio
+     * (hospitalización directa), esta regla no aplica y no bloquea nada.
+     */
+    public function hasConfirmedConsultaPayment(Reception $reception): bool
+    {
+        $consultaTotal = $this->consultaTotal($reception);
+        if ($consultaTotal <= 0) {
+            return true;
+        }
+
+        $account = $reception->episode->account ?? null;
+        if (!$account) {
+            return false;
+        }
+
+        // round(): amount es decimal(8,2) — evita falsos negativos por
+        // arrastre de precisión de punto flotante en la suma de $consultaTotal.
+        return $account->advancePayments()
+            ->where('status', 1)
+            ->where('amount', round($consultaTotal, 2))
+            ->exists();
     }
 
     /**
@@ -472,7 +699,7 @@ class AccountStatementService
             return false;
         }
 
-        $current = Reception::currentForEpisode($reception->episode_id);
+        $current = $this->currentReceptionForEpisode($reception->episode_id);
         if (!$current || $current->id !== $reception->id) {
             return false;
         }
@@ -504,7 +731,7 @@ class AccountStatementService
 
     private function cannotCloseMessage(Reception $reception): string
     {
-        $current = Reception::currentForEpisode($reception->episode_id);
+        $current = $this->currentReceptionForEpisode($reception->episode_id);
 
         if ($current && $current->id !== $reception->id) {
             return 'Esta recepción fue trasladada; el cierre de cuenta ahora se gestiona desde la recepción vigente del episodio.';
@@ -518,6 +745,21 @@ class AccountStatementService
             5 => 'Solo se puede cerrar la cuenta cuando la cremación está recién creada, antes de iniciar el servicio.',
             default => 'No se puede cerrar la cuenta de este tipo de recepción.',
         };
+    }
+
+    /**
+     * Reception::currentForEpisode() memoizado: canClose() y
+     * cannotCloseMessage() lo pedían cada uno por separado dentro de la
+     * misma llamada a preview() — mismo motivo que las otras memoizaciones
+     * de esta clase.
+     */
+    private function currentReceptionForEpisode(int $episodeId): ?Reception
+    {
+        if (array_key_exists($episodeId, $this->currentReceptionCache)) {
+            return $this->currentReceptionCache[$episodeId];
+        }
+
+        return $this->currentReceptionCache[$episodeId] = Reception::currentForEpisode($episodeId);
     }
 
     private function latestHotel(int $receptionId): ?Hotel

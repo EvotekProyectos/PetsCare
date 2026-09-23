@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property $id
  * @property $reception_id
+ * @property $account_id
  * @property $reference
  * @property $concept
  * @property $date
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property $deleted_at
  *
  * @property Reception $reception
+ * @property Account $account
  * @property User $user
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
@@ -38,7 +40,7 @@ class AdvancePayment extends Model
      *
      * @var array
      */
-    protected $fillable = ['reception_id', 'reference', 'concept', 'date', 'amount', 'user_id', 'status'];
+    protected $fillable = ['reception_id', 'account_id', 'reference', 'concept', 'date', 'amount', 'user_id', 'status'];
 
 
     /**
@@ -48,7 +50,15 @@ class AdvancePayment extends Model
     {
         return $this->belongsTo(\App\Models\Reception::class, 'reception_id', 'id');
     }
-    
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function account()
+    {
+        return $this->belongsTo(\App\Models\Account::class, 'account_id', 'id');
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

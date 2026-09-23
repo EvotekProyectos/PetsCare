@@ -10,6 +10,7 @@ use App\Models\Reception;
 use App\Models\SalesOrder;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class OrdenVentaService
@@ -29,31 +30,74 @@ class OrdenVentaService
             return collect();
         }
 
-        // PRECIOS_ARTICULOS puede tener más de una fila por ARTICULO_ID (varias
-        // listas de precio); ->unique() se queda con una sola, igual que el
-        // ->first() del código original, para no duplicar el total por el JOIN.
-        $productos = DB::connection('firebird')
-            ->table('ARTICULOS AS a')
-            ->leftJoin('PRECIOS_ARTICULOS AS pa', 'a.ARTICULO_ID', '=', 'pa.ARTICULO_ID')
-            ->whereIn('a.ARTICULO_ID', $articulos->pluck('product_id')->all())
-            ->select('a.NOMBRE', 'a.ARTICULO_ID', 'pa.PRECIO')
-            ->get()
-            ->unique('ARTICULO_ID')
-            ->keyBy('ARTICULO_ID');
+        $productos = $this->productosCacheados($articulos->pluck('product_id'));
 
         return $articulos->map(function ($item) use ($productos) {
             $producto = $productos->get($item['product_id']);
-            $unitPrice = $producto ? floatval($producto->PRECIO) : 0.0;
+            $unitPrice = $producto ? floatval($producto['PRECIO']) : 0.0;
             $quantity = $item['quantity'];
 
             return [
                 'product_id' => $item['product_id'],
-                'description' => $producto->NOMBRE ?? null,
+                'description' => $producto['NOMBRE'] ?? null,
                 'quantity' => $quantity,
                 'unit_price' => $unitPrice,
                 'total' => $unitPrice * $quantity,
             ];
         })->values();
+    }
+
+    /**
+     * Nombre/precio de un lote de ARTICULO_ID, cacheado 300s POR ARTICULO_ID
+     * individual (no por la combinación completa que se pida cada vez, que
+     * casi nunca se repite igual entre dos recepciones distintas) — mismo
+     * TTL ya usado en AppointmentController::consultation() y
+     * BudgetDetailController::price(). Antes, cada llamada a previsualizar()
+     * pagaba una conexión nueva a Firebird (~2-20s medidos) SIN cachear;
+     * llamado una vez por fila desde AccountStatementService (ver
+     * consultaTotal()/hasConfirmedConsultaPayment(), usado por el índice de
+     * Hospitalización) esto era un N+1 real contra Firebird. Solo se
+     * consulta Firebird para los ARTICULO_ID que todavía no estén en cache;
+     * el resto se resuelve de una sola vez con whereIn().
+     */
+    private function productosCacheados(Collection $ids): Collection
+    {
+        $ids = $ids->unique()->values();
+        $resultado = collect();
+        $faltantes = collect();
+
+        foreach ($ids as $id) {
+            $cached = Cache::get("firebird_articulo_{$id}");
+
+            if ($cached !== null) {
+                $resultado->put($id, $cached);
+            } else {
+                $faltantes->push($id);
+            }
+        }
+
+        if ($faltantes->isNotEmpty()) {
+            // PRECIOS_ARTICULOS puede tener más de una fila por ARTICULO_ID
+            // (varias listas de precio); ->unique() se queda con una sola,
+            // igual que el ->first() del código original, para no duplicar
+            // el total por el JOIN.
+            $encontrados = DB::connection('firebird')
+                ->table('ARTICULOS AS a')
+                ->leftJoin('PRECIOS_ARTICULOS AS pa', 'a.ARTICULO_ID', '=', 'pa.ARTICULO_ID')
+                ->whereIn('a.ARTICULO_ID', $faltantes->all())
+                ->select('a.NOMBRE', 'a.ARTICULO_ID', 'pa.PRECIO')
+                ->get()
+                ->unique('ARTICULO_ID')
+                ->keyBy('ARTICULO_ID');
+
+            foreach ($encontrados as $id => $row) {
+                $data = ['NOMBRE' => $row->NOMBRE, 'PRECIO' => $row->PRECIO];
+                Cache::put("firebird_articulo_{$id}", $data, 300);
+                $resultado->put($id, $data);
+            }
+        }
+
+        return $resultado;
     }
 
     /**

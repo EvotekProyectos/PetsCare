@@ -77,6 +77,14 @@ class Account extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function advancePayments()
+    {
+        return $this->hasMany(\App\Models\AdvancePayment::class, 'account_id', 'id');
+    }
+
+    /**
      * Único total real de una cuenta: no existe ningún campo persistido con
      * el monto (ni en Account ni en SalesOrder) — Charge.total
      * creado por OrdenVentaService::generar() al cerrar la cuenta
@@ -100,5 +108,18 @@ class Account extends Model
     public function latestSalesOrder()
     {
         return $this->hasOne(\App\Models\SalesOrder::class, 'account_id', 'id')->latestOfMany();
+    }
+
+    /**
+     * Anticipo más reciente de la cuenta, por su fecha efectiva (no por id/
+     * created_at) — es la fecha que el usuario capturó/el backend asignó al
+     * registrar el anticipo (ver AdvancePaymentController::store()).
+     * Usado por NotifyOverdueAdvancePayments para la regla de 48 horas.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function latestAdvancePayment()
+    {
+        return $this->hasOne(\App\Models\AdvancePayment::class, 'account_id', 'id')->latestOfMany('date');
     }
 }

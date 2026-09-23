@@ -52,7 +52,9 @@
                         <textarea id="voucherSignObservaciones" class="form-control" rows="3"></textarea>
                     </div>
 
-                    <div class="text-center">
+                    {{-- Oculto por completo cuando la acción no requiere firma
+                         (surtir/rechazar), ver requireSignature en sign-modal.js. --}}
+                    <div id="voucherSignCanvasWrap" class="text-center">
                         <canvas id="voucherSignCanvas" width="300" height="120"
                             style="border: 1px solid #E5E7EB; border-radius: 6px; background: #fff;"></canvas>
                         <div>

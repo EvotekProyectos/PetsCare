@@ -70,6 +70,29 @@ function formatDate(fecha, incluirHora = false) {
     return resultado;
 }
 
+// Columna de fecha para DataTables con orden cronológico correcto.
+//
+// `render: formatDate` (uso previo) tiene dos problemas: (1) DataTables
+// invoca render(data, type, row) y ese `type` ("display"/"sort"/"filter"/
+// "type") caía en el parámetro `incluirHora` de formatDate, siempre truthy,
+// así que la hora aparecía sin haberla pedido; y (2) al no diferenciar
+// "sort" de "display", DataTables ordenaba por el string ya formateado
+// "DD/MM/YYYY", que se compara alfabéticamente por el día primero -> el
+// orden queda incorrecto (ej. "05/01/2026" antes que "12/12/2025").
+//
+// Esta función usa datos ortogonales: para "sort"/"type" regresa el string
+// ISO tal cual llega del backend ("YYYY-MM-DD HH:mm:ss"), que sí ordena
+// cronológicamente como texto; para "display"/"filter" regresa la fecha ya
+// formateada con formatDate().
+function renderDateColumn(incluirHora = false) {
+    return function (data, type) {
+        if (type === 'sort' || type === 'type') {
+            return data || '';
+        }
+        return formatDate(data, incluirHora);
+    };
+}
+
 // Deriva una versión clara del mismo tono de `hex`, mezclándolo con blanco.
 // Se usa para los badges "soft" (fondo claro + texto del color original),
 // ej. estatus de recepción o motivo de consulta, donde el color base viene
@@ -255,6 +278,87 @@ const deleteServicieHotel = (id, table) => {
 const deleteControlDate = (id, table) => {
     const url = route("control-dates.destroy", id);
     deleteResource(url, table);
+}
+
+/**
+ * Arranca un polling estándar de "¿cambió algo?" -> recargar: llama a
+ * `checkFn` DE INMEDIATO y luego cada `intervalMs`; si el valor que
+ * resuelve (ej. un timestamp `last_update`) cambió respecto al anterior,
+ * llama a `onChanged`. Usado por las tablas de los distintos Index/vistas
+ * con polling (Recepciones, Hospital, Consultas, Almacén, RedSheets...).
+ *
+ * Por qué existe (dos bugs reales ya diagnosticados en este proyecto, que
+ * cada tabla repetía o no según qué copia del patrón se hubiera escrito):
+ *
+ * 1) Si la primera vez que se consulta el estado es recién en el primer
+ *    tick del setInterval (a los intervalMs, no al momento de entrar a la
+ *    vista), cualquier cambio ocurrido en esa primera ventana queda
+ *    "absorbido" como línea base sin haberlo comparado nunca contra un
+ *    estado anterior -ese primer tick solo GUARDA el valor, no dispara
+ *    onChanged-, y ningún tick posterior lo detecta jamás (la línea base
+ *    ya lo incluye desde el principio). Para quien usa la página eso es
+ *    indistinguible de "la tabla se quedó sin actualizar": nada la refresca
+ *    hasta la siguiente carga completa de la página. Por eso este helper
+ *    llama a checkFn() de inmediato, antes de armar el setInterval.
+ * 2) Si el usuario navega a otra vista y regresa con "Atrás", algunos
+ *    navegadores restauran la página entera desde bfcache en vez de
+ *    recargarla: el DOM, las variables JS y los timers quedan congelados
+ *    tal cual estaban y se reanudan igual, sin que $(document).ready()
+ *    vuelva a correr. El polling sigue vivo, pero hasta el próximo tick
+ *    programado la tabla sigue mostrando lo que había al salir de la
+ *    página -se percibe como "tarda mucho en cargar" al volver-. Por eso
+ *    este helper también escucha 'pageshow' y, si event.persisted es
+ *    true (restaurada desde bfcache), fuerza un chequeo inmediato.
+ *
+ * Un tick que falla (red, sesión expirada, 500, etc.) se registra en
+ * consola y no detiene los siguientes: el próximo tick programado corre
+ * igual, por su cuenta -nunca queda el polling parado en seco por un solo
+ * error, ni se generan peticiones duplicadas como reintento-.
+ *
+ * @param {Object} options
+ * @param {() => (any|Promise<any>)} options.checkFn - hace el fetch/ajax
+ *   (puede devolver un jqXHR/Promise) y resuelve con el valor de "última
+ *   actualización" a comparar contra el anterior.
+ * @param {(value: any) => void} options.onChanged - se llama solo cuando
+ *   ese valor cambió respecto al anterior (nunca en el primer chequeo).
+ * @param {number} [options.intervalMs=30000]
+ * @returns {() => void} función para detener el polling (clearInterval +
+ *   quita el listener de 'pageshow'), por si la vista lo necesita.
+ */
+function pollForChanges({ checkFn, onChanged, intervalMs = 30000 }) {
+    let lastValue = null;
+
+    function tick() {
+        Promise.resolve(checkFn())
+            .then(function (value) {
+                if (lastValue === null) {
+                    lastValue = value;
+                    return;
+                }
+                if (value !== lastValue) {
+                    lastValue = value;
+                    onChanged(value);
+                }
+            })
+            .catch(function (error) {
+                console.error('pollForChanges: chequeo fallido, se reintenta en el próximo ciclo.', error);
+            });
+    }
+
+    function onPageShow(event) {
+        if (event.persisted) {
+            tick();
+        }
+    }
+
+    tick();
+    const intervalId = setInterval(tick, intervalMs);
+    window.addEventListener('pageshow', onPageShow);
+
+    return function stopPolling() {
+        clearInterval(intervalId);
+        window.removeEventListener('pageshow', onPageShow);
+    };
 }
 
 const deleteAdvancePayment = (id, table) => {

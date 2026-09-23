@@ -103,6 +103,7 @@
 @push('scripts')
     <script>
         var HOSPITALIZATION_STATUS_HOSPITALIZADO_ID = {{ (int) $hospitalizadoStatusId }};
+        var HOSPITALIZATION_STATUS_TRASLADADO_ID = {{ (int) $trasladadoStatusId }};
     </script>
     <script src="{{ asset('js/assignments/hospital.js') }}" defer></script>
 @endpush

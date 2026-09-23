@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('template_title')
-    Voucher
+    VALES
 @endsection
 
 @section('vouchers', 'active border-start border-3 border-primary')

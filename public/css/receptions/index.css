@@ -265,3 +265,21 @@
     color: #9CA3AF;
     margin-top: 6px;
 }
+
+/* Resaltado temporal del renglón de Hospitalización localizado desde el
+   badge "Trasladado a Hospitalización" de la pestaña Consultas (ver
+   goToHospitalizationReception()/highlightHospitalizationRow() en
+   receptions/index.js). Se agrega/quita por JS, nunca queda permanente. */
+.row-highlight-flash {
+    animation: row-highlight-flash-fade 3s ease-out;
+}
+
+@keyframes row-highlight-flash-fade {
+    0% {
+        background-color: #FFF3B0;
+    }
+
+    100% {
+        background-color: transparent;
+    }
+}

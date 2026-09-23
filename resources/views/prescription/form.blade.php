@@ -57,24 +57,17 @@
                 </div>
             </div>
 
-            <div class="col-md-12">
-                <div class="form-group mb-2">
-                    <label for="name" class="form-label">DIAGNOSTICO
-                        
-                    </label>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text bg-primary-subtle" id="basic-addon1">
-                            <img src="{{ asset('img/consulta.png') }}" alt="Foto Mascota" id="preview"
-                                class="img-fixed" style="width: 20px; height: 20px; object-fit: cover; ">
-                        </span>
-                        <input type="text" name="diagnosis"
-                            class="form-control @error('diagnosis') is-invalid @enderror"
-                            value="{{ old('diagnosis', $prescription?->diagnosis) }}" id="diagnosis_prescription"
-                            placeholder="Diagnóstico">
-                        {!! $errors->first('diagnosis', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-                    </div>
-                </div>
-            </div>
+            {{-- El diagnóstico de la Fórmula Médica ya no se captura aquí: es
+                 siempre el mismo de la Consulta (campo #diagnosis en
+                 appointment/form.blade.php, dentro de esta misma página).
+                 public/js/appointments/create.js sincroniza este hidden con
+                 el valor de #diagnosis (evento 'change' + al finalizar la
+                 consulta); de cualquier forma, el backend
+                 (PrescriptionController::store()) vuelve a resolverlo desde
+                 la Consulta asociada como fuente de verdad, sin confiar en
+                 lo que llegue del navegador. --}}
+            <input type="hidden" name="diagnosis" id="diagnosis_prescription"
+                value="{{ old('diagnosis', $prescription?->diagnosis) }}">
         </div>
 
 

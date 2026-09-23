@@ -85,7 +85,8 @@
                         </div>
 
                          <x-pet-info :pet="$reception->pet" :years="$years" :months="$months" :days="$days"
-                            :genre-name="$genreName" :reproductive-status-name="$reproductiveStatusName" :classification-name="$classificationName" />
+                            :genre-name="$genreName" :reproductive-status-name="$reproductiveStatusName" :classification-name="$classificationName"
+                            :show-weight-actions="true" :reception="$reception" />
 
                         {{-- Botones de acción: fila propia a ancho completo --}}
                         <div class="row">
@@ -109,6 +110,16 @@
                                         onclick="window.open('{{ route('pet-history.index', ['id' => $reception->pet_id, 'type' => 2]) }}', '_blank')">
                                         <i class="fas fa-notes-medical"></i>
                                         <span>Historial médico</span>
+                                    </button>
+
+                                    {{-- Oculto por defecto: solo se muestra si de verdad existe un
+                                         presupuesto elegible para este episodio (ver
+                                         checkBudgetConversionEligibility(), en
+                                         public/js/budgets/conversion-modal.js). --}}
+                                    <button type="button" class="action-link" id="btnConvertBudget"
+                                        style="display: none;" onclick="openBudgetConversionModal()">
+                                        <i class="fas fa-money-check-alt"></i>
+                                        <span>Convertir presupuesto a servicios</span>
                                     </button>
                                 </div>
                             </div>
@@ -241,6 +252,14 @@
                     <form method="POST" onsubmit="AddSurgery()" id="NewSurgery" role="form"
                         enctype="multipart/form-data">
                         @csrf
+                        {{-- Le indica a SurgeryController::store() que la fecha debe
+                             fijarla el backend (now()), en vez de confiar en el campo
+                             #date de surgery.form (oculto en este modal específico vía
+                             JS — ver createredsheets.js). Ese partial es compartido con
+                             surgery.create/edit y status-surgery, que sí necesitan poder
+                             capturar una fecha propia; por eso el override va aquí, no
+                             en el partial, y solo aplica cuando llega este campo. --}}
+                        <input type="hidden" name="use_current_date" value="1">
                         @include('surgery.form')
                     </form>
                 </div>
@@ -290,6 +309,8 @@
     <script src="{{ asset('js/receptions/transfer.js') }}" defer></script>
     <script src="{{ asset('js/vouchers/detail-modal.js') }}" defer></script>
     <script src="{{ asset('js/vouchers/sign-modal.js') }}" defer></script>
+    <script src="{{ asset('js/pet-weights/index.js') }}" defer></script>
+    <script src="{{ asset('js/budgets/conversion-modal.js') }}" defer></script>
     <script>
         function setCurrentDateTime() {
             const input = document.getElementById('date');
@@ -320,4 +341,8 @@
 
     @include('followup-intern.modal')
     @include('followups-critic.modal')
+    @include('pet-weights.partials.register-modal')
+    @include('pet-weights.partials.history-modal')
+    @include('red-sheet.partials.removal-reason-modal')
+    @include('budget.partials.conversion-modal')
 @endpush

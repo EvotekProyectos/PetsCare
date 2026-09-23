@@ -14,11 +14,11 @@
                             <h4 id="card_title" class="text-primary text-uppercase">
                                 <span class="fluent--document-28-filled"></span> FORMATOS DE <strong>{{ $pet->name }}</strong>
                             </h4>
-                            <div class="float-right">
+                            {{-- <div class="float-right">
                                 <a href="{{ route('formats.add', $pet->id) }}" class="btn btn-primary btn-sm float-right" data-placement="left">
                                     <i class="fas fa-plus"></i> AGREGAR NUEVO FORMATO
                                 </a>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
 

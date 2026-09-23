@@ -400,29 +400,28 @@ function voucherTableReload() {
 }
 
 let pollingInterval = null;
-let lastUpdate = null;
 
+// pollForChanges (global.js) chequea DE INMEDIATO (no solo en el primer
+// tick a los 15s) y además al volver de bfcache ('pageshow' + persisted) —
+// mismo helper compartido que receptions/index.js y vouchers/index.js.
 function startPolling() {
   if (pollingInterval) return;
 
-  pollingInterval = setInterval(function () {
-    $.ajax({
-      url: route("vouchers.lastUpdate"),
-      method: "GET",
-      data: { reception_id: Reception_Id },
-      success: function (response) {
-        if (lastUpdate === null) {
-          lastUpdate = response.last_update;
-          return;
-        }
-
-        if (response.last_update !== lastUpdate) {
-          lastUpdate = response.last_update;
-          fetchAndRenderData(false);
-        }
-      },
-    });
-  }, 15000);
+  pollingInterval = pollForChanges({
+    checkFn: function () {
+      return $.ajax({
+        url: route("vouchers.lastUpdate"),
+        method: "GET",
+        data: { reception_id: Reception_Id },
+      }).then(function (response) {
+        return response.last_update;
+      });
+    },
+    onChanged: function () {
+      fetchAndRenderData(false);
+    },
+    intervalMs: 15000,
+  });
 }
 
 function stopPolling() {

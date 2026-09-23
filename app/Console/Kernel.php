@@ -13,6 +13,15 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
+
+        // Regla de negocio: cuenta hospitalaria abierta sin anticipo nuevo
+        // por más de 48 horas -> notifica a recepcionistas (ver
+        // NotifyOverdueAdvancePayments). Hourly es suficiente precisión
+        // para una ventana de 48h; withoutOverlapping() por si alguna
+        // corrida tarda más de lo esperado.
+        $schedule->command('advance-payments:notify-overdue')
+            ->hourly()
+            ->withoutOverlapping();
     }
 
     /**

@@ -39,6 +39,8 @@ use App\Models\Room;
 use App\Models\Species;
 use App\Models\Surgery;
 use App\Models\User;
+use App\Services\AccountStatementService;
+use App\Services\ReceptionDocumentService;
 use Barryvdh\DomPDF\Facade\Pdf  as Pdf;
 use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\Facades\DataTables;
@@ -53,6 +55,13 @@ use PhpParser\Node\Expr\FuncCall;
  */
 class ReceptionController extends Controller
 {
+    private ReceptionDocumentService $documentService;
+
+    public function __construct(ReceptionDocumentService $documentService)
+    {
+        $this->documentService = $documentService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -179,21 +188,26 @@ class ReceptionController extends Controller
             ]);
         }
 
-        if ($request->reception_type_id == 2) { 
+        if ($request->reception_type_id == 2) {
             HospitalizationStatusHistory::create([
                 'reception_id' => $reception->id,
                 'hospitalization_status_id' => HospitalizationStatus::where('name', 'Hospitalizado')->value('id'),
                 'changed_by' => auth()->id(),
                 'changed_at' => now(),
             ]);
+            // from=reception: esta recepción se creó directamente desde
+            // Recepción (reception/form.blade.php, sin pasar por un
+            // traslado), así que al firmar la responsiva debe volver aquí y
+            // no a Hospitalizaciones (ver hospital_authorization()/
+            // hospital_auth.js).
             if ($wantsJson) {
                 return response()->json([
                     'success' => true,
                     'reception_type_id' => 2,
-                    'redirect' => route('hospital.list', ['id' => $reception->id]),
+                    'redirect' => route('hospital.list', ['id' => $reception->id, 'from' => 'reception']),
                 ]);
             }
-            return redirect()->route('hospital.list', ['id' => $reception->id])
+            return redirect()->route('hospital.list', ['id' => $reception->id, 'from' => 'reception'])
                 ->with('success', 'Recepción de hospitalización guardada exitosamente.');
         } elseif ($request->reception_type_id == 5) {
             if ($wantsJson) {
@@ -299,7 +313,7 @@ class ReceptionController extends Controller
         $veterinarians = User::role('medico')->get();      // rol id 3
         $collaborators = User::role('colaborador')->get(); // rol id 4
         $pets = Pet::where("deceased", 0)->get(); //filtra a mascotas no fallecidas
-       
+
         return view('reception.edit', compact(
             'reception',
             'admissions',
@@ -351,8 +365,17 @@ class ReceptionController extends Controller
     }
 
     /**
-     *Usado por el polling
-     * del index para saber si hay que recargar la tabla del tab activo.
+     * Usado por el polling del index para saber si hay que recargar la
+     * tabla del tab activo (ver pollForChanges/startPollingReceptions en
+     * receptions/index.js). Debe cubrir el historial de estatus de las 5
+     * pestañas del index (Consultas/Hospitalizaciones/Grooming/Hotel/
+     * Cremaciones): faltaba HotelStatusHistory -Reception no se "toca" al
+     * crear un HotelStatusHistory (no hay $touches para eso en ningún
+     * modelo), así que un cambio de estatus en Hotel (ej. asignar/liberar
+     * cubículo) no bumpeaba ni Reception::max('updated_at') ni ninguna de
+     * las otras 4 tablas ya listadas, y por lo tanto nunca disparaba un
+     * reload de esa pestaña vía polling- hasta que se recargaba la página
+     * completa.
      */
     public function lastUpdateGlobal()
     {
@@ -360,6 +383,7 @@ class ReceptionController extends Controller
             Reception::max('updated_at'),
             ReceptionStatusHistory::max('updated_at'),
             GroomingStatusHistory::max('updated_at'),
+            HotelStatusHistory::max('updated_at'),
             CremationStatusHistory::max('updated_at'),
             HospitalizationStatusHistory::max('updated_at'),
         ])
@@ -395,7 +419,8 @@ class ReceptionController extends Controller
             'currentHospitalizationStatus.hospitalizationStatus',
             'currentHotelStatus.hotelStatus',
             'episode.account',
-            'cremation'
+            'cremation',
+            'transfersFrom.toReception.receptionType'
 
         )
             ->where('reception_type_id', $reception_type_id) //filtramos el tipo de recepcion de acuerdo al id recibido en la funcion
@@ -443,7 +468,7 @@ class ReceptionController extends Controller
                     $q->where('status', $request->account_status);
                 });
             })
-           
+
             ->when(in_array($reception_type_id, [1, 3]) && $request->filled('vet_id'), function ($query) use ($request) {
                 $query->where('veterinarian_id', $request->vet_id);
             })
@@ -461,10 +486,31 @@ class ReceptionController extends Controller
             ->pluck('episode_id')
             ->unique();
 
-        $receptions = $receptions->map(function ($reception) use ($episodesWithTransfers) {
+        $accountStatementService = $reception_type_id == 2 ? app(AccountStatementService::class) : null;
+
+        $receptions = $receptions->map(function ($reception) use ($episodesWithTransfers, $accountStatementService) {
             $reception->can_edit = auth()->user()->can('update', $reception);
             $reception->can_delete = auth()->user()->can('delete', $reception);
             $reception->has_transfers = $episodesWithTransfers->contains($reception->episode_id);
+
+            // Mismo criterio que AssignmentController::appointments(): si el
+            // estatus vigente es "Trasladado", la columna Estatus muestra
+            // "Trasladado a {tipo de recepción destino}" en vez del nombre a
+            // secas. Se calcula para todas las recepciones (no solo type=1)
+            // porque transfersFrom ya se usaba para has_transfers; el label
+            // solo lo consume la tabla de Consultas.
+            $reception->transferred_to = $reception->transfersFrom->first()?->toReception?->receptionType?->name;
+
+            // Solo Hospitalización: el botón "Documentos" del index se oculta
+            // hasta que exista un anticipo confirmado por el total exacto de
+            // la consulta trasladada (ver AccountStatementService::
+            // hasConfirmedConsultaPayment()). Sin Consulta de por medio
+            // (hospitalización directa), el método ya regresa true y no
+            // afecta nada.
+            if ($accountStatementService) {
+                $reception->show_documents = $accountStatementService->hasConfirmedConsultaPayment($reception);
+            }
+
             return $reception;
         });
 
@@ -479,17 +525,30 @@ class ReceptionController extends Controller
             ->latest()
             ->get();
 
+        // Misma fuente de verdad que hospital_authorization()/
+        // hospital_authorizationpdf()/SurgeryController (ver
+        // ReceptionDocumentService) — el catálogo de responsivas
+        // requeridas no se duplica aquí.
+        $requiredFormats = $this->documentService->requiredFormatsFor($reception);
         $existingTypeIds = $documents->pluck('format_type_id');
-
-        $requiredFormats = $this->requiredFormatsFor($reception);
         $formatTypeNames = FormatType::whereIn('id', array_keys($requiredFormats))->pluck('name', 'id');
 
         $missingFormats = collect($requiredFormats)
-            ->reject(fn ($meta, $formatTypeId) => $existingTypeIds->contains($formatTypeId))
-            ->map(fn ($meta, $formatTypeId) => [
+            ->reject(fn($meta, $formatTypeId) => $existingTypeIds->contains($formatTypeId))
+            ->map(fn($meta, $formatTypeId) => [
                 'format_type_id' => $formatTypeId,
                 'name' => $formatTypeNames->get($formatTypeId, $meta['fallback_name']),
-                'url' => route($meta['route'], $reception->id),
+                // from=reception para las responsivas de Hospital y Cirugía:
+                // este modal de Documentos es exclusivo de Recepción (ver
+                // openDocumentsModal() en receptions/index.js, único
+                // consumidor de este endpoint), así que marca a
+                // hospital_authorization()/surgery_authorization() que, al
+                // firmarse, deben volver aquí y no a Hospitalizaciones (ver
+                // hospital_auth.js/auth_surgery.js). Grooming/hotel/cremación
+                // no tienen ese problema de redirección, no se tocan.
+                'url' => in_array($meta['route'], ['hospital.list', 'surgery.auth'], true)
+                    ? route($meta['route'], ['id' => $reception->id, 'from' => 'reception'])
+                    : route($meta['route'], $reception->id),
             ])
             ->values();
 
@@ -504,32 +563,19 @@ class ReceptionController extends Controller
                 ];
             }),
             'missing_formats' => $missingFormats,
+            // Mismo Reception::family() (belongsTo Family, family_id) que ya
+            // usa list()/el resto de las tablas del index — el modal de
+            // Documentos lo necesita para "Enviar por WhatsApp"
+            // (sendDocumentWhatsApp en receptions/index.js). Antes ese
+            // teléfono nunca llegaba: openDocumentsModal(receptionId,
+            // familyPhone) esperaba un segundo argumento que ningún
+            // onclick="openDocumentsModal(${data.id})" del index le pasaba
+            // -por eso el modal decía "sin teléfono" incluso cuando la
+            // familia sí tenía uno registrado-. Ahora viaja en la misma
+            // respuesta que el modal ya consume, sin depender de que cada
+            // botón se lo pase por su cuenta.
+            'family_phone' => $reception->family?->phone,
         ]);
-    }
-
-    /**
-     * Responsivas requeridas según el tipo de recepción, con la ruta de la
-     * vista de captura/firma correspondiente. Consulta (1) no requiere
-     * ninguna. Hospitalización (2) además requiere la quirúrgica (3) SOLO
-     * si hay una Surgery asociada — se evalúa aparte, no es fija como las
-     * demás. fallback_name es solo por si el catálogo FormatType no trae
-     * el registro esperado (no debería pasar, ver FormatTypeSeeder).
-     */
-    private function requiredFormatsFor(Reception $reception): array
-    {
-        $required = match ((int) $reception->reception_type_id) {
-            2 => [1 => ['route' => 'hospital.list', 'fallback_name' => 'Autorización para Hospitalización']],
-            3 => [4 => ['route' => 'grooming.sign', 'fallback_name' => 'Responsiva Grooming']],
-            4 => [5 => ['route' => 'hotel.format', 'fallback_name' => 'Responsiva Pensión']],
-            5 => [7 => ['route' => 'cremation.responsiva', 'fallback_name' => 'Responsiva cremación']],
-            default => [],
-        };
-
-        if ((int) $reception->reception_type_id === 2 && Surgery::where('reception_id', $reception->id)->exists()) {
-            $required[3] = ['route' => 'surgery.auth', 'fallback_name' => 'Autorización de Procedimientos Anestésicos y Quirúrgicos'];
-        }
-
-        return $required;
     }
 
     public function bulkAdvanceStatus(Request $request)
@@ -637,11 +683,86 @@ class ReceptionController extends Controller
 
     public function hospital_authorization($id)
     {
+        // Ya fue firmada: no volver a mostrar la responsiva en blanco. Misma
+        // fuente de verdad que ya usa documents() para excluirla de
+        // missing_formats (Format format_type_id=1 ligado a esta reception,
+        // creado en hospital_authorizationpdf() al aceptar y firmar) — no se
+        // agrega un campo/estado nuevo.
+        $alreadyAuthorized = Format::where('reception_id', $id)
+            ->where('format_type_id', 1)
+            ->exists();
+
+        if ($alreadyAuthorized) {
+            $reception = Reception::find($id);
+            $cameFromTransfer = ReceptionTransfer::where('to_reception_id', $id)->exists();
+            $fromReception = request()->query('from') === 'reception';
+
+            // Mismo destino que hospital_auth.js elige al terminar de firmar:
+            // si a la recepción todavía le falta otra responsiva requerida
+            // (ver ReceptionDocumentService::nextMissingFormat() — hoy solo
+            // la quirúrgica, en área Quirúrgicos), se manda directo a
+            // firmarla en vez de mostrar el formulario de Hospital otra vez.
+            $nextFormat = $this->documentService->nextMissingFormat($reception);
+            if ($nextFormat) {
+                return redirect()->route($nextFormat['route'], array_filter([
+                    'id' => $id,
+                    'from' => $fromReception ? 'reception' : null,
+                ]));
+            }
+
+            return redirect()
+                ->route($fromReception || !$cameFromTransfer ? 'receptions.index' : 'assignment.hospital')
+                ->with('success', 'Esta hospitalización ya cuenta con su autorización firmada.');
+        }
+
         $reception = Reception::with('admissionType')->find($id); //buscamos la recepcion correspondiente
+
+        // Si la hospitalización viene de un traslado desde Consulta, la
+        // recepcionista debe cobrar el saldo pendiente de esa consulta antes
+        // de poder generar/firmar la responsiva (ver
+        // AccountStatementService::consultaBalance() y
+        // AdvancePaymentController::payConsulta()). Si no hay Consulta de
+        // por medio (hospitalización directa), el saldo es 0 y no bloquea.
+        $consultaBalance = app(AccountStatementService::class)->consultaBalance($reception);
+        if ($consultaBalance > 0) {
+            return redirect()->route('receptions.index')
+                ->with('error', 'Debes registrar el pago de la consulta ($' . number_format($consultaBalance, 2) . ') antes de generar la autorización.');
+        }
+
+        // NOTA: a propósito NO se bloquea aquí el acceso al formulario de
+        // Hospital aunque todavía falte la Autorización de Procedimientos
+        // Anestésicos y Quirúrgicos (área Quirúrgicos) — ambas responsivas
+        // pueden firmarse en cualquier orden (ver modal de Documentos
+        // Pendientes). Lo único que se condiciona a que estén las dos
+        // completas es el paso real de estatus "Trasladado" ->
+        // "Hospitalizado", que decide ReceptionDocumentService::
+        // advanceToHospitalizadoIfComplete() dentro de
+        // hospital_authorizationpdf()/SurgeryController::
+        // surgery_authorizationpdf() -sin importar cuál de las dos se firme
+        // al final-.
+
         $total = $this->admissionTypePrice($reception?->admissionType?->articulo_id);
         $cameFromTransfer = ReceptionTransfer::where('to_reception_id', $id)->exists();
 
-        return view('reception.pdf', compact("reception", "total", "cameFromTransfer")); //enviamos los datos a la vista del pfd para firma y llendo
+        // Distingue si esta responsiva se abrió desde el modal de Documentos
+        // de Recepción (ver documents()/requiredFormatsFor(), que arman esta
+        // URL con ?from=reception) o desde store() al crear una
+        // hospitalización directa (mismo marcador) -en ambos casos la
+        // recepcionista debe volver a Recepciones al firmar, nunca a
+        // Hospitalizaciones (assignment.hospital)-, versus el flujo propio
+        // de Hospital, que no manda este parámetro y conserva su
+        // comportamiento actual (ver hospital_auth.js).
+        $fromReception = request()->query('from') === 'reception';
+
+        // Sin esto, el botón "Atrás" del navegador puede restaurar esta
+        // página (el formulario en blanco) desde su caché/bfcache SIN volver
+        // a pedírsela al servidor — la condición de arriba nunca se vuelve a
+        // evaluar y parece que "no se actualizó". no-store fuerza a que
+        // siempre se re-consulte.
+        return response()
+            ->view('reception.pdf', compact("reception", "total", "cameFromTransfer", "fromReception"))
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            ->header('Pragma', 'no-cache');
     }
 
     /**
@@ -680,7 +801,7 @@ class ReceptionController extends Controller
         ]);
 
         // Guardar el PDF en el almacenamiento público.
-        $pdfPath = 'public/receptions/reception_' . $id . '.pdf';
+        $pdfPath = 'public/receptions/AUT_HOSP_' . $id . '_' . $pet->id . '_' . date('Ymd_His') . '.pdf';
         Storage::put($pdfPath, $pdf->output());
 
         $pdfUrl = Storage::url($pdfPath); // Obtener la URL pública del PDF
@@ -692,15 +813,116 @@ class ReceptionController extends Controller
         $format->format_pdf = $pdfPath; // Ruta del PDF almacenado
         $format->save();
 
+        // La(s) responsiva(s) firmada(s) son lo que finalmente admite al
+        // paciente: recién cuando ya no falta ninguna responsiva requerida
+        // (ver ReceptionDocumentService::advanceToHospitalizadoIfComplete())
+        // pasa de "Trasladado" a "Hospitalizado" (ver
+        // ReceptionTransferController::seedInitialStatusHistory(), que ya no
+        // siembra "Hospitalizado" al transferir). Mismo patrón que
+        // HospitalizationController::discharge() para "Dado de alta". Una
+        // hospitalización creada directamente (sin traslado) ya nace
+        // "Hospitalizado" (ver ReceptionController::store()): el método no
+        // hace nada en ese caso (evita sembrar una entrada duplicada). En
+        // área Quirúrgicos, si además falta la Autorización de
+        // Procedimientos Anestésicos y Quirúrgicos, el estatus se queda en
+        // "Trasladado" hasta que también se firme esa (sin importar cuál de
+        // las dos se firme primero) — ver SurgeryController::
+        // surgery_authorizationpdf(), que llama al mismo método.
+        $this->documentService->advanceToHospitalizadoIfComplete($reception);
+
+        // Si a esta recepción todavía le falta otra responsiva requerida
+        // (ver ReceptionDocumentService::nextMissingFormat() — hoy solo
+        // aplica el caso Hospitalización en área Quirúrgicos, que además
+        // exige la Autorización de Procedimientos Anestésicos y
+        // Quirúrgicos), el frontend encadena directo a firmarla en vez de
+        // volver a Recepciones (ver hospital_auth.js).
+        $nextFormat = $this->documentService->nextMissingFormat($reception);
+        $nextFormatUrl = $nextFormat
+            ? route($nextFormat['route'], ['id' => $id, 'from' => 'reception'])
+            : null;
+
         // Retornar la respuesta JSON con la URL del PDF y el ID del formato generado
-        return response()->json(['url' => asset($pdfUrl), 'format_id' => $format->id]);
+        return response()->json([
+            'url' => asset($pdfUrl),
+            'format_id' => $format->id,
+            'next_format_url' => $nextFormatUrl,
+        ]);
     }
 
 
     public function getReceptionArea($id)
     {
-        $reception = Reception::find($id); //busca recepcion correpondinete 
+        $reception = Reception::find($id); //busca recepcion correpondinete
         return response()->json(['area_id' => $reception->area_id]); //regresa el area que tiene registrada la recepcion
+    }
+
+    /**
+     * Saldo pendiente de la Consulta del episodio de esta recepción (ver
+     * AccountStatementService::consultaBalance()). Usado por el modal
+     * "Pagar consulta" (openConsultaPaymentModal en advancePayment.js) para
+     * mostrar el monto y fijar el mínimo permitido antes de enviarlo.
+     */
+    public function consultaBalance($id)
+    {
+        $reception = Reception::findOrFail($id);
+        $balance = app(AccountStatementService::class)->consultaBalance($reception);
+
+        return response()->json(['balance' => $balance]);
+    }
+
+    /**
+     * Resumen combinado de Consulta + servicios hospitalarios para el modal
+     * de pago de Recepción (ver openConsultaPaymentModal()/advancePayment.js
+     * y AccountStatementService::paymentMinimumRequired()). Se recalcula
+     * completo en cada llamada -nunca un valor guardado-, así que si el
+     * médico agrega un servicio nuevo en Red Sheet después de que Recepción
+     * ya abrió el modal, la siguiente consulta a este endpoint ya lo incluye.
+     */
+    public function paymentSummary($id)
+    {
+        $reception = Reception::findOrFail($id);
+        $statementService = app(AccountStatementService::class);
+
+        // Una sola vez cada uno (memoizados en AccountStatementService): el
+        // resto de las llamadas de abajo (consultaBalance(),
+        // hospitalizacionServiciosTotal(), hospitalizacionAnticipoRequerido(),
+        // paymentMinimumRequired()) reutilizan este mismo cálculo en vez de
+        // repetirlo — antes, entre las 4, hospitalizacionServiciosPreview()
+        // se recalculaba completo 4 veces en una sola llamada a este endpoint.
+        $serviciosConsulta = $statementService->consultaServiciosPreview($reception);
+        $serviciosHospitalarios = $statementService->hospitalizacionServiciosPreview($reception);
+
+        $consultaTotal = (float) $serviciosConsulta->sum('total');
+        $hospitalizacionTotal = (float) $serviciosHospitalarios->sum('total');
+
+        // La Consulta como concepto real de la lista (no un mensaje aparte):
+        // misma estructura línea por línea que ya usa el Estado de Cuenta
+        // (OrdenVentaService::previsualizar()), solo con una etiqueta 'tipo'
+        // agregada para que el front pueda seguir separando qué es Consulta
+        // y qué es servicio hospitalario dentro de la misma lista.
+        $servicios = $serviciosConsulta->map(fn ($item) => ['tipo' => 'consulta'] + $item)
+            ->concat($serviciosHospitalarios->map(fn ($item) => ['tipo' => 'hospitalizacion'] + $item))
+            ->values();
+
+        return response()->json([
+            'servicios' => $servicios,
+            'servicios_total' => $consultaTotal + $hospitalizacionTotal,
+            'consulta' => [
+                'total' => $consultaTotal,
+                'balance' => $statementService->consultaBalance($reception),
+            ],
+            'hospitalizacion' => [
+                // Se conserva para no romper nada que ya lea esta forma
+                // específica (mismas líneas, sin la etiqueta 'tipo').
+                'servicios' => $serviciosHospitalarios->values(),
+                'servicios_total' => $hospitalizacionTotal,
+                // TODO(negocio): sigue en 0.0 hasta que se defina la regla
+                // de anticipo — ver AccountStatementService::
+                // hospitalizacionAnticipoRequerido().
+                'anticipo_requerido' => $statementService->hospitalizacionAnticipoRequerido($reception),
+            ],
+            'minimum_required' => $statementService->paymentMinimumRequired($reception),
+        ]);
     }
 
 

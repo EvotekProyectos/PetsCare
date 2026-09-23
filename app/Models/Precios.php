@@ -14,4 +14,10 @@ class Precios extends FDBModel
     protected $table = 'PRECIOS_ARTICULOS';
     protected $primaryKey = 'PRECIO_ARTICULO_ID';
     protected $guarded = [];
+
+    // Ver CachedFirebirdBuilder (mismo motivo que Producto).
+    public function newEloquentBuilder($query)
+    {
+        return new CachedFirebirdBuilder($query);
+    }
 }

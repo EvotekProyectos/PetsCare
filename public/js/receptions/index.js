@@ -36,6 +36,13 @@ var table3 = undefined;
 var table4 = undefined;
 var table5 = undefined;
 
+// id de la Reception de Hospitalización que hay que buscar/resaltar en
+// cuanto la pestaña Hospitalización termine de mostrarse (ver
+// goToHospitalizationReception() y el listener shown.bs.tab de
+// tab-hospitalizaciones-tab más abajo). null = no hay ninguna búsqueda
+// pendiente.
+let pendingHospitalizationHighlightId = null;
+
 function initTable() {
   if (table) {
     return;
@@ -54,7 +61,7 @@ function initTable() {
     responsive: true,
     order: [0, "desc"],
     columns: [
-      { data: "entry_date", render: formatDate },
+      { data: "entry_date", render: renderDateColumn(true) },
 
       {
         data: null,
@@ -130,10 +137,29 @@ function initTable() {
             data.current_status_appointment.attention_status
           ) {
             const status = data.current_status_appointment.attention_status;
-            return `<span style="background-color: ${lightenColor(status.color)}; padding: 5px 10px; color: ${status.color}; border-radius: 5px; font-weight: 600;
-        -webkit-box-decoration-break: clone;
-        box-decoration-break: clone;">
-                ${status.name}
+            // Mismo criterio que assignments/index.js: "Trasladado" a secas
+            // si no se pudo resolver la recepción destino (transferred_to
+            // viene del backend, ver ReceptionController::list()).
+            const label =
+              status.name === "Trasladado" && data.transferred_to
+                ? `${status.name} a ${data.transferred_to}`
+                : status.name;
+
+            // Clickeable SOLO cuando el traslado fue hacia una Hospitalización
+            // (reception_type_id 2): to_reception_id ya viaja en transfers_from
+            // (eager-loaded en ReceptionController::list()), no hace falta
+            // ninguna consulta ni relación nueva. Otros destinos (Grooming,
+            // Hotel, Cremación) conservan el badge tal cual, sin interacción.
+            const destinoHospitalizacion = data.transfers_from?.find(
+              (t) => t.to_reception?.reception_type_id === 2,
+            );
+
+            const attrs = destinoHospitalizacion
+              ? ` style="background-color: ${lightenColor(status.color)}; padding: 5px 10px; color: ${status.color}; border-radius: 5px; font-weight: 600; cursor: pointer; -webkit-box-decoration-break: clone; box-decoration-break: clone;" title="Ver en Hospitalización" onclick="goToHospitalizationReception(${destinoHospitalizacion.to_reception_id}); return false;"`
+              : ` style="background-color: ${lightenColor(status.color)}; padding: 5px 10px; color: ${status.color}; border-radius: 5px; font-weight: 600; -webkit-box-decoration-break: clone; box-decoration-break: clone;"`;
+
+            return `<span${attrs}>
+                ${label}
               </span>`;
           }
           return "Sin estatus";
@@ -171,7 +197,15 @@ function initTable() {
             buttons += `
                 <a type="button" href="#" onclick="openAccountStatementModal(${data.id}); return false;" class="btn btn-sm icon-btn-outline text-primary" title="Estado de cuenta">
                  <i class="fas fa-dollar-sign"></i>
-                </a>`;
+                </a>
+                
+                 <a type="button"
+                        href="#"
+                        onclick="openDocumentsModal(${data.id}); return false;"
+                        class="btn btn-sm icon-btn-outline text-primary"
+                        title="Documentos">
+                        <i class="fas fa-folder-open"></i>
+            </a>`;
           }
 
           if (data.has_transfers) {
@@ -207,7 +241,7 @@ function initTable2() {
     responsive: true,
     order: [0, "desc"],
     columns: [
-      { data: "entry_date", render: formatDate },
+      { data: "entry_date", render: renderDateColumn(true) },
 
       {
         data: null,
@@ -300,14 +334,48 @@ function initTable2() {
       {
         data: null,
         render: function (data) {
+          // "Pagar consulta" (Consulta + anticipo de servicios hospitalarios,
+          // ver AccountStatementService::paymentMinimumRequired()) en
+          // "Trasladado" Y "Hospitalizado" -mismo criterio que
+          // RedSheetController::entry() usa para permitir escritura-: el
+          // médico ya puede seguir agregando servicios en Red Sheet estando
+          // "Hospitalizado" (el traslado ya no espera el pago de consulta
+          // para llegar ahí), así que "Hospitalizado" ya NO implica que no
+          // quede nada pendiente de cobrar. El propio modal recalcula el
+          // monto real cada vez que se abre; si no hay nada pendiente
+          // simplemente muestra $0.00, así que mostrar el botón de más no
+          // causa ningún cobro incorrecto.
+          const hospStatusName =
+            data.current_hospitalization_status?.hospitalization_status?.name;
+          const payConsultaBtn =
+            hospStatusName === "Trasladado" || hospStatusName === "Hospitalizado"
+              ? `<a type="button" href="#" onclick="openConsultaPaymentModal(${data.id}); return false;" class="btn btn-sm icon-btn-outline text-danger" title="Pagar consulta">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </a>`
+              : "";
+
+          // Oculto hasta que exista un anticipo confirmado por el total
+          // exacto de la consulta trasladada (ver ReceptionController::list()
+          // / AccountStatementService::hasConfirmedConsultaPayment()).
+          // show_documents no viene (undefined) en hospitalización directa
+          // sin traslado por diseño del backend, pero por seguridad se trata
+          // como visible salvo que venga explícitamente en false.
+          const documentosBtn =
+            data.show_documents === false
+              ? ""
+              : `<a type="button" href="#" onclick="openDocumentsModal(${data.id}); return false;"
+                        class="btn btn-sm icon-btn-outline text-primary" title="Documentos"> <i class="fas fa-folder-open"></i>
+                        </a>`;
+
           return `
 
+    ${payConsultaBtn}
 
-
-
-                        <a type="button" href="#" onclick="openDocumentsModal(${data.id}); return false;"
-                        class="btn btn-sm icon-btn-outline text-primary" title="Documentos"> <i class="fas fa-folder-open"></i>
+    <a type="button" href="#" onclick="openAdvancePaymentModal(${data.id}, 'redsheet'); return false;" class="btn btn-sm icon-btn-outline text-primary" title="Crear Anticipo">
+                            <span class="lets-icons--paper-fill"></span>
                         </a>
+
+                        ${documentosBtn}
 
               <a type="button" href="#" onclick="openAccountStatementModal(${data.id}, 'redsheet'); return false;" class="btn btn-sm icon-btn-outline text-primary" title="Estado de cuenta">
                             <i class="fas fa-dollar-sign"></i>
@@ -344,7 +412,7 @@ function initTable3() {
     responsive: true,
     order: [0, "desc"],
     columns: [
-      { data: "entry_date", render: formatDate },
+      { data: "entry_date", render: renderDateColumn(true) },
 
       {
         data: null,
@@ -385,7 +453,7 @@ function initTable3() {
     `;
         },
       },
-      { data: "exit_date", render: formatDate },
+      { data: "exit_date", render: renderDateColumn(true) },
       {
         data: null,
         render: function (data) {
@@ -451,7 +519,7 @@ function initTable4() {
     responsive: true,
     order: [0, "desc"],
     columns: [
-      { data: "entry_date", render: formatDate },
+      { data: "entry_date", render: renderDateColumn(true) },
 
       {
         data: null,
@@ -492,7 +560,7 @@ function initTable4() {
     `;
         },
       },
-      { data: "exit_date", render: formatDate },
+      { data: "exit_date", render: renderDateColumn(true) },
       {
         data: null,
         render: function (data) {
@@ -515,7 +583,7 @@ function initTable4() {
         render: function (data) {
           return `
 
-                        <a type="button" href="${route("advance-payments.add", data.id)}" class="btn btn-sm icon-btn-outline text-primary" title="Crear Anticipo">
+                        <a type="button" href="#" onclick="openAdvancePaymentModal(${data.id}, 'hotel'); return false;" class="btn btn-sm icon-btn-outline text-primary" title="Crear Anticipo">
                             <span class="lets-icons--paper-fill"></span>
                         </a>
 
@@ -565,7 +633,7 @@ function initTable5() {
           return `<input type="checkbox" class="cremation-checkbox" value="${data.id}">`;
         },
       },
-      { data: "entry_date", render: formatDate },
+      { data: "entry_date", render: renderDateColumn(true) },
 
       {
         data: null,
@@ -909,13 +977,52 @@ $(document).ready(function () {
   // mal el ancho de columnas dentro de un tab-pane oculto.
   initTable();
 
-  $("#tab-hospitalizaciones-tab").on("shown.bs.tab", initTable2);
+  // initTable2() ya tiene su propia guarda (if (table2) return): si la
+  // pestaña Hospitalización ya se había mostrado antes, esta llamada no
+  // vuelve a inicializar nada -por eso locateHospitalizationReception() de
+  // abajo distingue "ya estaba cargada" (busca directo) de "se acaba de
+  // inicializar ahora mismo" (espera al evento "init" de DataTables).
+  $("#tab-hospitalizaciones-tab").on("shown.bs.tab", function () {
+    const wasAlreadyInitialized = !!table2;
+    initTable2();
+
+    if (pendingHospitalizationHighlightId === null) {
+      return;
+    }
+
+    const targetId = pendingHospitalizationHighlightId;
+    pendingHospitalizationHighlightId = null;
+
+    if (wasAlreadyInitialized) {
+      locateHospitalizationReception(targetId);
+    } else {
+      // Primera vez que se muestra esta pestaña: initTable2() acaba de
+      // disparar su primera carga ajax, todavía no hay filas. "init" (evento
+      // propio de DataTables, no un setTimeout) se dispara una sola vez, ya
+      // con los datos dibujados.
+      table2.one("init", function () {
+        locateHospitalizationReception(targetId);
+      });
+    }
+  });
   $("#tab-grooming-tab").on("shown.bs.tab", initTable3);
   $("#tab-hotel-tab").on("shown.bs.tab", function () {
     initTable4();
     loadHotelCubicleAvailability();
   });
   $("#tab-cremaciones-tab").on("shown.bs.tab", initTable5);
+
+  // ?tab=hospitalizaciones (ej. al volver de firmar una responsiva de
+  // Hospital/Quirúrgica, ver hospital_auth.js/auth_surgery.js): activa esa
+  // pestaña en vez de dejar "Consultas", que es la que arranca activa por
+  // defecto en el markup.
+  const requestedTab = new URLSearchParams(window.location.search).get("tab");
+  if (requestedTab) {
+    const tabButton = document.getElementById(`tab-${requestedTab}-tab`);
+    if (tabButton) {
+      bootstrap.Tab.getOrCreateInstance(tabButton).show();
+    }
+  }
 
   startPollingReceptions();
 });
@@ -937,32 +1044,133 @@ function getActiveReceptionTable() {
   return getTable ? getTable() : null;
 }
 
-let pollingReceptions = null;
-let lastUpdateReceptions = null;
+/**
+ * Click en el badge "Trasladado a Hospitalización" (pestaña Consultas):
+ * cambia a la pestaña Hospitalización con el mecanismo nativo de tabs de
+ * Bootstrap (sin navegar a otra URL) y deja encolado el id a buscar — el
+ * listener shown.bs.tab de tab-hospitalizaciones-tab es quien realmente
+ * dispara la búsqueda, una vez que la tabla exista y tenga datos.
+ */
+function goToHospitalizationReception(receptionId) {
+  const tabButton = document.getElementById("tab-hospitalizaciones-tab");
 
+  if (!tabButton) {
+    return;
+  }
+
+  pendingHospitalizationHighlightId = receptionId;
+  bootstrap.Tab.getOrCreateInstance(tabButton).show();
+}
+
+/**
+ * Busca targetId (Reception.id real, nunca nombre/mascota/propietario) entre
+ * las filas que la tabla de Hospitalización tiene cargadas AHORA MISMO
+ * (respetando los filtros actuales). Si no aparece, reintenta UNA vez
+ * limpiando solo el rango de fechas -la causa más común, #filterHospFecha
+ * arranca en "hoy"-, sin tocar ningún otro filtro y sin dejar nada
+ * modificado de forma permanente (son inputs de esta misma pantalla, no una
+ * preferencia guardada).
+ */
+function locateHospitalizationReception(targetId, retriedWithoutDateFilter = false) {
+  if (!table2) {
+    return;
+  }
+
+  const row = table2.row(function (idx, data) {
+    return data.id === targetId;
+  });
+
+  if (row.any()) {
+    highlightHospitalizationRow(row);
+    return;
+  }
+
+  if (retriedWithoutDateFilter) {
+    notifyHospitalizationReceptionNotFound();
+    return;
+  }
+
+  const hadDateFilter = $("#filterHospFecha").val() || $("#filterHospFechaHasta").val();
+
+  if (!hadDateFilter) {
+    notifyHospitalizationReceptionNotFound();
+    return;
+  }
+
+  $("#filterHospFecha").val("");
+  $("#filterHospFechaHasta").val("");
+
+  table2.one("draw", function () {
+    locateHospitalizationReception(targetId, true);
+  });
+  table2.ajax.reload(null, false);
+}
+
+function notifyHospitalizationReceptionNotFound() {
+  Swal.fire({
+    icon: "info",
+    title: "No se pudo localizar",
+    text: "No se encontró la recepción hospitalaria correspondiente en la lista actual.",
+  });
+}
+
+/**
+ * Pagina hasta la fila si quedó en una página distinta a la visible
+ * (paginación client-side de DataTables) y la resalta unos segundos.
+ */
+function highlightHospitalizationRow(row) {
+  const rowIndex = table2.rows({ search: "applied" }).indexes().toArray().indexOf(row.index());
+  const pageLength = table2.page.len();
+
+  if (rowIndex >= 0 && pageLength > 0) {
+    const targetPage = Math.floor(rowIndex / pageLength);
+    if (targetPage !== table2.page()) {
+      table2.page(targetPage).draw(false);
+    }
+  }
+
+  const node = row.node();
+  if (!node) {
+    notifyHospitalizationReceptionNotFound();
+    return;
+  }
+
+  const $node = $(node);
+  node.scrollIntoView({ behavior: "smooth", block: "center" });
+  $node.addClass("row-highlight-flash");
+  setTimeout(function () {
+    $node.removeClass("row-highlight-flash");
+  }, 3000);
+}
+
+let pollingReceptions = null;
+
+// pollForChanges (global.js) hace el chequeo inicial DE INMEDIATO (no solo
+// en el primer tick a los 30s) y fuerza un chequeo extra al volver de
+// bfcache ('pageshow' + persisted) -dos bugs reales que esta implementación
+// tenía antes y que assignments/index.js y assignments/hospital.js ya
+// habían corregido cada una por su cuenta-. Ver el comentario de
+// pollForChanges en global.js para el detalle completo de ambos.
 function startPollingReceptions() {
   if (pollingReceptions) return;
 
-  pollingReceptions = setInterval(function () {
-    $.ajax({
-      url: route("receptions.lastUpdateGlobal"),
-      method: "GET",
-      success: function (response) {
-        if (lastUpdateReceptions === null) {
-          lastUpdateReceptions = response.last_update;
-          return;
-        }
-
-        if (response.last_update !== lastUpdateReceptions) {
-          lastUpdateReceptions = response.last_update;
-          const activeTable = getActiveReceptionTable();
-          if (activeTable) {
-            activeTable.ajax.reload(null, false);
-          }
-        }
-      },
-    });
-  }, 30000);
+  pollingReceptions = pollForChanges({
+    checkFn: function () {
+      return $.ajax({
+        url: route("receptions.lastUpdateGlobal"),
+        method: "GET",
+      }).then(function (response) {
+        return response.last_update;
+      });
+    },
+    onChanged: function () {
+      const activeTable = getActiveReceptionTable();
+      if (activeTable) {
+        activeTable.ajax.reload(null, false);
+      }
+    },
+    intervalMs: 30000,
+  });
 }
 
 // Widget informativo (no bloqueante) de disponibilidad de cubículos por
@@ -1024,9 +1232,22 @@ let currentReceptionId = null;
 
 let currentFamilyPhone = null; // agregar junto a donde ya declaras currentReceptionId
 
-async function openDocumentsModal(receptionId, familyPhone) {
+// receptionId es el único argumento real: los 4 onclick="openDocumentsModal(${data.id})"
+// del index nunca mandaban un segundo argumento, así que un parámetro
+// familyPhone acá siempre llegaba undefined -currentFamilyPhone quedaba en
+// null sin importar si la familia sí tenía teléfono, y sendDocumentWhatsApp()
+// más abajo mostraba "Esta familia no tiene teléfono registrado" de forma
+// incorrecta-. El teléfono ahora se toma de la MISMA respuesta de
+// receptions.documents que ya se pide para llenar este modal (ver
+// ReceptionController::documents(), que ya usa Reception::family(), la
+// misma relación que usa el resto del index) — no hace falta que cada botón
+// se lo pase por su cuenta.
+async function openDocumentsModal(receptionId) {
   currentReceptionId = receptionId;
-  currentFamilyPhone = familyPhone || null;
+  // Se resetea mientras carga (no al valor de la recepción anterior): evita
+  // que, si se reabre el modal rápido para otra recepción antes de que
+  // responda el fetch, quede el teléfono de la familia equivocada.
+  currentFamilyPhone = null;
 
   const $body = $("#documents_body");
 
@@ -1054,7 +1275,8 @@ async function openDocumentsModal(receptionId, familyPhone) {
       throw new Error();
     }
 
-    const { documents, missing_formats } = await response.json();
+    const { documents, missing_formats, family_phone } = await response.json();
+    currentFamilyPhone = family_phone || null;
 
     if (documents.length === 0 && missing_formats.length === 0) {
       $body.html(`
@@ -1092,19 +1314,32 @@ async function openDocumentsModal(receptionId, familyPhone) {
     // (ver ReceptionController::requiredFormatsFor()): misma fila que un
     // documento normal, solo cambia el botón de acción.
     const missingRows = missing_formats
-      .map(
-        (fmt) => `
+      .map((fmt) => {
+        // Autorización de Hospital (format_type_id=1) y de Procedimientos
+        // Anestésicos y Quirúrgicos (format_type_id=3): la PANTALLA de
+        // firma debe abrirse en esta misma pestaña -no es un PDF, es el
+        // formulario a llenar/firmar- porque al terminar de firmar
+        // (hospital_auth.js/auth_surgery.js) ya redirige de vuelta a
+        // Recepciones en la pestaña donde esté corriendo; con
+        // target="_blank" eso dejaba una pestaña nueva navegando sola
+        // hasta el Index, más la pestaña original sin tocar -dos pestañas
+        // de Recepciones abiertas-. El PDF final sigue pudiendo abrirse en
+        // pestaña nueva si el usuario elige "Ver PDF" en el SweetAlert de
+        // esa pantalla; eso no cambia. Grooming/Hotel/Cremación no entran
+        // en este caso y conservan su target="_blank" de siempre.
+        const sameTab = fmt.format_type_id === 1 || fmt.format_type_id === 3;
+        return `
         <tr>
             <td>${fmt.name}</td>
             <td class="text-muted">Pendiente</td>
             <td class="text-center">
-                <a href="${fmt.url}" target="_blank" class="btn btn-sm icon-btn-outline text-warning" title="Generar responsiva">
+                <a href="${fmt.url}" ${sameTab ? "" : 'target="_blank"'} class="btn btn-sm icon-btn-outline text-warning" title="Generar responsiva">
                     <i class="fas fa-pencil-alt"></i>
                 </a>
             </td>
         </tr>
-    `,
-      )
+    `;
+      })
       .join("");
 
     $body.html(documentRows + missingRows);
@@ -1121,10 +1356,16 @@ async function openDocumentsModal(receptionId, familyPhone) {
   }
 }
 
-async function sendDocumentWhatsApp(docUrl, docType) {
+// phone: opcional, default currentFamilyPhone (el de la familia cargada en
+// el modal de Documentos) por compatibilidad con su único llamador de
+// siempre (el botón "Enviar por WhatsApp" de ese mismo modal, más abajo).
+// Otros modales (ej. Estado de Cuenta, ver accountStatement.js) pasan su
+// propio teléfono explícito en vez de depender de esta variable global, que
+// podría venir de una recepción/familia distinta a la que están mostrando.
+async function sendDocumentWhatsApp(docUrl, docType, phone = currentFamilyPhone) {
   event.preventDefault();
 
-  if (!currentFamilyPhone) {
+  if (!phone) {
     Swal.fire({
       icon: "warning",
       title: "Sin teléfono",
@@ -1145,7 +1386,7 @@ async function sendDocumentWhatsApp(docUrl, docType) {
 
   if (result.isConfirmed) {
     const mensaje = `Hola, te compartimos tu documento (${docType}): ${docUrl}`;
-    const whatsappURL = `https://wa.me/${currentFamilyPhone}?text=${encodeURIComponent(mensaje)}`;
+    const whatsappURL = `https://wa.me/${phone}?text=${encodeURIComponent(mensaje)}`;
 
     window.open(whatsappURL, "_blank");
   }

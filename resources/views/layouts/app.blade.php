@@ -355,8 +355,18 @@
                                         </li>
                                     @endif
                                 @else --}}
-                                <a href="{{ route('notifications.index') }}"><span
-                                        class="ic--twotone-notifications-none"></span></a>
+                                <a href="{{ route('notifications.index') }}" class="position-relative d-inline-block">
+                                    <span class="ic--twotone-notifications-none"></span>
+                                    {{-- Contador de notificaciones no leídas: se llena/actualiza en
+                                         fetchNotifications() más abajo, reutilizando la misma respuesta de
+                                         notifications.unreadList() que ya llena #show-notifications -no es
+                                         una segunda fuente de datos, es la MISMA lista, solo se cuenta-. --}}
+                                    <span id="unreadNotificationsCount"
+                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">
+                                        <span id="unreadNotificationsCountValue">0</span>
+                                        <span class="visually-hidden">notificaciones no leídas</span>
+                                    </span>
+                                </a>
                                 <li class="nav-item dropdown">
                                     <a id="navbarDropdown" class="nav-link p-0" href="#" role="button"
                                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -445,11 +455,23 @@
             });
         });
         // Mark Notification As Read when close the alerts
+        //
+        // Delegado en el contenedor FIJO (#show-notifications), no en cada
+        // .notification-alert por separado: fetchNotifications() reemplaza
+        // el contenido de ese contenedor completo cada 60s (setInterval más
+        // abajo), así que un listener puesto en cada alerta individual solo
+        // funcionaba para las que ya existían en el DOMContentLoaded inicial
+        // -cualquier alerta agregada después (prácticamente todas, ya que
+        // fetchNotifications() puebla el contenedor de forma asíncrona) se
+        // quedaba sin el listener, y cerrarla nunca marcaba la notificación
+        // como leída ni actualizaba el contador-. Delegar en el contenedor
+        // (que sí es estable) cubre también las alertas que llegan después.
         document.addEventListener("DOMContentLoaded", function() {
-            document.querySelectorAll(".notification-alert").forEach(alert => {
-                alert.addEventListener("closed.bs.alert", function() {
-                    let notificationId = this.getAttribute("data-id");
-                    let phone = this.getAttribute("phone");
+            document.getElementById("show-notifications")
+                .addEventListener("closed.bs.alert", function(event) {
+                    const alertEl = event.target;
+                    let notificationId = alertEl.getAttribute("data-id");
+                    let phone = alertEl.getAttribute("phone");
 
                     if (!notificationId) return;
 
@@ -467,9 +489,11 @@
                             if (data.success) {
                                 chat(phone);
                             }
+                            // Refresca el listado/contador de inmediato en
+                            // vez de esperar hasta el próximo tick de 60s.
+                            fetchNotifications();
                         }).catch(error => console.error("Error:", error));
                 });
-            });
         });
 
         //Open Whatsapp Web To Talk to the Family of the pet
@@ -493,6 +517,16 @@
             }
         }
 
+        // Contador de la campana: misma respuesta de notifications.unreadList()
+        // que ya llena #show-notifications más abajo -se cuenta ese mismo
+        // arreglo (data.length), no se agrega una segunda fuente de datos
+        // ni una consulta aparte-.
+        function updateUnreadNotificationsBadge(count) {
+            const $badge = $("#unreadNotificationsCount");
+            $("#unreadNotificationsCountValue").text(count > 99 ? "99+" : count);
+            $badge.toggleClass("d-none", count <= 0);
+        }
+
         // Check for unread notifications
         function fetchNotifications() {
             $.ajax({
@@ -502,6 +536,8 @@
                     'X-Requested-With': 'XMLHttpRequest',
                 },
                 success: function(data) {
+                    updateUnreadNotificationsBadge(data.length);
+
                     let notificationsHtml = "";
                     data.forEach(notification => {
                         notificationsHtml += `

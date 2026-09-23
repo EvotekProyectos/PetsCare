@@ -97,8 +97,15 @@ $(document).ready(function () {
             data.current_status_appointment.attention_status
           ) {
             const status = data.current_status_appointment.attention_status;
+            // "Trasladado" a secas si no se pudo resolver la recepción
+            // destino (transferred_to viene del backend, ver
+            // AssignmentController::appointments()).
+            const label =
+              status.name === "Trasladado" && data.transferred_to
+                ? `${status.name} a ${data.transferred_to}`
+                : status.name;
             return `<span style="background-color: ${lightenColor(status.color)}; padding: 5px 10px; color: ${status.color}; border-radius: 5px; font-weight: 600;">
-                ${status.name}
+                ${label}
               </span>`;
           }
           return "Sin estatus";
@@ -159,33 +166,32 @@ $(document).ready(function () {
   startPollingAppointments();
 });
 
-// Mismo patrón que startPollingReceptions() (public/js/receptions/index.js):
-// intervalo de 30s, snapshot local de last_update, se salta el reload en el
-// primer tick (evita un reload espurio justo al cargar la página), recarga
-// sin resetear la página actual (reload(null, false)) solo si cambió.
+// Intervalo de 30s, snapshot local de last_update, recarga sin resetear la
+// página actual (reload(null, false)) solo si cambió.
+//
+// pollForChanges (global.js) ya hace el chequeo inicial DE INMEDIATO (esta
+// vista ya lo hacía bien por su cuenta antes de este cambio) y además, ahora,
+// fuerza un chequeo extra al volver de bfcache ('pageshow' + persisted) —
+// mismo helper compartido que receptions/index.js/assignments/hospital.js.
 let pollingAppointments = null;
-let lastUpdateAppointments = null;
 
 function startPollingAppointments() {
   if (pollingAppointments) return;
 
-  pollingAppointments = setInterval(function () {
-    $.ajax({
-      url: route("assignment.lastUpdateAppointments"),
-      method: "GET",
-      success: function (response) {
-        if (lastUpdateAppointments === null) {
-          lastUpdateAppointments = response.last_update;
-          return;
-        }
-
-        if (response.last_update !== lastUpdateAppointments) {
-          lastUpdateAppointments = response.last_update;
-          table.ajax.reload(null, false);
-        }
-      },
-    });
-  }, 30000);
+  pollingAppointments = pollForChanges({
+    checkFn: function () {
+      return $.ajax({
+        url: route("assignment.lastUpdateAppointments"),
+        method: "GET",
+      }).then(function (response) {
+        return response.last_update;
+      });
+    },
+    onChanged: function () {
+      table.ajax.reload(null, false);
+    },
+    intervalMs: 30000,
+  });
 }
 
 async function Attend(Type, ID, Status) {

@@ -65,13 +65,39 @@ class PrescriptionController extends Controller
     {
         $this->authorize("create", Prescription::class);
 
-        $new = Prescription::create($request->validated());
+        $validated = $request->validated();
+        $validated['diagnosis'] = $this->resolveDiagnosis($validated);
+
+        $new = Prescription::create($validated);
 
         $this->createNextControlDate($new, $request);
 
         return response()->json($new);
     }
 
+    /**
+     * El diagnóstico de la Fórmula Médica emitida DENTRO de una Consulta
+     * (prescription/form.blade.php, incluida únicamente desde
+     * appointment/create.blade.php) siempre debe ser el mismo que el de esa
+     * Consulta (Appointment::diagnosis) — ya no es editable desde el
+     * formulario de Fórmula Médica, así que el valor del navegador no es la
+     * fuente de verdad. Otros flujos que crean una Prescription sin Consulta
+     * asociada (prescription/form2.blade.php: "Guardar receta" desde el
+     * historial, Alta normal en red-sheet, edición) no envían reception_id o
+     * no tienen Appointment del que heredar, así que conservan el
+     * diagnóstico capturado manualmente tal cual llega.
+     */
+    private function resolveDiagnosis(array $validated): ?string
+    {
+        if (empty($validated['reception_id'])) {
+            return $validated['diagnosis'] ?? null;
+        }
+
+        $appointmentDiagnosis = Appointment::where('reception_id', $validated['reception_id'])
+            ->value('diagnosis');
+
+        return $appointmentDiagnosis ?? ($validated['diagnosis'] ?? null);
+    }
 
     public function storeControlDate(PrescriptionRequest $request)
     {

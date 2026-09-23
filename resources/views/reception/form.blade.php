@@ -119,6 +119,22 @@
         border-color: #dc3545;
     }
 
+    /* .reception-type-group también es flex-wrap:nowrap (arriba): el
+       mensaje de "tipo de recepción" que renderReceptionFormErrors() agrega
+       ahí mismo (ver modal.js) sería un 6to flex item más, comprimido junto
+       a los 5 pills. position:relative/absolute lo saca del flujo, igual
+       que en #receptionModal .input-group más abajo. */
+    .reception-type-group {
+        position: relative;
+    }
+
+    .reception-type-group .invalid-feedback {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+    }
+
     /* Dentro del modal de recepción: 2 columnas en vez de 3 para el resto de los campos */
     @media (min-width: 768px) {
         #receptionModal .row .col-md-4 {
@@ -174,6 +190,27 @@
         min-width: 0;
         max-width: 100%;
         flex: 1 1 0%;
+    }
+
+    /* Mensaje de error de CUALQUIER campo del modal (agregado dinámicamente
+       por addFieldError() en modal.js, y también por el fallback estático
+       de Blade que ya trae cada campo): el flex-wrap:nowrap de arriba
+       mantiene ícono + campo en una sola fila, pero eso mismo compite por
+       espacio con el div de error si se deja dentro del flujo flex —
+       Bootstrap lo encoge a un ancho mínimo y el word-break parte el texto
+       letra por letra (y, al quedar superpuesto sobre el campo, llega a
+       bloquear el clic sobre él, como pasaba con entry_date). Regla única
+       para TODOS los .input-group del modal, no solo mascota/familia/fecha:
+       todos comparten la misma estructura y el mismo riesgo. */
+    #receptionModal .input-group {
+        position: relative;
+    }
+
+    #receptionModal .input-group .invalid-feedback {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
     }
 </style>
 

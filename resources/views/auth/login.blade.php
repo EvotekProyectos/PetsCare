@@ -179,7 +179,7 @@
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-between align-items-center mb-4">
+                    {{-- <div class="d-flex justify-content-between align-items-center mb-4">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="remember" id="remember"
                                 {{ old('remember') ? 'checked' : '' }}>
@@ -193,16 +193,16 @@
                                 {{ __('Forgot Your Password?') }}
                             </a>
                         @endif
-                    </div>
+                    </div> --}}
 
                     <button type="submit" class="btn btn-primary-dark w-100 shadow-sm">
                         {{ __('Login') }}
                     </button>
                 </form>
 
-                <p class="text-center text-muted small mt-4 mb-0">
+                {{-- <p class="text-center text-muted small mt-4 mb-0">
                     &copy; {{ date('Y') }} Pets Care
-                </p>
+                </p> --}}
 
             </div>
 

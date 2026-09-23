@@ -260,19 +260,12 @@ class VoucherController extends Controller
             'reception.family'
         )->findOrFail($voucherId);
 
-        // Guardar cantidades
-        foreach ($request->cantidad as $voucherProductId => $cantidad) {
-            VoucherProduct::where('voucher_id', $voucher->id)
-                ->where('id', $voucherProductId)
-                ->update(['requested_quantity' => $cantidad]);
-        }
+        // La cantidad ya no la captura el usuario: siempre es 1. El backend
+        // es la fuente de verdad, no confía en ninguna cantidad enviada por
+        // el cliente (aunque el frontend ya no la envía).
+        VoucherProduct::where('voucher_id', $voucher->id)->update(['requested_quantity' => 1]);
 
-        // Guardar firma
-        $image = str_replace(['data:image/png;base64,', ' '], ['', '+'], $request->signature);
-        $signatureName = 'firma_medico_' . $voucher->id . '.png';
-        Storage::disk('public')->put('signatures/' . $signatureName, base64_decode($image));
-
-        $voucher->update(['vet_signature' => 'signatures/' . $signatureName]);
+        // Ya no se requiere firma del médico para generar el vale.
 
         // Generar PDF
         $pdf = Pdf::loadView('voucher.voucher', [
@@ -333,15 +326,16 @@ class VoucherController extends Controller
             ], 403);
         }
 
-        $image = str_replace(['data:image/png;base64,', ' '], ['', '+'], $request->signature);
-        $signatureName = 'firma_cancelacion_' . $voucherId . '_' . time() . '.png';
-        Storage::disk('public')->put('signatures/' . $signatureName, base64_decode($image));
+        // El médico ya no firma para cancelar, pero el motivo de cancelación
+        // sigue siendo obligatorio.
+        $request->validate([
+            'observaciones' => 'required|string',
+        ]);
 
         $voucher->update([
-            'status'                 => 'Cancelado',
-            'cancellation_reason'    => $request->observaciones,
-            'cancellation_signature' => 'signatures/' . $signatureName,
-            'cancelled_by'           => auth()->id(),
+            'status'              => 'Cancelado',
+            'cancellation_reason' => $request->observaciones,
+            'cancelled_by'        => auth()->id(),
         ]);
 
         $voucher->load(
@@ -405,16 +399,11 @@ class VoucherController extends Controller
             ], 403);
         }
 
-        $image = str_replace(['data:image/png;base64,', ' '], ['', '+'], $request->signature);
-        $signatureName = 'firma_surtido_' . $voucherId . '_' . time() . '.png';
-        Storage::disk('public')->put('signatures/' . $signatureName, base64_decode($image));
-
+        // El almacenista ya no firma ni agrega observaciones para surtir.
         $voucher->update([
-            'status'                  => 'Surtido',
-            'warehouse_observations'  => $request->observaciones,
-            'warehouse_signature'        => 'signatures/' . $signatureName,
-            'issuer_id'               => auth()->id(),
-            'issued_at'               => now(),
+            'status'     => 'Surtido',
+            'issuer_id'  => auth()->id(),
+            'issued_at'  => now(),
         ]);
 
         $voucher->load(
@@ -479,16 +468,17 @@ class VoucherController extends Controller
             ], 403);
         }
 
-        $image = str_replace(['data:image/png;base64,', ' '], ['', '+'], $request->signature);
-        $signatureName = 'firma_rechazo_' . $voucherId . '_' . time() . '.png';
-        Storage::disk('public')->put('signatures/' . $signatureName, base64_decode($image));
+        // El almacenista ya no firma para rechazar, pero el motivo sigue
+        // siendo obligatorio: es la única evidencia de por qué se rechazó.
+        $request->validate([
+            'observaciones' => 'required|string',
+        ]);
 
         $voucher->update([
-            'status'             => 'Rechazado',
-            'rejection_reason'   => $request->observaciones,
-            'warehouse_signature' => 'signatures/' . $signatureName,
+            'status'           => 'Rechazado',
+            'rejection_reason' => $request->observaciones,
             'issuer_id'        => auth()->id(),
-            'issued_at'               => now(),
+            'issued_at'        => now(),
         ]);
 
         $voucher->load(

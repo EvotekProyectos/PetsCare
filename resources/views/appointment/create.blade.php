@@ -6,7 +6,13 @@
 
 @section('design')
     <link rel="stylesheet" href="{{ asset('css/appointment.css') }}?v={{ filemtime(public_path('css/appointment.css')) }}">
+    {{-- Arregla Select2 dentro de un input-group (ícono + select en el mismo
+         renglón, ver budget/partials/modal.blade.php) — mismo archivo que ya
+         usa budget/form.blade.php (Edit Budget) para el mismo problema. --}}
+    <link rel="stylesheet" href="{{ asset('css/budgets/form.css') }}">
 @endsection
+
+@section('assignments', 'active border-start border-3 border-primary')
 
 @section('content')
     <section class="container-fluid">
@@ -60,7 +66,9 @@
                         </div>
 
                         <x-pet-info :pet="$reception->pet" :years="$years" :months="$months" :days="$days"
-                            :genre-name="$genreName" :reproductive-status-name="$reproductiveStatusName" :classification-name="$classificationName" />
+                            :genre-name="$genreName" :reproductive-status-name="$reproductiveStatusName" :classification-name="$classificationName"
+                            :show-weight-actions="true" :reception="$reception" :weight-registered-this-visit="$weightRegisteredThisVisit ?? false"
+                            :show-weight-pending-badge="true" />
 
                         {{-- Botones de acción: fila propia a ancho completo --}}
                         <div class="row">
@@ -71,16 +79,30 @@
                                         <i class="fas fa-exchange-alt"></i>
                                         <span>Trasladar</span>
                                     </button>
-                                    {{-- 
+
+                                    
                                     <button type="button" class="action-link" onclick="openBudgetModal()">
                                         <i class="fas fa-money-check-alt"></i>
                                         <span>Presupuestos</span>
-                                    </button> --}}
+                                    </button>
 
                                     <button type="button" class="action-link"
                                         onclick="window.open('{{ route('pet-history.index', ['id' => $reception->pet_id, 'type' => 1]) }}', '_blank')">
                                         <i class="fas fa-notes-medical"></i>
                                         <span>Historial médico</span>
+                                    </button>
+
+                                    {{-- Declinación de Recomendaciones Médicas = la Responsiva de
+                                         Estudios de Gabinete ya existente (ver format/responsivaEG.blade.php
+                                         y FormatController::responsivaEg()), no un documento nuevo.
+                                         No depende de que exista un Presupuesto. reception_id viaja como
+                                         query param opcional (compatibilidad con el formulario genérico
+                                         de Formatos, que solo pasa pet_id) para mostrar médico/fecha de
+                                         esta consulta y volver aquí al firmar, ver responsiva.js. --}}
+                                    <button type="button" class="action-link"
+                                        onclick="window.location.href='{{ route('format.responsivaEG', ['id' => $reception->pet_id, 'reception_id' => $reception->id]) }}'">
+                                       <i class="fas fa-times-circle"></i>
+                                        <span>Declinación recomendaciones</span>
                                     </button>
                                 </div>
                             </div>
@@ -337,6 +359,11 @@
         var ruta = "{{ asset('') }}";
         var imgDefault = "{{ asset('img/pet_pic.png') }}";
         var Reception_Id = {{ $reception->id }};
+        // Estado inicial del peso obligatorio de esta consulta (ver
+        // AppointmentController::consultation()/store() y pet-weights/index.js):
+        // true si, al cargar la página (p.ej. tras un refresh), ya existe una
+        // medición de peso registrada para esta recepción.
+        var InitialWeightRegisteredThisVisit = @json($weightRegisteredThisVisit ?? false);
         var Reason_Id = {{ $reception->reason_id }};
         var Pet_Id = {{ $reception->pet_id }};
         var vet_id = {{ $reception->veterinarian_id }};
@@ -350,6 +377,7 @@
     <script src="{{ asset('js/vouchers/detail-modal.js') }}" defer></script>
     <script src="{{ asset('js/vouchers/sign-modal.js') }}" defer></script>
     <script src="{{ asset('js/budgets/appointment-modal.js') }}" defer></script>
+    <script src="{{ asset('js/pet-weights/index.js') }}" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             ['#specificDataCollapse', '#servicesCollapse', '#prescriptionCollapse'].forEach(function(selector) {
@@ -377,6 +405,8 @@
     @include('voucher.partials.detail-modal')
     @include('voucher.partials.sign-modal')
     @include('budget.partials.modal')
+    @include('pet-weights.partials.register-modal')
+    @include('pet-weights.partials.history-modal')
 @endpush
 
 @push('styles')
