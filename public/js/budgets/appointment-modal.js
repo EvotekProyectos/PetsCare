@@ -175,21 +175,33 @@ window.addEventListener("pageshow", function (event) {
 function addBudgetRow(category) {
   const rowId = ++budgetRowSeq;
 
+  // Mismo input-group con ícono que budget-detail/form.blade.php (Edit
+  // Budget) para el select/precio/notas -solo apariencia, el select sigue
+  // siendo el mismo <select> que select2()/updateBudgetRowPrice() de abajo
+  // inicializan y leen igual que antes-.
   const row = $(`
     <div
       class="row align-items-center mb-2 budget-row"
       data-row-id="${rowId}"
     >
       <div class="col-md-5 col-12">
-        <select
-          class="form-control budget-select"
-          id="budget_${category}_${rowId}"
-        ></select>
+        <div class="input-group">
+          <span class="input-group-text bg-primary-subtle">
+            <span class="vaadin--lines-list"></span>
+          </span>
+
+          <select
+            class="form-control budget-select"
+            id="budget_${category}_${rowId}"
+          ></select>
+        </div>
       </div>
 
       <div class="col-md-3 col-6 mt-2 mt-md-0">
         <div class="input-group">
-          <span class="input-group-text">$</span>
+          <span class="input-group-text bg-primary-subtle">
+            <span class="f7--money-dollar"></span>
+          </span>
 
           <input
             type="text"
@@ -202,19 +214,26 @@ function addBudgetRow(category) {
       </div>
 
       <div class="col-md-3 col-5 mt-2 mt-md-0">
-        <input
-          type="text"
-          class="form-control"
-          id="budget_${category}_notes_${rowId}"
-          placeholder="Notas"
-        >
+        <div class="input-group">
+          <span class="input-group-text bg-primary-subtle">
+            <span class="vaadin--lines-list"></span>
+          </span>
+
+          <input
+            type="text"
+            class="form-control"
+            id="budget_${category}_notes_${rowId}"
+            placeholder="Notas"
+          >
+        </div>
       </div>
 
       <div class="col-md-1 col-1 mt-2 mt-md-0 text-end">
         <button
           type="button"
-          class="btn btn-sm text-danger"
+          class="btn-delete-budget"
           onclick="removeBudgetRow('${category}', ${rowId})"
+          title="Eliminar fila"
         >
           <i class="fas fa-trash"></i>
         </button>
@@ -338,8 +357,14 @@ function collectBudgetLines() {
 
 /**
  * Guarda el nuevo presupuesto.
+ *
+ * El mensaje de éxito se muestra apenas responde storeBatch() (~40-100ms
+ * medido, no es lento) — el refresco de #BudgetTable (ensureBudgetTable())
+ * corre después, sin bloquear ese mensaje. Limpiar las filas capturadas
+ * (clearBudgetRows()) evita que un segundo clic en "Añadir"/"Agregar"
+ * reenvíe las líneas que ya se guardaron.
  */
-async function AddBudgetBatch() {
+async function AddBudgetBatch(event) {
   const lines = collectBudgetLines();
 
   if (lines.length === 0) {
@@ -351,6 +376,18 @@ async function AddBudgetBatch() {
 
     return;
   }
+
+  // Evita doble envío mientras la petición sigue en curso.
+  const $btn = $(event.currentTarget);
+  if ($btn.prop("disabled")) {
+    return;
+  }
+
+  const originalBtnHtml = $btn.html();
+  // spinner-border-sm es de Bootstrap (ya cargado en toda la app), a
+  // diferencia de .btn-spinner que solo existe en documento-base.css -no
+  // cargado en esta pantalla (appointment/create.blade.php usa appointment.css)-.
+  $btn.prop("disabled", true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Agregando...');
 
   try {
     let url = route("budget-details.store-batch");
@@ -366,6 +403,13 @@ async function AddBudgetBatch() {
 
       body: JSON.stringify({
         reception_id: Reception_Id,
+        // null en el primer "Agregar a la lista" de esta apertura del modal
+        // (resetBudgetForm() ya puso BudgetId = null): el backend debe
+        // crear un Budget NUEVO, nunca reutilizar uno de una sesión
+        // anterior. Si ya se guardó un lote antes en esta misma sesión
+        // (BudgetId ya tiene valor), los lotes siguientes se suman a ese
+        // mismo Budget en vez de crear uno por cada clic.
+        budget_id: BudgetId,
         lines,
       }),
     });
@@ -383,19 +427,7 @@ async function AddBudgetBatch() {
     // generateBudget() lo utilizará posteriormente.
     BudgetId = respData.budget_id;
 
-    /*
-     * IMPORTANTE:
-     *
-     * Ya NO hacemos:
-     *
-     * clearBudgetRows();
-     * ensureBudgetTable();
-     *
-     * porque no queremos mostrar los servicios guardados
-     * en una DataTable ni perder el estado necesario para
-     * continuar con generateBudget().
-     */
-
+    // Mensaje inmediato, ANTES de refrescar la tabla -no depende de ella-.
     Swal.fire({
       icon: "success",
       title: "Servicios agregados al presupuesto",
@@ -403,6 +435,15 @@ async function AddBudgetBatch() {
       showConfirmButton: false,
       timerProgressBar: true,
     });
+
+    // Limpia las filas de captura (evita reenviarlas en un próximo clic) y
+    // muestra en #BudgetTable lo que realmente quedó guardado -esto también
+    // dispara calculateBudgetTotal() vía el evento 'draw' de la tabla, que
+    // es lo único que actualiza CurrentBudgetTotal (si nunca se llama, el
+    // total que generateBudget() envía queda en $0.00 sin importar lo
+    // guardado)-.
+    clearBudgetRows();
+    ensureBudgetTable();
 
   } catch (error) {
     console.error(error);
@@ -414,6 +455,8 @@ async function AddBudgetBatch() {
         error.message ||
         "Ocurrió un error al guardar el presupuesto.",
     });
+  } finally {
+    $btn.prop("disabled", false).html(originalBtnHtml);
   }
 }
 
@@ -439,7 +482,11 @@ function ensureBudgetTable() {
   BudgetTable = $("#BudgetTable").DataTable({
     ajax: url,
     responsive: true,
-    order: [0, "desc"],
+    // Sin orden propio: respeta el orden que ya entrega el backend
+    // (BudgetDetailController::list(), ordenado por id/orden de inserción).
+    // [0, "desc"] reordenaba alfabéticamente por la columna "Tipo Servicio",
+    // no por el orden real en que se agregaron los conceptos.
+    order: [],
 
     language: {
       emptyTable:

@@ -17,6 +17,24 @@ let currentFamilyId = null;
 // familia.
 const petSelectFullOptionsHtml = document.getElementById("pet_id").innerHTML;
 
+// Limpia el error de un campo Select2 (family_id/pet_id) en cuanto haya una
+// selección válida, sin esperar a un nuevo submit (clearReceptionFormErrors
+// solo corre ahí). Select2 dispara 'change' igual que un <select> nativo,
+// así que un solo listener cubre ambos casos (elegido con el mouse o con
+// teclado). Debe engancharse una sola vez por campo, junto con su propia
+// inicialización de select2() (mismo guard de hasClass en ensureSelect2Init).
+function clearSelect2ErrorOnChange(id) {
+  $("#" + id).on("change", function () {
+    if (!$(this).val()) return;
+    $(this).removeClass("is-invalid");
+    $(this).parent().find(".invalid-feedback").remove();
+    $(this)
+      .next(".select2-container")
+      .find(".select2-selection")
+      .removeClass("is-invalid");
+  });
+}
+
 function ensureSelect2Init() {
   if (!$("#family_id").hasClass("select2-hidden-accessible")) {
     $("#family_id").select2({
@@ -25,6 +43,8 @@ function ensureSelect2Init() {
       allowClear: true,
       dropdownParent: $("#receptionModal"),
     });
+
+    clearSelect2ErrorOnChange("family_id");
   }
   if (!$("#pet_id").hasClass("select2-hidden-accessible")) {
     $("#pet_id").select2({
@@ -33,6 +53,8 @@ function ensureSelect2Init() {
       allowClear: true,
       dropdownParent: $("#receptionModal"),
     });
+
+    clearSelect2ErrorOnChange("pet_id");
   }
 }
 
@@ -252,6 +274,39 @@ document.getElementById("exit_date").addEventListener("input", function () {
   }
 });
 
+// Limpia el error de un campo simple (input o <select> nativo, sin Select2)
+// en cuanto tenga un valor, sin esperar a un nuevo submit. Contraparte de
+// clearSelect2ErrorOnChange para el resto de los campos del modal. Se
+// registra aparte de listeners propios que ya tenga el campo (ej. min de
+// exit_date, bloqueo de domingos): si esos vacían el valor antes de que
+// este corra, ve el campo vacío y no borra el error, que es lo correcto.
+function clearPlainFieldError(id, eventName) {
+  document.getElementById(id).addEventListener(eventName, function () {
+    if (!this.value) return;
+    $(this).removeClass("is-invalid");
+    $(this).parent().find(".invalid-feedback").remove();
+  });
+}
+clearPlainFieldError("entry_date", "input");
+clearPlainFieldError("exit_date", "input");
+clearPlainFieldError("admission_type_id", "change");
+clearPlainFieldError("area_id", "change");
+clearPlainFieldError("reason_id", "change");
+clearPlainFieldError("veterinarian_id", "change");
+clearPlainFieldError("room_id", "change");
+clearPlainFieldError("recepcionist_id", "input");
+clearPlainFieldError("num_input", "input");
+
+// Igual que clearPlainFieldError, pero para el grupo de radios de tipo de
+// recepción (renderReceptionFormErrors los trata aparte: marca is-invalid
+// en todos los radios y agrega un único mensaje). Elegir cualquier tipo ya
+// implica un valor válido (siempre son botones con value fijo), así que
+// alcanza con limpiar en el propio 'change'.
+$('input[name="reception_type_id"]').on("change", function () {
+  $('input[name="reception_type_id"]').removeClass("is-invalid");
+  $("#receptionTypeGroup .invalid-feedback").remove();
+});
+
 function clearReceptionFormErrors() {
   $("#receptionForm .is-invalid").removeClass("is-invalid");
   $("#receptionForm .invalid-feedback").remove();
@@ -280,7 +335,16 @@ function renderReceptionFormErrors(errors) {
       return;
     }
 
-    if (field === "pet_id" || field === "veterinarian_id") {
+    if (field === "pet_id" || field === "family_id") {
+      // Escopado a su propio select2 (no ".select2-selection" global: eso
+      // marcaba también el de otros campos aunque no tuvieran error), para
+      // que el listener de 'change' en ensureSelect2Init() pueda limpiarlo
+      // de forma precisa cuando se elige un valor válido.
+      $("#" + field)
+        .next(".select2-container")
+        .find(".select2-selection")
+        .addClass("is-invalid");
+    } else if (field === "veterinarian_id") {
       $(".select2-selection").addClass("is-invalid");
     }
 

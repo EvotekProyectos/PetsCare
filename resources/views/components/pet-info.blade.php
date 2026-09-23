@@ -83,16 +83,47 @@
                 </div>
 
 
-                {{-- Peso --}}
+                {{-- Peso: $showWeightActions/$reception son opcionales (ver
+                     PetWeight) — activan los links "+ Registrar peso/Ver
+                     historial" en todas las pantallas que ya los usan
+                     (Consulta, Hospitalización, Grooming, Hotel, Cremación).
+                     El badge "Pendiente de esta consulta" es aparte y
+                     requiere además $showWeightPendingBadge=true: hoy solo lo
+                     activa appointment/create.blade.php, porque es la única
+                     pantalla donde el peso es obligatorio para poder
+                     finalizar (ver AppointmentController::store()) y la
+                     única que calcula $weightRegisteredThisVisit — mostrarlo
+                     en cualquier otra pantalla marcaría "Pendiente" siempre,
+                     sin importar el estado real, porque nadie más pasa esa
+                     variable. Se actualiza en vivo desde
+                     openRegisterWeightModal()/pet-weights/index.js al registrar. --}}
                 <div class="col-md-3 col-6 pet-info-col">
                     <small class="text-muted">
                         <i class="fas fa-weight pet-info-icon"></i>
-                        Peso
+                        Peso actual
                     </small>
 
-                    <div class="{{ $pet->weight ? 'fw-semibold' : 'text-muted' }}">
+                    <div class="{{ $pet->weight ? 'fw-semibold' : 'text-muted' }}" id="currentPetWeight">
                         {{ $pet->weight ? $pet->weight . ' kg' : 'No definido' }}
                     </div>
+
+                    @if($showWeightActions ?? false)
+                        <div class="mt-1">
+                            <a href="#" class="small"
+                                onclick="openRegisterWeightModal({{ $pet->id }}, {{ $reception->id ?? 'null' }}, {{ $pet->weight ? "'{$pet->weight}'" : 'null' }}); return false;">+
+                                Registrar peso</a>
+                            <span class="text-muted mx-1">|</span>
+                            <a href="#" class="small"
+                                onclick="openWeightHistoryModal({{ $pet->id }}); return false;">Ver historial</a>
+                        </div>
+                        @if($showWeightPendingBadge ?? false)
+                            <div class="mt-1" id="weightPendingBadge" style="{{ ($weightRegisteredThisVisit ?? false) ? 'display:none;' : '' }}">
+                                <span class="badge rounded-pill" style="background-color:#FFF3CD; color:#8A6D3B;">
+                                    <i class="fas fa-exclamation-triangle"></i> Pendiente de esta consulta
+                                </span>
+                            </div>
+                        @endif
+                    @endif
                 </div>
 
 

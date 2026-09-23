@@ -255,7 +255,7 @@
         }
 
         .firma-line {
-            border-top: 1px solid #2b2b2b;
+            border-top: 0px solid #2b2b2b;
             margin-top: 50px;
             padding-top: 4px;
             font-size: 9pt;
@@ -413,20 +413,20 @@
             <table style="width:100%; border-collapse:collapse; margin-top:40px;">
                 <tr>
                     <td style="width:50%; text-align:center; vertical-align:bottom; padding: 0 20px;">
-                        @if ($voucher->vet_signature)
+                        {{-- @if ($voucher->vet_signature)
                             <img src="{{ public_path('storage/' . $voucher->vet_signature) }}"
                                 style="width:300px;height:120px;object-fit:contain;">
-                        @endif
+                        @endif --}}
                         <div class="firma-line">
                             <b>MÉDICO SOLICITANTE</b><br>
-                            MVZ. {{ $voucher->vet->name }}
+                            {{ $voucher->vet->name }}
                         </div>
                     </td>
                     <td style="width:50%; text-align:center; vertical-align:bottom; padding: 0 20px;">
-                        @if ($voucher->warehouse_signature)
+                        {{-- @if ($voucher->warehouse_signature)
                             <img src="{{ public_path('storage/' . $voucher->warehouse_signature) }}"
                                 style="width:300px;height:120px;object-fit:contain;">
-                        @endif
+                        @endif --}}
                         <div class="firma-line">
                             <b>RECHAZADO POR</b><br>
                             {{ $voucher->issuer->name }}

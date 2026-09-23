@@ -54,7 +54,8 @@
                         </div>
 
                         <x-pet-info :pet="$reception->pet" :years="$years" :months="$months" :days="$days"
-                            :genre-name="$genreName" :reproductive-status-name="$reproductiveStatusName" :classification-name="$classificationName" />
+                            :genre-name="$genreName" :reproductive-status-name="$reproductiveStatusName" :classification-name="$classificationName"
+                            :show-weight-actions="true" :reception="$reception" />
 
                     </div>
                     <div class="card-panel">
@@ -165,8 +166,11 @@
 
     <script src="{{ asset('js/groomings/create.js') }}" defer></script>
     <script src="{{ asset('js/receptions/transfer.js') }}" defer></script>
+    <script src="{{ asset('js/pet-weights/index.js') }}" defer></script>
 @endpush
 
 @push('modals')
     @include('reception.partials.transfer-modal')
+    @include('pet-weights.partials.register-modal')
+    @include('pet-weights.partials.history-modal')
 @endpush

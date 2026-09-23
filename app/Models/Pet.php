@@ -129,4 +129,13 @@ public function episodes()
     return $this->hasMany(Episode::class, 'pet_id', 'id');
 }
 
+/**
+ * Historial de mediciones de peso (ver PetWeight): pets.weight es solo el
+ * peso actual, por compatibilidad — esta es la fuente de trazabilidad.
+ */
+public function weights()
+{
+    return $this->hasMany(PetWeight::class, 'pet_id', 'id');
+}
+
 }

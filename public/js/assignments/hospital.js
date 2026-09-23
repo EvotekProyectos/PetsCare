@@ -118,12 +118,19 @@ $(document).ready(function () {
       {
         data: null,
         render: function (data) {
-          // Solo mientras está Hospitalizado se puede seguir atendiendo.
-          // Trasladado o Dado de alta: ya no, solo verla en modo lectura
-          // (ver ReceptionTransferController::markOriginAsTransferred(),
-          // HospitalizationController::discharge()/registerDeathDischarge()
-          // y RedSheetController::entry()).
-          if (data.status_id !== HOSPITALIZATION_STATUS_HOSPITALIZADO_ID) {
+          // Editable en "Trasladado" (recién trasladada desde Consulta, el
+          // médico ya puede trabajar en Red Sheet sin esperar pago ni
+          // responsiva firmada) y en "Hospitalizado" — mismo criterio que
+          // RedSheetController::entry(). "Dado de alta" u otro estatus:
+          // solo lectura. entry() sigue siendo la autoridad real (si esta
+          // hospitalización ya fue trasladada a otra -isTransferred()-,
+          // igual redirige a modo lectura aunque el botón de aquí diga
+          // "Atender").
+          const isEditableStatus =
+            data.status_id === HOSPITALIZATION_STATUS_HOSPITALIZADO_ID ||
+            data.status_id === HOSPITALIZATION_STATUS_TRASLADADO_ID;
+
+          if (!isEditableStatus) {
             return `
                           <a type="button" href="${route("redsheet.show", data.id)}" class="btn btn-sm icon-btn-outline text-primary" title="Ver">
                             <i class="fas fa-eye"></i>
@@ -158,28 +165,27 @@ $(document).ready(function () {
   startPollingHospitalizations();
 });
 
-// Mismo patrón que startPollingReceptions() (public/js/receptions/index.js).
+// pollForChanges (global.js) ya hace el chequeo inicial DE INMEDIATO (esta
+// vista ya lo hacía bien por su cuenta antes de este cambio) y además, ahora,
+// fuerza un chequeo extra al volver de bfcache ('pageshow' + persisted) —
+// mismo helper compartido que receptions/index.js.
 let pollingHospitalizations = null;
-let lastUpdateHospitalizations = null;
 
 function startPollingHospitalizations() {
   if (pollingHospitalizations) return;
 
-  pollingHospitalizations = setInterval(function () {
-    $.ajax({
-      url: route("assignment.lastUpdateHospitalizations"),
-      method: "GET",
-      success: function (response) {
-        if (lastUpdateHospitalizations === null) {
-          lastUpdateHospitalizations = response.last_update;
-          return;
-        }
-
-        if (response.last_update !== lastUpdateHospitalizations) {
-          lastUpdateHospitalizations = response.last_update;
-          table.ajax.reload(null, false);
-        }
-      },
-    });
-  }, 30000);
+  pollingHospitalizations = pollForChanges({
+    checkFn: function () {
+      return $.ajax({
+        url: route("assignment.lastUpdateHospitalizations"),
+        method: "GET",
+      }).then(function (response) {
+        return response.last_update;
+      });
+    },
+    onChanged: function () {
+      table.ajax.reload(null, false);
+    },
+    intervalMs: 30000,
+  });
 }

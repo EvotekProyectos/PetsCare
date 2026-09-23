@@ -17,6 +17,12 @@
                             </h4>
                         </div>
                     </div>
+                    @if ($message = Session::get('error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <p>{{ $message }}</p>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
                     <div class="card-body">
                         <form method="POST" action="{{ route('advance-payments.store') }}"  role="form" enctype="multipart/form-data">
                             @csrf

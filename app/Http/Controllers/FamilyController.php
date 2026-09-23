@@ -48,7 +48,8 @@ class FamilyController extends Controller
      */
     public function store(FamilyRequest $request)
     {
-        $family = Family::create($request->validated());
+        // email_confirmation es solo para validar; no debe llegar al modelo.
+        $family = Family::create($request->safe()->except(['email_confirmation']));
         $this->authorize("create", Family::class);
 
         if ($request->ajax() || $request->wantsJson()) {
@@ -100,7 +101,8 @@ class FamilyController extends Controller
      */
     public function update(FamilyRequest $request, Family $family)
     {
-        $family->update($request->validated());
+        // email_confirmation es solo para validar; no debe llegar al modelo.
+        $family->update($request->safe()->except(['email_confirmation']));
         $this->authorize("update", $family);
 
         return redirect()->route('families.index')

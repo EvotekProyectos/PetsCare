@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group mb-2 mb20">
-                    <label for="anamnesis" class="form-label">SUBJETIVO (ANAMNESIS)</label>
+                    <label for="anamnesis" class="form-label">ANAMNESIS</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="vaadin--lines-list"></span>
@@ -19,7 +19,7 @@
 
             <div class="col-md-6">
                 <div class="form-group mb-2 mb20">
-                    <label for="exam_details" class="form-label">OBJETIVO (DETALLES DEL EXAMEN)</label>
+                    <label for="exam_details" class="form-label">EXAMEN CLÍNICO</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="vaadin--lines-list"></span>
@@ -31,26 +31,14 @@
         </div>
 
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="form-group mb-2 mb20">
-                    <label for="diagnosis" class="form-label">INTERPRETACIÓN (DIAGNÓSTICO PRESUNTIVO/FINAL)</label>
+                    <label for="diagnosis" class="form-label">INTERPRETACIÓN (DIAGNÓSTICO)</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="vaadin--lines-list"></span>
                         </span>
                         <textarea rows="3" class="form-control" id="diagnosis" readonly>{{ $appointment?->diagnosis }} </textarea>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-group mb-2 mb20">
-                    <label for="observations" class="form-label">OBSERVACIONES</label>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text bg-primary-subtle" id="basic-addon1">
-                            <span class="vaadin--lines-list"></span>
-                        </span>
-                        <textarea rows="3" class="form-control" id="observations" readonly>{{ $appointment?->observations }}</textarea>
                     </div>
                 </div>
             </div>

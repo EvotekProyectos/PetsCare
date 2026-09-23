@@ -140,26 +140,26 @@ function voucherTableReload() {
 }
 
 let pollingAlmacen = null;
-let lastUpdateAlmacen = null;
 
+// pollForChanges (global.js) chequea DE INMEDIATO (no solo en el primer
+// tick a los 30s) y además al volver de bfcache ('pageshow' + persisted) —
+// mismo helper compartido que ya usa receptions/index.js, evita repetir
+// (y volver a arrastrar) el mismo bug de polling en cada tabla.
 function startPollingAlmacen() {
   if (pollingAlmacen) return;
 
-  pollingAlmacen = setInterval(function () {
-    $.ajax({
-      url: route("vouchers.lastUpdateGlobal"),
-      method: "GET",
-      success: function (response) {
-        if (lastUpdateAlmacen === null) {
-          lastUpdateAlmacen = response.last_update;
-          return;
-        }
-
-        if (response.last_update !== lastUpdateAlmacen) {
-          lastUpdateAlmacen = response.last_update;
-          table.ajax.reload(null, false);
-        }
-      },
-    });
-  }, 30000);
+  pollingAlmacen = pollForChanges({
+    checkFn: function () {
+      return $.ajax({
+        url: route("vouchers.lastUpdateGlobal"),
+        method: "GET",
+      }).then(function (response) {
+        return response.last_update;
+      });
+    },
+    onChanged: function () {
+      table.ajax.reload(null, false);
+    },
+    intervalMs: 30000,
+  });
 }

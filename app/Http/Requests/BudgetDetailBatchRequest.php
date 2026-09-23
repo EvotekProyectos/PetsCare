@@ -23,6 +23,10 @@ class BudgetDetailBatchRequest extends FormRequest
     {
         return [
             'reception_id' => 'required|integer|exists:receptions,id',
+            // Budget de la sesión de captura en curso (ver
+            // BudgetDetailController::storeBatch()): nullable porque el
+            // primer lote de una apertura del modal todavía no tiene uno.
+            'budget_id' => 'nullable|integer|exists:budgets,id',
             'lines' => 'required|array|min:1',
             'lines.*.type' => 'required|string|in:service,lab,img',
             'lines.*.product_id' => 'required|integer',

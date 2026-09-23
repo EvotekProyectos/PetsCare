@@ -127,7 +127,7 @@
 
     padding: 12px 24px;
     background: #fff;
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, .08);
+   
 
     transition: left 0.3s ease;
 }
@@ -230,16 +230,16 @@ body.sidebar-collapsed .finalize-sticky-bar {
 .action-link {
     border: none;
     background: #E6F1FB;
-    border-radius: 24px;
-    padding: 10px 20px;
+    border-radius: 18px;
+    padding: 6px 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 9px;
-    font-size: 14px;
+    gap: 6px;
+    font-size: 12px;
     font-weight: 600;
-    min-width: 150px;
-    min-height: 44px;
+    min-width: 110px;
+    min-height: 34px;
     color: #0455A0;
     cursor: pointer;
     text-decoration: none;

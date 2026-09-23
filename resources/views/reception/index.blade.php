@@ -537,6 +537,7 @@
     @push('modals')
         @include('reception.partials.pet-quick-create-modal')
         @include('reception.partials.account-statement-modal')
+        @include('reception.partials.advance-payment-modal')
         @include('reception.partials.documents-modal')
         @include('reception.partials.transfer-modal')
         @include('reception.partials.transfers-tracking-modal')
@@ -550,6 +551,7 @@
     <script src="{{ asset('js/receptions/petQuickCreate.js') }}" defer></script>
     <script src="{{ asset('js/pets/breed-cascade.js') }}" defer></script>
     <script src="{{ asset('js/receptions/accountStatement.js') }}" defer></script>
+    <script src="{{ asset('js/receptions/advancePayment.js') }}" defer></script>
     <script src="{{ asset('js/receptions/transfer.js') }}" defer></script>
     <script>
         // Usado por la columna Acciones de la tabla de Consultas (ver

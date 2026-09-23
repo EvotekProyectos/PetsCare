@@ -30,6 +30,7 @@ const VOUCHER_SIGN_ACTIONS = {
     getUrl: (id) => route("vouchers.cancelFormat", id),
     postUrl: (id) => route("vouchers.cancel", id),
     editableQuantity: false,
+    requireSignature: false,
     showObservaciones: true,
     observacionesLabel: "Motivo de cancelación",
     observacionesRequired: true,
@@ -49,15 +50,13 @@ const VOUCHER_SIGN_ACTIONS = {
     getUrl: (id) => route("vouchers.issueFormat", id),
     postUrl: (id) => route("vouchers.issue", id),
     editableQuantity: false,
-    showObservaciones: true,
-    observacionesLabel: "Observaciones del almacén",
+    requireSignature: false,
+    // Aceptar el modal (botón "Confirmar surtido") ya es la confirmación;
+    // no se pide una segunda con SweetAlert.
+    skipConfirmQuestion: true,
+    showObservaciones: false,
+    observacionesLabel: null,
     observacionesRequired: false,
-    confirmQuestion: {
-      title: "¿Confirmar surtido?",
-      text: "Se registrará la entrega de los insumos solicitados.",
-      icon: "question",
-      confirmButtonText: "Sí, surtir",
-    },
     successTitle: "Vale surtido",
     successText: "El vale fue surtido correctamente.",
   },
@@ -67,17 +66,13 @@ const VOUCHER_SIGN_ACTIONS = {
     getUrl: (id) => route("vouchers.rejectFormat", id),
     postUrl: (id) => route("vouchers.reject", id),
     editableQuantity: false,
+    requireSignature: false,
     showObservaciones: true,
     observacionesLabel: "Motivo de rechazo",
     observacionesRequired: true,
-    confirmQuestion: {
-      title: "¿Rechazar vale?",
-      text: "Esta acción no se puede deshacer.",
-      icon: "warning",
-      confirmButtonText: "Sí, rechazar",
-      cancelButtonText: "Volver",
-      confirmButtonColor: "#dc3545",
-    },
+
+    skipConfirmQuestion: true,
+
     successTitle: "Vale rechazado",
     successText: "El vale fue rechazado correctamente.",
   },
@@ -176,8 +171,10 @@ function voucherStatusBadgeColor(status) {
 
 function voucherSignPatientLine(voucher) {
   const parts = [];
-  if (voucher.reception?.type) parts.push(`Servicio: ${voucher.reception.type}`);
-  if (voucher.vet?.name) parts.push(`Médico solicitante: MVZ. ${voucher.vet.name}`);
+  if (voucher.reception?.type)
+    parts.push(`Servicio: ${voucher.reception.type}`);
+  if (voucher.vet?.name)
+    parts.push(`Médico solicitante: MVZ. ${voucher.vet.name}`);
   return parts.join(" · ");
 }
 
@@ -194,7 +191,9 @@ async function openVoucherSignModal(action, voucherId) {
   $("#voucherSignLoader").show();
   $("#voucherSignObservaciones").val("");
 
-  bootstrap.Modal.getOrCreateInstance(document.getElementById("voucherSignModal")).show();
+  bootstrap.Modal.getOrCreateInstance(
+    document.getElementById("voucherSignModal"),
+  ).show();
 
   try {
     const res = await fetch(config.getUrl(voucherId), {
@@ -232,14 +231,23 @@ async function openVoucherSignModal(action, voucherId) {
       $("#voucherSignObservacionesWrap").hide();
     }
 
-    initVoucherSignCanvas();
-    clearVoucherSignCanvas();
+    // requireSignature: false (surtir/rechazar) -> no se pide ni se muestra
+    // la firma, ya no aporta nada útil en ese flujo.
+    if (config.requireSignature === false) {
+      $("#voucherSignCanvasWrap").hide();
+    } else {
+      $("#voucherSignCanvasWrap").show();
+      initVoucherSignCanvas();
+      clearVoucherSignCanvas();
+    }
 
     $("#voucherSignLoader").hide();
     $("#voucherSignContent").show();
   } catch (error) {
     console.error(error);
-    bootstrap.Modal.getInstance(document.getElementById("voucherSignModal"))?.hide();
+    bootstrap.Modal.getInstance(
+      document.getElementById("voucherSignModal"),
+    )?.hide();
     Swal.fire({
       icon: "error",
       title: "No se pudo abrir el vale",
@@ -271,7 +279,11 @@ $("#voucherSignConfirmBtn").on("click", async function () {
   }
 
   const observaciones = $("#voucherSignObservaciones").val()?.trim() ?? "";
-  if (config.showObservaciones && config.observacionesRequired && observaciones === "") {
+  if (
+    config.showObservaciones &&
+    config.observacionesRequired &&
+    observaciones === ""
+  ) {
     Swal.fire({
       icon: "warning",
       title: "Dato requerido",
@@ -280,7 +292,7 @@ $("#voucherSignConfirmBtn").on("click", async function () {
     return;
   }
 
-  if (isVoucherSignCanvasEmpty()) {
+  if (config.requireSignature !== false && isVoucherSignCanvasEmpty()) {
     Swal.fire({
       icon: "error",
       title: "Firma requerida",
@@ -289,17 +301,21 @@ $("#voucherSignConfirmBtn").on("click", async function () {
     return;
   }
 
-  const result = await Swal.fire({
-    title: config.confirmQuestion.title,
-    text: config.confirmQuestion.text,
-    icon: config.confirmQuestion.icon,
-    showCancelButton: true,
-    confirmButtonText: config.confirmQuestion.confirmButtonText,
-    cancelButtonText: config.confirmQuestion.cancelButtonText || "Cancelar",
-    confirmButtonColor: config.confirmQuestion.confirmButtonColor,
-  });
+  // surtir: aceptar el modal ya es la confirmación, no se pide una segunda
+  // vez con SweetAlert (ver skipConfirmQuestion).
+  if (!config.skipConfirmQuestion) {
+    const result = await Swal.fire({
+      title: config.confirmQuestion.title,
+      text: config.confirmQuestion.text,
+      icon: config.confirmQuestion.icon,
+      showCancelButton: true,
+      confirmButtonText: config.confirmQuestion.confirmButtonText,
+      cancelButtonText: config.confirmQuestion.cancelButtonText || "Cancelar",
+      confirmButtonColor: config.confirmQuestion.confirmButtonColor,
+    });
 
-  if (!result.isConfirmed) return;
+    if (!result.isConfirmed) return;
+  }
 
   const $confirmBtn = $("#voucherSignConfirmBtn").prop("disabled", true);
 
@@ -311,13 +327,18 @@ $("#voucherSignConfirmBtn").on("click", async function () {
     didOpen: () => Swal.showLoading(),
   });
 
-  const canvas = document.getElementById("voucherSignCanvas");
   const formData = new FormData();
-  formData.append("signature", canvas.toDataURL("image/png"));
+
+  if (config.requireSignature !== false) {
+    const canvas = document.getElementById("voucherSignCanvas");
+    formData.append("signature", canvas.toDataURL("image/png"));
+  }
 
   if (config.editableQuantity) {
     $("#voucherSignProductsBody .cantidad-insumo").each(function () {
-      const match = $(this).attr("name").match(/cantidad\[(\d+)\]/);
+      const match = $(this)
+        .attr("name")
+        .match(/cantidad\[(\d+)\]/);
       if (match) formData.append(`cantidad[${match[1]}]`, $(this).val());
     });
   }
@@ -339,7 +360,9 @@ $("#voucherSignConfirmBtn").on("click", async function () {
     }
 
     Swal.close();
-    bootstrap.Modal.getInstance(document.getElementById("voucherSignModal"))?.hide();
+    bootstrap.Modal.getInstance(
+      document.getElementById("voucherSignModal"),
+    )?.hide();
 
     if (typeof voucherTableReload === "function") {
       voucherTableReload();
@@ -368,3 +391,110 @@ $("#voucherSignConfirmBtn").on("click", async function () {
     $confirmBtn.prop("disabled", false);
   }
 });
+
+// El médico ya no captura cantidad ni firma (siempre 1 unidad, sin firma —
+// ver VoucherController::generate()), así que ya no tiene sentido abrir
+// voucherSignModal para "generar": no queda nada que revisar ni completar.
+// Un solo SweetAlert de confirmación y, detrás, se encadenan las dos
+// llamadas que ya existían (store-products + generate) sin mostrar UI
+// intermedia. Compartida entre Consulta (appointments/create.js) y
+// Hospitalización (hospitalizations/createredsheets.js) para no duplicar
+// la lógica en los dos archivos.
+async function generateVoucherWithoutReview(
+  sourceType,
+  receptionId,
+  sourceIds,
+  $button,
+  onSuccess,
+) {
+  if (!sourceIds || sourceIds.length === 0) {
+    Swal.fire({
+      icon: "warning",
+      title: "Selecciona al menos un insumo",
+    });
+    return;
+  }
+
+  const result = await Swal.fire({
+    title: "¿Generar vale?",
+    text: "Se generará un vale por cada insumo seleccionado.",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Sí, generar",
+    cancelButtonText: "Cancelar",
+  });
+
+  if (!result.isConfirmed) return;
+
+  $button?.prop("disabled", true);
+
+  // Mostrar loading mientras se genera
+  Swal.fire({
+    title: "Generando vale...",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    showConfirmButton: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+
+  try {
+    const storeRes = await fetch(route("vouchers.store-products"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+      },
+      body: JSON.stringify({
+        reception_id: receptionId,
+        source_type: sourceType,
+        source_ids: sourceIds,
+      }),
+    });
+
+    const storeResp = await storeRes.json();
+
+    if (!storeRes.ok || !storeResp.success) {
+      throw new Error(storeResp.message || "No se pudo generar el vale.");
+    }
+
+    const genRes = await fetch(
+      route("vouchers.generate", storeResp.voucher_id),
+      {
+        method: "POST",
+        headers: {
+          "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+      },
+    );
+
+    const genResp = await genRes.json();
+
+    if (!genRes.ok || !genResp.success) {
+      throw new Error(genResp.message || "No se pudo generar el vale.");
+    }
+
+    // IMPORTANTE:
+    // Cerrar el Swal de "Generando vale..."
+    Swal.close();
+
+    // No mostrar alerta de éxito
+    if (typeof onSuccess === "function") {
+      onSuccess();
+    }
+  } catch (error) {
+    console.error(error);
+
+    // Cerrar el loading antes de mostrar el error
+    Swal.close();
+
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: error.message || "No se pudo generar el vale.",
+    });
+  } finally {
+    $button?.prop("disabled", false);
+  }
+}

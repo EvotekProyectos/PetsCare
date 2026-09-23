@@ -25,8 +25,12 @@ class AdvancePaymentRequest extends FormRequest
             'reception_id' => 'nullable|integer|exists:receptions,id',
 			'reference' => 'nullable|string',
 			'concept' => 'required|string',
-			'date' => 'required',
-			'amount' => 'required|string',
+			// Ya no la captura el usuario en el modal de creación (ver
+			// AdvancePaymentController::store(), que la asigna con now());
+			// se deja nullable (no se elimina) porque edit.blade.php sigue
+			// enviándola y update() no debe verse afectado.
+			'date' => 'nullable',
+			'amount' => 'required|numeric|gt:0',
             'user_id' => 'nullable|integer|exists:users,id',
 			'status' => 'nullable|boolean',
         ];

@@ -1,0 +1,6 @@
+/* Adapta el ancho del widget de intl-tel-input (por defecto inline-block) para que
+   ocupe el 100% del contenedor, igual que el resto de los .form-control del formulario. */
+.iti {
+    display: block;
+    width: 100%;
+}

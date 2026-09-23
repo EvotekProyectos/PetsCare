@@ -1,6 +1,17 @@
 const colorFondo = "white";
 let dibujando;
 
+// Buscador del procedimiento (ARTICULO_ID de Firebird, puede ser un catálogo
+// largo) — select2.min.js ya viene cargado antes que este script (ver
+// aut_quirurgica.blade.php). Sin theme "bootstrap-5": este documento no
+// carga Bootstrap, usa su propio estilo (documento-base.css + el <style>
+// propio del documento), así que aquí va el tema default de select2.
+$("#procedure").select2({
+    placeholder: "Buscar el procedimiento a realizar",
+    width: "resolve",
+    allowClear: true,
+});
+
 $("canvas").each(function(index) {
     let m;
     const ctx = this.getContext("2d");
@@ -9,10 +20,17 @@ $("canvas").each(function(index) {
     const oMousePos = (elmnt, e) => {
         let Client = elmnt.getBoundingClientRect();
         e = e.touches ? e.touches[0] : e;
-    
+
+        // El canvas ahora usa la clase .signature-box (documento-base.css),
+        // que puede encogerse en pantallas angostas. Si el tamaño CSS
+        // (Client.width/height) llega a diferir del buffer de dibujo
+        // (elmnt.width/height), hay que escalar el trazo o queda mal ubicado.
+        const scaleX = elmnt.width / Client.width;
+        const scaleY = elmnt.height / Client.height;
+
         return {
-            x: Math.round(e.clientX - Client.left),
-            y: Math.round(e.clientY - Client.top),
+            x: Math.round((e.clientX - Client.left) * scaleX),
+            y: Math.round((e.clientY - Client.top) * scaleY),
         };
     };
     
@@ -62,6 +80,15 @@ $('#procedure').on('change', function () {
 $("form").on("submit", function (e) {
     e.preventDefault();
 
+    const $btn = $(this).find(".btnEnviar");
+
+    // Defensa extra contra doble envío: si ya hay una petición en curso
+    // (botón deshabilitado más abajo), ignora cualquier submit adicional
+    // -por ejemplo, Enter en un input del form- mientras se procesa.
+    if ($btn.prop("disabled")) {
+        return;
+    }
+
     const $selected = $("#procedure option:selected");
     const procedure = $selected.data("nombre") || ""; // nombre legible, no el ID
     const total = $("#total").val();
@@ -93,6 +120,26 @@ $("form").on("submit", function (e) {
     formData.append("total", total);
     formData.append("include", include);
 
+    // Deshabilita el botón y muestra el loading ANTES del $.ajax (todo esto
+    // corre síncrono dentro del mismo handler), así que un segundo clic no
+    // alcanza a disparar otra petición aunque llegue muy rápido.
+    const originalBtnHtml = $btn.html();
+    $btn.prop("disabled", true).html('<span class="btn-spinner"></span>Firmando...');
+
+    function resetSubmitButton() {
+        $btn.prop("disabled", false).html(originalBtnHtml);
+    }
+
+    Swal.fire({
+        title: "Firmando autorización...",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+    });
+
     $.ajax({
         url: route('surgery_authorization.pdf', RECEPTION_ID),
         type: "post",
@@ -103,6 +150,37 @@ $("form").on("submit", function (e) {
         processData: false,
         data: formData,
         success: function (response) {
+            Swal.close();
+
+            // Iniciada desde Recepción (ver SurgeryController::
+            // surgery_authorization(), que recibe ?from=reception desde el
+            // modal de Documentos o encadenada desde hospital_auth.js):
+            // nunca se auto-abre el PDF, y nunca termina en Hospitalizaciones
+            // (assignment.hospital, panel exclusivo de médico) — mismo
+            // criterio que hospital_auth.js.
+            if (FROM_RECEPTION) {
+                
+                    Swal.fire({
+                        icon: 'question',
+                        title: '¿Deseas ver el PDF generado?',
+                        showCancelButton: true,
+                        confirmButtonText: 'Ver PDF',
+                        cancelButtonText: 'Cerrar',
+                    }).then(function (result) {
+                        if (result.isConfirmed) {
+                            window.open(response.url, '_blank');
+                        }
+                        // Si todavía falta la Autorización de Hospital (esta
+                        // quirúrgica se firmó primero desde el modal de
+                        // Documentos), se encadena directo a firmarla; si no,
+                        // de vuelta a Recepciones, en la pestaña de Hospital.
+                        window.location.href = response.next_format_url
+                            || route('receptions.index', { tab: 'hospitalizaciones' });
+                    });
+                return;
+            }
+
+            // Flujo nativo (no iniciado desde Recepción): sin cambios.
             window.open(response.url, '_blank');
             window.location.href = CAME_FROM_TRANSFER
                 ? route('assignment.hospital')
@@ -110,7 +188,13 @@ $("form").on("submit", function (e) {
         },
         error: function (error) {
             console.error("Error:", error);
-            alert("Ocurrió un error al procesar la solicitud. Inténtalo de nuevo.");
+            Swal.close();
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Ocurrió un error al procesar la solicitud. Inténtalo de nuevo.',
+            });
+            resetSubmitButton();
         },
     });
 });

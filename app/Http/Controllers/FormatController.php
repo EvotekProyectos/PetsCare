@@ -235,7 +235,7 @@ class FormatController extends Controller
         $include = $request->input('include');
 
         $uniqueId = uniqid();
-        $pdfPath = 'public/formats/auth_surgery_' . $id . '_' . $uniqueId . '.pdf';
+        $pdfPath = 'public/formats/AUT_QUIR' . $id .  '_' . $pet->id . '_' . date('Ymd_His') . '.pdf';
 
         $pdf = PDF::loadView('format.aut_surgery', [
             'pet' => $pet,
@@ -316,18 +316,54 @@ class FormatController extends Controller
         return response()->json(['url' => asset('storage' . $pdfPath)]);
     }
 
-    public function responsivaEg($id)
+    /**
+     * $id sigue siendo el pet_id de siempre (no cambia: el formulario
+     * genérico de Formatos -format/form.blade.php- solo conoce la mascota,
+     * no una recepción). reception_id es un query param OPCIONAL nuevo:
+     * cuando la Consulta abre esta misma responsiva (ver appointment/create.blade.php),
+     * lo manda para poder mostrar médico/fecha de esa consulta y, al firmar,
+     * regresar ahí en vez de a formats.created (ver responsiva.js). Sin ese
+     * parámetro el comportamiento es idéntico al de siempre.
+     */
+    public function responsivaEg(Request $request, $id)
     {
         $pet = Pet::with('family', 'genre')->find($id);
-        return view('format.responsivaEG', compact("pet"));
+
+        $receptionId = $request->query('reception_id');
+        $reception = $receptionId ? Reception::with('vet')->find($receptionId) : null;
+
+        // Mismo criterio que ReceptionController::hospital_authorization()/
+        // SurgeryController::surgery_authorization(): sin esto, el botón
+        // "Atrás" del navegador puede restaurar esta página (con la firma ya
+        // dibujada y el botón deshabilitado, tal como quedó justo antes de
+        // navegar) desde bfcache, sin volver a pedírsela al servidor.
+        return response()
+            ->view('format.responsivaEG', compact("pet", "reception"))
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            ->header('Pragma', 'no-cache');
     }
 
     public function responsivaPdf(Request $request, $id)
     {
+        // Validación en backend (no depender únicamente del JS de
+        // responsiva.js): sin estos datos no se guarda nada.
+        $request->validate([
+            'signature' => 'required|string',
+            'name' => 'required|string',
+            'reason' => 'required|string',
+            'reception_id' => 'nullable|integer|exists:receptions,id',
+        ], [
+            'signature.required' => 'La firma del propietario es obligatoria.',
+            'name.required' => 'El nombre es obligatorio.',
+            'reason.required' => 'El motivo es obligatorio.',
+            'reception_id.exists' => 'La consulta indicada no existe.',
+        ]);
+
         $pet = Pet::with('family', 'genre')->find($id);
         $signatureDataUrl = $request->input('signature');
         $name = $request->input('name');
         $reason = $request->input('reason');
+        $receptionId = $request->input('reception_id');
 
         $uniqueId = uniqid();
         $pdfPath = 'public/formats/responsiva_EG' . $id . '_' . $uniqueId . '.pdf';
@@ -346,6 +382,9 @@ class FormatController extends Controller
         $format = new Format();
         $format->format_type_id = 6;
         $format->pet_id = $id;
+        // Nullable, igual que en el resto de responsivas: solo se llena
+        // cuando esta responsiva se firmó desde una Consulta (ver arriba).
+        $format->reception_id = $receptionId ?: null;
         $format->format_pdf = $pdfPath;
         $format->save();
 

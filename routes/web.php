@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\ReceptionStatusHistory;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\PetController;
+use App\Http\Controllers\PetWeightController;
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\RoomController;
@@ -52,6 +53,7 @@ use App\Http\Controllers\PetClassificationController;
 use App\Http\Controllers\RoleHasPermissionController;
 use App\Http\Controllers\AppointmentServiceController;
 use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\BudgetConversionController;
 use App\Http\Controllers\BudgetDetailController;
 use App\Http\Controllers\CmTypeController;
 use App\Http\Controllers\ConfirmedDateController;
@@ -201,7 +203,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/pets/preview/{family}', [PetController::class, 'preview'])->name('pets.preview');
     Route::get('/pets/data/{family}', [PetController::class, 'data'])->name('pets.data');
     // Route::get('/pets/{pet}/family', [PetController::class, 'getFamilyByPet'])->name('pets.family');
+    Route::post('/pets/quick-create', [PetController::class, 'quickCreate'])->name('pets.quickCreate');
     Route::resource('pets', PetController::class);
+
+    //Pet Weights (historial de peso, ver PetWeight)
+    Route::post('/pet-weights', [PetWeightController::class, 'store'])->name('pet-weights.store');
+    Route::get('/pets/{id}/weights', [PetWeightController::class, 'history'])->name('pet-weights.history');
 
     //Breeds (catálogo especie -> raza, ver Form Pet / petQuickCreateModal)
     Route::get('/breeds/data/{species}', [BreedController::class, 'data'])->name('breeds.data');
@@ -210,6 +217,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put('/receptions/update/{id}', [ReceptionController::class, 'transfer'])->name('reception.transfer');
     Route::get('/receptions/list/{reception_type_id}', [ReceptionController::class, 'list'])->name('reception.list');
     Route::get('/receptions/{id}/area', [ReceptionController::class, 'getReceptionArea'])->name('receptions.getArea');
+    Route::get('/receptions/{id}/consulta-balance', [ReceptionController::class, 'consultaBalance'])->name('receptions.consultaBalance');
+    Route::get('/receptions/{id}/payment-summary', [ReceptionController::class, 'paymentSummary'])->name('receptions.paymentSummary');
     Route::get('/receptions/historial/{id}', [ReceptionController::class, 'historial'])->name('reception.historial');
     Route::get('/receptions/hospital/{id}', [ReceptionController::class, 'hospital_authorization'])->name('hospital.list');
     Route::post('/receptions/hospital/pdf/{id}', [ReceptionController::class, 'hospital_authorizationpdf'])->name('hospital.pdf');
@@ -254,11 +263,12 @@ Route::group(['middleware' => ['auth']], function () {
     //Appointments
     Route::get('/appointments/consultation/{id}', [AppointmentController::class, 'consultation'])->name('appointment.consultation');
     Route::get('/appointments/pv/{id}/{concepto}', [AppointmentController::class, 'ordenventa'])->name('appointment.pay');
-   Route::get('/appointments/list/{id}', [AppointmentController::class, 'list'])->name('appointment.list');
+    Route::get('/appointments/list/{id}', [AppointmentController::class, 'list'])->name('appointment.list');
 
     //Route::get('/appointments/{id}', [AppointmentController::class, 'list'])->name('appointment.list');
     Route::get('/appointments/historic/{id}', [AppointmentController::class, 'historic'])->name('appointment.historic');
     Route::get('/appointments/entries/{id}/show', [AppointmentController::class, 'showReception'])->name('appointment.show');
+    Route::get('/appointments/entries/{id}/details-modal', [AppointmentController::class, 'detailsModal'])->name('appointment.detailsModal');
     Route::get('/appointments/{id}/account-statement', [AppointmentController::class, 'accountStatement'])->name('appointment.account-statement');
     Route::get('/appointments/{id}/account-statement/pdf', [AppointmentController::class, 'accountStatementPdf'])->name('appointment.account-statement.pdf');
     Route::post('/appointments/{id}/account-statement/close', [AppointmentController::class, 'closeAccount'])->name('appointment.account-statement.close');
@@ -311,6 +321,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/red-sheets/recap/{id}', [RedSheetController::class, 'recap'])->name("red-sheets.recap");
     Route::get('/red-sheets/{id}/events', [RedSheetController::class, 'events'])->name("red-sheets.events");
     Route::post('/red-sheets/{id}/remove', [RedSheetController::class, 'removeService'])->name("red-sheets.remove-service");
+
+    // Conversión de Presupuesto (Consulta) a servicios de Hospitalización
+    // (ver BudgetConversionController/BudgetConversionService). {id} es el
+    // reception_id de la Hospitalización, igual que en las rutas de arriba.
+    // Ya no llevan {budgetId}: la conversión opera sobre TODOS los
+    // presupuestos firmados del episodio a la vez, no sobre uno elegido de
+    // antemano (ver BudgetConversionService::signedBudgetsFor()).
+    Route::get('/red-sheets/{id}/budget-conversion/eligible', [BudgetConversionController::class, 'eligible'])->name('budget-conversions.eligible');
+    Route::get('/red-sheets/{id}/budget-conversion/details', [BudgetConversionController::class, 'details'])->name('budget-conversions.details');
+    Route::post('/red-sheets/{id}/budget-conversion/convert', [BudgetConversionController::class, 'convert'])->name('budget-conversions.convert');
     // Route::post('/redSheet/discharge', [RedSheetController::class, 'discharge'])->name("redsheet-discharge");
     // Route::post('/hospitalizations/discharge', [RedSheetController::class, 'dischargePatient']);
     Route::resource('red-sheets', RedSheetController::class);
@@ -538,6 +558,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/advance-payments/generate-reference/{id}', [AdvancePaymentController::class, 'reference'])->name('advance-payments.refrence');
     Route::get('/advance-payments/list', [AdvancePaymentController::class, 'list'])->name('advance-payments.list');
     Route::get('/advance-payments/add/{id}', [AdvancePaymentController::class, 'add'])->name('advance-payments.add');
+    Route::post('/receptions/{id}/pay-consulta', [AdvancePaymentController::class, 'payConsulta'])->name('advance-payments.payConsulta');
+    Route::post('/receptions/{id}/pay-hospitalizacion', [AdvancePaymentController::class, 'payHospitalizacion'])->name('advance-payments.payHospitalizacion');
     Route::resource('advance-payments', AdvancePaymentController::class);
 
     //vouchers

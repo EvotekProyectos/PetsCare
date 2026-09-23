@@ -40,12 +40,46 @@
                     </table>
                 </div>
 
+                {{-- Solo informativo: no se resta del Total de arriba (eso depende
+                     de que el anticipo esté "pagado", flujo aún no implementado). --}}
+                <div id="as_advance_payments_section" class="mt-3" style="display: none;">
+                    <h6 class="fw-bold mb-1">Anticipos registrados</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Referencia</th>
+                                    <th>Concepto</th>
+                                    <th>Fecha</th>
+                                    <th class="text-end">Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody id="as_advance_payments_body"></tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="3" class="text-end">Total anticipado:</th>
+                                    <th class="text-end" id="as_advance_payments_total">$0.00</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
                 <div id="as_close_warning" class="alert alert-warning py-2 px-3 mb-0" style="display: none;"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
                 <button type="button" class="btn btn-outline-primary btn-sm" onclick="showAccountStatementPdf()">
                     <i class="fas fa-file-pdf"></i> Mostrar PDF
+                </button>
+                {{-- Mismo mecanismo que el botón "Enviar por WhatsApp" del
+                     modal de Documentos (sendDocumentWhatsApp(), ver
+                     receptions/index.js): envía el MISMO PDF que ya genera
+                     "Mostrar PDF", nunca un documento aparte. --}}
+                <button type="button" class="btn btn-outline-success btn-sm" id="as_whatsapp_btn"
+                    onclick="sendAccountStatementWhatsApp()">
+                    {{-- <i class="fab fa-whatsapp"></i> --}}
+                     Compartir
                 </button>
                 <button type="button" class="btn btn-primary btn-sm" id="as_close_account_btn" disabled
                     onclick="closeAccountFromModal()">

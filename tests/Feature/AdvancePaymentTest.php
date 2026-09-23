@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\Account;
 use App\Models\AdvancePayment;
+use App\Models\Episode;
 use App\Models\Reception;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -33,6 +35,33 @@ class AdvancePaymentTest extends TestCase
         Artisan::call('db:seed', ['--class' => 'RolesAndPermissionsSeeder']); // Ejecuta los seeders de permisos y roles
         $this->user = User::factory()->create(); //Creacion del usuario para pruebas
         $this->user->assignRole('administrador'); //asigna el rol de administrador al usuario de pruebas
+    }
+
+    /**
+     * Crea una Reception con su Episode + Account, igual que
+     * ReceptionController::store() en producción. ReceptionFactory no
+     * replica ese efecto secundario por su cuenta, así que cualquier prueba
+     * que dependa de la cadena reception->episode->account debe armarla así.
+     */
+    private function receptionWithAccount(array $receptionAttributes = [], string $accountStatus = Account::STATUS_OPEN, ?\DateTimeInterface $closedAt = null): Reception
+    {
+        $reception = Reception::factory()->create($receptionAttributes);
+
+        $episode = Episode::create([
+            'pet_id' => $reception->pet_id,
+            'status' => Episode::STATUS_OPEN,
+            'opened_at' => now()->subDay(),
+        ]);
+
+        Account::create([
+            'episode_id' => $episode->id,
+            'status' => $accountStatus,
+            'closed_at' => $closedAt,
+        ]);
+
+        $reception->update(['episode_id' => $episode->id]);
+
+        return $reception->fresh();
     }
 
     /** @test */
@@ -72,7 +101,10 @@ class AdvancePaymentTest extends TestCase
     /** @test */
     public function save_new_register_for_advancepayment()
     {
-        $reception = Reception::factory()->create(); //Creamos recepcion ficticia para el test
+        // Reception::factory() por sí sola no crea Episode/Account (ese
+        // efecto secundario solo lo produce ReceptionController::store() en
+        // producción) — se arma aquí a mano para reflejar el flujo real.
+        $reception = $this->receptionWithAccount();
 
         //establecemos los datos reuqridos para un nuevo registro de anticpo
         $data = [
@@ -87,6 +119,97 @@ class AdvancePaymentTest extends TestCase
         $response = $this->actingAs($this->user)->post(route('advance-payments.store'), $data);
 
         $this->assertDatabaseHas('advance_payments', $data); //confirmamos que los datos enviados se encuentren en la tabla
+    }
+
+    /** @test */
+    public function caso_1_nuevo_anticipo_queda_ligado_a_la_cuenta_de_su_recepcion()
+    {
+        $reception = $this->receptionWithAccount();
+        $account = $reception->episode->account;
+
+        $response = $this->actingAs($this->user)->post(route('advance-payments.store'), [
+            'date' => now()->format('Y-m-d H:i:s'),
+            'reception_id' => $reception->id,
+            'amount' => '500',
+            'concept' => 'Anticipo consulta',
+        ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('advance_payments', [
+            'reception_id' => $reception->id,
+            'account_id' => $account->id,
+        ]);
+    }
+
+    /** @test */
+    public function caso_2_segundo_anticipo_de_la_misma_cuenta_queda_ligado_a_la_misma_cuenta()
+    {
+        $reception = $this->receptionWithAccount();
+        $account = $reception->episode->account;
+
+        foreach (['Primer anticipo', 'Segundo anticipo'] as $concepto) {
+            $this->actingAs($this->user)->post(route('advance-payments.store'), [
+                'date' => now()->format('Y-m-d H:i:s'),
+                'reception_id' => $reception->id,
+                'amount' => '300',
+                'concept' => $concepto,
+            ]);
+        }
+
+        $this->assertEquals(
+            2,
+            AdvancePayment::where('reception_id', $reception->id)->where('account_id', $account->id)->count()
+        );
+    }
+
+    /** @test */
+    public function caso_3_mascota_con_varias_hospitalizaciones_liga_cada_anticipo_a_su_propia_cuenta()
+    {
+        $petId = \App\Models\Pet::factory()->create()->id;
+
+        $receptionA = $this->receptionWithAccount(['pet_id' => $petId]);
+        $receptionB = $this->receptionWithAccount(['pet_id' => $petId]);
+
+        $this->actingAs($this->user)->post(route('advance-payments.store'), [
+            'date' => now()->format('Y-m-d H:i:s'),
+            'reception_id' => $receptionA->id,
+            'amount' => '100',
+            'concept' => 'Anticipo hospitalización A',
+        ]);
+
+        $this->actingAs($this->user)->post(route('advance-payments.store'), [
+            'date' => now()->format('Y-m-d H:i:s'),
+            'reception_id' => $receptionB->id,
+            'amount' => '200',
+            'concept' => 'Anticipo hospitalización B',
+        ]);
+
+        $accountA = $receptionA->episode->account;
+        $accountB = $receptionB->episode->account;
+
+        $this->assertNotEquals($accountA->id, $accountB->id);
+        $this->assertDatabaseHas('advance_payments', ['reception_id' => $receptionA->id, 'account_id' => $accountA->id]);
+        $this->assertDatabaseHas('advance_payments', ['reception_id' => $receptionB->id, 'account_id' => $accountB->id]);
+    }
+
+    /** @test */
+    public function caso_4_sin_cuenta_valida_no_crea_el_anticipo_y_regresa_error_controlado()
+    {
+        $before = AdvancePayment::count();
+
+        // Reception::factory() sin receptionWithAccount(): episode_id queda
+        // null a propósito, para simular "sin contexto de cuenta válido".
+        $reception = Reception::factory()->create();
+
+        $response = $this->actingAs($this->user)->post(route('advance-payments.store'), [
+            'date' => now()->format('Y-m-d H:i:s'),
+            'reception_id' => $reception->id,
+            'amount' => '100',
+            'concept' => 'Anticipo sin cuenta',
+        ]);
+
+        $response->assertSessionHas('error');
+        $this->assertEquals($before, AdvancePayment::count());
     }
 
     /** @test */
@@ -150,5 +273,35 @@ class AdvancePaymentTest extends TestCase
                     '*' => ['id', 'reception_id', 'user_id', 'amount', 'reference']
                 ]
             ]);
+    }
+
+    /** @test */
+    public function caso_5_backfill_liga_los_historicos_resolvibles_y_deja_sin_tocar_los_que_no_lo_son()
+    {
+        $reception = $this->receptionWithAccount();
+        $account = $reception->episode->account;
+
+        // Histórico resolvible: tiene reception_id (y por tanto account_id
+        // resolvible), pero fue creado antes de que existiera la columna.
+        $resolvible = AdvancePayment::factory()->create(['reception_id' => $reception->id]);
+
+        // Histórico sin cuenta identificable: sin reception_id en absoluto.
+        $sinCuenta = AdvancePayment::factory()->create(['reception_id' => null]);
+
+        Artisan::call('advance-payments:backfill-accounts');
+
+        $this->assertEquals($account->id, $resolvible->fresh()->account_id);
+        $this->assertNull($sinCuenta->fresh()->account_id);
+    }
+
+    /** @test */
+    public function caso_6_dry_run_no_modifica_ningun_registro()
+    {
+        $reception = $this->receptionWithAccount();
+        $resolvible = AdvancePayment::factory()->create(['reception_id' => $reception->id]);
+
+        Artisan::call('advance-payments:backfill-accounts', ['--dry-run' => true]);
+
+        $this->assertNull($resolvible->fresh()->account_id);
     }
 }

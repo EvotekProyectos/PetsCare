@@ -54,7 +54,21 @@ class Budget extends Model
      *
      * @var array
      */
-    protected $fillable = ['pet_id', 'date',  'total', 'vet_id', 'others', 'reception_id'];
+    protected $fillable = ['pet_id', 'date',  'total', 'vet_id', 'others', 'reception_id', 'signed_at'];
+
+    protected $casts = [
+        'signed_at' => 'datetime',
+    ];
+
+    /**
+     * Ver BudgetController::budgetpdf() (donde se marca) y
+     * BudgetConversionService (única fuente de verdad de qué presupuesto es
+     * convertible a servicios de Hospitalización).
+     */
+    public function isSigned(): bool
+    {
+        return $this->signed_at !== null;
+    }
 
 
     /**
@@ -80,5 +94,13 @@ class Budget extends Model
     public function reception()
     {
         return $this->belongsTo(\App\Models\Reception::class, 'reception_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function details()
+    {
+        return $this->hasMany(\App\Models\BudgetDetail::class, 'budget_id', 'id');
     }
 }

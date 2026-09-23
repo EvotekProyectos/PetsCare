@@ -111,7 +111,11 @@ $(document).ready(function () {
 async function Details(Type, ID) {
   event.preventDefault();
   if (Type === 1) {
-    window.location.href = route("appointment.show", ID);
+    // Consulta: modal aislado (ver appointment-details-modal.js) en vez de
+    // navegar a appointment.show — esa vista de página completa sigue
+    // existiendo sin cambios para los demás usos del sistema.
+    openConsultaDetailsModal(ID);
+    return;
   }
   if (Type === 2) {
     window.location.href = route("redsheet.show", ID);

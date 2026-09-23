@@ -180,6 +180,16 @@ class BudgetController extends Controller
         $signatureDataUrl = $request->input('signature');
         $signatureDataUrl2 = $request->input('signature2');
 
+        // Fuente de verdad real (el chequeo de public/js/budgets/pdf.js solo
+        // evita el viaje al servidor en el caso obvio): sin ambas firmas
+        // -médico y propietario- no se genera el PDF ni se marca el
+        // presupuesto como firmado (signed_at más abajo).
+        if (!$signatureDataUrl || !$signatureDataUrl2) {
+            return response()->json([
+                'message' => 'Se necesitan la firma del médico y la del propietario para generar el presupuesto.',
+            ], 422);
+        }
+
         $pdf = PDF::loadView('budget.pdf', [
             'budget' => $budget,
             'details' => $details,
@@ -190,6 +200,12 @@ class BudgetController extends Controller
 
         $pdfPath = '/budgets/budget_' . $id . '.pdf';
         Storage::put('public' . $pdfPath, $pdf->output());
+
+        // Fuente de verdad de "este Budget está firmado" (ver
+        // BudgetConversionService): antes solo se creaba el Format de abajo,
+        // pero Format no distingue DE CUÁL budget vino si la consulta tiene
+        // más de uno (ver BudgetDetailController::storeBatch()).
+        $budget->update(['signed_at' => now()]);
 
         $format = new Format();
         $format->format_type_id = FormatType::where('name', 'Presupuesto')->value('id');

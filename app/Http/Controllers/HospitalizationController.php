@@ -118,8 +118,29 @@ class HospitalizationController extends Controller
 
     public function altaVoluntaria($id)
     {
+        // Ya fue firmada: no volver a mostrar el formulario en blanco. Mismo
+        // patrón que ReceptionController::hospital_authorization() —
+        // format_type_id=2 ("Alta Voluntaria", ver FormatTypeSeeder) ligado
+        // a esta reception, creado en altaVoluntariapdf() al firmar.
+        $alreadySigned = Format::where('reception_id', $id)
+            ->where('format_type_id', 2)
+            ->exists();
+
+        if ($alreadySigned) {
+            return redirect()->route('assignment.hospital')
+                ->with('success', 'Esta alta voluntaria ya fue firmada.');
+        }
+
         $reception = Reception::find($id); //encuentra la recepcion
-        return view('hospital-discharge.alta_voluntaria', compact("reception")); //regresa vista del pdf con la recedpcion para llenado y firma
+
+        // Sin esto, el botón "Atrás" del navegador puede restaurar esta
+        // página (el formulario en blanco) desde bfcache SIN volver a
+        // pedirla al servidor — el chequeo de arriba nunca se re-evalúa y
+        // el alta voluntaria ya firmada parece seguir pendiente.
+        return response()
+            ->view('hospital-discharge.alta_voluntaria', compact("reception")) //regresa vista del pdf con la recedpcion para llenado y firma
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            ->header('Pragma', 'no-cache');
     }
 
     public function altaVoluntariapdf(Request $request, $id)

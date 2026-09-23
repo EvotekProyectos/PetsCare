@@ -96,17 +96,6 @@ async function submitTransfer() {
     return;
   }
 
-  const result = await Swal.fire({
-    title: "¿Trasladar esta recepción?",
-    text: "La recepción actual quedará marcada como trasladada y no podrá recibir más servicios.",
-    icon: "question",
-    showCancelButton: true,
-    confirmButtonText: "Sí, trasladar",
-    cancelButtonText: "Cancelar",
-  });
-
-  if (!result.isConfirmed) return;
-
   const $btn = $("#transfer_submit_btn");
   $btn.prop("disabled", true);
 

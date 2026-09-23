@@ -14,6 +14,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property $service_id
  * @property $price
  * @property $notes
+ * @property $converted_at
+ * @property $converted_to_type
+ * @property $converted_to_id
  * @property $created_at
  * @property $updated_at
  * @property $deleted_at
@@ -34,7 +37,11 @@ class BudgetDetail extends Model
      *
      * @var array
      */
-    protected $fillable = ['budget_id', 'service_id', 'lab_id', 'img_id', 'price', 'notes', 'type'];
+    protected $fillable = ['budget_id', 'service_id', 'lab_id', 'img_id', 'price', 'notes', 'type', 'converted_at', 'converted_to_type', 'converted_to_id'];
+
+    protected $casts = [
+        'converted_at' => 'datetime',
+    ];
 
 
     /**
@@ -43,6 +50,23 @@ class BudgetDetail extends Model
     public function budget()
     {
         return $this->belongsTo(\App\Models\Budget::class, 'budget_id', 'id');
+    }
+
+    /**
+     * Servicio real generado a partir de esta línea (ver BudgetConversionService::convert()).
+     * Hoy siempre es un RedSheet, pero se deja polimórfico por si en el
+     * futuro se convierte a AppointmentService (conversión antes del traslado).
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function convertedTo()
+    {
+        return $this->morphTo();
+    }
+
+    public function isConverted(): bool
+    {
+        return $this->converted_at !== null;
     }
 
     public function service()

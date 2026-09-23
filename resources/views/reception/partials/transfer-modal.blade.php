@@ -80,7 +80,7 @@
                 </div>
 
                 <div class="mb-0">
-                    <label for="transfer_reason" class="form-label text-uppercase">Motivo<span class="text-danger">*</span></label>
+                    <label for="transfer_reason" class="form-label text-uppercase">Motivo</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-primary-subtle" id="basic-addon1">
                             <span class="vaadin--lines-list"></span>

@@ -32,7 +32,7 @@ class ReceptionTransferRequest extends FormRequest
                     }
                 },
             ],
-            'reason' => 'required|string|max:500',
+            'reason' => 'nullable|string|max:500',
             'admission_type_id' => 'required_if:reception_type_id,2|nullable|integer|exists:admission_types,id',
             'area_id' => 'required_if:reception_type_id,2|nullable|integer|exists:areas,id',
             'reason_id' => 'required_if:reception_type_id,1|nullable|integer|exists:reasons,id',

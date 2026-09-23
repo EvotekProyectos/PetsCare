@@ -259,7 +259,7 @@
         }
 
         .firma-line {
-            border-top: 1px solid #2b2b2b;
+            border-top: 0px solid #2b2b2b;
             margin-top: 50px;
             padding-top: 4px;
             font-size: 9pt;
@@ -407,22 +407,22 @@
             </tbody>
         </table>
 
-        <div class="section-title">OBSERVACIONES DEL ALMACÉN</div>
+        {{-- <div class="section-title">OBSERVACIONES DEL ALMACÉN</div>
         <div class="motivo-box" style="color:#aaa; font-style:italic;">
             (Se completará al momento del surtimiento)
-        </div>
+        </div> --}}
 
         <div class="firmas-row">
             <div class="firma-block">
-                @if (!isset($isPdf) || !$isPdf)
+                {{-- @if (!isset($isPdf) || !$isPdf)
                     <canvas id="canvas" width="300" height="120"></canvas>
                 @elseif ($voucher->vet_signature)
                     <img src="{{ public_path('storage/' . $voucher->vet_signature) }}"
                         style="width:300px;height:120px;object-fit:contain;">
-                @endif
+                @endif --}}
                 <div class="firma-line">
-                    <b>MÉDICO SOLICITANTE</b><br>
-                    MVZ. {{ auth()->user()->name }}
+                    <b>USUARIO SOLICITANTE</b><br>
+                   {{ $voucher->vet->name }}
                 </div>
 
             </div>

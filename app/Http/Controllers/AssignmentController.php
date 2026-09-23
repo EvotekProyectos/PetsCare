@@ -36,10 +36,18 @@ class AssignmentController extends Controller
         $user = auth()->user();
         $this->authorize("viewAny", Appointment::class);
 
-        $receptions = Reception::with(['receptionType', 'family', 'pet', 'pet.species', 'reason', 'room', 'statusHistory', 'vet', 'currentStatusAppointment.attentionStatus'])
+        $receptions = Reception::with([
+                'receptionType', 'family', 'pet', 'pet.species', 'reason', 'room', 'statusHistory', 'vet',
+                'currentStatusAppointment.attentionStatus',
+                // Recepción destino cuando el estado es "Trasladado" (ver
+                // ReceptionTransferController::store()): misma relación que ya
+                // usa transfers-tracking.js, eager-loaded aquí para no hacer
+                // una consulta extra por fila.
+                'transfersFrom.toReception.receptionType',
+            ])
             ->where('veterinarian_id', $user->id)
             ->where('reception_type_id', 1)
-            // "Fecha" en esta tabla es entry_date 
+            // "Fecha" en esta tabla es entry_date
             ->when($request->filled('date'), function ($query) use ($request) {
                 $query->whereDate('entry_date', $request->date);
             })
@@ -56,6 +64,13 @@ class AssignmentController extends Controller
             })
             ->addColumn('status_id', function ($reception) {
                 return $reception->currentStatusAppointment?->attentionStatus?->id;
+            })
+            // Solo tiene valor cuando el estado es "Trasladado"; null en
+            // cualquier otro caso (o si por alguna razón no hay recepción
+            // destino resuelta) para que el front conserve "Trasladado" a
+            // secas — ver assignments/index.js.
+            ->addColumn('transferred_to', function ($reception) {
+                return $reception->transfersFrom->first()?->toReception?->receptionType?->name;
             })
             ->make(true);
     }
@@ -80,8 +95,12 @@ class AssignmentController extends Controller
 
         $hospitalizationStatuses = HospitalizationStatus::all();
         $hospitalizadoStatusId = HospitalizationStatus::where('name', 'Hospitalizado')->value('id');
+        // El médico ya puede atender (Red Sheet en modo escritura) también en
+        // "Trasladado" -ver RedSheetController::entry()-, no solo en
+        // "Hospitalizado" como antes.
+        $trasladadoStatusId = HospitalizationStatus::where('name', 'Trasladado')->value('id');
 
-        return view('hospitalization.table', compact('hospitalizationStatuses', 'hospitalizadoStatusId'));
+        return view('hospitalization.table', compact('hospitalizationStatuses', 'hospitalizadoStatusId', 'trasladadoStatusId'));
     }
 
     public function hospitalizations(Request $request)

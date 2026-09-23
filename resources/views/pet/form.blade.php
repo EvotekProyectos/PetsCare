@@ -266,6 +266,13 @@
 
             </div> --}}
         </div>
+        {{-- Sembrado por PetController::edit() (query param return_to) solo
+             cuando se llega desde el Historial Médico; PetController::update()
+             lo usa para volver ahí en vez del listado general. En cualquier
+             otro punto de entrada a este form (crear mascota, family.edit)
+             $returnTo no existe y este campo viaja vacío, sin efecto. --}}
+        <input type="hidden" name="return_to" value="{{ $returnTo ?? '' }}">
+
         <div class="col-12 mt-2 d-flex justify-content-end">
             <button type="submit" class="btn btn-primary btn-sm text-uppercase rounded-4">
                 <i class="fas fa-plus"></i>

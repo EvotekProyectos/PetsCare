@@ -34,6 +34,21 @@ $(document).ready(function () {
     theme: "bootstrap-5",
     dropdownParent: $("#ModalSurgeries"),
   });
+
+  // Oculta el campo de fecha de ModalSurgeries sin tocar surgery/form.blade.php
+  // (compartido con surgery.create/edit y status-surgery, que sí lo necesitan
+  // visible): la fecha de esta cirugía siempre es "ahora", fijada por
+  // OpenSurgeries()/SurgeryController::store() — ver use_current_date en
+  // red-sheet/create.blade.php. El tipo de cirugía ocupa el ancho que deja
+  // libre, para no dejar un hueco en la fila.
+  const $surgeryDateGroup = $('#ModalSurgeries label[for="date"]').closest(
+    ".col-md-5",
+  );
+  $surgeryDateGroup.hide();
+  $surgeryDateGroup
+    .siblings(".col-md-7")
+    .removeClass("col-md-7")
+    .addClass("col-md-12");
 });
 
 $("#table-container").on("click", "#btnGenerarVale", function () {
@@ -43,43 +58,16 @@ $("#table-container").on("click", "#btnGenerarVale", function () {
     redsheets.push($(this).data("redsheet"));
   });
 
-  if (redsheets.length === 0) {
-    Swal.fire({
-      icon: "warning",
-      title: "Selecciona al menos un insumo",
-    });
-    return;
-  }
-
-  Swal.fire({
-    title: "¿Generar vale?",
-    text: "Se generará el documento para firma del médico",
-    icon: "question",
-    showCancelButton: true,
-    confirmButtonText: "Sí, generar",
-    cancelButtonText: "Cancelar",
-  }).then((result) => {
-    if (!result.isConfirmed) return;
-
-    fetch(route("vouchers.store-products"), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-      },
-      body: JSON.stringify({
-        reception_id: Reception_Id,
-        source_type: "red_sheet",
-        source_ids: redsheets,
-      }),
-    })
-      .then((res) => res.json())
-      .then((resp) => {
-        if (resp.success) {
-          openVoucherSignModal("generar", resp.voucher_id);
-        }
-      });
-  });
+  // Definida en vouchers/sign-modal.js: un solo SweetAlert de confirmación,
+  // luego encadena store-products + generate (el médico ya no captura
+  // cantidad ni firma, ver VoucherController::generate()).
+  generateVoucherWithoutReview(
+    "red_sheet",
+    Reception_Id,
+    redsheets,
+    $(this),
+    () => voucherTableReload(),
+  );
 });
 
 function generarVale() {
@@ -200,6 +188,20 @@ $(document).on("hidden.bs.collapse", ".day-collapse-body", function () {
 });
 
 function renderData(data, events = []) {
+  // recap() (ver RedSheetController::recap()) arma la respuesta como
+  // [surgeries, redsheets] y fetchAndRenderData() la aplana con .flat() en
+  // ESE orden fijo: todas las cirugías primero, luego todos los redsheets,
+  // sin importar cuándo se registró cada uno. Como groupedData más abajo
+  // solo agrupa por día preservando el orden que traiga data, las cirugías
+  // terminaban siempre arriba de la tabla de su día. Se ordena aquí por
+  // created_at (hora real de alta, la tienen ambos tipos) ANTES de agrupar,
+  // para que cirugías y servicios se intercalen según cuándo se registraron
+  // de verdad — no se reordena visualmente en el HTML, se corrige el orden
+  // de origen de los datos.
+  data = [...data].sort(
+    (a, b) => new Date(a.created_at) - new Date(b.created_at),
+  );
+
   // "Generar Vale" solo tiene sentido si al menos una fila (de cualquier
   // día, de CUALQUIERA de los 3 tipos — lab/imaging/service) tiene checkbox
   // disponible — mismo criterio que ya decide el checkbox dentro de
@@ -282,7 +284,7 @@ function renderData(data, events = []) {
                     <tr>
                         <th>Tipo</th>
                         <th>Nombre</th>
-                      
+                        <th>Observaciones</th>
                         <th>M.V.Z.</th>
                         <th>Vale</th>
                         <th>Acciones</th>
@@ -298,6 +300,27 @@ function renderData(data, events = []) {
       dayEvents.length > 0 ? renderEventsTimeline(dayEvents) : "";
 
     const bothColumns = entries.length > 0 && dayEvents.length > 0;
+
+    // "Generar Vale" ya no vive suelto al final de la página (quedaba fuera
+    // de cualquier card, "expuesto"): se muestra dentro de la card del día
+    // vigente (mostRecentDay), junto a los checkboxes de los que depende
+    // (.descontar-stock, dentro de esta misma tabla). Mismo botón/id/handler
+    // de siempre (#btnGenerarVale, delegado en $("#table-container")), mismo
+    // criterio hasIssuableRow (cualquier día) — solo cambia dónde se pinta.
+    const valeButtonHtml =
+      isCurrentDay && hasIssuableRow
+        ? `
+            <div class="d-flex justify-content-end mt-2 day-vale-button-wrapper">
+                <button
+                    id="btnGenerarVale"
+                    class="action-link action-link--success btn-icon-circle"
+                    type="button"
+                    title="Generar vale">
+                    <span class="heroicons-outline--ticket"></span>
+                </button>
+            </div>
+          `
+        : "";
 
     const dayBlock = `
         <div class="card-panel day-accordion-card">
@@ -315,27 +338,12 @@ function renderData(data, events = []) {
                     ${tableHtml ? `<div class="${bothColumns ? "col-lg-7" : "col-12"}">${tableHtml}</div>` : ""}
                     ${timelineHtml ? `<div class="${bothColumns ? "col-lg-5" : "col-12"}">${timelineHtml}</div>` : ""}
                 </div>
+                ${valeButtonHtml}
             </div>
         </div>
     `;
     $("#table-container").append(dayBlock);
   });
-
- const totalFinalSection = hasIssuableRow
-    ? `
-        <div style="display:flex; align-items:center; margin-top:1.5rem;">
-            <button
-                id="btnGenerarVale"
-                class="action-link action-link--success btn-icon-circle"
-                type="button"
-                title="Generar vale">
-                <span class="heroicons-outline--ticket"></span>
-            </button>
-        </div>
-      `
-    : "";
-
-$("#table-container").append(totalFinalSection);
 }
 
 function renderEventsTimeline(dayEvents) {
@@ -420,6 +428,13 @@ function renderVoucherCell(entry) {
   return checkbox;
 }
 
+// Motivo/quién de cada servicio eliminado, indexado por entry.id, para el
+// modal informativo "Motivo de eliminación" (openRemovalReasonModal) — se
+// llena al renderizar la celda "Eliminar" (renderEliminarCell), reutilizando
+// los mismos datos que ya trae la tabla (entry.removal_reason/removed_by_user),
+// sin ningún fetch adicional al backend.
+let redSheetRemovalReasons = {};
+
 // Celda "Eliminar": si ya está marcado como eliminado, muestra quién/motivo
 // en vez de un botón (auditoría visible, ver RedSheetController::removeService()).
 // Si no, solo hay botón en el día actual (isCurrentDay), deshabilitado con
@@ -430,9 +445,17 @@ function renderEliminarCell(entry, producto, isCurrentDay) {
     const who = entry.removed_by_user
       ? entry.removed_by_user.name
       : "Desconocido";
-    return `<span class="badge bg-secondary" title="Motivo: ${entry.removal_reason || ""}">
+
+    redSheetRemovalReasons[entry.id] = {
+      who: who,
+      reason: entry.removal_reason || "Sin motivo registrado.",
+    };
+
+    return `<span class="badge bg-secondary">
                 Eliminado por ${who}
-            </span>`;
+            </span>
+            <i class="fas fa-eye removal-reason-icon" style="cursor:pointer; margin-left:6px; color:#6c757d;"
+                title="Ver motivo de eliminación" data-entry-id="${entry.id}"></i>`;
   }
 
   if (!isCurrentDay) {
@@ -457,6 +480,27 @@ function renderEliminarCell(entry, producto, isCurrentDay) {
             </button>`;
 }
 
+// Modal informativo "Motivo de eliminación" (removal-reason-modal.blade.php):
+// solo lectura, no permite modificar el motivo. .text() escapa el contenido,
+// por si el motivo capturado incluyera caracteres de HTML.
+function openRemovalReasonModal(entryId) {
+  const data = redSheetRemovalReasons[entryId] || {
+    who: "Desconocido",
+    reason: "Sin motivo registrado.",
+  };
+
+  $("#removalReasonWho").text(data.who);
+  $("#removalReasonText").text(data.reason);
+
+  bootstrap.Modal.getOrCreateInstance(
+    document.getElementById("removalReasonModal"),
+  ).show();
+}
+
+$(document).on("click", ".removal-reason-icon", function () {
+  openRemovalReasonModal($(this).data("entry-id"));
+});
+
 function renderEntryRow(entry, isCurrentDay) {
   let rows = "";
   const rowClass = entry.removed_at
@@ -468,7 +512,7 @@ function renderEntryRow(entry, isCurrentDay) {
             <tr${rowClass}>
                 <td>Laboratorio</td>
                 <td>${entry.laboratory.NOMBRE}</td>
-               
+                <td>${entry.observations || "—"}</td>
                 <td>${entry.vet ? entry.vet.name : ""}</td>
                 <td>${renderVoucherCell({ ...entry, serv_producto: entry.laboratory })}</td>
                 <td>${renderEliminarCell(entry, entry.laboratory, isCurrentDay)}</td>
@@ -481,7 +525,7 @@ function renderEntryRow(entry, isCurrentDay) {
             <tr${rowClass}>
                 <td>Imagenologia</td>
                 <td>${entry.img.NOMBRE}</td>
-               
+                <td>${entry.observations || "—"}</td>
                 <td>${entry.vet ? entry.vet.name : ""}</td>
                 <td>${renderVoucherCell({ ...entry, serv_producto: entry.img })}</td>
                 <td>${renderEliminarCell(entry, entry.img, isCurrentDay)}</td>
@@ -494,6 +538,7 @@ function renderEntryRow(entry, isCurrentDay) {
             <tr${rowClass}>
                 <td>Servicio</td>
                 <td>${entry.serv.NOMBRE}</td>
+                <td>${entry.observations || "—"}</td>
                 <td>${entry.vet ? entry.vet.name : ""}</td>
                 <td>${renderVoucherCell({ ...entry, serv_producto: entry.serv })}</td>
                 <td>${renderEliminarCell(entry, entry.serv, isCurrentDay)}</td>
@@ -504,11 +549,15 @@ function renderEntryRow(entry, isCurrentDay) {
   if (entry.surgery) {
     // Cirugía: el checkbox de vale y el botón de eliminar NO aplican todavía
     // — Surgery no está integrado al mecanismo de vales ni a este flujo.
+    // (Antes del header "Observaciones" esta fila ya traía 6 <td> contra un
+    // header de 5 columnas: quedaba desalineada -observaciones se veía bajo
+    // "M.V.Z." y el M.V.Z. real bajo "Vale". Con la columna nueva ya
+    // encajan en su lugar real, sin tocar el orden de esta fila.)
     rows += `
             <tr>
                 <td>Cirugia</td>
                 <td>${entry.surg.NOMBRE}</td>
-                <td>${entry.observations || ""}</td>
+                <td>${entry.observations || "—"}</td>
                 <td>${entry.vet ? entry.vet.name : ""}</td>
                 <td></td>
                 <td></td>
@@ -603,6 +652,9 @@ async function NewEntry() {
   let url = route("red-sheets.store");
   let form = new FormData(document.getElementById("NewRedSheet"));
   let pet = await fetch(url, { method: "POST", body: form });
+  // Un solo await pet.json(): el body de un Response solo se puede leer una
+  // vez (una 2a llamada tronaba con "body stream already read"), así que la
+  // rama de error de abajo nunca llegaba a mostrar nada útil.
   let resp = await pet.json();
 
   if (pet.ok) {
@@ -619,10 +671,18 @@ async function NewEntry() {
     $("#service_type_id").val(null).trigger("change");
     $("#imaging_type_id").val(null).trigger("change");
   } else {
-    let resp = await pet.json();
+    // Mismo criterio que hospital_auth.js: 422 con mensaje propio del
+    // backend (ej. guardReceptionNotDischarged() en Controller.php) se
+    // muestra tal cual; cualquier otro error usa un mensaje genérico.
+    const message =
+      pet.status === 422 && resp?.message
+        ? resp.message
+        : "Ocurrió un error al procesar la solicitud. Inténtalo de nuevo.";
+
     Swal.fire({
       icon: "error",
-      body: resp,
+      title: "Error",
+      text: message,
     });
   }
 }
@@ -739,15 +799,10 @@ function OpenFollowUps() {
   }
 
   // Buscar reception_id dentro del formulario de ese modal
-  const receptionInput = modal.querySelector(
-    'input[name="reception_id"]'
-  );
+  const receptionInput = modal.querySelector('input[name="reception_id"]');
 
   if (!receptionInput) {
-    console.error(
-      "No existe input[name='reception_id'] en:",
-      FollowUpModalId
-    );
+    console.error("No existe input[name='reception_id'] en:", FollowUpModalId);
     return;
   }
 
@@ -775,68 +830,68 @@ function uncheckRadiosIn(containerId) {
 }
 
 async function AddFollowupSurgical() {
-    event.preventDefault();
+  event.preventDefault();
 
-    const form = document.getElementById("NewFollowupSurgical");
-    const url = route("followup-surgicals.store");
+  const form = document.getElementById("NewFollowupSurgical");
+  const url = route("followup-surgicals.store");
 
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            body: new FormData(form),
-            headers: {
-                "Accept": "application/json",
-            },
-        });
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      body: new FormData(form),
+      headers: {
+        Accept: "application/json",
+      },
+    });
 
-        const data = await response.json().catch(() => null);
+    const data = await response.json().catch(() => null);
 
-        if (!response.ok) {
-            console.error("Error seguimiento quirúrgico:", data);
+    if (!response.ok) {
+      console.error("Error seguimiento quirúrgico:", data);
 
-            if (data?.errors) {
-                const errorMessages = Object.entries(data.errors)
-                    .map(([field, messages]) =>
-                        `<p><strong>${field}:</strong> ${messages.join(", ")}</p>`
-                    )
-                    .join("");
-
-                Swal.fire({
-                    icon: "error",
-                    title: "Errores en el formulario",
-                    html: errorMessages,
-                });
-            } else {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error al guardar",
-                    text: data?.message || "No se pudo guardar el seguimiento.",
-                });
-            }
-
-            return;
-        }
-
-        await Swal.fire({
-            icon: "success",
-            title: "Se guardó el seguimiento con éxito",
-            timer: 1000,
-            showConfirmButton: false,
-            timerProgressBar: true,
-        });
-
-        fetchAndRenderData();
-        CloseFollowupSurgical();
-
-    } catch (error) {
-        console.error("Error inesperado:", error);
+      if (data?.errors) {
+        const errorMessages = Object.entries(data.errors)
+          .map(
+            ([field, messages]) =>
+              `<p><strong>${field}:</strong> ${messages.join(", ")}</p>`,
+          )
+          .join("");
 
         Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Ocurrió un error inesperado al guardar el seguimiento.",
+          icon: "error",
+          title: "Errores en el formulario",
+          html: errorMessages,
         });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error al guardar",
+          text: data?.message || "No se pudo guardar el seguimiento.",
+        });
+      }
+
+      return;
     }
+
+    await Swal.fire({
+      icon: "success",
+      title: "Se guardó el seguimiento con éxito",
+      timer: 1000,
+      showConfirmButton: false,
+      timerProgressBar: true,
+    });
+
+    fetchAndRenderData();
+    CloseFollowupSurgical();
+  } catch (error) {
+    console.error("Error inesperado:", error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Ocurrió un error inesperado al guardar el seguimiento.",
+    });
+  }
 }
 
 function CloseFollowupSurgical() {
@@ -858,68 +913,68 @@ function CloseFollowupSurgical() {
 }
 
 async function AddFollowupIntern() {
-    event.preventDefault();
+  event.preventDefault();
 
-    const form = document.getElementById("NewFollowupIntern");
-    const url = route("followup-interns.store");
+  const form = document.getElementById("NewFollowupIntern");
+  const url = route("followup-interns.store");
 
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            body: new FormData(form),
-            headers: {
-                "Accept": "application/json",
-            },
-        });
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      body: new FormData(form),
+      headers: {
+        Accept: "application/json",
+      },
+    });
 
-        const data = await response.json().catch(() => null);
+    const data = await response.json().catch(() => null);
 
-        if (!response.ok) {
-            console.error("Error seguimiento interno:", data);
+    if (!response.ok) {
+      console.error("Error seguimiento interno:", data);
 
-            if (data?.errors) {
-                const errorMessages = Object.entries(data.errors)
-                    .map(([field, messages]) =>
-                        `<p><strong>${field}:</strong> ${messages.join(", ")}</p>`
-                    )
-                    .join("");
-
-                Swal.fire({
-                    icon: "error",
-                    title: "Errores en el formulario",
-                    html: errorMessages,
-                });
-            } else {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error al guardar",
-                    text: data?.message || "No se pudo guardar el seguimiento.",
-                });
-            }
-
-            return;
-        }
-
-        await Swal.fire({
-            icon: "success",
-            title: "Se guardó el seguimiento con éxito",
-            timer: 1000,
-            showConfirmButton: false,
-            timerProgressBar: true,
-        });
-
-        fetchAndRenderData();
-        CloseFollowupIntern();
-
-    } catch (error) {
-        console.error("Error inesperado:", error);
+      if (data?.errors) {
+        const errorMessages = Object.entries(data.errors)
+          .map(
+            ([field, messages]) =>
+              `<p><strong>${field}:</strong> ${messages.join(", ")}</p>`,
+          )
+          .join("");
 
         Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Ocurrió un error inesperado al guardar el seguimiento.",
+          icon: "error",
+          title: "Errores en el formulario",
+          html: errorMessages,
         });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error al guardar",
+          text: data?.message || "No se pudo guardar el seguimiento.",
+        });
+      }
+
+      return;
     }
+
+    await Swal.fire({
+      icon: "success",
+      title: "Se guardó el seguimiento con éxito",
+      timer: 1000,
+      showConfirmButton: false,
+      timerProgressBar: true,
+    });
+
+    fetchAndRenderData();
+    CloseFollowupIntern();
+  } catch (error) {
+    console.error("Error inesperado:", error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Ocurrió un error inesperado al guardar el seguimiento.",
+    });
+  }
 }
 
 function CloseFollowupIntern() {
@@ -936,68 +991,68 @@ function CloseFollowupIntern() {
 }
 
 async function AddFollowupsCritic() {
-    event.preventDefault();
+  event.preventDefault();
 
-    const form = document.getElementById("NewFollowupsCritic");
-    const url = route("followups-critics.store");
+  const form = document.getElementById("NewFollowupsCritic");
+  const url = route("followups-critics.store");
 
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            body: new FormData(form),
-            headers: {
-                "Accept": "application/json",
-            },
-        });
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      body: new FormData(form),
+      headers: {
+        Accept: "application/json",
+      },
+    });
 
-        const data = await response.json().catch(() => null);
+    const data = await response.json().catch(() => null);
 
-        if (!response.ok) {
-            console.error("Error seguimiento crítico:", data);
+    if (!response.ok) {
+      console.error("Error seguimiento crítico:", data);
 
-            if (data?.errors) {
-                const errorMessages = Object.entries(data.errors)
-                    .map(([field, messages]) =>
-                        `<p><strong>${field}:</strong> ${messages.join(", ")}</p>`
-                    )
-                    .join("");
-
-                Swal.fire({
-                    icon: "error",
-                    title: "Errores en el formulario",
-                    html: errorMessages,
-                });
-            } else {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error al guardar",
-                    text: data?.message || "No se pudo guardar el seguimiento.",
-                });
-            }
-
-            return;
-        }
-
-        await Swal.fire({
-            icon: "success",
-            title: "Se guardó el seguimiento con éxito",
-            timer: 1000,
-            showConfirmButton: false,
-            timerProgressBar: true,
-        });
-
-        fetchAndRenderData();
-        CloseFollowupsCritic();
-
-    } catch (error) {
-        console.error("Error inesperado:", error);
+      if (data?.errors) {
+        const errorMessages = Object.entries(data.errors)
+          .map(
+            ([field, messages]) =>
+              `<p><strong>${field}:</strong> ${messages.join(", ")}</p>`,
+          )
+          .join("");
 
         Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Ocurrió un error inesperado al guardar el seguimiento.",
+          icon: "error",
+          title: "Errores en el formulario",
+          html: errorMessages,
         });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error al guardar",
+          text: data?.message || "No se pudo guardar el seguimiento.",
+        });
+      }
+
+      return;
     }
+
+    await Swal.fire({
+      icon: "success",
+      title: "Se guardó el seguimiento con éxito",
+      timer: 1000,
+      showConfirmButton: false,
+      timerProgressBar: true,
+    });
+
+    fetchAndRenderData();
+    CloseFollowupsCritic();
+  } catch (error) {
+    console.error("Error inesperado:", error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Ocurrió un error inesperado al guardar el seguimiento.",
+    });
+  }
 }
 
 function CloseFollowupsCritic() {
@@ -1028,73 +1083,72 @@ function CloseFollowUp() {
 }
 
 async function AddFollowUp() {
-    event.preventDefault();
+  event.preventDefault();
 
-    const form = document.getElementById("NewFollowUp");
-    const url = route("follow-ups.store");
+  const form = document.getElementById("NewFollowUp");
+  const url = route("follow-ups.store");
 
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            body: new FormData(form),
-            headers: {
-                "Accept": "application/json",
-            },
-        });
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      body: new FormData(form),
+      headers: {
+        Accept: "application/json",
+      },
+    });
 
-     
-        const data = await response.json().catch(() => null);
+    const data = await response.json().catch(() => null);
 
-        if (!response.ok) {
-            console.error("Error al guardar seguimiento:", data);
+    if (!response.ok) {
+      console.error("Error al guardar seguimiento:", data);
 
-            if (data?.errors) {
-                const errorMessages = Object.entries(data.errors)
-                    .map(([field, messages]) =>
-                        `<p><strong>${field}:</strong> ${messages.join(", ")}</p>`
-                    )
-                    .join("");
-
-                Swal.fire({
-                    icon: "error",
-                    title: "Errores en el formulario",
-                    html: errorMessages,
-                });
-            } else {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error al guardar",
-                    text: data?.message || "No se pudo registrar el seguimiento.",
-                });
-            }
-
-            return;
-        }
-
-        await Swal.fire({
-            icon: "success",
-            title: "Se guardó el seguimiento con éxito",
-            timer: 1000,
-            showConfirmButton: false,
-            timerProgressBar: true,
-        });
-
-        if (typeof followtable !== "undefined" && followtable) {
-            followtable.ajax.reload(null, false);
-        }
-
-        fetchAndRenderData();
-        CloseFollowUp();
-
-    } catch (error) {
-        console.error("Error inesperado:", error);
+      if (data?.errors) {
+        const errorMessages = Object.entries(data.errors)
+          .map(
+            ([field, messages]) =>
+              `<p><strong>${field}:</strong> ${messages.join(", ")}</p>`,
+          )
+          .join("");
 
         Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Ocurrió un error inesperado al registrar el seguimiento.",
+          icon: "error",
+          title: "Errores en el formulario",
+          html: errorMessages,
         });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error al guardar",
+          text: data?.message || "No se pudo registrar el seguimiento.",
+        });
+      }
+
+      return;
     }
+
+    await Swal.fire({
+      icon: "success",
+      title: "Se guardó el seguimiento con éxito",
+      timer: 1000,
+      showConfirmButton: false,
+      timerProgressBar: true,
+    });
+
+    if (typeof followtable !== "undefined" && followtable) {
+      followtable.ajax.reload(null, false);
+    }
+
+    fetchAndRenderData();
+    CloseFollowUp();
+  } catch (error) {
+    console.error("Error inesperado:", error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Ocurrió un error inesperado al registrar el seguimiento.",
+    });
+  }
 }
 
 async function discharge(receptionID) {
@@ -1228,6 +1282,16 @@ function getDischarges(DischargeData) {
   }, {});
 }
 
+// surgery/form.blade.php usa id="date", pero esa página (red-sheet/create.blade.php)
+// también incluye followup-intern.modal, que TAMBIÉN tiene un campo oculto
+// con id="date" — con el id duplicado, document.getElementById("date") toma
+// el primero que aparece en el DOM (el de followup-intern, no el de la
+// cirugía). Escopado a #NewSurgery (único en la página) para tomar siempre
+// el campo correcto, sin tocar el id compartido del partial.
+function getSurgeryDateInput() {
+  return document.querySelector('#NewSurgery [name="date"]');
+}
+
 async function OpenSurgeries() {
   const receptionId = document.getElementById("reception_id_followup").value;
 
@@ -1239,7 +1303,7 @@ async function OpenSurgeries() {
     // Hora del momento en que se abre el modal (hora local, no UTC)
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    document.getElementById("date").value = now.toISOString().slice(0, 16);
+    getSurgeryDateInput().value = now.toISOString().slice(0, 16);
 
     $("#ModalSurgeries").modal("show");
   } else {
@@ -1256,33 +1320,66 @@ jQuery("#ModalSurgeries").on("shown.bs.modal", function () {
 
 async function AddSurgery() {
   event.preventDefault();
-  let url = route("surgeries.store");
-  let form = new FormData(document.getElementById("NewSurgery"));
-  let pet = await fetch(url, { method: "POST", body: form });
-  let resp = await pet.json();
 
-  if (pet.ok) {
-    Swal.fire({
-      icon: "success",
-      title: "Se guardo la cirugia con exito",
-      timer: 7000,
-      showConfirmButton: true,
-    });
-    fetchAndRenderData();
-    CloseSurgeries();
-  } else {
-    let resp = await pet.json();
+  // #date va oculto (ver arriba), pero sigue viajando en el FormData con el
+  // valor que fijó OpenSurgeries() al abrir el modal; se refresca aquí para
+  // que refleje el momento real del guardado, no el de apertura del modal.
+  // El backend igual la vuelve a fijar con now() (use_current_date) como
+  // fuente de verdad — esto es solo para que el valor enviado sea coherente.
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  getSurgeryDateInput().value = now.toISOString().slice(0, 16);
+
+  const url = route("surgeries.store");
+  const form = new FormData(document.getElementById("NewSurgery"));
+
+  try {
+    const response = await fetch(url, { method: "POST", body: form });
+
+    if (response.ok) {
+      Swal.fire({
+        icon: "success",
+        title: "Se guardo la cirugia con exito",
+        timer: 1500,
+        showConfirmButton: false,
+        timerProgressBar: true,
+      });
+      CloseSurgeries();
+      fetchAndRenderData();
+    } else {
+      const resp = await response.json();
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: resp.message || "Ocurrió un error al guardar la cirugía.",
+      });
+    }
+  } catch (error) {
+    console.error("Error al guardar la cirugía:", error);
     Swal.fire({
       icon: "error",
-      body: resp,
+      title: "Error",
+      text: "Ocurrió un error inesperado. Vuelve a intentar más tarde.",
     });
   }
 }
 
 function CloseSurgeries() {
-  document.getElementById("date").value = "";
-  document.getElementById("product_type_id").value = "";
-  document.getElementById("observations").value = "";
+  // Bug real detrás de "Ocurrió un error inesperado" y el modal sin cerrar:
+  // #observations no existe (el textarea de surgery.form es
+  // "observations_surgery"), así que getElementById("observations") daba
+  // null y el .value = "" siguiente reventaba con "Cannot set properties of
+  // null" — eso se comía el resto de esta función (nunca llegaba a
+  // modal("hide")) y, al llamarse dentro del try/catch de AddSurgery(),
+  // aparecía como error aunque la cirugía ya se hubiera guardado bien.
+  getSurgeryDateInput().value = "";
+  // product_type_id es Select2 (ver $(document).ready arriba): asignar
+  // .value directo no actualiza su UI renderizada, se queda mostrando la
+  // cirugía recién guardada aunque el <select> nativo ya esté vacío. Mismo
+  // patrón que ya usa NewEntry() para limpiar sus propios Select2
+  // (lab_type_id/service_type_id/imaging_type_id) tras guardar con éxito.
+  $("#product_type_id").val(null).trigger("change");
+  document.getElementById("observations_surgery").value = "";
   $("#ModalSurgeries").modal("hide");
 }
 
@@ -1364,20 +1461,15 @@ async function Transfer(currentAdmissionTypeId) {
 
     inputValidator: (value) => {
       return new Promise((resolve) => {
-
         if (value === "") {
           resolve("Debes seleccionar una admisión");
         } else {
           resolve();
         }
-
       });
     },
-
   }).then(async (result) => {
-
     if (result.isConfirmed) {
-
       const form = new FormData();
 
       const token = document
@@ -1388,10 +1480,7 @@ async function Transfer(currentAdmissionTypeId) {
       form.append("_method", "PUT");
       form.append("admission_type_id", result.value);
 
-      let url = route(
-        "reception.transfer",
-        Reception_Id
-      );
+      let url = route("reception.transfer", Reception_Id);
 
       let pet = await fetch(url, {
         method: "POST",
@@ -1402,7 +1491,6 @@ async function Transfer(currentAdmissionTypeId) {
         window.location.reload();
       }
     }
-
   });
 }
 
@@ -1468,29 +1556,29 @@ async function removeRedSheetService(id) {
 }
 
 let pollingInterval = null;
-let lastUpdate = null;
 
+// pollForChanges (global.js) chequea DE INMEDIATO (no solo en el primer
+// tick a los 15s) y además al volver de bfcache ('pageshow' + persisted) —
+// mismo helper compartido que receptions/index.js, vouchers/index.js y
+// hospitalizations/show.js.
 function startPolling() {
   if (pollingInterval) return; // ya está corriendo
 
-  pollingInterval = setInterval(function () {
-    $.ajax({
-      url: route("vouchers.lastUpdate"),
-      method: "GET",
-      data: { reception_id: Reception_Id },
-      success: function (response) {
-        if (lastUpdate === null) {
-          lastUpdate = response.last_update;
-          return;
-        }
-
-        if (response.last_update !== lastUpdate) {
-          lastUpdate = response.last_update;
-          fetchAndRenderData(false);
-        }
-      },
-    });
-  }, 15000);
+  pollingInterval = pollForChanges({
+    checkFn: function () {
+      return $.ajax({
+        url: route("vouchers.lastUpdate"),
+        method: "GET",
+        data: { reception_id: Reception_Id },
+      }).then(function (response) {
+        return response.last_update;
+      });
+    },
+    onChanged: function () {
+      fetchAndRenderData(false);
+    },
+    intervalMs: 15000,
+  });
 }
 
 function stopPolling() {

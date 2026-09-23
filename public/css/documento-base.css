@@ -1,0 +1,466 @@
+/*
+ * documento-base.css
+ * ---------------------------------------------------------------------------
+ * Hoja de estilos base para los documentos imprimibles / firmables (PDF via
+ * DomPDF) de Pets Care: autorizaciones, consentimientos, etc.
+ *
+ * IMPORTANTE (compatibilidad con DomPDF):
+ * - DomPDF no soporta flexbox ni grid. Todo el layout de columnas se hace
+ *   con <table> (ver documento-base.blade.php).
+ * - Los porcentajes en border-radius (círculos) sí funcionan.
+ * - Enlaza este archivo con <link rel="stylesheet"> usando public_path()
+ *   cuando $isPdf sea true, y asset() cuando sea la vista web normal
+ *   (mismo patrón que ya usan para el logo). DomPDF necesita una ruta de
+ *   archivo local, no una URL http, para poder leer el CSS.
+ * - Los íconos (svg en base64) se generan desde PHP, no desde aquí.
+ *
+ * Este archivo es la BASE común. Cada documento (autorización de
+ * hospitalización, consentimiento de cirugía, etc.) puede traer su propio
+ * <style> adicional en su vista para lo que sea específico de ese documento.
+ * ---------------------------------------------------------------------------
+ */
+
+/* ---------- Base / reset ---------- */
+
+body {
+    font-family: sans-serif;
+    font-size: 11pt;
+    margin: 0;
+    padding: 16px 10px;
+    background-color: #F3F6FA;
+    color: #1F2A37;
+}
+
+table {
+    border-collapse: collapse;
+    font-family: sans-serif;
+}
+
+/* ---------- Tarjeta contenedora ---------- */
+
+.card {
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.section {
+    padding: 14px 22px 0;
+}
+
+/* ---------- Header (logo + nombre clínica + contacto) ---------- */
+
+.header-table {
+    width: 100%;
+    background-color: #fff;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.header-table td {
+    padding: 16px 20px 12px;
+    vertical-align: top;
+}
+
+.header-table td:first-child {
+    padding-right: 8px;
+}
+
+.header-left {
+    width: 55%;
+    padding-left: 0;
+}
+
+.clinic-name {
+    font-weight: 700;
+    font-size: 12pt;
+    color: #0455A0;
+    margin: 0;
+}
+
+.clinic-sub {
+    font-size: 9pt;
+    color: #6B7280;
+    margin: 2px 0 0;
+}
+
+.clinic-meta {
+    font-size: 8pt;
+    color: #9CA3AF;
+    margin: 6px 0 0;
+}
+
+.header-contact {
+    text-align: right;
+}
+
+.header-contact p {
+    margin: 0 0 4px;
+    font-size: 8.5pt;
+    color: #4B5563;
+}
+
+.header-contact p:last-child {
+    margin-bottom: 0;
+}
+
+/* ---------- Tarjetas lado a lado (propietario / mascota, etc.) ---------- */
+
+.cards-table {
+    width: 100%;
+}
+
+.card-cell {
+    width: 50%;
+    vertical-align: top;
+}
+
+.card-box {
+    background-color: #F5F9FD;
+    border-radius: 12px;
+    padding: 12px 16px;
+}
+
+.card-label {
+    font-size: 8pt;
+    font-weight: 700;
+    color: #0455A0;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    margin-bottom: 8px;
+}
+
+/* Tarjeta de propietario / persona */
+
+.owner-name {
+    font-size: 10.5pt;
+    font-weight: 700;
+    color: #1F2A37;
+    margin: 0 0 6px;
+}
+
+.owner-line {
+    font-size: 9pt;
+    color: #4B5563;
+    margin: 4px 0 0;
+}
+
+/* Tarjeta de mascota */
+
+.pet-photo {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+.pet-photo-placeholder {
+    background: #F3F6FA;
+    text-align: center;
+    line-height: 48px;
+}
+
+.pet-name {
+    font-size: 10.5pt;
+    font-weight: 700;
+    color: #1F2A37;
+    margin: 0;
+}
+
+.pet-breed {
+    font-size: 8.5pt;
+    color: #6B7280;
+    margin: 2px 0 0;
+}
+
+.pet-meta {
+    font-size: 9pt;
+    color: #1F2A37;
+    margin: 10px 0 0;
+}
+
+/* ---------- Términos y condiciones ---------- */
+
+.terms-label {
+    font-size: 10.5pt;
+    font-weight: 700;
+    color: #1F2A37;
+    text-transform: uppercase;
+    letter-spacing: .01em;
+    padding-left: 2px;
+    margin-bottom: 10px;
+}
+
+.terms-box {
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 14px 16px;
+}
+
+.terms-hint {
+    margin: 6px 0 0;
+    color: #9CA3AF;
+    text-align: center;
+    font-size: 8.5pt;
+}
+
+/* Solo en pantalla interactiva: caja con altura fija y scroll.
+   En el PDF el texto fluye normal a través de las páginas. */
+.terms-box.scrollable {
+    height: 220px;
+    overflow-y: auto;
+}
+
+.terms-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.term-row td {
+    padding-bottom: 10px;
+    vertical-align: top;
+}
+
+.term-row:last-child td {
+    padding-bottom: 0;
+}
+
+/* El <td> se estira a la altura de toda la fila (por el texto largo del
+   lado derecho), así que el círculo NO puede ir directo en el <td> o sale
+   ovalado. Va en un <span> interno de tamaño fijo (ver .term-badge-circle). */
+.term-badge {
+    width: 26px;
+    min-width: 26px;
+    text-align: center;
+    vertical-align: top;
+    padding-top: 1px;
+}
+
+.term-badge-circle {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    line-height: 20px;
+    border-radius: 50%;
+    background-color: #EAF2FB;
+    border: 1px solid #BFDDF6;
+    color: #0455A0;
+    font-weight: 700;
+    font-size: 8.5pt;
+    text-align: center;
+}
+
+.term-text {
+    padding-left: 10px;
+    font-size: 9.5pt;
+    color: #374151;
+    line-height: 1.6;
+    text-align: justify;
+}
+
+.price-highlight {
+    color: #0455A0;
+    font-weight: 700;
+}
+
+/* ---------- Firma ---------- */
+
+.signature-section {
+    margin: 0 22px 14px;
+    padding: 18px 18px 20px;
+    text-align: center;
+    background-color: #F5F9FD;
+    border-radius: 12px;
+}
+
+.signature-header-table {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.signature-title {
+    font-size: 10.5pt;
+    font-weight: 700;
+    color: #1F2A37;
+    text-transform: uppercase;
+    letter-spacing: .01em;
+    margin: 0;
+}
+
+.signature-box {
+    display: block;
+    width: 100%;
+    max-width: 476px;
+    margin: 0 auto;
+    border: 2px dashed #BFDDF6;
+    border-radius: 14px;
+    background-color: #FAFBFC;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjQkZEREY2IiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNOSAxMlY2YTEuNSAxLjUgMCAwIDEgMyAwdjUiLz48cGF0aCBkPSJNMTIgMTFWNWExLjUgMS41IDAgMCAxIDMgMHY2Ii8+PHBhdGggZD0iTTE1IDExVjdhMS41IDEuNSAwIDAgMSAzIDB2NyIvPjxwYXRoIGQ9Ik0xOCAxMS41VjExYTEuNSAxLjUgMCAwIDEgMyAwdjVjMCAzLjMtMi43IDYtNiA2aC0xLjVjLTEuOSAwLTMtLjYtNC4zLTJsLTIuOC0zLjFhMS42IDEuNiAwIDAgMSAyLjMtMi4yTDExIDE3Ii8+PC9zdmc+");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 34px 34px;
+    height: 100px;
+}
+
+.signature-placeholder {
+    color: #9CA3AF;
+    font-size: 9pt;
+}
+
+/* Firma ya capturada (canvas.toDataURL(), 476x100 de origen): sin esto se
+   forzaba a 200x100 con <img style="width/height">, distorsionando la
+   proporción real del trazo. */
+.signature-image {
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin: 0 auto;
+}
+
+/* ---------- Botones / acciones (solo vista interactiva) ----------
+   Antes tenía su propio fondo gris (igual al del body, fuera de .card) y un
+   border-top: quedaba como una barra flotando por separado debajo de la
+   tarjeta blanca en vez de sentirse parte del documento. Ahora fluye como
+   cualquier otra .section, con el mismo fondo blanco de .card. */
+.actions-footer {
+    padding: 6px 22px 22px;
+}
+
+.actions-table {
+    width: 100%;
+}
+
+.btn-limpiar,
+.btn-aceptar {
+    display: block;
+    text-align: center;
+    padding: 12px 0;
+    border-radius: 14px;
+    font-size: 9.5pt;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn-limpiar {
+    background-color: #fff;
+    color: #0455A0;
+    border: 1px solid #BFDDF6;
+    font-weight: 600;
+}
+
+.btn-aceptar {
+    background-color: #0455A0;
+    color: #fff;
+}
+
+/* Spinner del botón "Aceptar y firmar" mientras procesa (ver
+   hospital_auth.js) — self-contained porque este documento no carga
+   Bootstrap (no hay .spinner-border disponible). */
+.btn-spinner {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    margin-right: 6px;
+    vertical-align: middle;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: btn-spinner-rotate 0.6s linear infinite;
+}
+
+@keyframes btn-spinner-rotate {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.btn-limpiar-sm {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 8pt;
+    font-weight: 600;
+    background: #fff;
+    color: #0455A0;
+    border: 1px solid #BFDDF6;
+    cursor: pointer;
+}
+
+/* ---------- Modo PDF (ver reception/pdf.blade.php <body class="pdf-mode">
+   cuando isPdf === true) ----------
+   Documento limpio: sin el tinte azul de fondo ni el card de la firma que sí
+   tienen sentido en la interfaz web. La especificidad de clase ya gana sobre
+   las reglas base (.pdf-mode > body; .pdf-mode .signature-section >
+   .signature-section), así que no hace falta !important. */
+.pdf-mode {
+    background: #fff;
+}
+
+.pdf-mode .signature-section {
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+}
+
+/* ---------- Responsivo (solo vista interactiva) ----------
+   1024px cubre tablets/ventanas medianas, no solo celulares — eso ya es más
+   ancho que la página de DomPDF (~816px, Carta/A4), así que aquí SÍ hace
+   falta excluir explícitamente .pdf-mode en cada selector (a diferencia de
+   un breakpoint angosto tipo 480/600px, que nunca alcanzaría el ancho de la
+   página del PDF).
+   El layout base usa <table> para las columnas (header, propietario/mascota,
+   botones) porque eso es lo único que soporta DomPDF; aquí, solo para
+   pantalla, se convierten esas mismas tablas en bloques apilados con la
+   técnica estándar de "tablas responsivas" (display:block en table/tr/td).
+   !important solo donde ya había un width en % puesto inline en el Blade
+   (style="width:48%" etc.) — una regla externa normal no le gana a eso. */
+@media (max-width: 1024px) {
+    body:not(.pdf-mode) {
+        padding: 10px 6px;
+    }
+
+    body:not(.pdf-mode) .header-table,
+    body:not(.pdf-mode) .header-table tbody,
+    body:not(.pdf-mode) .header-table tr,
+    body:not(.pdf-mode) .header-table td,
+    body:not(.pdf-mode) .cards-table,
+    body:not(.pdf-mode) .cards-table tbody,
+    body:not(.pdf-mode) .cards-table tr,
+    body:not(.pdf-mode) .card-cell,
+    body:not(.pdf-mode) .actions-table,
+    body:not(.pdf-mode) .actions-table tbody,
+    body:not(.pdf-mode) .actions-table tr,
+    body:not(.pdf-mode) .actions-table td {
+        display: block;
+        width: 100% !important;
+    }
+
+    body:not(.pdf-mode) .header-table td {
+        padding: 4px 16px !important;
+    }
+
+    body:not(.pdf-mode) .header-left,
+    body:not(.pdf-mode) .header-contact {
+        text-align: left !important;
+    }
+
+    body:not(.pdf-mode) .card-cell {
+        padding: 0 0 10px !important;
+    }
+
+    body:not(.pdf-mode) .card-cell:last-child {
+        padding-bottom: 0 !important;
+    }
+
+    body:not(.pdf-mode) .actions-table td {
+        padding: 0 0 8px !important;
+    }
+
+    body:not(.pdf-mode) .actions-table td:last-child {
+        padding-bottom: 0 !important;
+    }
+}

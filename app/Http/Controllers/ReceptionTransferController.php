@@ -108,6 +108,17 @@ class ReceptionTransferController extends Controller
         // tabla de Cremaciones (ver receptions/index.js).
         $redirect = match (true) {
             $destinationTypeId === 1 && (int) $origin->reception_type_id === 2 => route('assignment.index'),
+            // Consulta -> Hospitalización: el médico entra DIRECTO a Red
+            // Sheet de la recepción destino, sin esperar a que Recepción
+            // liquide la consulta ni a que se firme la responsiva de
+            // Hospital. La recepción destino nace "Trasladado" (no
+            // "Hospitalizado" — ver seedInitialStatusHistory() arriba), y
+            // RedSheetController::entry() ya permite escritura en ese
+            // estatus. El pago de la consulta y el anticipo de servicios
+            // hospitalarios se cobran después, desde Recepciones > pestaña
+            // Hospitalización (ver AccountStatementService::
+            // hospitalizacionAnticipoRequerido()), ya sin bloquear el acceso.
+            $destinationTypeId === 2 && (int) $origin->reception_type_id === 1 => route('redsheet.entry', $destination->id),
             $destinationTypeId === 2 => route('hospital.list', ['id' => $destination->id]),
             $destinationTypeId === 3 => route('receptions.grooming', $destination->id),
             $destinationTypeId === 4 => route('hotel.create', ['id' => $destination->id]),
@@ -168,9 +179,18 @@ class ReceptionTransferController extends Controller
                 'reception_id' => $destination->id,
                 'attention_status_id' => AttentionStatus::where('name', 'En espera')->value('id'),
             ]),
+            // "Hospitalizado" ya no se siembra aquí: la recepción destino
+            // nace "Trasladado" y solo pasa a "Hospitalizado" cuando se
+            // firma la responsiva de autorización, después de que la
+            // recepcionista registra el pago de la consulta (ver
+            // ReceptionController::hospital_authorization()/
+            // hospital_authorizationpdf() y AccountStatementService::consultaBalance()).
+            // Mientras esté en "Trasladado", RedSheetController::entry() y
+            // el botón "Atender" de assignments/hospital.js ya la excluyen
+            // de la atención hospitalaria sin cambios adicionales.
             2 => HospitalizationStatusHistory::create([
                 'reception_id' => $destination->id,
-                'hospitalization_status_id' => HospitalizationStatus::where('name', 'Hospitalizado')->value('id'),
+                'hospitalization_status_id' => HospitalizationStatus::where('name', 'Trasladado')->value('id'),
                 'changed_by' => auth()->id(),
                 'changed_at' => now(),
             ]),
@@ -197,7 +217,22 @@ class ReceptionTransferController extends Controller
      */
     public function tracking(Request $request)
     {
-        $this->authorize('viewAny', Reception::class);
+        // No se usa authorize('viewAny', Reception::class) (=
+        // ReceptionPolicy::viewAny(), que exige 'ver panel recepciones') a
+        // propósito: el médico NO tiene ese permiso -ver
+        // RolesAndPermissionsSeeder.php, comentado deliberadamente ("el
+        // médico es quien traslada recepciones... no necesita ver panel
+        // recepciones")-, pero el botón "Traslados" de
+        // pet_history/view.blade.php (historial clínico del paciente, al
+        // que el médico sí debe poder entrar) llama a este mismo endpoint
+        // con pet_id (ver docblock arriba). Se acepta cualquiera de los dos
+        // permisos que ya cubren a los roles que legítimamente necesitan
+        // ver el tracking, sin ampliar el acceso de médico al panel
+        // completo de Recepciones.
+        abort_unless(
+            $request->user()->can('ver panel recepciones') || $request->user()->can('ver panel asignaciones'),
+            403
+        );
 
         if ($request->filled('reception_id')) {
             $episodeIds = collect([Reception::findOrFail($request->reception_id)->episode_id])->filter();

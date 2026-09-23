@@ -12,6 +12,7 @@ use App\Models\ControlDate;
 use App\Models\Folio;
 use App\Models\GenericModel;
 use App\Models\PaymentOrder;
+use App\Models\PetWeight;
 use App\Models\Prescription;
 use App\Models\Producto;
 use App\Models\ProductType;
@@ -25,6 +26,7 @@ use App\Services\VoucherService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -68,6 +70,13 @@ class AppointmentController extends Controller
         $this->authorize("create", Appointment::class); //verifica el permiso para crear citas
         $reception = Reception::with('reason')->findOrFail($request->reception_id);
         $this->guardReceptionNotTransferred($reception);
+
+        // El peso es obligatorio en cada consulta: debe existir una medición
+        // (PetWeight) registrada específicamente para esta recepción, nunca
+        // se reutiliza automáticamente el peso de una consulta anterior.
+        if (!PetWeight::where('reception_id', $reception->id)->exists()) {
+            abort(422, 'Debes registrar el peso actual de la mascota antes de finalizar la consulta.');
+        }
 
         // El cargo base de la consulta sale del concepto de Microsip configurado en el reason_id de la recepción.
         $data = $request->validated();
@@ -152,13 +161,24 @@ class AppointmentController extends Controller
         $prescription = new Prescription();
         $vaccineCertificate = new VaccineCertificate();
         $appointmentService = new AppointmentService();
-        $products = Producto::where("ESTATUS",  "A")->get();
+        // Esta consulta a Firebird (ARTICULOS activos) puede tardar ~19s sin
+        // caché — es la razón real por la que "tardaba en redirigir" a esta
+        // pantalla (el redirect en sí es instantáneo; lo lento es cargar
+        // Consulta). El catálogo de Microsip cambia con poca frecuencia, así
+        // que 5 minutos de caché son seguros. Mismo patrón repetido en otros
+        // 17 controllers (Cremación, Grooming, Hotel, etc.) — no tocados aquí.
+        $products = Cache::remember('productos_activos', 300, function () {
+            return Producto::where("ESTATUS", "A")->get();
+        });
         $admissions = AdmissionType::all();
         $areas = Area::all();
+        // Para el indicador de "peso pendiente" en x-pet-info: si ya existe una
+        // medición (PetWeight) para esta recepción no hace falta volver a pedirla.
+        $weightRegisteredThisVisit = PetWeight::where('reception_id', $id)->exists();
 
-        $this->authorize("create", Appointment::class); 
+        $this->authorize("create", Appointment::class);
 
-        return view('appointment.create', compact('appointment', 'reasons', 'prescription', 'reception', 'vaccineCertificate', 'products', 'appointmentService', 'admissions', 'areas'));
+        return view('appointment.create', compact('appointment', 'reasons', 'prescription', 'reception', 'vaccineCertificate', 'products', 'appointmentService', 'admissions', 'areas', 'weightRegisteredThisVisit'));
     }
 
     public function historic(int $id)
@@ -184,6 +204,54 @@ class AppointmentController extends Controller
         $prescription = Prescription::where('reception_id', $id)->first();
 
         return view('appointment.show', compact('appointment', 'reception', 'prescription'));
+    }
+
+    /**
+     * Datos de una Consulta para el modal "Ver Detalles" del Historial de la
+     * mascota (pet-history/view.blade.php): NO reemplaza a showReception()/
+     * appointment.show (esa vista de página completa sigue igual, sin
+     * tocarse). Reutiliza los mismos partials de solo lectura
+     * (appointment.form-readonly / prescription.form-readonly) ya
+     * renderizados como HTML, para no duplicar el listado de campos en el
+     * modal. Servicios NO se incluye aquí: el modal reutiliza tal cual el
+     * endpoint appointment-services.registros (mismo que ya usa
+     * appointment/show.blade.php vía appointments/show.js) para su propio
+     * DataTable — aquí solo se informa si existen, para decidir si mostrar
+     * esa sección.
+     */
+    public function detailsModal(int $id)
+    {
+        $this->authorize('viewAny', Appointment::class);
+
+        $reception = Reception::findOrFail($id);
+        $appointment = Appointment::where('reception_id', $id)->first();
+        $prescription = Prescription::where('reception_id', $id)->first();
+
+        $hasServices = AppointmentService::where('reception_id', $id)
+            ->where(function ($query) {
+                $query->whereNotNull('lab_type_id')
+                    ->orWhereNotNull('imaging_type_id');
+            })
+            ->exists()
+            || VaccineCertificate::where('reception_id', $id)->exists();
+
+        return response()->json([
+            'reception_id' => $reception->id,
+            'registro_html' => view('appointment.form-readonly', ['appointment' => $appointment])->render(),
+            'has_prescription' => (bool) $prescription,
+            // Para el botón "Imprimir Fórmula Médica" del modal (ver
+            // appointment-details-modal.js), que arma la URL con
+            // route('prescription.imprimir', prescription_id) — mismo
+            // endpoint que ya usa appointment/historic.blade.php.
+            'prescription_id' => $prescription?->id,
+            // hideDiagnosis: el diagnóstico ya se muestra en Registro
+            // clínico justo arriba (es el mismo dato — ver
+            // PrescriptionController::store()), así que no se repite aquí.
+            'prescription_html' => $prescription
+                ? view('prescription.form-readonly', ['prescription' => $prescription, 'appointment' => $appointment, 'hideDiagnosis' => true])->render()
+                : null,
+            'has_services' => $hasServices,
+        ]);
     }
 
     // public function ordenventa(int $reception, int $concepto)

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('template_title')
-   HISTORIAL MASCOTA
+    HISTORIAL MASCOTA
 @endsection
 
 @section('design')
@@ -62,35 +62,43 @@
                             </div> --}}
                         </div>
 
-                       <x-pet-info :pet="$pet" :years="$years" :months="$months" :days="$days"
-                            :genre-name="$genreName" :reproductive-status-name="$reproductiveStatusName" :classification-name="$classificationName" />
+                        <x-pet-info :pet="$pet" :years="$years" :months="$months" :days="$days"
+                            :genre-name="$genreName" :reproductive-status-name="$reproductiveStatusName" :classification-name="$classificationName" :show-weight-actions="true" />
 
                         {{-- Botones de acción: fila propia a ancho completo --}}
                         <div class="row">
                             <div class="col-12">
                                 <div class="d-flex flex-wrap justify-content-center gap-3 action-buttons-divider">
-                                    <button type="button" class="action-link" onclick="openTransferModal()">
-                                       <i class="fas fa-syringe"></i>
+                                    {{-- <a href="{{ route('vaccine-certificates.show', $pet->id) }}" class="action-link">
+                                        <i class="fas fa-syringe"></i>
                                         <span>Cartilla</span>
-                                    </button>
+                                    </a> --}}
 
-                                    <button type="button" class="action-link" onclick="openBudgetModal()">
-                                      <i class="fas fa-pills"></i>
-                                        <span>Formúla médica</span>
-                                    </button>
+                                    {{-- <a href="{{ route('prescription.create', $pet->id) }}" class="action-link">
+                                        <i class="fas fa-pills"></i>
+                                        <span>Fórmula médica</span>
+                                    </a> --}}
 
-                                    <button type="button" class="action-link" onclick="openTransferModal())">
-                                      <i class="fas fa-folder-open"></i>
+                                    <a href="{{ route('formats.created', $pet->id) }}" class="action-link">
+                                        <i class="fas fa-folder-open"></i>
                                         <span>Formatos</span>
-                                    </button>
+                                    </a>
 
                                     @if ($hasTransfers)
                                         <button type="button" class="action-link"
                                             onclick="openTransfersTrackingModal({ pet_id: {{ $pet->id }} })">
-                                           <i class="fas fa-exchange-alt"></i>
+                                            <i class="fas fa-exchange-alt"></i>
                                             <span>Traslados</span>
                                         </button>
                                     @endif
+
+                                    {{-- return_to=medical_history: PetController::update() lo usa para
+                                         volver aquí (mismo pet) en vez del listado general de mascotas. --}}
+                                    <button type="button" class="action-link"
+                                        onclick="window.location.href='{{ route('pets.edit', ['pet' => $pet->id, 'return_to' => 'medical_history']) }}'">
+                                        <i class="fas fa-edit"></i>
+                                        <span>Editar mascota</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -179,11 +187,15 @@
                                         <label for="filterHistorialTipo" class="form-label mb-1">Tipo</label>
                                         <select id="filterHistorialTipo" class="form-control form-control-sm">
                                             <option value="">Todas</option>
-                                            <option value="1" {{ $typeFilter == 1 ? 'selected' : '' }}>Consulta</option>
-                                            <option value="2" {{ $typeFilter == 2 ? 'selected' : '' }}>Hospitalización</option>
-                                            <option value="3" {{ $typeFilter == 3 ? 'selected' : '' }}>Grooming</option>
+                                            <option value="1" {{ $typeFilter == 1 ? 'selected' : '' }}>Consulta
+                                            </option>
+                                            <option value="2" {{ $typeFilter == 2 ? 'selected' : '' }}>Hospitalización
+                                            </option>
+                                            <option value="3" {{ $typeFilter == 3 ? 'selected' : '' }}>Grooming
+                                            </option>
                                             <option value="4" {{ $typeFilter == 4 ? 'selected' : '' }}>Hotel</option>
-                                            <option value="5" {{ $typeFilter == 5 ? 'selected' : '' }}>Cremación</option>
+                                            <option value="5" {{ $typeFilter == 5 ? 'selected' : '' }}>Cremación
+                                            </option>
                                         </select>
                                     </div>
                                     <div class="col">
@@ -229,7 +241,7 @@
                     {{-- Estados de cuenta: mismo endpoint/columnas que account/index.blade.php
                          (ver initAccountsTable() en public/js/accounts/table.js), acotado a
                          esta mascota (pet_id fijo, sin filtro de mascota visible). --}}
-                    <div class="card-panel">
+                    {{-- <div class="card-panel">
                         <div class="d-flex justify-content-between align-items-center chevron-toggle pb-2"
                             style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#accountsCollapse"
                             aria-expanded="true" aria-controls="accountsCollapse">
@@ -297,7 +309,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -307,6 +319,9 @@
 @push('modals')
     @include('reception.partials.transfers-tracking-modal')
     @include('account.partials.detail-modal')
+    @include('pet_history.partials.appointment-details-modal')
+    @include('pet-weights.partials.register-modal')
+    @include('pet-weights.partials.history-modal')
 @endpush
 
 @push('scripts')
@@ -319,5 +334,7 @@
     </script>
     <script src="{{ asset('js/receptions/transfers-tracking.js') }}" defer></script>
     <script src="{{ asset('js/accounts/table.js') }}" defer></script>
+    <script src="{{ asset('js/pet-history/appointment-details-modal.js') }}" defer></script>
+    <script src="{{ asset('js/pet-weights/index.js') }}" defer></script>
     <script src="{{ asset('js/pet-history/view.js') }}" defer></script>
 @endpush

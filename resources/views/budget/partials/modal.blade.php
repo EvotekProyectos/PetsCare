@@ -6,31 +6,69 @@
         box-sizing: border-box;
     }
 
-    /* Botón pequeño para agregar */
-    .btn-add-budget {
-        background-color: #007bff;
-        /* azul */
-        color: #fff;
-        /* icono blanco */
-        border: none;
-        padding: 3px 6px;
-        /* más pequeño */
-        font-size: 0.75rem;
-        border-radius: 4px;
-        display: inline-flex;
+    /* Subtítulo de sección (Servicios Médicos/Laboratorio/Imagenología),
+       mismo estilo que budget/edit.blade.php (Edit Budget), en tamaño
+       compacto -h5 completo ocupaba demasiado alto para un modal-. */
+    .budget-section-title {
+        color: #BEBEBE;
+        margin-bottom: 0;
+        font-size: 0.95rem;
+        font-weight: 700;
+    }
+
+    /* Tabla de resultados más compacta: menos padding por celda que el
+       table-hover por defecto de Bootstrap, sin reducir el tamaño de letra
+       (legibilidad) ni el alto de los inputs/botones de arriba. */
+    #BudgetTable th,
+    #BudgetTable td {
+        padding: 0.35rem 0.6rem;
+        vertical-align: middle;
+    }
+
+    #ModalBudget .budget-row {
+        margin-bottom: 0.5rem !important;
+    }
+
+    /* Select2 dentro de un input-group (ícono + select): Select2 fija un
+       width inline en px al iniciarse (select2({width: "100%"}) en
+       appointment-modal.js), que sumado al ícono (input-group-text)
+       desbordaba el ancho del input-group y lo mandaba a un renglón nuevo
+       -input-group tiene flex-wrap: wrap por defecto-. flex:1 1 auto +
+       width:1% hace que comparta el espacio con el ícono como cualquier
+       input normal, en vez de pedir 100% del contenedor. */
+    #ModalBudget .input-group > .select2-container {
+        flex: 1 1 auto;
+        width: 1% !important;
+    }
+
+    #ModalBudget .input-group > .select2-container .select2-selection {
+        height: 38px;
+        display: flex;
         align-items: center;
-        justify-content: center;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
     }
 
-    .btn-add-budget i {
-        color: #fff;
-        font-size: 0.85rem;
+    /* Fondo distintivo por tipo de servicio, mismos colores que ya usa la
+       tabla de resultados (budgetTypeColors en appointment-modal.js) para
+       que el color signifique lo mismo en todo el modal. */
+    #serviceRows {
+        background-color: rgba(13, 148, 136, 0.10);
+        border-radius: 8px;
+        padding: 8px;
     }
 
-    /* .btn-add-budget:hover {
-        background: #0455a0;
-        color: #fff;
-    } */
+    #labRows {
+        background-color: rgba(124, 58, 237, 0.10);
+        border-radius: 8px;
+        padding: 8px;
+    }
+
+    #imgRows {
+        background-color: rgba(234, 88, 12, 0.10);
+        border-radius: 8px;
+        padding: 8px;
+    }
 
     /* Botón eliminar */
     .btn-delete-budget {
@@ -58,17 +96,6 @@
         font-size: 13px;
     }
 
-    #BudgetTable tfoot tr {
-        background-color: #f8f9fa;
-        border-top: 2px solid #dee2e6;
-    }
-
-    #BudgetTable tfoot th {
-        color: #0455a0;
-        font-weight: 700;
-        padding: 10px 12px;
-    }
-
     #budget-total-price {
         color: #0455a0;
         font-weight: 700;
@@ -78,34 +105,44 @@
 <div class="modal fade" id="ModalBudget" tabindex="-1" aria-labelledby="ModalBudgetTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
-            <div class="modal-header py-3">
+            <div class="modal-header py-2">
                 <div class="d-flex align-items-center">
-                    <div class="bg-primary rounded me-3" style="width:6px;height:28px;"></div>
+                    <div class="bg-primary rounded me-3" style="width:6px;height:24px;"></div>
                     <div>
-                        <div class="fw-bold fs-4 text-dark" id="ModalBudgetTitle">Presupuesto</div>
+                        {{-- Mismo título/ícono que budget/edit.blade.php (Edit Budget),
+                             para que se sienta la misma pantalla, en tamaño compacto. --}}
+                        <div class="fw-bold fs-5 text-dark text-uppercase" id="ModalBudgetTitle">
+                            <span class="ic--baseline-price-change"></span> Presupuesto
+                        </div>
                     </div>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body py-3">
                 <div class="col-12" id="previousBudgetsSection" style="display:none;">
-                    <div class="mb-4">
-                        <div class="fw-bold text-uppercase mb-2" style="font-size:13px; color:#6c757d;">
+                    <div class="mb-3">
+                        <div class="fw-bold text-uppercase mb-1" style="font-size:12px; color:#6c757d;">
                             Presupuestos de esta consulta
                         </div>
                         <div id="previousBudgetsList"></div>
                     </div>
                 </div>
 
-                <div class="row g-4">
+                {{-- Cada sección (Servicios Médicos/Laboratorio/Imagenología) reproduce
+                     el subtítulo gris de Edit Budget (ver budget/edit.blade.php). El
+                     botón "Añadir" agrega una fila de captura más -NO guarda nada
+                     todavía-: es exactamente el mismo botón "+" de siempre
+                     (addBudgetRow(), ver public/js/budgets/appointment-modal.js),
+                     solo con la etiqueta/estilo de Edit Budget. No se duplica lógica:
+                     sigue siendo la única función que agrega filas para las 3 categorías. --}}
+                <div class="row g-2">
                     <div class="col-12">
-                        <div class="d-flex align-items-center gap-2 mb-2">
-                            <label class="form-label mb-0">SERVICIO MÉDICO</label>
-
-                            <button type="button" class="btn-add-budget" onclick="addBudgetRow('service')"
-                                title="Agregar servicio">
-                                <i class="fa-solid fa-plus"></i>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h5 class="budget-section-title">Servicios Médicos</h5>
+                            <button type="button" class="btn btn-primary btn-sm text-uppercase rounded-4"
+                                onclick="addBudgetRow('service')">
+                                <i class="fas fa-plus"></i> Añadir
                             </button>
                         </div>
 
@@ -113,29 +150,35 @@
                     </div>
 
                     <div class="col-12">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <label class="form-label">LABORATORIO</label>
-                            <button type="button" class="btn-add-budget" onclick="addBudgetRow('lab')"
-                                title="Agregar laboratorio">
-                                +
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h5 class="budget-section-title">Exámenes de Laboratorio</h5>
+                            <button type="button" class="btn btn-primary btn-sm text-uppercase rounded-4"
+                                onclick="addBudgetRow('lab')">
+                                <i class="fas fa-plus"></i> Añadir
                             </button>
                         </div>
                         <div id="labRows"></div>
                     </div>
 
                     <div class="col-12">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <label class="form-label">IMAGENOLOGÍA</label>
-                            <button type="button" class="btn-add-budget" onclick="addBudgetRow('img')"
-                                title="Agregar imagenología">
-                                +
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h5 class="budget-section-title">Imagenología</h5>
+                            <button type="button" class="btn btn-primary btn-sm text-uppercase rounded-4"
+                                onclick="addBudgetRow('img')">
+                                <i class="fas fa-plus"></i> Añadir
                             </button>
                         </div>
                         <div id="imgRows"></div>
                     </div>
 
+                    {{-- "Agregar" guarda en el presupuesto todas las filas capturadas
+                         arriba (AddBudgetBatch(), sin cambios): no tiene equivalente
+                         directo en Edit Budget -ahí cada línea se guarda sola al
+                         capturarla-, pero sigue siendo necesario aquí para no meter
+                         una llamada AJAX por cada fila. --}}
                     <div class="col-12 d-flex justify-content-end">
-                        <button type="button" class="btn btn-primary" onclick="AddBudgetBatch()">
+                        <button type="button" class="btn btn-primary btn-sm text-uppercase rounded-4"
+                            onclick="AddBudgetBatch(event)">
                             <i class="fas fa-plus"></i> Agregar
                         </button>
                     </div>
@@ -144,8 +187,8 @@
                 <div class="row mt-3">
                     <div class="col-12">
                         <div class="table-responsive">
-                            <table class="table table-hover table-flat-rows responsive w-100" id="BudgetTable">
-                                <thead class="thead table-header-solid text-uppercase">
+                            <table class="table table-striped table-hover responsive w-100" id="BudgetTable">
+                                <thead class="thead table-primary text-uppercase">
                                     <tr>
                                         <th>Tipo Servicio</th>
                                         <th>Nombre</th>
@@ -156,36 +199,17 @@
                                 </thead>
 
                                 <tbody></tbody>
-
-                                <tfoot>
-                                    <tr>
-                                        <th colspan="3" class="text-end">
-                                            Total:
-                                        </th>
-                                        <th id="budget-total-price">
-                                            $0.00
-                                        </th>
-                                        <th></th>
-                                    </tr>
-                                </tfoot>
                             </table>
                         </div>
                     </div>
                 </div>
-                {{-- <div class="col-12 d-flex justify-content-end mt-2">
-                    <div id="budget-total-price"
-                        style="
-                        color: #0455a0;
-                        font-weight: 700;
-                        font-size: 1rem;
-                        background: #d3f0f3;
-                        border: 1.5px solid #0455a0;
-                        padding: 8px 24px;
-                        border-radius: 999px;
-                        white-space: nowrap;
-                    ">
-                        Total: $0.00</div>
-                </div> --}}
+
+                {{-- Mismo "Gran Total: $0.00" de Edit Budget, fuera de la tabla.
+                     Sigue siendo el mismo #budget-total-price de siempre -no cambia
+                     nada del cálculo, solo dónde vive el elemento en el HTML-. --}}
+                <div class="col-12 mt-2 d-flex justify-content-end">
+                    <h5 class="mb-0">Gran Total: <span id="budget-total-price">$0.00</span></h5>
+                </div>
             </div>
 
             <div class="modal-footer">
