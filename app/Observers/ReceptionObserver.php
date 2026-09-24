@@ -4,10 +4,15 @@ namespace App\Observers;
 
 use App\Models\Log;
 use App\Models\Reception;
+use App\Services\ReceptionVersionService;
 use Illuminate\Support\Facades\Auth;
 
 class ReceptionObserver
 {
+    public function __construct(private ReceptionVersionService $versionService)
+    {
+    }
+
     /**
      * Handle the Reception "created" event.
      */
@@ -20,6 +25,8 @@ class ReceptionObserver
             "description"=>'Se creo una nueva recepción para ' . $pets->name. ' de tipo: ' .$type->name,
             "user_id"=>(Auth::user()->id)??null
         ]);
+
+        $this->versionService->touch();
     }
 
     /**
@@ -35,6 +42,8 @@ class ReceptionObserver
             "description"=>'Se edito la recepción de ' . $pets->name. ' de tipo: ' .$type->name,
             "user_id"=>(Auth::user()->id)
         ]);
+
+        $this->versionService->touch();
     }
 
     /**
@@ -50,6 +59,8 @@ class ReceptionObserver
             "description"=>'Se eliminó la recepción de ' . $pets->name. ' de tipo: ' .$type->name,
             "user_id"=>(Auth::user()->id)
         ]);
+
+        $this->versionService->touch();
     }
 
     /**

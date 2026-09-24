@@ -4,10 +4,15 @@ namespace App\Observers;
 
 use App\Models\Log;
 use App\Models\ReceptionStatusHistory;
+use App\Services\ReceptionVersionService;
 use Illuminate\Support\Facades\Auth;
 
 class receptionStatusHistoryObserver
 {
+    public function __construct(private ReceptionVersionService $versionService)
+    {
+    }
+
     /**
      * Handle the ReceptionStatusHistory "created" event.
      */
@@ -21,6 +26,8 @@ class receptionStatusHistoryObserver
             "description"=>'La mascota ' .$pet->name. ' está en ' .$attention->name,
             "user_id"=>(Auth::user()->id)??null
         ]);
+
+        $this->versionService->touch();
     }
 
     /**
@@ -36,6 +43,8 @@ class receptionStatusHistoryObserver
             "description"=>'La mascota ' .$pet->name. ' está en ' .$attention->name,
             "user_id"=>(Auth::user()->id)??null
         ]);
+
+        $this->versionService->touch();
     }
 
     /**

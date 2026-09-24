@@ -315,6 +315,18 @@ const deleteControlDate = (id, table) => {
  * igual, por su cuenta -nunca queda el polling parado en seco por un solo
  * error, ni se generan peticiones duplicadas como reintento-.
  *
+ * Protección contra overlap: si `checkFn()` tarda más que `intervalMs` (ej.
+ * el servidor está lento), el/los tick(s) programados mientras la petición
+ * anterior sigue pendiente se ignoran (`requestInFlight`) en vez de lanzar
+ * una petición nueva encima -evita que las peticiones se apilen y agraven
+ * la lentitud que las causó-. `requestTimeoutMs` es el límite de cuánto
+ * puede quedar "pendiente" una petición antes de soltar ese bloqueo: no
+ * cancela la petición real (checkFn es opaco, puede ser $.ajax o fetch),
+ * solo deja de esperarla para permitir que el próximo tick programado
+ * vuelva a intentar. Con eso basta para este caso -el resultado tardío de
+ * la petición abandonada, si llega, ya no compara ni dispara onChanged
+ * (ver chequeo de `stopped` en tick())-.
+ *
  * @param {Object} options
  * @param {() => (any|Promise<any>)} options.checkFn - hace el fetch/ajax
  *   (puede devolver un jqXHR/Promise) y resuelve con el valor de "última
@@ -322,15 +334,46 @@ const deleteControlDate = (id, table) => {
  * @param {(value: any) => void} options.onChanged - se llama solo cuando
  *   ese valor cambió respecto al anterior (nunca en el primer chequeo).
  * @param {number} [options.intervalMs=30000]
+ * @param {number} [options.requestTimeoutMs=20000] - cuánto esperar
+ *   `checkFn()` antes de soltar `requestInFlight` y permitir el siguiente
+ *   ciclo, aunque la petición original nunca resuelva.
  * @returns {() => void} función para detener el polling (clearInterval +
  *   quita el listener de 'pageshow'), por si la vista lo necesita.
  */
-function pollForChanges({ checkFn, onChanged, intervalMs = 30000 }) {
+function pollForChanges({ checkFn, onChanged, intervalMs = 30000, requestTimeoutMs = 20000 }) {
     let lastValue = null;
+    let requestInFlight = false;
+    let stopped = false;
+
+    function withTimeout(promise, ms) {
+        return new Promise(function (resolve, reject) {
+            const timer = setTimeout(function () {
+                reject(new Error('pollForChanges: checkFn() superó el timeout de ' + ms + 'ms.'));
+            }, ms);
+            promise.then(
+                function (value) {
+                    clearTimeout(timer);
+                    resolve(value);
+                },
+                function (error) {
+                    clearTimeout(timer);
+                    reject(error);
+                }
+            );
+        });
+    }
 
     function tick() {
-        Promise.resolve(checkFn())
+        if (stopped || requestInFlight) {
+            return;
+        }
+        requestInFlight = true;
+
+        withTimeout(Promise.resolve(checkFn()), requestTimeoutMs)
             .then(function (value) {
+                if (stopped) {
+                    return;
+                }
                 if (lastValue === null) {
                     lastValue = value;
                     return;
@@ -342,6 +385,9 @@ function pollForChanges({ checkFn, onChanged, intervalMs = 30000 }) {
             })
             .catch(function (error) {
                 console.error('pollForChanges: chequeo fallido, se reintenta en el próximo ciclo.', error);
+            })
+            .finally(function () {
+                requestInFlight = false;
             });
     }
 
@@ -356,6 +402,7 @@ function pollForChanges({ checkFn, onChanged, intervalMs = 30000 }) {
     window.addEventListener('pageshow', onPageShow);
 
     return function stopPolling() {
+        stopped = true;
         clearInterval(intervalId);
         window.removeEventListener('pageshow', onPageShow);
     };

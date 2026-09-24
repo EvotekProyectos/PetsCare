@@ -38,9 +38,11 @@ use App\Models\ReproductiveStatus;
 use App\Models\Room;
 use App\Models\Species;
 use App\Models\Surgery;
+use App\Models\SystemVersion;
 use App\Models\User;
 use App\Services\AccountStatementService;
 use App\Services\ReceptionDocumentService;
+use App\Services\ReceptionVersionService;
 use Barryvdh\DomPDF\Facade\Pdf  as Pdf;
 use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\Facades\DataTables;
@@ -367,31 +369,28 @@ class ReceptionController extends Controller
     /**
      * Usado por el polling del index para saber si hay que recargar la
      * tabla del tab activo (ver pollForChanges/startPollingReceptions en
-     * receptions/index.js). Debe cubrir el historial de estatus de las 5
-     * pestañas del index (Consultas/Hospitalizaciones/Grooming/Hotel/
-     * Cremaciones): faltaba HotelStatusHistory -Reception no se "toca" al
-     * crear un HotelStatusHistory (no hay $touches para eso en ningún
-     * modelo), así que un cambio de estatus en Hotel (ej. asignar/liberar
-     * cubículo) no bumpeaba ni Reception::max('updated_at') ni ninguna de
-     * las otras 4 tablas ya listadas, y por lo tanto nunca disparaba un
-     * reload de esa pestaña vía polling- hasta que se recargaba la página
-     * completa.
+     * receptions/index.js). Antes hacía 5x MAX(updated_at) (Reception +
+     * las 4 status-history) sin índice, en cada poll de 30s de cada pestaña
+     * abierta. Ahora es una sola lectura de system_versions -la versión la
+     * incrementan los Observers de Reception/*StatusHistory/Account/
+     * AdvancePayment (ver ReceptionVersionService::touch()), no este método-.
+     *
+     * Se asume que la fila 'receptions' de system_versions siempre existe:
+     * la migración create_system_versions_table la siembra al correr, así
+     * que no depende de que alguien haya visitado Recepciones antes. Este
+     * endpoint es de solo lectura a propósito -no hace firstOrCreate()- para
+     * no convertir un polling de lectura en una escritura condicional en
+     * cada ciclo; si la fila llegara a faltar por alguna razón externa a
+     * este flujo, value() devuelve null y el `?? 0` de abajo evita romper el
+     * contrato JSON (el frontend solo compara igualdad, nunca asume que sea
+     * un timestamp).
      */
     public function lastUpdateGlobal()
     {
-        $lastChange = collect([
-            Reception::max('updated_at'),
-            ReceptionStatusHistory::max('updated_at'),
-            GroomingStatusHistory::max('updated_at'),
-            HotelStatusHistory::max('updated_at'),
-            CremationStatusHistory::max('updated_at'),
-            HospitalizationStatusHistory::max('updated_at'),
-        ])
-            ->filter()
-            ->max();
+        $version = SystemVersion::where('key', ReceptionVersionService::KEY)->value('version') ?? 0;
 
         return response()->json([
-            'last_update' => $lastChange,
+            'last_update' => $version,
         ]);
     }
 

@@ -4,10 +4,15 @@ namespace App\Observers;
 
 use App\Models\GroomingStatusHistory;
 use App\Models\Log;
+use App\Services\ReceptionVersionService;
 use Illuminate\Support\Facades\Auth;
 
 class GroomingStatusHistoryObserver
 {
+    public function __construct(private ReceptionVersionService $versionService)
+    {
+    }
+
     /**
      * Handle the GroomingStatusHistory "created" event.
      */
@@ -21,6 +26,8 @@ class GroomingStatusHistoryObserver
             "description"=>'La mascota ' .$pet->name. ' está ' .$attention->name,
             "user_id"=>(Auth::user()->id)??null
         ]);
+
+        $this->versionService->touch();
     }
 
     /**
@@ -36,6 +43,8 @@ class GroomingStatusHistoryObserver
             "description"=>'La mascota ' .$pet->name. ' está ' .$attention->name,
             "user_id"=>(Auth::user()->id)??null
         ]);
+
+        $this->versionService->touch();
     }
 
     /**
