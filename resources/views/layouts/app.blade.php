@@ -429,7 +429,7 @@
     <script src="{{ asset('js/dataTables.js') }}" defer></script>
     <script src="{{ asset('js/jquery.dataTables.spanish.js') }}" defer></script>
     {{-- <script src="{{ asset('js/responsive.dataTables.min.js') }}" defer></script> --}}
-    <script src="{{ asset('js/global.js') }}" defer></script>
+    <script src="{{ asset('js/global.js') }}?v={{ filemtime(public_path('js/global.js')) }}" defer></script>
     {{-- <script src="{{ asset('js/notifications/show.js') }}" defer></script> --}}
     {{-- Select2 JS --}}
     <script src="{{ asset('js/select2.min.js') }}" defer></script>

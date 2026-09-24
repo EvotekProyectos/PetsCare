@@ -48,6 +48,26 @@ class OrdenVentaService
     }
 
     /**
+     * Precalienta el cache de productosCacheados() (300s por ARTICULO_ID) con
+     * TODOS los IDs dados, en una sola consulta batch a Firebird para los que
+     * todavía no estén en cache -mismo mecanismo, sin cambiarlo, solo se
+     * llama antes de tiempo-. Pensado para AccountStatementService::preview():
+     * antes, un episodio con varios tipos de recepción (ej. Consulta
+     * trasladada a Hospitalización) llamaba previsualizar() una vez por
+     * grupo, y cada una resolvía sus propios faltantes contra Firebird por
+     * separado -hasta una consulta a Firebird por grupo-. Llamando esto una
+     * sola vez con la UNIÓN de ARTICULO_ID de todos los grupos, cada
+     * previsualizar() posterior encuentra su cache ya tibio y no repite la
+     * consulta, sin importar cuántos grupos tenga el episodio. No se usa el
+     * resultado directamente (por eso no devuelve nada): el efecto que
+     * importa es el cache que productosCacheados() ya deja poblado.
+     */
+    public function precalentarArticulos(Collection $ids): void
+    {
+        $this->productosCacheados($ids);
+    }
+
+    /**
      * Nombre/precio de un lote de ARTICULO_ID, cacheado 300s POR ARTICULO_ID
      * individual (no por la combinación completa que se pida cada vez, que
      * casi nunca se repite igual entre dos recepciones distintas) — mismo

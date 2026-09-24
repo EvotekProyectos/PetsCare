@@ -487,7 +487,18 @@ class ReceptionController extends Controller
 
         $accountStatementService = $reception_type_id == 2 ? app(AccountStatementService::class) : null;
 
-        $receptions = $receptions->map(function ($reception) use ($episodesWithTransfers, $accountStatementService) {
+        // Precalienta ES_ALMACENABLE/nombre-precio de Firebird para TODOS los
+        // episodios de esta página de una sola vez -sin esto,
+        // hasConfirmedConsultaPayment() de abajo paga su propia consulta a
+        // Firebird por cada fila de un episodio distinto (medido: 10
+        // consultas Firebird para 8 filas). Ver AccountStatementService::
+        // prewarmConsultaFirebirdData(). No cambia qué se calcula, solo evita
+        // repetir la misma consulta por fila.
+        $almacenablesPrewarm = $accountStatementService
+            ? $accountStatementService->prewarmConsultaFirebirdData($receptions->pluck('episode_id'))
+            : null;
+
+        $receptions = $receptions->map(function ($reception) use ($episodesWithTransfers, $accountStatementService, $almacenablesPrewarm) {
             $reception->can_edit = auth()->user()->can('update', $reception);
             $reception->can_delete = auth()->user()->can('delete', $reception);
             $reception->has_transfers = $episodesWithTransfers->contains($reception->episode_id);
@@ -507,7 +518,7 @@ class ReceptionController extends Controller
             // (hospitalización directa), el método ya regresa true y no
             // afecta nada.
             if ($accountStatementService) {
-                $reception->show_documents = $accountStatementService->hasConfirmedConsultaPayment($reception);
+                $reception->show_documents = $accountStatementService->hasConfirmedConsultaPayment($reception, $almacenablesPrewarm);
             }
 
             return $reception;
