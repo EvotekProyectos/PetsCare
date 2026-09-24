@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Account;
 use App\Models\AdmissionType;
 use App\Models\AdvancePayment;
 use App\Models\Appointment;
@@ -23,7 +24,10 @@ use App\Models\Grooming;
 use App\Models\GroomingStatus;
 use App\Models\GroomingStatusHistory;
 use App\Models\Hospitalization;
+use App\Models\HospitalizationStatusHistory;
 use App\Models\Hotel;
+use App\Models\HotelStatusHistory;
+use App\Models\CremationStatusHistory;
 use App\Models\Pet;
 use App\Models\PetClassification;
 use App\Models\PetsStatus;
@@ -45,8 +49,12 @@ use App\Models\TagType;
 use App\Models\User;
 use App\Models\VaccineCertificate;
 use App\Models\Voucher;
+use App\Observers\AccountObserver;
 use App\Observers\AdmissionTypeObserver;
 use App\Observers\AdvancePaymentObserver;
+use App\Observers\CremationStatusHistoryObserver;
+use App\Observers\HospitalizationStatusHistoryObserver;
+use App\Observers\HotelStatusHistoryObserver;
 use App\Observers\AppointmentObserver;
 use App\Observers\AttentionStatusObserver;
 use App\Observers\CmTypeObserver;
@@ -149,7 +157,15 @@ class EventServiceProvider extends ServiceProvider
         ControlDate::observe(ControlDateObserver::class);
         AdvancePayment::observe(AdvancePaymentObserver::class);
         Voucher::observe(VoucherObserver::class);
-        
+
+        // Registrados para la versión global de Recepciones (ver
+        // ReceptionVersionService / ReceptionController::lastUpdateGlobal()):
+        // estas 3 tablas de status-history y Account no tenían ningún
+        // Observer antes de este paso.
+        HotelStatusHistory::observe(HotelStatusHistoryObserver::class);
+        CremationStatusHistory::observe(CremationStatusHistoryObserver::class);
+        HospitalizationStatusHistory::observe(HospitalizationStatusHistoryObserver::class);
+        Account::observe(AccountObserver::class);
     }
 
     /**
