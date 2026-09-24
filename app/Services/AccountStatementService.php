@@ -59,7 +59,22 @@ class AccountStatementService
     public function preview(Reception $reception): array
     {
         // Agrupado por tipo de recepción (Consulta/Hospitalización/etc.)
-        $groups = $this->articulosPorTipoFor($reception)->map(fn ($g) => [
+        $gruposArticulos = $this->articulosPorTipoFor($reception);
+
+        // Precalienta el cache de Firebird (OrdenVentaService::
+        // precalentarArticulos()) con la UNIÓN de ARTICULO_ID de TODOS los
+        // grupos antes del loop de abajo: un episodio con traslado (ej.
+        // Consulta -> Hospitalización) tiene 2+ grupos, y antes cada
+        // previsualizar() del loop resolvía sus propios faltantes contra
+        // Firebird por separado -hasta una consulta a Firebird por grupo-.
+        // Con esto, el previsualizar() de cada grupo encuentra su cache ya
+        // tibio, sin importar cuántos grupos tenga el episodio. Mismo TTL
+        // (300s) y mismo mecanismo de siempre, solo se llena antes.
+        $this->ordenVentaService->precalentarArticulos(
+            $gruposArticulos->flatMap(fn ($g) => $g['articulos'])->pluck('product_id')->unique()
+        );
+
+        $groups = $gruposArticulos->map(fn ($g) => [
             'reception_type' => $g['reception_type_name'],
             'items' => $this->ordenVentaService->previsualizar($g['articulos']),
         ])->values();
@@ -182,7 +197,7 @@ class AccountStatementService
      * ReceptionController::paymentSummary()). Memoizado por episode_id: ver
      * comentario en las propiedades de la clase.
      */
-    public function consultaServiciosPreview(Reception $reception): Collection
+    public function consultaServiciosPreview(Reception $reception, ?Collection $almacenables = null): Collection
     {
         $episodeId = $reception->episode_id;
 
@@ -195,7 +210,7 @@ class AccountStatementService
             ->pluck('id');
 
         return $this->consultaServiciosCache[$episodeId] = $this->ordenVentaService->previsualizar(
-            $this->consolidarCantidades($this->consultaArticulos($consultaReceptionIds))
+            $this->consolidarCantidades($this->consultaArticulos($consultaReceptionIds, $almacenables))
         );
     }
 
@@ -203,10 +218,14 @@ class AccountStatementService
      * Total cobrable (sin restar anticipos) de la porción de Consulta del
      * episodio de $reception. 0.0 si el episodio no tiene ninguna Reception
      * de Consulta (ej. hospitalización sin traslado previo).
+     *
+     * $almacenables: ver prewarmConsultaFirebirdData()/cobrableIds() — mapa
+     * ES_ALMACENABLE ya resuelto para inyectar en vez de consultar Firebird
+     * de nuevo. Opcional, no cambia el resultado, solo de dónde sale el dato.
      */
-    private function consultaTotal(Reception $reception): float
+    private function consultaTotal(Reception $reception, ?Collection $almacenables = null): float
     {
-        return (float) $this->consultaServiciosPreview($reception)->sum('total');
+        return (float) $this->consultaServiciosPreview($reception, $almacenables)->sum('total');
     }
 
     /**
@@ -291,10 +310,17 @@ class AccountStatementService
      * total de esa consulta — no basta con que el saldo llegue a 0 sumando
      * varios anticipos parciales. Si no hay ninguna Consulta en el episodio
      * (hospitalización directa), esta regla no aplica y no bloquea nada.
+     *
+     * $almacenables: opcional — ver prewarmConsultaFirebirdData(). Usado por
+     * ReceptionController::list() (índice de Hospitalización) para resolver
+     * el ES_ALMACENABLE de TODOS los episodios visibles en una sola consulta
+     * a Firebird antes del loop, en vez de que cada fila pague la suya. Sin
+     * este argumento (ej. llamado directo, sin prewarm) el comportamiento es
+     * exactamente el mismo de siempre: cobrableIds() resuelve por su cuenta.
      */
-    public function hasConfirmedConsultaPayment(Reception $reception): bool
+    public function hasConfirmedConsultaPayment(Reception $reception, ?Collection $almacenables = null): bool
     {
-        $consultaTotal = $this->consultaTotal($reception);
+        $consultaTotal = $this->consultaTotal($reception, $almacenables);
         if ($consultaTotal <= 0) {
             return true;
         }
@@ -310,6 +336,77 @@ class AccountStatementService
             ->where('status', 1)
             ->where('amount', round($consultaTotal, 2))
             ->exists();
+    }
+
+    /**
+     * Precalienta, para TODOS los episodios dados de una sola vez, lo que
+     * hasConfirmedConsultaPayment() necesita de Firebird -pensado
+     * exclusivamente para ReceptionController::list() (índice de
+     * Hospitalización), que la llama una vez por fila: sin esto, cada fila
+     * de un episodio distinto pagaba su propia consulta a Firebird para lo
+     * mismo (medido: 10 consultas Firebird para 8 filas).
+     *
+     * Resuelve dos cosas, cada una por su propio motivo:
+     * 1) ES_ALMACENABLE (cobrableIds()): se resuelve aquí mismo con
+     *    Producto::whereIn() sobre la unión de artículos candidatos de
+     *    TODOS los episodios, y el mapa resultante se inyecta en las
+     *    llamadas de abajo. No se puede lograr esto con un simple
+     *    "precalentamiento" de cache: CachedFirebirdBuilder cachea por
+     *    SQL+bindings EXACTOS, así que el whereIn de un episodio individual
+     *    (subconjunto) nunca encuentra en cache lo que ya se resolvió para
+     *    la unión completa -de ahí que haga falta inyectar el mapa
+     *    directamente en vez de confiar en el cache existente-.
+     * 2) Nombre/precio (OrdenVentaService::productosCacheados(), cacheado
+     *    por ARTICULO_ID individual): para esto SÍ basta con
+     *    precalentarArticulos() (ya existente, sin tocar), porque ese cache
+     *    sí es por ID y un precalentamiento con la unión sirve para
+     *    cualquier subconjunto posterior.
+     *
+     * No cambia qué se calcula ni el resultado de hasConfirmedConsultaPayment()
+     * para ninguna recepción -solo de dónde sale el dato ES_ALMACENABLE-.
+     *
+     * @return Collection|null el mapa ES_ALMACENABLE a pasar a cada llamada
+     *   de hasConfirmedConsultaPayment(), o null si ningún episodio dado
+     *   tiene ninguna Reception de Consulta (nada que precalentar).
+     */
+    public function prewarmConsultaFirebirdData(Collection $episodeIds): ?Collection
+    {
+        $consultaReceptionIds = Reception::whereIn('episode_id', $episodeIds->filter()->unique())
+            ->where('reception_type_id', 1)
+            ->pluck('id');
+
+        if ($consultaReceptionIds->isEmpty()) {
+            return null;
+        }
+
+        // Mismas filas candidatas que cobrableIds() usa dentro de
+        // consultaArticulos() (ver esa función), pero para TODOS los
+        // episodios de una sola consulta -se necesita el mapa ES_ALMACENABLE
+        // ANTES de poder inyectarlo, así que este query puntual sí se repite
+        // aquí (una sola vez por carga de tabla, no por fila).
+        $articuloIds = AppointmentService::whereIn('reception_id', $consultaReceptionIds)
+            ->where(function ($query) {
+                $query->whereNotNull('imaging_type_id')
+                    ->orWhereNotNull('lab_type_id');
+            })
+            ->get(['imaging_type_id', 'lab_type_id'])
+            ->map(fn ($item) => $item->imaging_type_id ?? $item->lab_type_id)
+            ->filter()
+            ->unique()
+            ->values();
+
+        $almacenables = $articuloIds->isEmpty()
+            ? collect()
+            : Producto::whereIn('ARTICULO_ID', $articuloIds)->pluck('ES_ALMACENABLE', 'ARTICULO_ID');
+
+        // Con $almacenables ya resuelto, esta llamada NO vuelve a tocar
+        // Firebird para ES_ALMACENABLE (se lo inyectamos) -se usa solo para
+        // obtener la lista consolidada de product_id de TODOS los episodios
+        // y precalentar productosCacheados() en una sola pasada.
+        $articulos = $this->consultaArticulos($consultaReceptionIds, $almacenables);
+        $this->ordenVentaService->precalentarArticulos($articulos->pluck('product_id'));
+
+        return $almacenables;
     }
 
     /**
@@ -435,7 +532,7 @@ class AccountStatementService
         return $ids->filter()->map(fn ($id) => ['product_id' => $id, 'quantity' => 1]);
     }
 
-    private function consultaArticulos(Collection $receptionIds): Collection
+    private function consultaArticulos(Collection $receptionIds, ?Collection $almacenables = null): Collection
     {
         // Servicio de la consulta en sí (lo que el médico registra al terminar),
         // igual que Grooming.service_id / Hotel.service_type_id / Cremation.servicie.
@@ -455,7 +552,8 @@ class AccountStatementService
         $servicesIds = $this->cobrableIds(
             $appointmentServiceRows,
             AppointmentService::class,
-            fn ($item) => $item->imaging_type_id ?? $item->lab_type_id
+            fn ($item) => $item->imaging_type_id ?? $item->lab_type_id,
+            $almacenables
         );
 
         $vaccinesIds = VaccineCertificate::whereIn('reception_id', $receptionIds)
@@ -484,11 +582,20 @@ class AccountStatementService
      * ES_ALMACENABLE con un JOIN SQL, así que se resuelve en PHP con un
      * query batch (mismo patrón que VoucherProduct::activeMapFor(), que
      * también se reutiliza aquí tal cual para el estatus del vale).
+     *
+     * $almacenables opcional: si ya viene resuelto (ver
+     * prewarmConsultaFirebirdData()), se usa tal cual y NO se vuelve a
+     * consultar Firebird -CachedFirebirdBuilder cachea por SQL+bindings
+     * exactos, así que un whereIn con un subconjunto de IDs no encuentra en
+     * cache lo que ya se resolvió para un conjunto más grande; inyectar el
+     * mapa es la única forma de evitar repetir esta consulta por cada
+     * episodio-. Sin este argumento, el comportamiento es idéntico al de
+     * siempre.
      */
-    private function cobrableIds(Collection $rows, string $sourceableType, \Closure $articuloIdOf): Collection
+    private function cobrableIds(Collection $rows, string $sourceableType, \Closure $articuloIdOf, ?Collection $almacenables = null): Collection
     {
         $articuloIds = $rows->map($articuloIdOf)->filter()->unique()->values();
-        $almacenables = Producto::whereIn('ARTICULO_ID', $articuloIds)->pluck('ES_ALMACENABLE', 'ARTICULO_ID');
+        $almacenables ??= Producto::whereIn('ARTICULO_ID', $articuloIds)->pluck('ES_ALMACENABLE', 'ARTICULO_ID');
         $activeVouchers = VoucherProduct::activeMapFor($sourceableType, $rows->pluck('id')->all());
 
         return $rows->map(function ($row) use ($articuloIdOf, $almacenables, $activeVouchers) {
